@@ -1,0 +1,263 @@
+<!doctype html>
+<html>
+<head>
+  <title>nkc.chat.prototype</title>
+  <style>
+  * {
+    margin: 0; padding: 0;
+  }
+
+  body {
+    font-size:8pt;
+  }
+
+  .inputform {
+    font-size:100%;
+    background: rgb(90,30,0);
+    position:fixed;
+    bottom: 0;
+    height:10%;
+    width: 100%;
+    padding-top:3px;
+  }
+
+  #tosend {
+    font-size:200%;
+    border:none;
+    width: 60%;
+    height:100%;
+    float:left;
+  }
+
+  #username {
+    font-size:200%;
+    border:none;
+    width: 20%;
+    height:100%;
+    float:left;
+  }
+
+  #send {
+    font-size:200%;
+    width:20%;
+    border: none;
+    height:100%;
+    background: rgb(233, 100, 40);
+    float:left;
+  }
+
+  .logo {
+    position:fixed; top:0; width:100%; height:15%;
+  }
+  .logoimage {
+    height:100%;
+  }
+
+  #wrap {width:100%;height:75%;position:fixed;top:15%; overflow-y: scroll; overflow-x: hidden}
+  #messages {list-style-type: none;width:90%;}
+  .line{width:100%; clear:both; color:#888;}
+
+  .divp {
+    width:8%;
+    padding-bottom:8%;
+    float:left;
+    margin:3px;
+    margin-right:10px;
+    display:inline-block;
+    border-radius: 20%;
+    overflow:hidden;
+    position: relative;
+  }
+  .divi {
+    width:100%;
+    display:block;
+    position: absolute;
+  }
+  .divm {
+    width:80%;
+    display:inline-block;
+    float:left;
+    margin-bottom:7px
+  }
+
+  #messages { padding: 5px 5px;}
+
+  .msgbody {
+    font-size:150%;
+    margin-left: 2%;
+  }
+  </style>
+</head>
+<body>
+  <div class="logo">
+    <img class="logoimage" src=http://bbs.kechuang.org/themes/site/dingzhi/images/logo.png></img>
+  </div>
+  <div id="wrap">
+    <div id="messages"></div>
+  </div>
+  <div class="inputform">
+    <input id="tosend" autocomplete="off" placeholder="说点啥……" />
+    <input id="username" autocomplete="off" value="" placeholder="记得填ID"/>
+    <button id="send">Send</button>
+  </div>
+</body>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/chat/jquery-1.11.1.js"></script>
+<script>
+
+var socket = io.connect(document.URL);//namespacing
+//console.log(document.URL);
+
+var lines = [];
+
+//on submit of form
+$("#tosend").keydown(function(e) {
+  var key = e.which;
+  //console.log(key);
+  if (key == 13)
+  {
+    // As ASCII code for ENTER key is "13"
+    $('#send').click(); // Submit form code
+  }
+});
+
+//on submit of form
+$("#send").click(function(){
+
+  var estr = $('#tosend').val();//content string to be submitted
+  var nstr = $('#username').val();//name string to be submitted
+  if(nstr==""||estr=="")return;
+
+  estr=JSON.stringify({user:nstr,content:estr});
+  socket.emit('msg',estr);
+  //emit an event, thru socket, with the help of socket.io
+  //'msg' is event key, '.val()' is event value
+
+  $('#tosend').val('');//clr text
+  //return false;
+  $('#wrap').scrollTop($('#messages').height()+1000);//scroll all the way down
+});
+
+socket.on('reconnection',function(msg){
+  $('#messages').html('');
+});
+
+//on retrieval of msg
+socket.on('msg',function(msg){
+  try{
+    msg=JSON.parse(msg);
+  }
+  catch(err){
+    //dont do a thing
+    console.log('json parse error',err);
+    return;
+  }
+
+  //lines.push(msg);
+  //kill lines more than required.
+  //while(lines.length>256)lines.shift();
+
+  //obtain uid, if valid
+  var uidstring = "";
+  if(msg.misc){
+    uidstring  = msg.misc.userid;
+    if(!uidstring){
+      uidstring = "";
+    }
+  }
+  var defaultavatar="http://bbs.kechuang.org/res/images/face/face_middle.jpg";
+  var avatarstring="";
+  //generate avatar string if uid valid
+  if(uidstring!="")
+  {
+    var padstring = "000000000000"+uidstring;//fill zeros
+    var wan = padstring.slice(-6,-4);
+    var bai = padstring.slice(-4,-2);
+    //http://bbs.kechuang.org/windid/attachment/avatar/000/06/34/63422_small.jpg
+    avatarstring = "http://bbs.kechuang.org/windid/attachment/avatar/000/"
+    +wan+"/"+bai+"/"+uidstring+"_middle.jpg";
+  }else{
+    avatarstring=defaultavatar;//default avatar
+  }
+
+  avatarstring = '<div class="divp"><img class="divi" src="'
+  +avatarstring
+  +'" onerror="this.src=\''+defaultavatar+'\';"></div>';
+  //console.log(avatarstring);
+
+  //generate color according to uidstring
+  if(uidstring!=""){
+    var uidcolor={};
+    uidcolor.r=((uidstring+129)*uidstring.charCodeAt())%69+22;
+    uidcolor.g=((uidstring+399)*uidstring.charCodeAt())%71+22;
+    uidcolor.b=((uidstring+99)*uidstring.charCodeAt())%73+22;
+    var uidcolorstring = uidcolor.r.toString()+','+uidcolor.g.toString()+','+uidcolor.b.toString();
+  }
+  else {
+    var uidcolorstring ='66,66,66';
+  }
+
+  //generate then append HTML content to message section
+  var temp2 = "";
+  temp2+='<div class="line">'
+  +avatarstring
+  +'<div class="divm"><p>'
+  +$('<p>').text(msg.user+' - '+msg.title +' '
+  +uidstring
+  +' \n'+msg.content).html()
+  +'</div></div>';
+
+  temp2=temp2.replace('\n','</p><p class="msgbody" style="color:rgb('+uidcolorstring+')">');
+  temp2=temp2.replace(/\n/g,'<br>').replace(/\t/g,'&emsp;');
+  temp2=temp2+'</p>';
+
+  var latexurl='https://latex.codecogs.com/gif.latex?\\large%20';
+
+  temp2 = temp2.replace(/\[tex\](.*?)\[\/tex\]/g,
+  '<img src="'+latexurl+'$1'+'" />'
+); //all the [tex] tag parsed
+
+var smiurl='http://hulab.lifemodules.org/smi2img/';
+
+temp2 = temp2.replace(/\[smi\](.*?)\[\/smi\]/g,
+'<img src="'+smiurl+'$1'+'/" />'
+); //all the [smi] tag parsed
+
+var casurl="http://www.commonchemistry.org/images/structuralDiagrams/"
+
+temp2 = temp2.replace(/\[cas\](.*?)\[\/cas\]/g,
+'<img src="'+casurl+'$1'+'.png" />'
+); //all the [cas] tag parsed
+
+//https://pubchem.ncbi.nlm.nih.gov/image/imagefly.cgi?cid=11953895
+var cidurl="https://pubchem.ncbi.nlm.nih.gov/image/imagefly.cgi?cid=";
+
+temp2 = temp2.replace(/\[cid\](.*?)\[\/cid\]/g,
+'<img src="'+cidurl+'$1'+'" />'
+); //all the [cid] tag parsed
+
+//determine should scroll to end or not, before append
+var shouldscroll=null;
+//autoscroll section
+//if current scrollbar position is far from 'bottom'
+if($('#wrap').scrollTop()<$('#messages').height()-$('#wrap').height()-300){
+  //dont scroll down
+  //console.log('stay');s
+}
+else{
+  shouldscroll = 1;
+  //console.log('down');
+}
+
+//append text to message section
+$('#messages').append(temp2);
+
+if(shouldscroll)
+{
+  $('#wrap').scrollTop($('#messages').height()+1000);//scroll all the way down
+}
+
+});
+
+</script>
+</html>
