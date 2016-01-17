@@ -3,12 +3,13 @@
 //dependencies
 var moment = require('moment');
 var os = require('os');
+var colors = require('colors');
 
 module.exports = function(){
 
   //dashline generator
   this.dash=function(){
-    console.log("-------------------------------------------------------");
+    console.log("-------------------------------------------------------".green);
   };
 
   //reformat a post after retrieval
@@ -28,18 +29,18 @@ module.exports = function(){
   this.requestLog = function (req){
     var d=new Date();
     dash();
-    console.log(dateString(d),
-    req.ip, req.method, req.originalUrl);
+    console.log(dateString(d).cyan,
+    req.ip, req.method, req.originalUrl.cyan);
   };
 
   //error reporter
   this.report = function(description,error){
     if(error){
-      console.log(dateString(),"err:",description);
-      console.log(error);
+      console.log(dateString(),"err:",description.red);
+      console.log(error.toString().red);
       return({'error':description});
     }else{
-      console.log(dateString(),"msg:",description);
+      console.log(dateString().yellow,"msg:",description);
       return({message:description});
     }
   };

@@ -1,6 +1,6 @@
 {
   "name": "nkc",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "newkc",
   "main": "server.js",
   "scripts": {
@@ -10,6 +10,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.14.2",
+    "colors": "^1.1.2",
     "express": "^4.13.3",
     "jade": "^1.11.0",
     "moment": "^2.10.6",

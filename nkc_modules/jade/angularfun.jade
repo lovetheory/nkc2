@@ -1,0 +1,11 @@
+doctype html 
+html(ng-app='myapp')
+  head
+    script(src="/angular.min.js")
+    script(src="angularfun.js")
+  body(ng-controller='myctrl')
+    div
+      label name:
+      input(type="text" ng-model="yourname" placeholder="enter a name here")
+      hr
+      h1 Hello {{yourname}}!

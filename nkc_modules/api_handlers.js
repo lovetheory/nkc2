@@ -5,6 +5,7 @@ var moment = require('moment');
 
 var settings = require('server_settings.js');
 var helper_mod = require('helper.js')();
+var bodyParser = require('body-parser');
 
 var nano = require('nano')('http://'+settings.couchdb.address+':'+settings.couchdb.port.toString());
 var posts = nano.use("posts");
@@ -16,13 +17,18 @@ var request = require('request');
 var express = require('express');
 var api = express.Router();
 
+var validation = require('validation');
+
 ///------------
 ///logger, to be executed before all handlers below
 api.use(function(req,res,next){
-  requestLog(req);
   next();
 });
 
+//parse body. expect json
+api.use(bodyParser.json());
+//expect urlencoded
+//api.use(bodyParser.urlencoded({extended:false}));//false = plaintext urlencoded parsing
 
 ///----------------------------------------
 ///GET /posts/* handler
@@ -50,69 +56,61 @@ api.get('/posts/:pid', function (req, res){
 api.post('/posts',function(req,res)
 {
   requestLog(req);//log
+  report('request body received');
+  report(req.body);
 
-  //receive post body
-  var requestBody=[];
-  req.on('error', function(err){
-    report('error receiving body',err)
-  }).on('data', function(chunk) {
-    requestBody.push(chunk);
-  }).on('end', function() {
-    requestBody = Buffer.concat(requestBody).toString();
-    //body fully received
-    report('request body received');
-    report(requestBody);
+/*
+  var requestObject={};
+  try {
+    requestObject = JSON.parse(req.body);
+  }
+  catch(err){
+    res.json(report('error parsing json',err));//if body is not JSON, exit
+    return;
+  }
+  */
 
-    var requestObject={};
-    try {
-      requestObject = JSON.parse(requestBody);
-    }
-    catch(err){
-      res.json(report('error parsing json',err));//if body is not JSON, exit
-      return;
-    }
-    report('json successfully parsed');
+  report('json successfully parsed');
 
-    //check if object is legal (contains enough fields)
-    if(validatePost(requestObject)){
-      //if okay, don't do a thing
-    }else{
-      res.json(report('bad field/illegal input',requestObject));
-      return;
-    }
+  //check if object is legal (contains enough fields)
+  if(validation.validatePost(req.body)){
+    //if okay, don't do a thing
+  }else{
+    res.json(report('bad field/illegal input',req.body));
+    return;
+  }
 
-    //obtain a pid by atomically incrementing the postcount document
-    counters.atomic("counters",'counters','postcount',{},function(err,body)
+  //obtain a pid by atomically incrementing the postcount document
+  counters.atomic("counters",'counters','postcount',{},function(err,body)
+  {
+    if(!err)
     {
-      if(!err)
+      report('postcount given:'+body.toString());
+
+      //construct new post document
+      var newpost={};
+      newpost._id=body.toString();
+      newpost.content=req.body.content;
+      newpost.toc=Date.now();
+
+      //insert the document into db
+      posts.insert(newpost,function(err,body)
       {
-        report('postcount given:'+body.toString());
-
-        //construct new post document
-        var newpost={};
-        newpost._id=body.toString();
-        newpost.content=requestObject.content;
-        newpost.toc=Date.now();
-
-        //insert the document into db
-        posts.insert(newpost,function(err,body)
+        if(!err)//if succeed
         {
-          if(!err)//if succeed
-          {
-            report('insert succeed');
-            res.json(report({status:"succeed",id:newpost._id}));
-          }
-          else
-          {
-            res.json(report('error inserting',err));
-          }
-        });
-      }
-      else
-      {//if unable to obtain
-        res.json(report("failed to obtain atomically incrementing postcount",err));
-      }
-    });
+          report('insert succeed');
+          res.json(report({status:"succeed",id:newpost._id}));
+        }
+        else
+        {
+          res.json(report('error inserting',err));
+        }
+      });
+    }
+    else
+    {//if unable to obtain
+      res.json(report("failed to obtain atomically incrementing postcount",err));
+    }
   });
 });
 
@@ -141,6 +139,12 @@ api.get('/thread/:tid', function (req, res) {
       res.json({error:"notfound"});
     }
   });
+});
+
+//error handler
+api.use((err,req,res,next)=>{
+  report('error within /api',err.stack);
+  res.json({error:err.message});
 });
 
 exports.route_handler = api;

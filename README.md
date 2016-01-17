@@ -10,3 +10,4 @@ currently under dev.
   5. Press **Enter** in terminal window whenever to restart server
 
 # Should you have
+- ArangoDB listening on 8529

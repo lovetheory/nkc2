@@ -19,18 +19,12 @@ var route_handler = express.Router();
 ///------------
 ///logger, to be executed before all handlers below
 route_handler.use(function(req,res,next){
-  requestLog(req);
   next();
 });
 
 //chatroom HTML serving
 route_handler.get('/',function(req,res){
   res.sendFile(__dirname + '/chat/chat.html');
-});
-
-//chatroom HTML serving
-route_handler.get('/jquery-1.11.1.js',function(req,res){
-  res.sendFile(__dirname + '/jquery/jquery-1.11.1.js');
 });
 
 exports.route_handler = route_handler;
