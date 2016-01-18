@@ -1,11 +1,35 @@
 doctype html 
-html(ng-app='myapp')
+html(ng-app='myapp' ng-controller='myctrl as c')
   head
+    //the leading slash is important.
     script(src="/angular.min.js")
+    script(src="be_included.js")
     script(src="angularfun.js")
-  body(ng-controller='myctrl')
+    style.
+      table {
+        border-collapse: collapse;
+        margin:10px;
+      }
+      th, td {
+        border: 1px solid grey;
+        padding: 5px;
+      }
+  body
     div
+      //some buttons and textboxes
       label name:
-      input(type="text" ng-model="yourname" placeholder="enter a name here")
+      input(type="text" ng-model="c.yourname" placeholder="placeholder")
       hr
-      h1 Hello {{yourname}}!
+      h1 Hello {{c.yourname}}!
+      button(ng-click='c.bclick()') generate japanese rows
+      button(ng-click='c.reverse()' class="btn-primary") reverse list
+    div
+      //list section
+      table
+        tr(ng-repeat="i in c.nicelist")
+          td
+            h3 {{i}}
+          td
+            button(style="color:red" ng-click='c.kill($index)') kill me
+          td
+            button(style='color:blue' ng-click='c.append(i)') copy me
