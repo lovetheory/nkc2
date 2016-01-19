@@ -1,4 +1,4 @@
-doctype html 
+doctype html
 html(ng-app='myapp' ng-controller='myctrl as c')
   head
     //the leading slash is important.
@@ -23,6 +23,7 @@ html(ng-app='myapp' ng-controller='myctrl as c')
       h1 Hello {{c.yourname}}!
       button(ng-click='c.bclick()') generate japanese rows
       button(ng-click='c.reverse()' class="btn-primary") reverse list
+      button(ng-click='c.sort()') sort me
     div
       //list section
       table

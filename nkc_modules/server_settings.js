@@ -1,6 +1,7 @@
 exports.server={
     name:"nkc API server",
-    port:1080
+    port:1080,
+    address:''
   };
 
 exports.couchdb={

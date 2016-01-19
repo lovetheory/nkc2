@@ -21,6 +21,10 @@ myapp.controller('myctrl',['myfac',function(myfac){
     this.nicelist.reverse();
   }
 
+  this.sort=()=>{
+    this.nicelist.sort();
+  }
+
   //remove from array at index
   this.kill = function(index){
     this.nicelist.splice(index,1);
