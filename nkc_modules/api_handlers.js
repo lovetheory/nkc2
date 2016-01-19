@@ -14,6 +14,10 @@ var users = nano.use("users");
 var counters = nano.use('counters');
 var request = require('request');
 
+var db = require('arangojs')(settings.arango.address);
+db.useDatabase('testdb');
+var testdata = db.collection('testdata');
+
 var express = require('express');
 var api = express.Router();
 
@@ -29,6 +33,40 @@ api.use(function(req,res,next){
 api.use(bodyParser.json());
 //expect urlencoded
 //api.use(bodyParser.urlencoded({extended:false}));//false = plaintext urlencoded parsing
+
+///test arango api
+api.get('/angularfun',function(req,res){
+  testdata.document('angularfun').then(
+    doc=>{
+      res.json(doc);
+    },
+    err=>{
+      res.json(report('err',err));
+    }
+  );
+});
+
+api.post('/angularfun',function(req,res){
+  if(!req.body.table)
+  {
+    res.json(report('paramerr','bad'));
+    return;
+  }
+  var doc ={
+    //_key:'angularfun',
+    table:req.body.table,
+  };
+  testdata.update('angularfun',doc).then(
+    meta => {
+      res.json(report(meta));
+    },
+    err => {
+      console.error('Failed to save document:', err)
+      res.json(report('dbfailure',err));
+    }
+  );
+});
+//----
 
 ///----------------------------------------
 ///GET /posts/* handler
@@ -59,59 +97,59 @@ api.post('/posts',function(req,res)
   report('request body received');
   report(req.body);
 
-/*
+  /*
   var requestObject={};
   try {
-    requestObject = JSON.parse(req.body);
-  }
-  catch(err){
-    res.json(report('error parsing json',err));//if body is not JSON, exit
-    return;
-  }
-  */
+  requestObject = JSON.parse(req.body);
+}
+catch(err){
+res.json(report('error parsing json',err));//if body is not JSON, exit
+return;
+}
+*/
 
-  report('json successfully parsed');
+report('json successfully parsed');
 
-  //check if object is legal (contains enough fields)
-  if(validation.validatePost(req.body)){
-    //if okay, don't do a thing
-  }else{
-    res.json(report('bad field/illegal input',req.body));
-    return;
-  }
+//check if object is legal (contains enough fields)
+if(validation.validatePost(req.body)){
+  //if okay, don't do a thing
+}else{
+  res.json(report('bad field/illegal input',req.body));
+  return;
+}
 
-  //obtain a pid by atomically incrementing the postcount document
-  counters.atomic("counters",'counters','postcount',{},function(err,body)
+//obtain a pid by atomically incrementing the postcount document
+counters.atomic("counters",'counters','postcount',{},function(err,body)
+{
+  if(!err)
   {
-    if(!err)
+    report('postcount given:'+body.toString());
+
+    //construct new post document
+    var newpost={};
+    newpost._id=body.toString();
+    newpost.content=req.body.content;
+    newpost.toc=Date.now();
+
+    //insert the document into db
+    posts.insert(newpost,function(err,body)
     {
-      report('postcount given:'+body.toString());
-
-      //construct new post document
-      var newpost={};
-      newpost._id=body.toString();
-      newpost.content=req.body.content;
-      newpost.toc=Date.now();
-
-      //insert the document into db
-      posts.insert(newpost,function(err,body)
+      if(!err)//if succeed
       {
-        if(!err)//if succeed
-        {
-          report('insert succeed');
-          res.json(report({status:"succeed",id:newpost._id}));
-        }
-        else
-        {
-          res.json(report('error inserting',err));
-        }
-      });
-    }
-    else
-    {//if unable to obtain
-      res.json(report("failed to obtain atomically incrementing postcount",err));
-    }
-  });
+        report('insert succeed');
+        res.json(report({status:"succeed",id:newpost._id}));
+      }
+      else
+      {
+        res.json(report('error inserting',err));
+      }
+    });
+  }
+  else
+  {//if unable to obtain
+    res.json(report("failed to obtain atomically incrementing postcount",err));
+  }
+});
 });
 
 ///----------------------------------------

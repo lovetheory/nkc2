@@ -17,13 +17,15 @@ html(ng-app='myapp' ng-controller='myctrl as c')
   body
     div
       //some buttons and textboxes
-      label name:
+      label your name:
       input(type="text" ng-model="c.yourname" placeholder="placeholder")
       hr
       h1 Hello {{c.yourname}}!
       button(ng-click='c.bclick()') generate japanese rows
+      button(ng-click='c.addme()') generate from my name
       button(ng-click='c.reverse()' class="btn-primary") reverse list
-      button(ng-click='c.sort()') sort me
+      button(ng-click='c.sort()') alphabetically sort me
+      button(ng-click='c.savetable()') Save to DB
     div
       //list section
       table

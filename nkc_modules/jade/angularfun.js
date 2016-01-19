@@ -4,9 +4,9 @@ var myapp = angular.module('myapp',['be_included']);
 //define a module named myapp
 
 //add one controller named myctrl
-myapp.controller('myctrl',['myfac',function(myfac){
+myapp.controller('myctrl',['myfac','$http',function(myfac,$http){
   //initiate a variable named yourname
-  this.yourname = 'somename';
+  this.yourname = 'james';
 
   var counter =1;
   this.bclick = function(){
@@ -33,11 +33,31 @@ myapp.controller('myctrl',['myfac',function(myfac){
   //append
   this.append = (row)=>{
     counter = myfac.by2(counter);
-    this.nicelist.push(
-      counter.toString()+" "+row);
-  }
+    this.nicelist.push(counter.toString()+" "+row);
+  };
 
-  this.nicelist=['italian'];
-  this.nicelist.push('german');
-  this.nicelist.push('chinese');
+  this.addme=()=>{
+    counter = myfac.by2(counter);
+    this.nicelist.push(counter.toString()+" "+this.yourname);
+  };
+
+  this.nicelist = ["(not ready)"];
+
+  this.gettable = function(){
+    var scope = this;
+    $http.get('/api/angularfun')
+    .success(function(data) {
+      scope.nicelist = data.table;
+    });
+  };
+
+  this.savetable = function(){
+    $http.post('/api/angularfun',{table:this.nicelist})
+    .success(function(data){
+      //dont do anything
+      console.log(data);
+    });
+  };
+
+  this.gettable(this);//obtain data
 }]);

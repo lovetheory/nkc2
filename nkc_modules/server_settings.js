@@ -4,6 +4,10 @@ exports.server={
     address:''
   };
 
+exports.arango={
+  address:'http://127.0.0.1:8529'
+};
+
 exports.couchdb={
     address:"127.0.0.1",
     port:5984
