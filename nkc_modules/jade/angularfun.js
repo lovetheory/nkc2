@@ -12,7 +12,7 @@ myapp.controller('myctrl',['myfac','$http',function(myfac,$http){
   this.bclick = function(){
     counter = myfac.by2(counter);
     this.nicelist.push(
-      counter.toString()
+      Date.now().toString()
       +' japanese'
     );
   };
@@ -33,12 +33,12 @@ myapp.controller('myctrl',['myfac','$http',function(myfac,$http){
   //append
   this.append = (row)=>{
     counter = myfac.by2(counter);
-    this.nicelist.push(counter.toString()+" "+row);
+    this.nicelist.push(Date.now().toString()+" "+row);
   };
 
   this.addme=()=>{
     counter = myfac.by2(counter);
-    this.nicelist.push(counter.toString()+" "+this.yourname);
+    this.nicelist.push(Date.now().toString()+" "+this.yourname);
   };
 
   this.nicelist = ["(not ready)"];
