@@ -22,14 +22,15 @@ handler.use('/jade/',express.static('nkc_modules/jade')); //file serving
 
 //var hellojade = jade.compileFile('./nkc_modules/jade/hello.jade',jadeoptions)
 
-handler.get('/jade/:fn',(req,res)=>{
+handler.get('/jade/:fn',(req,res,next)=>{
   var opt = settings.jadeoptions;
   opt.address = req.ip.toString();
   opt.url = req.originalUrl;
 
   fs.access('nkc_modules/jade/'+req.params.fn+'.jade', fs.R_OK , function (err) {
     if(err){
-      res.send(jade.renderFile('nkc_modules/jade/404.jade',opt));
+      //pass next
+      next();
     }else{
       res.send(jade.renderFile('nkc_modules/jade/'+req.params.fn+'.jade',opt));
     }

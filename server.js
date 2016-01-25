@@ -67,7 +67,7 @@ nkc.get('/',(req,res)=>{
 nkc.get('*',(req,res)=>{
   var opt = settings.jadeoptions;
   opt.url = req.originalUrl;
-  res.send(
+  res.status(404).send(
     jade.renderFile('nkc_modules/jade/404.jade',opt)
   );
 });
