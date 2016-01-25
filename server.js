@@ -53,19 +53,22 @@ nkc.use(express.static('nkc_modules/chat'));
 nkc.use(express.static('nkc_modules/jquery'));
 nkc.use(express.static('nkc_modules/angular'));
 
-var jadeoptions= {
-  pretty:true,
-  cache:false,
-  globals:[]
-};
-
 //root serving
 nkc.get('/',(req,res)=>{
-  var opt = jadeoptions;
+  var opt = settings.jadeoptions;
   opt.address = req.ip.toString();
   opt.osinfo = JSON.stringify(osinfo(),null,2);
   res.send(
-    jade.renderFile('index.jade',opt)
+    jade.renderFile('nkc_modules/jade/index.jade',opt)
+  );
+});
+
+//404 catching
+nkc.get('*',(req,res)=>{
+  var opt = settings.jadeoptions;
+  opt.url = req.originalUrl;
+  res.send(
+    jade.renderFile('nkc_modules/jade/404.jade',opt)
   );
 });
 

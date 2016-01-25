@@ -1,5 +1,5 @@
 doctype html
-html(ng-app='myapp' ng-controller='myctrl as c')
+html(ng-app='myapp')
   head
     //the leading slash is important.
     script(src="/angular.min.js")
@@ -14,7 +14,7 @@ html(ng-app='myapp' ng-controller='myctrl as c')
         border: 1px solid grey;
         padding: 5px;
       }
-  body
+  body(ng-controller='myctrl as c')
     div
       //some buttons and textboxes
       label your name:
