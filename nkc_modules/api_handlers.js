@@ -96,60 +96,48 @@ api.post('/posts',function(req,res)
   requestLog(req);//log
   report('request body received');
   report(req.body);
+  report('json successfully parsed');
 
-  /*
-  var requestObject={};
-  try {
-  requestObject = JSON.parse(req.body);
-}
-catch(err){
-res.json(report('error parsing json',err));//if body is not JSON, exit
-return;
-}
-*/
+  //check if object is legal (contains enough fields)
+  if(validation.validatePost(req.body)){
+    //if okay, don't do a thing
+  }else{
+    res.json(report('bad field/illegal input',req.body));
+    return;
+  }
 
-report('json successfully parsed');
-
-//check if object is legal (contains enough fields)
-if(validation.validatePost(req.body)){
-  //if okay, don't do a thing
-}else{
-  res.json(report('bad field/illegal input',req.body));
-  return;
-}
-
-//obtain a pid by atomically incrementing the postcount document
-counters.atomic("counters",'counters','postcount',{},function(err,body)
-{
-  if(!err)
+  //obtain a pid by atomically incrementing the postcount document
+  counters.atomic("counters",'counters','postcount',{},function(err,body)
   {
-    report('postcount given:'+body.toString());
-
-    //construct new post document
-    var newpost={};
-    newpost._id=body.toString();
-    newpost.content=req.body.content;
-    newpost.toc=Date.now();
-
-    //insert the document into db
-    posts.insert(newpost,function(err,body)
+    if(!err)
     {
-      if(!err)//if succeed
+      report('postcount given:'+body.toString());
+
+      //construct new post document
+      var newpost={};
+      newpost._id=body.toString();
+      newpost.content=req.body.content;
+      newpost.toc=Date.now();
+
+      //insert the document into db
+      posts.insert(newpost,function(err,body)
       {
-        report('insert succeed');
-        res.json(report({status:"succeed",id:newpost._id}));
-      }
-      else
-      {
-        res.json(report('error inserting',err));
-      }
-    });
-  }
-  else
-  {//if unable to obtain
-    res.json(report("failed to obtain atomically incrementing postcount",err));
-  }
-});
+        if(!err)//if succeed
+        {
+          report('insert succeed');
+          res.json(report({status:"succeed",id:newpost._id}));
+        }
+        else
+        {
+          res.json(report('error inserting',err));
+        }
+      });
+    }
+    else
+    {//if unable to obtain
+      res.json(report("failed to obtain atomically incrementing postcount",err));
+    }
+  });
 });
 
 ///----------------------------------------
