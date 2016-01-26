@@ -63,7 +63,7 @@ nkc.get('/',(req,res)=>{
   );
 });
 
-//404 catching
+//404 handling
 nkc.get('*',(req,res)=>{
   var opt = settings.jadeoptions;
   opt.url = req.originalUrl;
@@ -75,7 +75,14 @@ nkc.get('*',(req,res)=>{
 //unhandled error handler
 nkc.use((err,req,res,next)=>{
   report('not handled',err.stack);
-  res.json({error:err.message});
+  var opt = settings.jadeoptions;
+  opt.url = req.originalUrl;
+  opt.errormessage = err.message;
+  opt.errorstack = err.stack;
+  res.status(500).send(
+    jade.renderFile('nkc_modules/jade/500.jade',opt)
+  );
+  //res.json({error:err.message});
 });
 
 ///------------------------------------------

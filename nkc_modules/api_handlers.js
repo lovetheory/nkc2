@@ -179,10 +179,10 @@ api.get('/thread/:tid', function (req, res) {
   });
 });
 
-//error handler
+//unhandled error handler
 api.use((err,req,res,next)=>{
   report('error within /api',err.stack);
-  res.json({error:err.message});
+  res.status(500).json({error:err.message});
 });
 
 exports.route_handler = api;

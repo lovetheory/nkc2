@@ -32,15 +32,16 @@ handler.get('/jade/:fn',(req,res,next)=>{
       //pass next
       next();
     }else{
-      res.send(jade.renderFile('nkc_modules/jade/'+req.params.fn+'.jade',opt));
+      try{
+        res.send(jade.renderFile('nkc_modules/jade/'+req.params.fn+'.jade',opt));
+      }
+      catch(err){
+        next(err);
+      }
     }
   });
 });
 
-//unhandled error handler
-handler.use((err,req,res,next)=>{
-  report('error in /html',err.stack);
-  res.json({error:err.message});
-});
+//unhandled error will be routed back to server.js
 
 exports.route_handler = handler;
