@@ -22,15 +22,18 @@ var express = require('express');
 var api = express.Router();
 
 var validation = require('validation');
+var apifunc = require('api_functions');
+var queryfunc = require('query_functions');
 
 ///------------
-///logger, to be executed before all handlers below
+///something here to be executed before all handlers below
 api.use(function(req,res,next){
   next();
 });
 
 //parse body. expect json
 api.use(bodyParser.json());
+
 //expect urlencoded
 //api.use(bodyParser.urlencoded({extended:false}));//false = plaintext urlencoded parsing
 
@@ -67,6 +70,27 @@ api.post('/angularfun',function(req,res){
   );
 });
 //----
+//counter increment api
+api.get('/new/:countername',(req,res)=>{
+  //queryfunc.incr_counter('threads',callback);
+  queryfunc.incr_counter(req.params.countername,(err,id)=>{
+    if(err){
+      res.json(report(req.params.countername +' retrieval error',err));
+    }else{
+      res.json(report(id));
+    }
+  });
+});
+
+api.get('/test',(req,res)=>{
+  apifunc.post_to_forum({content:'fuckyou'},'default',(err,result)=>{
+    if(err){
+      res.json(report('error in test',err));
+    }else{
+      res.json(report(result));
+    }
+  });
+});
 
 ///----------------------------------------
 ///GET /posts/* handler
