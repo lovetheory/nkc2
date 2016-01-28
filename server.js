@@ -63,6 +63,15 @@ nkc.get('/',(req,res)=>{
   );
 });
 
+nkc.get('/api',(req,res)=>{
+  var opt = settings.jadeoptions;
+  opt.address = req.ip.toString();
+  opt.osinfo = JSON.stringify(osinfo(),null,2);
+  res.send(
+    jade.renderFile('nkc_modules/jade/index.jade',opt)
+  );
+});
+
 //404 handling
 nkc.get('*',(req,res)=>{
   var opt = settings.jadeoptions;

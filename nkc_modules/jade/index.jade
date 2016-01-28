@@ -1,7 +1,20 @@
-doctype html
-head
-body
-  h1 #{servername}
-  p Your ip is #{address}.
-  pre(style="color:#999;")
-    code #{osinfo}
+extends scratch.jade
+
+block head
+  title #{server.name}
+block body
+  div
+    div.intpad
+      div.intpad
+        h1 #{server.name}
+        p Your ip is #{address}. #[a.grey(href='#{server.github}') #{server.github}]
+  div
+    div.halfpane.intpad
+      div.intpad.zipline
+        //include as markdown
+        include:md ../../README.md
+    div.halfpane.intpad
+      div.intpad.zipline
+        h1 Server Status
+        pre
+          code #{osinfo}

@@ -1,14 +1,16 @@
 exports.server={
   name:"nkc Development Server",
-  port:1080,
-  address:''
+  port:1086,
+  address:'',
+  github:'https://github.com/ctmakro/nkc2',
 };
 
 exports.jadeoptions= {
-  pretty:true,
-  cache:false,
+  //pretty:true,
+  //cache:false,
+  cache:true,
   //globals:[]
-  servername:exports.server.name
+  server:exports.server,
 };
 
 exports.arango={

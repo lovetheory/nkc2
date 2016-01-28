@@ -52,6 +52,7 @@ module.exports = function(){
     if(date)//if input contains date
     {
       return moment(date).format(dateformat);
+      //
       return (date.toISOString().
       replace('T', ' ').      // replace T with a space
       substr(0,19));
@@ -59,6 +60,7 @@ module.exports = function(){
     else
     {
       return moment().format(dateformat);
+      //
       return (new Date().toISOString().
       replace('T', ' ').      // replace T with a space
       substr(0,19)); //delete trails
@@ -74,7 +76,8 @@ module.exports = function(){
         kv[method] = os[method]();
       }
       catch(err){
-        report('err during \'os\' listing',err);
+        //report('err during \'os\' listing',err);
+        //supressed!
         kv[method] = os[method];
       }
     });

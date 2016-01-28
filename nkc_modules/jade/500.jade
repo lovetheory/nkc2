@@ -1,11 +1,11 @@
-doctype html
-html
-  head
-    title 500 Internal Server Error
-  body
-    h1 Sorry
-    :markdown
-      request to path **#{url}** encountered an error.
-    pre #{errormessage}
-    pre #{errorstack}
-    p(style="color:#999;") #{servername}
+extends scratch.jade
+
+block head
+  title 500 Internal Server Error
+block body
+  h1 Sorry
+  :markdown
+    request to path **#{url}** encountered an error.
+  pre #{errormessage}
+  pre #{errorstack}
+  p(style="color:#999;") #{server.name}

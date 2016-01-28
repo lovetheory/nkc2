@@ -1,10 +1,10 @@
-doctype html
-html
-  head
-    title 404 Not Found
-  body
-    h1 Sorry
-    :markdown
-      path **#{url}** does not exist | can not be listed | not available.
-    br
-    p(style="color:#999;") #{servername}
+extends scratch.jade
+
+block head
+  title 404 Not Found
+block  body
+  h1 Sorry
+  :markdown
+    path **#{url}** does not exist | can not be listed | not available.
+  br
+  p(style="color:#999;") #{server.name}
