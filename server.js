@@ -97,7 +97,7 @@ nkc.use((err,req,res,next)=>{
 ///------------------------------------------
 ///start server
 var server = http.listen(settings.server.port,settings.server.address,
-  function(){
+  () => {
     var host = server.address().address;
     var port = server.address().port;
     dash();
@@ -105,9 +105,8 @@ var server = http.listen(settings.server.port,settings.server.address,
   }
 );
 
-//end process after pressing ENTER, for debug purpose
-var stdin = process.openStdin();
-stdin.addListener("data",function(d){
+//end process after pressing ENTER, for debugging purpose
+process.openStdin().addListener("data",function(d){
   if(d.toString().trim()=="")
   process.exit();
 });

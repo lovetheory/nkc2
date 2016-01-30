@@ -6,9 +6,9 @@ exports.server={
 };
 
 exports.jadeoptions= {
-  //pretty:true,
-  //cache:false,
-  cache:true,
+  pretty:true,
+  cache:false,
+  //cache:true,
   //globals:[]
   server:exports.server,
 };

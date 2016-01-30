@@ -31,6 +31,7 @@ The author of these files shall not be held responsible for any terrorist attack
 - ArangoDB listening on 8529
 
 ## For your convenience
+- by default listens on localhost:1086
 - server_settings.js includes several globally used server parameters
 - GET `server_address:port/html/jade/somename` will respond with rendered `/nkc_modules/jade/somename.jade`
 - everything under `/jquery`, `/angular` and `/chat` will be served static at `/`.
