@@ -1,0 +1,22 @@
+extends scratch.jade
+
+block head
+  meta(charset='utf-8')
+  meta(http-equiv="X-UA-Compatible" content="IE=edge")
+  meta(name="viewport" content="width=device-width, initial-scale=1")
+  
+  link(href="/bootstrap/css/bootstrap.min.css" rel='stylesheet')
+  
+  block styles
+  
+  block title
+    title bootstrap_base
+  
+block body
+  block content
+    h1 hello world!
+  
+  script(src='/jquery-1.11.1.js')
+  script(src='/bootstrap/js/bootstrap.min.js')
+
+  block scripts

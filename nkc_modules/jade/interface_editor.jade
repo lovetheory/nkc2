@@ -1,0 +1,43 @@
+extends bootstrap_base.jade
+
+block title
+  title if_e
+  
+block styles
+  include nkc_styles.jade
+  
+block content
+  include nkc_navbar.jade
+  
+  #ife.container
+    .row
+      .col-md-6
+        h4 发表内容
+        .form-group
+          input.form-control(type='text', placeholder='标题',v-model='title')
+          
+
+        .form-group
+          textarea.form-control(rows='20',placeholder='内容',v-model='content' debounce='200')
+          
+        .form-inline
+          .form-group
+            input.form-control(placeholder='发表至',v-model='to')
+          .form-group
+            select.form-control(v-model='lang')
+              option Markdown
+          
+          button.btn.btn-default(type='submit' v-on:click='post') 发表
+          
+      .col-md-6
+        h4 预览
+        .panel.panel-default
+          .panel-body
+            div
+              h4 {{title}}
+            div(v-html="content|marked")
+      
+block scripts
+  script(src='/marked.js')
+  script(src="/vue.js")
+  script(src='interface_editor.js')

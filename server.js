@@ -2,23 +2,16 @@ module.paths.push('./nkc_modules'); //enable require-ment for this path
 
 var moment = require('moment');
 
-var settings = require('server_settings.js');
-var helper_mod = require('helper.js')();
-var validation = require('validation.js');
+var settings = require('server_settings');
+var permissions = require('permissions');
+var helper_mod = require('helper')();
+var validation = require('validation');
 
+var compression = require('compression');
 var express = require('express');
 var jade = require('jade');
 var nkc = express(); //main router
 var http = require('http').Server(nkc);
-
-//CouchDB
-var nano = require('nano')
-('http://'+settings.couchdb.address+':'+settings.couchdb.port.toString());
-
-var posts = nano.use("posts");
-var chat = nano.use("chat");
-var users = nano.use('users');
-var counters = nano.use('counters');
 
 var db = require('arangojs')(settings.arango.address);
 db.useDatabase('testdb');
@@ -26,6 +19,9 @@ var collection = db.collection('testdata');
 
 var request = require('request');
 
+nkc.use(compression({level:2}));//enable compression
+
+//log me
 nkc.use((req,res,next)=>{
   requestLog(req);
   next();
@@ -39,6 +35,9 @@ nkc.use('/api',api_handlers.route_handler);
 var html_handlers = require('html_handlers');
 nkc.use('/html',html_handlers.route_handler);
 
+var interface_handlers = require('interface_handlers');
+nkc.use('/interface',interface_handlers.route_handler);
+
 //chatroom serving
 var chat_handlers = require('chat_handlers.js')
 nkc.use('/chat',chat_handlers.route_handler);//routing
@@ -48,10 +47,15 @@ var io = require('socket.io')(http);
 var chat_io = io.of('/chat');// socket.io namespacing
 chat_handlers.socket_handler(chat_io);//pass namespaced socket object into processing function
 
-//clientside js file serving
-nkc.use(express.static('nkc_modules/chat'));
-nkc.use(express.static('nkc_modules/jquery'));
-nkc.use(express.static('nkc_modules/angular'));
+
+for(i in settings.root_serve_static)
+{
+  if(settings.root_serve_static[i].map){
+    nkc.use(settings.root_serve_static[i].map,express.static(settings.root_serve_static[i].to));
+  } else {
+    nkc.use(express.static(settings.root_serve_static[i].to));
+  }
+}
 
 //root serving
 nkc.get('/',(req,res)=>{
@@ -72,6 +76,7 @@ nkc.get('/api',(req,res)=>{
   );
 });
 
+//unrouted url handler
 //404 handling
 nkc.get('*',(req,res)=>{
   var opt = settings.jadeoptions;
@@ -82,6 +87,7 @@ nkc.get('*',(req,res)=>{
 });
 
 //unhandled error handler
+//aka 500 handling
 nkc.use((err,req,res,next)=>{
   report('not handled',err.stack);
   var opt = settings.jadeoptions;
@@ -91,13 +97,13 @@ nkc.use((err,req,res,next)=>{
   res.status(500).send(
     jade.renderFile('nkc_modules/jade/500.jade',opt)
   );
-  //res.json({error:err.message});
 });
 
 ///------------------------------------------
-///start server
+///-----start server-----
 var server = http.listen(settings.server.port,settings.server.address,
-  () => {
+  () =>
+  {
     var host = server.address().address;
     var port = server.address().port;
     dash();
@@ -106,7 +112,9 @@ var server = http.listen(settings.server.port,settings.server.address,
 );
 
 //end process after pressing ENTER, for debugging purpose
-process.openStdin().addListener("data",function(d){
-  if(d.toString().trim()=="")
+process.openStdin().addListener('data',function(d){
+  if(d.toString().trim()=='')
   process.exit();
 });
+
+//console.log(permissions.getpermissions(['god','default']));

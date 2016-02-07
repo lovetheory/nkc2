@@ -1,0 +1,28 @@
+extends bootstrap_base.jade
+
+block title
+  title if_t
+  
+block styles
+  include nkc_styles.jade
+  
+block content
+  include nkc_navbar.jade
+  
+  .container
+    .row
+      .col-md-9
+        if posts.length == 0
+          h4 您要找的帖子不存在。
+        else
+          h4 【民科高能】 论创新的规律
+              
+          .panel.panel-default
+            .panel-body
+              each post,index in posts
+                include interface_thread_singlepost.jade
+
+                        
+                      
+                
+                

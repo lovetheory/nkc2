@@ -69,6 +69,7 @@ api.post('/angularfun',function(req,res){
     }
   );
 });
+
 //----
 //counter increment api
 api.get('/new/:countername',(req,res)=>{
@@ -82,10 +83,22 @@ api.get('/new/:countername',(req,res)=>{
   });
 });
 
+//test handler.
 api.get('/test',(req,res)=>{
   apifunc.post_to_forum({content:'fuckyou'},'default',(err,result)=>{
     if(err){
       res.json(report('error in test',err));
+    }else{
+      res.json(report(result));
+    }
+  });
+});
+
+//test handler.
+api.get('/test2',(req,res)=>{
+  apifunc.post_to_thread({content:'fuckyou again yo bitch'},29,(err,result)=>{
+    if(err){
+      res.json(report('error in test2',err));
     }else{
       res.json(report(result));
     }
@@ -99,12 +112,12 @@ api.get('/posts/:pid', function (req, res){
   var pid=req.params.pid;
 
   //get the post from db
-  posts.get(pid,{},function(err,body){
+  apifunc.get_a_post(pid,(err,body)=>{
     if(!err)
     {//if nothing wrong
       report(pid.toString()+' is hit');
-      var result=postRepack(body);
-      res.json(report(result));
+      //var result=postRepack(body);
+      res.json(report(body));
     }
     else
     {//if error happened
@@ -113,80 +126,51 @@ api.get('/posts/:pid', function (req, res){
   });
 });
 
-///------------------------------------------
-/// POST /posts handler
-api.post('/posts',function(req,res)
-{
-  requestLog(req);//log
-  report('request body received');
-  report(req.body);
-  report('json successfully parsed');
-
-  //check if object is legal (contains enough fields)
-  if(validation.validatePost(req.body)){
-    //if okay, don't do a thing
-  }else{
-    res.json(report('bad field/illegal input',req.body));
-    return;
-  }
-
-  //obtain a pid by atomically incrementing the postcount document
-  counters.atomic("counters",'counters','postcount',{},function(err,body)
-  {
+///----------------------------------------
+///GET /thread/* handler
+api.get('/thread/:tid', function (req, res){
+  apifunc.get_post_from_thread({
+    tid:req.params.tid,
+    start:req.query.start,
+    count:req.query.count,
+  },
+  (err,body)=>{
     if(!err)
-    {
-      report('postcount given:'+body.toString());
-
-      //construct new post document
-      var newpost={};
-      newpost._id=body.toString();
-      newpost.content=req.body.content;
-      newpost.toc=Date.now();
-
-      //insert the document into db
-      posts.insert(newpost,function(err,body)
-      {
-        if(!err)//if succeed
-        {
-          report('insert succeed');
-          res.json(report({status:"succeed",id:newpost._id}));
-        }
-        else
-        {
-          res.json(report('error inserting',err));
-        }
-      });
+    {//if nothing went wrong
+      res.json(body);
     }
-    else
-    {//if unable to obtain
-      res.json(report("failed to obtain atomically incrementing postcount",err));
+    else {//if error happened
+      res.json(report('cant get /thread/:tid',err));
     }
   });
 });
 
-///----------------------------------------
-///GET /thread/* handler
-api.get('/thread/:tid', function (req, res) {
-  requestLog(req);
-
-  var tid=req.params.tid;//thread id
-
-  if(tid=='12647'){res.send('dont try again pls');return;}
-
-  posts.view('thread','thread',{startkey:[parseInt(tid),0],endkey:[parseInt(tid),11111111111]},
-  function(err,body){
-    if(!err)
-    {//if nothing went wrong
-      for(var i = 0, size = body.rows.length; i < size ; i++){
-        var item = body.rows[i];
-        body.rows[i]=postRepack(item.value);
-      }
-      res.json({'tid':tid,'posts':body.rows});
+///POST /thread/* handler
+api.post('/thread/:tid',function(req,res){
+  apifunc.post_to_thread(req.body,req.params.tid,(err,result)=>{
+    if(err){
+      res.json(report('error in test2',err));
+    }else{
+      res.json(report(result));
     }
-    else {//if error happened
-      console.log(tid,'is notfound within /thread/*, or other error');
-      console.log(err);
-      res.json({error:"notfound"});
+  },
+  false);
+});
+
+//GET /forum/*
+api.get('/forum/:fid',(req,res)=>{
+  apifunc.get_thread_from_forum({
+    fid:req.params.fid,
+    start:req.query.start,
+    count:req.query.count,
+  },
+  (err,body)=>{
+    if(!err)
+    {
+      res.json(body);
+    }
+    else{
+      res.json(report('cant get /forum/:fid',err));
     }
   });
 });

@@ -38,10 +38,15 @@ module.exports = function(){
     if(error){
       console.log(dateString(),"err:",description.red);
       console.log(error.toString().red);
-      return({'error':description});
+      return({'error':description,'detail':error});
     }else{
       console.log(dateString().yellow,"msg:",description);
-      return({message:description});
+      if(typeof(description)!='object'){
+        return {message:description};
+      }
+      else {
+        return description;
+      }
     }
   };
 
