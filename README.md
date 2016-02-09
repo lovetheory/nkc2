@@ -32,9 +32,8 @@ The author of these files shall not be held responsible for any terrorist attack
 
 ## For your convenience
 - by default listens on localhost:1086
-- server_settings.js includes several globally used server parameters
+- server_settings.js includes several globally used server parameters and static serving routes
 - GET `server_address:port/html/jade/somename` will respond with rendered `/nkc_modules/jade/somename.jade`
-- everything under `/jquery`, `/angular` and `/chat` will be served static at `/`.
 - Every unrouted path will end up returning 404.jade
 - `query_functions.js` is the database wrapper
-- `api_functions.js` contains all the API functions. Then we can call them when serving HTML requests
+- `api_functions.js` contains all the API functions. Then we can call them before serving HTML requests

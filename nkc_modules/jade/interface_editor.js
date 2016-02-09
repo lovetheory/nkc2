@@ -1,44 +1,52 @@
-function post(target,body)
-{
-  var xhr = new XMLHttpRequest();
+function submit(){
+  var body = {
+    t:gv('title').trim(),
+    c:gv('content').trim(),
+    l:gv('lang').toLowerCase().trim(),
+  };
 
-  xhr.onreadystatechange=function()
-  {
-    if (xhr.readyState==4)
-    {
-      alert(xhr.status+xhr.responseText);
+  var target = gv('target').trim();
+
+  post_api(target,body,function(err,back){
+    if(err){
+      alert('not 200 failure: '+back);
+    }else{
+      brrr=JSON.parse(back).redirect;
+      if(brrr){
+        redirect('/interface/'+brrr);
+      }else {
+        redirect('/interface/'+target);
+      }
     }
-  }
+  });
+}
 
-  xhr.open("POST","/api/"+target.toString().toLowerCase(),true);
-  xhr.setRequestHeader("Content-type","application/json");
-  xhr.send(JSON.stringify(body));
-};
+//var commonmark = window.commonmark;
+var commonreader = new commonmark.Parser();
+var commonwriter = new commonmark.HtmlRenderer({ sourcepos: true });
+function commonmarkconvert(cont){
+  var parsed = commonreader.parse(cont); // parsed is a 'Node' tree
+  // transform parsed if you like...
+  var result = commonwriter.render(parsed); // result is a String
+  return result;
+}
 
-var ife = new Vue({
-  el: '#ife',
-  //element
-  data: {
-    title:  'test title',
-    content: 'test content',
-    to:'thread/34',
-    lang:'Markdown',
-  },
-  //databinding
+function bbcodeconvert(input){
+  return XBBCODE.process({
+    text:input,
+  }).html;
+}
 
-  filters: {
-    marked: marked
-  },
+function update(){
+  hset('parsedtitle',gv('title'));
 
-  methods:
-  {
-    post:function(){
-      var body={
-        t:this.title,
-        c:this.content,
-        l:this.lang.toLowerCase(),
-      };
-      post(this.to,body);
-    },
-  }
-});
+  switch(gv('lang').toLowerCase()){
+    case 'markdown':
+    hset('parsedcontent',commonmarkconvert(gv('content')));break;
+    case 'bbcode':
+    hset('parsedcontent',bbcodeconvert(gv('content')));break;
+    case 'plain':
+    default:
+    hset('parsedcontent',plain_escape(gv('content')));break;
+  };
+}

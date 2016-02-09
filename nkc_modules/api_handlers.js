@@ -83,20 +83,30 @@ api.get('/new/:countername',(req,res)=>{
   });
 });
 
-//test handler.
-api.get('/test',(req,res)=>{
-  apifunc.post_to_forum({content:'fuckyou'},'default',(err,result)=>{
+//POST /forum/:fid
+api.post('/forum/:fid',(req,res,next)=>{
+  var r = validation.validatePost(req.body);
+  if(r!=true)//if failed to validate
+  {
+    next(r);
+    return;
+  }
+
+  apifunc.post_to_forum(req.body,req.params.fid.toString(),(err,result)=>{
     if(err){
-      res.json(report('error in test',err));
+      //res.json(report('mmm',err));
+      res.status(500).json(err);
     }else{
-      res.json(report(result));
+      var k =result;
+      k.redirect = 'thread/'+ queryfunc.result_reform(k).id;
+      res.json(report(k));
     }
   });
 });
 
 //test handler.
 api.get('/test2',(req,res)=>{
-  apifunc.post_to_thread({content:'fuckyou again yo bitch'},29,(err,result)=>{
+  apifunc.post_to_thread({c:'fuckyou again yo bitch'},'29',(err,result)=>{
     if(err){
       res.json(report('error in test2',err));
     }else{
@@ -146,12 +156,21 @@ api.get('/thread/:tid', function (req, res){
 });
 
 ///POST /thread/* handler
-api.post('/thread/:tid',function(req,res){
+api.post('/thread/:tid',function(req,res,next){
+  var r = validation.validatePost(req.body);
+  if(r!=true)//if failed to validate
+  {
+    next(r);//err thrown
+    return;
+  }
+
   apifunc.post_to_thread(req.body,req.params.tid,(err,result)=>{
     if(err){
-      res.json(report('error in test2',err));
+      res.json(report('error in /thread/post',err));
     }else{
-      res.json(report(result));
+      var k = result;
+      k.redirect = 'thread/' + queryfunc.result_reform(k).id;
+      res.json(report(k));
     }
   },
   false);

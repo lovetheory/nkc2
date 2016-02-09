@@ -1,8 +1,11 @@
 //do sth with the post variable here
 
+//horizontal line
 if(index==0)
 else
   hr
+  
+//post itself
 .media
   .media-left.media-top
     a(href='#')
@@ -10,5 +13,16 @@ else
   .media-body.media-top
     .row
       .col-xs-12
-        p.lighttext #username #{post.toc}
-        p #{post.c}
+        if(post.t&&post.t!=''&&index!=0)
+          h4.d-inline #{post.t}
+        else
+        p.d-inline.lighttext #username #{dateString(post.toc)}
+        case post.l
+          when 'markdown'
+            div!= markdown(post.c)
+          when 'bbcode'
+            div!= bbcode(post.c)
+          when 'plain'
+          default
+            div!= plain(post.c)
+            

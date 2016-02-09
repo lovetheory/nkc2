@@ -6,9 +6,8 @@ exports.server={
 };
 
 exports.jadeoptions= {
-  pretty:true,
-  cache:false,
-  //cache:true,
+  pretty:true,cache:false,
+  //cache:true,pretty:false,
   //globals:[]
   server:exports.server,
 };
@@ -29,6 +28,9 @@ exports.root_serve_static =
   {to:'nkc_modules/jquery'},
   {to:'nkc_modules/angular'},
   {to:'node_modules/marked/lib'},
+  {to:'node_modules/commonmark/dist'},
   {to:'nkc_modules/vue'},
+  {to:'nkc_modules/jade'},
+  {to:'nkc_modules/xbbcode'},
   {map:'/bootstrap',to:'bootstrap-3.3.6-dist'},
 ];

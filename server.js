@@ -39,23 +39,13 @@ var interface_handlers = require('interface_handlers');
 nkc.use('/interface',interface_handlers.route_handler);
 
 //chatroom serving
-var chat_handlers = require('chat_handlers.js')
+var chat_handlers = require('chat_handlers.js');
 nkc.use('/chat',chat_handlers.route_handler);//routing
 
 //chatroom socket
 var io = require('socket.io')(http);
 var chat_io = io.of('/chat');// socket.io namespacing
 chat_handlers.socket_handler(chat_io);//pass namespaced socket object into processing function
-
-
-for(i in settings.root_serve_static)
-{
-  if(settings.root_serve_static[i].map){
-    nkc.use(settings.root_serve_static[i].map,express.static(settings.root_serve_static[i].to));
-  } else {
-    nkc.use(express.static(settings.root_serve_static[i].to));
-  }
-}
 
 //root serving
 nkc.get('/',(req,res)=>{
@@ -75,6 +65,16 @@ nkc.get('/api',(req,res)=>{
     jade.renderFile('nkc_modules/jade/index.jade',opt)
   );
 });
+
+//statics
+for(i in settings.root_serve_static)
+{
+  if(settings.root_serve_static[i].map){
+    nkc.use(settings.root_serve_static[i].map,express.static(settings.root_serve_static[i].to));
+  } else {
+    nkc.use(express.static(settings.root_serve_static[i].to));
+  }
+}
 
 //unrouted url handler
 //404 handling

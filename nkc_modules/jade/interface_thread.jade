@@ -2,6 +2,7 @@ extends bootstrap_base.jade
 
 block title
   title if_t
+  meta#reply-target(value='#{replytarget}')
   
 block styles
   include nkc_styles.jade
@@ -15,14 +16,18 @@ block content
         if posts.length == 0
           h4 您要找的帖子不存在。
         else
-          h4 【民科高能】 论创新的规律
+          h4 #{posts[0].t}
               
           .panel.panel-default
             .panel-body
               each post,index in posts
                 include interface_thread_singlepost.jade
-
-                        
-                      
-                
+          
+          a.btn.btn-default(href='/interface/editor?target=#{replytarget}') 回帖
+    .row
+      br
+block scripts
+  script(src='/interface_common.js')
+  script(src='/interface_thread.js')
+      
                 

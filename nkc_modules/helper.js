@@ -34,11 +34,11 @@ module.exports = function(){
   };
 
   //error reporter
-  this.report = function(description,error){
-    if(error){
+  this.report = function(description,err){
+    if(err){
       console.log(dateString(),"err:",description.red);
-      console.log(error.toString().red);
-      return({'error':description,'detail':error});
+      console.log(err.toString().red);
+      return({'error':description,'detail':err});
     }else{
       console.log(dateString().yellow,"msg:",description);
       if(typeof(description)!='object'){

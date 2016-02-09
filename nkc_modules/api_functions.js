@@ -33,20 +33,67 @@ exports.get_new_uid = function(callback){
   queryfunc.incr_counter('users',callback);
 };
 
+//post to a given thread.
+exports.post_to_thread = function(post,tid,callback,isFirst){
+  //check existence
+  exports.exists(tid,'threads',(err,th)=>{
+    if(err){
+      callback(err);
+      return;
+    }
+    //th is the thread object now
+
+    //apply for a new pid
+    exports.get_new_pid((err,newpid) =>{
+      if(err)callback(err,null);else
+      {
+        //create a new post
+        var timestamp = Date.now();
+        var newpost = {
+          _key:newpid,
+          tid:tid,
+          toc:timestamp,
+          tlm:timestamp,
+          c:post.c,
+          t:post.t,
+          l:post.l,
+        };
+
+        //insert the new post into posts collection
+        queryfunc.doc_save(newpost,'posts',(err,back)=>{
+          if(err)callback(err);else{
+
+            //update the thread object
+            var props = {
+              tlm:timestamp,//update timestamp
+              lm:newpid.toString(),//point to newly created post
+            };
+
+            if(isFirst){//if this is the first post of the thread
+              props.oc = newpid.toString();
+              props.toc = timestamp;
+            }
+
+            queryfunc.doc_update(tid,'threads',props,callback);
+          }
+        });
+      }
+    });
+  });
+};
+
 //post to a forum, generating new threads.
 exports.post_to_forum = function(post,fid,callback){
-  var r = validation.validatePost(post);
-  if(r!=true)//if failed to validate
-  {
-    callback(r);//err thrown
-  }
-  else
-  {
+  //check existence
+  exports.exists(fid,'forums',function(err,fo){
+    if(err){callback(err);return;}
+    //fo is the forum object now
     //obtain new tid
     exports.get_new_tid((err,newtid) =>
     {
       if(err)callback(err);else
       {
+
         //now we got brand new tid.
 
         //create a new thread
@@ -70,47 +117,6 @@ exports.post_to_forum = function(post,fid,callback){
         });
       };
     });
-  };
-};
-
-//post to a given thread.
-exports.post_to_thread = (post,tid,callback,isFirst) =>
-{
-  //apply for a new pid
-  exports.get_new_pid((err,newpid) =>{
-    if(err)callback(err,null);else
-    {
-      //create a new post
-      var timestamp = Date.now();
-      var newpost = {
-        _key:newpid.toString(),
-        tid:tid.toString(),
-        toc:timestamp,
-        tlm:timestamp,
-        c:post.c,
-        t:post.t,
-        l:post.l,
-      };
-
-      //insert the new post into posts collection
-      queryfunc.doc_save(newpost,'posts',(err,back)=>{
-        if(err)callback(err);else{
-
-          //update the thread object
-          var props = {
-            tlm:timestamp,//update timestamp
-            lm:newpid.toString(),//point to newly created post
-          };
-
-          if(isFirst){//if this is the first post of the thread
-            props.oc = newpid.toString();
-            props.toc = timestamp;
-          }
-
-          queryfunc.doc_update(tid.toString(),'threads',props,callback);
-        }
-      });
-    }
   });
 };
 
@@ -119,35 +125,40 @@ exports.get_a_post = (pid,callback)=>{
 };
 
 //return a list of posts within a thread.
-exports.get_post_from_thread = (params,callback)=>{
-  queryfunc.doc_list(
-    {
-      type:'posts',
-      filter_by:'tid',
-      equals:params.tid,
-      sort_by:'toc',
-      order:'asc',
-      start:params.start,
-      count:params.count
-    },
-    callback);
-  };
+exports.get_post_from_thread = (params,callback)=>
+{
+  queryfunc.doc_list({
+    type:'posts',
+    filter_by:'tid',
+    equals:params.tid,
+    sort_by:'toc',
+    order:'asc',
+    start:params.start,
+    count:params.count
+  },
+  callback);
+};
 
-  //return a list of threads, whose first posts are included.
-  exports.get_thread_from_forum = (params,callback)=>{
-    queryfunc.doc_list_join(
-      {
-        type:'threads',
-        filter_by:'fid',
-        equals:params.fid,
-        sort_by:'tlm',
-        order:'desc',
-        start:params.start,
-        count:params.count,
+//return a list of threads, whose first posts are included.
+exports.get_thread_from_forum = (params,callback)=>
+{
+  queryfunc.doc_list_join({
+    type:'threads',
+    filter_by:'fid',
+    equals:params.fid,
+    sort_by:'tlm',
+    order:'desc',
+    start:params.start,
+    count:params.count,
 
-        join_collection:'posts',
-        join_filter_by:'_key',
-        join_equals_attrib:'lm',
-      },
-      callback);
-    };
+    join_collection:'posts',
+    join_filter_by:'_key',
+    join_equals_attrib:'lm',
+  },
+  callback);
+};
+
+//check if an entity exists/ is available
+exports.exists = function(key,type,callback){
+  queryfunc.doc_load(key,type,callback);
+};

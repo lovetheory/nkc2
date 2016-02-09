@@ -55,7 +55,7 @@ exports.incr_counter = function(countername,callback){
   aqlall(aqlobj,(err,vals)=>{
     if(err)callback(err);else {
       if(vals.length==1){
-        callback(null,vals[0]);
+        callback(null,vals[0].toString());
       } else {
         callback('counter '+countername.toString()+' may not be available',null);
       }
@@ -67,7 +67,6 @@ exports.incr_counter = function(countername,callback){
 exports.result_reform = (result)=>{
   return {
     'id' : result._key,
-    'version': result._rev,
   };
 };
 
@@ -76,6 +75,7 @@ exports.doc_save = (doc,collection_name,callback)=>{
 };
 
 exports.doc_load = (doc_key,collection_name,callback)=>{
+
   db.collection(collection_name).document(doc_key,callback);
 };
 
@@ -92,7 +92,7 @@ exports.doc_update = (doc,collection_name,props,callback)=>{
 
 exports.doc_list = (restrictions,callback)=>{
   if(!restrictions.start)restrictions.start=0;
-  if(!restrictions.count)restrictions.count=10;
+  if(!restrictions.count)restrictions.count=100;
 
   var aqlobj={
     query:`
@@ -109,7 +109,7 @@ exports.doc_list = (restrictions,callback)=>{
 
 exports.doc_list_join = (restrictions,callback)=>{
   if(!restrictions.start)restrictions.start=0;
-  if(!restrictions.count)restrictions.count=10;
+  if(!restrictions.count)restrictions.count=100;
 
   var aqlobj={
     query:`
