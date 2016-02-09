@@ -7,11 +7,6 @@ var settings = require('server_settings.js');
 var helper_mod = require('helper.js')();
 var bodyParser = require('body-parser');
 
-var nano = require('nano')('http://'+settings.couchdb.address+':'+settings.couchdb.port.toString());
-var posts = nano.use("posts");
-var chat = nano.use("chat");
-var users = nano.use("users");
-var counters = nano.use('counters');
 var request = require('request');
 
 var db = require('arangojs')(settings.arango.address);
