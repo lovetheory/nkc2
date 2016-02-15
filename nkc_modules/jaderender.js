@@ -1,0 +1,43 @@
+module.paths.push('./nkc_modules'); //enable require-ment for this path
+
+var jade = require('jade');
+var settings = require('server_settings.js');
+var commonmark = require('commonmark');
+var plain_escape = require('jade/plain_escaper');
+var xbbcode = require('xbbcode/xbbcode');
+
+function bbcodeconvert(input){
+  return xbbcode.process({
+    text:input,
+  }).html;
+}
+
+var commonreader = new commonmark.Parser();
+var commonwriter = new commonmark.HtmlRenderer();
+var commonparser = (input)=>{return commonwriter.render(commonreader.parse(input));} // result is a String
+
+jade.filters.markdown = commonparser;
+jade.filters.bbcode = bbcodeconvert;
+jade.filters.plain = plain_escape;
+
+var jadeoptions = {
+  pretty:true,cache:false,
+  //cache:true,pretty:false,
+
+  markdown:commonparser,
+  bbcode:bbcodeconvert,
+  plain:plain_escape,
+
+  server:settings.server,
+};
+
+function jaderender(filename,options){
+  for(k in jadeoptions)
+  {
+    options[k] = jadeoptions[k];
+  }
+
+  return jade.renderFile(filename,options);
+};
+
+module.exports = jaderender;

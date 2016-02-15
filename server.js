@@ -7,6 +7,8 @@ var permissions = require('permissions');
 var helper_mod = require('helper')();
 var validation = require('validation');
 
+var jaderender = require('jaderender');
+
 var compression = require('compression');
 var express = require('express');
 var jade = require('jade');
@@ -53,7 +55,7 @@ nkc.get('/',(req,res)=>{
   opt.address = req.ip.toString();
   opt.osinfo = JSON.stringify(osinfo(),null,2);
   res.send(
-    jade.renderFile('nkc_modules/jade/index.jade',opt)
+    jaderender('nkc_modules/jade/index.jade',opt)
   );
 });
 
