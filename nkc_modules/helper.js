@@ -38,11 +38,12 @@ module.exports = function(){
     if(err){
       console.log(dateString(),"err:",description.red);
       console.log(err.toString().red);
-      return({'error':description,'detail':err});
+      return({'error':description,'detail':err.toString()});
     }else{
       console.log(dateString().yellow,"msg:",description);
+
       if(typeof(description)!='object'){
-        return {message:description};
+        return {'message':description};
       }
       else {
         return description;

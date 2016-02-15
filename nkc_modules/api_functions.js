@@ -162,3 +162,58 @@ exports.get_thread_from_forum = (params,callback)=>
 exports.exists = function(key,type,callback){
   queryfunc.doc_load(key,type,callback);
 };
+
+exports.get_user_by_name = (username,callback)=>{
+  queryfunc.doc_list({
+    type:'users',
+    filter_by:'name',
+    equals:username,
+    sort_by:'name',
+    order:'asc',
+  },
+  callback);
+};
+
+exports.get_user = (uid,callback)=>{
+  queryfunc.doc_load(uid,'users',callback);
+};
+
+function user_exist_by_name(username,callback){
+  exports.get_user_by_name(username,(err,back)=>{
+    if(err)callback(err);else{
+      if(back.length==0){
+        callback(null,false);//user not exist
+      }else{
+        callback(null,true);//user does exist
+      }
+    }
+  });
+};
+
+//user creation
+exports.create_user = function(user,callback){
+  //check if user exists.
+  user_exist_by_name(user.name,(err,back)=>{
+    if(err)callback(err);else{
+      if(back){
+        //if user exists
+        callback('user exists already');
+      }else{
+        //user not exist, create user now!
+        //obtain an uid first...
+        exports.get_new_uid((err,newuid)=>{
+          if(err)callback(err);else{
+            //construct the new user object
+            user._key = newuid;
+            var timestamp = Date.now();
+            user.toc = timestamp;
+            user.tlv = timestamp;
+            user.certs = ['default'];//if not exist default to 'default'
+
+            queryfunc.doc_save(user,'users',callback);
+          }
+        });
+      }
+    }
+  });
+}

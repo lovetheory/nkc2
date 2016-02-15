@@ -60,7 +60,7 @@ api.post('/angularfun',function(req,res){
     },
     err => {
       console.error('Failed to save document:', err)
-      res.json(report('dbfailure',err));
+      res.status(500).json(report('dbfailure',err));
     }
   );
 });
@@ -161,7 +161,7 @@ api.post('/thread/:tid',function(req,res,next){
 
   apifunc.post_to_thread(req.body,req.params.tid,(err,result)=>{
     if(err){
-      res.json(report('error in /thread/post',err));
+      res.status(500).json(report('error in /thread/post',err));
     }else{
       var k = result;
       k.redirect = 'thread/' + queryfunc.result_reform(k).id;
@@ -187,6 +187,37 @@ api.get('/forum/:fid',(req,res)=>{
       res.json(report('cant get /forum/:fid',err));
     }
   });
+});
+
+api.get('/user/:uid',(req,res)=>{
+  apifunc.get_user(req.params.uid,(err,back)=>{
+    if(err){
+      res.status(500).json(report('cant get user',err));
+    }
+    else{
+      res.json(report(back));
+    }
+  });
+});
+
+//POST /user
+api.post('/user',(req,res)=>{
+  //todo: sanitize user object
+
+  apifunc.create_user(req.body,(err,back)=>{
+    if(err){
+      res.status(500).json(report('cant create user',err));
+    }
+    else{
+      res.json(report(back));
+    }
+  });
+});
+
+api.get('*',(req,res)=>{
+  res.status(404).json(
+    report('endpoint not exist','endpoint not exist')
+  );
 });
 
 //unhandled error handler

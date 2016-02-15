@@ -57,7 +57,7 @@ exports.incr_counter = function(countername,callback){
       if(vals.length==1){
         callback(null,vals[0].toString());
       } else {
-        callback('counter '+countername.toString()+' may not be available',null);
+        callback('counter '+countername.toString()+' may not be available');
       }
     }
   });
@@ -75,7 +75,6 @@ exports.doc_save = (doc,collection_name,callback)=>{
 };
 
 exports.doc_load = (doc_key,collection_name,callback)=>{
-
   db.collection(collection_name).document(doc_key,callback);
 };
 

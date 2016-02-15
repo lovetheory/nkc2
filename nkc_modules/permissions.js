@@ -1,7 +1,7 @@
 //证书，每张证书将包含不同的权限
 exports.certifications={
-  god:{
-    post:true,
+  god:{//cert name
+    post:true,//perm name
     move:true,
     issue:true,
     modify:true,
