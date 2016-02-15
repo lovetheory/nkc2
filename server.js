@@ -66,6 +66,11 @@ nkc.get('/api',(req,res)=>{
   );
 });
 
+nkc.get('/reload',function(req,res){
+  res.send(`<h1>Reload Page to Stop Server</h1>`);
+  process.exit();
+});
+
 //statics
 for(i in settings.root_serve_static)
 {
