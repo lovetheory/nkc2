@@ -7,6 +7,10 @@ function submit(){
 
   var target = gv('target').trim();
 
+  if(body.c==''){alert('请填写内容。');return;}
+  if(target==''){alert('请填写发表至的目标。');return;}
+
+
   post_api(target,body,function(err,back){
     if(err){
       alert('not 200 failure: '+back);

@@ -6,6 +6,7 @@ var moment = require('moment');
 
 var settings = require('server_settings.js');
 var helper_mod = require('helper.js')();
+var jaderender = require('jaderender');
 
 var request = require('request');
 var jade = require('jade');
@@ -23,7 +24,7 @@ handler.use('/jade/',express.static('nkc_modules/jade')); //file serving
 //var hellojade = jade.compileFile('./nkc_modules/jade/hello.jade',jadeoptions)
 
 handler.get('/jade/:fn',(req,res,next)=>{
-  var opt = settings.jadeoptions;
+  var opt = {};
   opt.address = req.ip.toString();
   opt.url = req.originalUrl;
 
@@ -33,7 +34,7 @@ handler.get('/jade/:fn',(req,res,next)=>{
       next();
     }else{
       try{
-        res.send(jade.renderFile('nkc_modules/jade/'+req.params.fn+'.jade',opt));
+        res.send(jaderender('nkc_modules/jade/'+req.params.fn+'.jade',opt));
       }
       catch(err){
         next(err);

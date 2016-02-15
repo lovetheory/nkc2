@@ -7,22 +7,7 @@ var moment = require('moment');
 var settings = require('server_settings.js');
 var helper_mod = require('helper.js')();
 
-var request = require('request');
-var jade = require('jade');
-
-var commonmark = require('commonmark');
-var plain_escape = require('jade/plain_escaper');
-var xbbcode = require('xbbcode/xbbcode');
-
-function bbcodeconvert(input){
-  return xbbcode.process({
-    text:input,
-  }).html;
-}
-
-var commonreader = new commonmark.Parser();
-var commonwriter = new commonmark.HtmlRenderer();
-var commonparser = (input)=>{return commonwriter.render(commonreader.parse(input));} // result is a String
+var jaderender = require('jaderender');
 
 var express = require('express');
 var iface = express.Router();
@@ -49,22 +34,19 @@ iface.get('/thread/:tid', function (req, res, next){
       return;
     }
     //if nothing went wrong
-    var opt = settings.jadeoptions;
+    var opt = {};
     opt.posts = body;
     opt.replytarget = 'thread/' + req.params.tid;
     opt.dateString = dateString;
-    opt.markdown = commonparser;
-    opt.plain = plain_escape;
-    opt.bbcode = bbcodeconvert;
 
-    res.send(jade.renderFile('nkc_modules/jade/interface_thread.jade',opt));
+    res.send(jaderender('nkc_modules/jade/interface_thread.jade',opt));
   });
 });
 
 //get editor
 ///--------------------
 iface.get('/editor',(req,res,next)=>{
-  var opt = settings.jadeoptions;
+  var opt = {};
 
   var e = {
     target:req.query.target,
@@ -72,7 +54,7 @@ iface.get('/editor',(req,res,next)=>{
 
   opt.editor=e;
 
-  res.send(jade.renderFile('nkc_modules/jade/interface_editor.jade',opt));
+  res.send(jaderender('nkc_modules/jade/interface_editor.jade',opt));
 });
 
 //unhandled error will be routed back to server.js

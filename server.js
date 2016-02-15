@@ -11,7 +11,7 @@ var jaderender = require('jaderender');
 
 var compression = require('compression');
 var express = require('express');
-var jade = require('jade');
+
 var nkc = express(); //main router
 var http = require('http').Server(nkc);
 
@@ -60,11 +60,11 @@ nkc.get('/',(req,res)=>{
 });
 
 nkc.get('/api',(req,res)=>{
-  var opt = settings.jadeoptions;
+  var opt = {};
   opt.address = req.ip.toString();
   opt.osinfo = JSON.stringify(osinfo(),null,2);
   res.send(
-    jade.renderFile('nkc_modules/jade/index.jade',opt)
+    jaderender('nkc_modules/jade/index.jade',opt)
   );
 });
 
@@ -86,10 +86,10 @@ for(i in settings.root_serve_static)
 //unrouted url handler
 //404 handling
 nkc.get('*',(req,res)=>{
-  var opt = settings.jadeoptions;
+  var opt = {};
   opt.url = req.originalUrl;
   res.status(404).send(
-    jade.renderFile('nkc_modules/jade/404.jade',opt)
+    jaderender('nkc_modules/jade/404.jade',opt)
   );
 });
 
@@ -97,12 +97,12 @@ nkc.get('*',(req,res)=>{
 //aka 500 handling
 nkc.use((err,req,res,next)=>{
   report('not handled',err.stack);
-  var opt = settings.jadeoptions;
+  var opt = {};
   opt.url = req.originalUrl;
   opt.errormessage = err.message;
   opt.errorstack = err.stack;
   res.status(500).send(
-    jade.renderFile('nkc_modules/jade/500.jade',opt)
+    jaderender('nkc_modules/jade/500.jade',opt)
   );
 });
 

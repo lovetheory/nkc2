@@ -21,8 +21,8 @@ block content
           
         .form-inline
           .form-group
-            input#target.form-control(placeholder='发表至' value='#{editor.target}')
-          
+              input#target.form-control(placeholder='发表至' value='#{(editor.target?editor.target:"")}')
+
             select#lang.form-control
               option Markdown
               option Plain
