@@ -139,10 +139,10 @@ exports.get_post_from_thread = (params,callback)=>
   callback);
 };
 
-//return a list of threads, whose first posts are included.
+//return a list of threads, whose selected posts are included.
 exports.get_thread_from_forum = (params,callback)=>
 {
-  queryfunc.doc_list_join({
+  queryfunc.ftp_join({
     type:'threads',
     filter_by:'fid',
     equals:params.fid,
@@ -150,10 +150,6 @@ exports.get_thread_from_forum = (params,callback)=>
     order:'desc',
     start:params.start,
     count:params.count,
-
-    join_collection:'posts',
-    join_filter_by:'_key',
-    join_equals_attrib:'lm',
   },
   callback);
 };

@@ -20,6 +20,29 @@ iface.use(function(req,res,next){
   next();
 });
 
+
+//render forumview
+iface.get('/forum/:fid',function(req,res,next){
+  apifunc.get_thread_from_forum({
+    fid:req.params.fid,
+    start:req.query.start,
+    count:req.query.count,
+  },(err,body)=>{
+    if(err){next(err);return;}
+    //if nothing went wrong
+    var opt = {};
+    opt.threads = body;
+    opt.replytarget = 'forum/' + req.params.fid;
+    try{
+      var k = jaderender('nkc_modules/jade/interface_forum.jade',opt);
+    }catch(err){
+      next(err);
+      return;
+    }
+    res.send(k);
+  });
+});
+
 //render threadview
 ///----------------------------------------
 iface.get('/thread/:tid', function (req, res, next){
@@ -37,7 +60,6 @@ iface.get('/thread/:tid', function (req, res, next){
     var opt = {};
     opt.posts = body;
     opt.replytarget = 'thread/' + req.params.tid;
-    opt.dateString = dateString;
 
     res.send(jaderender('nkc_modules/jade/interface_thread.jade',opt));
   });

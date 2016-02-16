@@ -89,38 +89,77 @@ exports.doc_update = (doc,collection_name,props,callback)=>{
   );
 };
 
-exports.doc_list = (restrictions,callback)=>{
-  if(!restrictions.start)restrictions.start=0;
-  if(!restrictions.count)restrictions.count=100;
+exports.doc_list = (opt,callback)=>{
+  if(!opt.start)opt.start=0;
+  if(!opt.count)opt.count=100;
 
   var aqlobj={
     query:`
-    FOR c IN ${restrictions.type}
-    FILTER c.${restrictions.filter_by} == '${restrictions.equals}'
-    sort c.${restrictions.sort_by} ${restrictions.order}
-    limit ${restrictions.start}, ${restrictions.count}
+    FOR c IN ${opt.type}
+    FILTER c.${opt.filter_by} == @equals
+    sort c.${opt.sort_by} ${opt.order}
+    limit ${opt.start}, ${opt.count}
     return c
     `
+    ,
+    params:{
+      'equals':opt.equals,
+    },
   };
 
   aqlall(aqlobj,callback);
 };
 
-exports.doc_list_join = (restrictions,callback)=>{
-  if(!restrictions.start)restrictions.start=0;
-  if(!restrictions.count)restrictions.count=100;
+exports.doc_list_join = (opt,callback)=>{
+  if(!opt.start)opt.start=0;
+  if(!opt.count)opt.count=100;
 
   var aqlobj={
     query:`
-    FOR c IN ${restrictions.type}
-    FILTER c.${restrictions.filter_by} == '${restrictions.equals}'
-    sort c.${restrictions.sort_by} ${restrictions.order}
-    limit ${restrictions.start}, ${restrictions.count}
-    FOR p IN ${restrictions.join_collection}
-    FILTER p.${restrictions.join_filter_by} == c.${restrictions.join_equals_attrib}
-    return merge(c,{${restrictions.join_equals_attrib}:p})
+    FOR c IN ${opt.type}
+    FILTER c.${opt.filter_by} == @equals
+    sort c.${opt.sort_by} ${opt.order}
+    limit ${opt.start}, ${opt.count}
+    FOR p IN ${opt.join_collection}
+    FILTER p.${opt.join_filter_by} == c.${opt.join_equals_attrib}
+    return merge(c,{${opt.join_equals_attrib}:p})
     `
+    ,
+    params:{
+      'equals':opt.equals,
+    },
   };
 
+  aqlall(aqlobj,callback);
+};
+
+//custom join function
+exports.ftp_join = (opt,callback)=>{
+  if(!opt.start)opt.start=0;
+  if(!opt.count)opt.count=100;
+
+  var aqlobj={
+    query:`
+    FOR t IN ${opt.type}
+    FILTER t.${opt.filter_by} == @equals
+    sort t.${opt.sort_by} ${opt.order}
+    limit ${opt.start}, ${opt.count}
+    let j0 =(
+      FOR p IN posts
+      FILTER p._key == t.lm
+      return p
+    )
+    let j1 = (
+      FOR p IN posts
+      FILTER p._key == t.oc
+      return p
+    )
+    return merge(t,{lm:j0[0]},{oc:j1[0]})
+    `
+    ,
+    params:{
+      'equals':opt.equals,
+    },
+  };
   aqlall(aqlobj,callback);
 };

@@ -1,5 +1,7 @@
 module.paths.push('./nkc_modules'); //enable require-ment for this path
 
+var helper = require('helper');
+
 var jade = require('jade');
 var settings = require('server_settings.js');
 var commonmark = require('commonmark');
@@ -27,6 +29,7 @@ var jadeoptions = {
   markdown:commonparser,
   bbcode:bbcodeconvert,
   plain:plain_escape,
+  'dateString':dateString,
 
   server:settings.server,
 };

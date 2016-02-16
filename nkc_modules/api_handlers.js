@@ -189,6 +189,7 @@ api.get('/forum/:fid',(req,res)=>{
   });
 });
 
+//GET /user
 api.get('/user/:uid',(req,res)=>{
   apifunc.get_user(req.params.uid,(err,back)=>{
     if(err){
