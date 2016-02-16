@@ -1,2 +1,1 @@
-npm upgrade
 npm update

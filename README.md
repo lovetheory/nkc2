@@ -28,7 +28,7 @@ The author of these files shall not be held responsible for any terrorist attack
   1. Install Node.js for your system and make sure `npm` is available as a command.
   2. `git clone` this project, or extract from zip, to somewhere nice
   3. `npm update` there for the dependencies.
-  4. Make sure ArangoDB is listening on localhost:8529, then run __db_restore.command__ from Finder (OS X: may need `chmod +x` first) or `sh db_restore.command` (UNIX) to load the database.
+  4. Make sure ArangoDB is listening on __localhost:8529__, then run __db_restore.command__ from Finder (OS X: may need `chmod +x` first) or `sh db_restore.command` (UNIX) to load the database.
   5. run __start.bat__ from Explorer (on Windows), or run __start.command__ from Finder (OS X: may need `chmod +x` first) or `sh` __start.command__ (UNIX) to start the server in a CLI environment.
   6. Press **Enter** in terminal window whenever to restart server. You may also visit `server:port/reload` to do the same.
 
