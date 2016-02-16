@@ -5,7 +5,6 @@ var moment = require('moment');
 var settings = require('server_settings');
 var permissions = require('permissions');
 var helper_mod = require('helper')();
-var validation = require('validation');
 
 var jaderender = require('jaderender');
 

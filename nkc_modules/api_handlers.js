@@ -6,6 +6,7 @@ var moment = require('moment');
 var settings = require('server_settings.js');
 var helper_mod = require('helper.js')();
 var bodyParser = require('body-parser');
+var multer = require('multer');
 
 var request = require('request');
 
@@ -26,7 +27,29 @@ api.use(function(req,res,next){
   next();
 });
 
-//parse body. expect json
+//multi-part parsing.
+var upload = multer({ dest: 'tmp/' });
+api.post('/resources', upload.single('file'), function (req, res) {
+  // req.file is the `avatar` file
+  // req.body will hold the text fields, if there were any
+  console.log(req.file);
+  /*
+  { fieldname: 'file',
+  originalname: '1.jpeg',
+  encoding: '7bit',
+  mimetype: 'image/jpeg',
+  destination: 'tmp/',
+  filename: '785b0943d7c454067762f3d1328aa739',
+  path: 'tmp/785b0943d7c454067762f3d1328aa739',
+  size: 17343 }
+  */
+
+  
+
+  res.json({done:'right',redirect:''});
+})
+
+//parse body. expect JSON
 api.use(bodyParser.json());
 
 //expect urlencoded

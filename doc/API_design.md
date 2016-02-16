@@ -1,17 +1,28 @@
+# doc/API_design.md
+RELAX
+
 ## GET /posts/:pid
+implemented
+
 获取楼。
 从posts数据库中获取pid文档并返回给用户。
 
 ## PUT /posts/:pid
+todo
+
 修改楼。
 将pid楼原文放入h属性数组内，
 随后将pid楼之content替换，
 并更新tlm属性。
 
 ## POST /posts/
+cancelled
+
 创建自由楼。暂无实现
 
 ## POST /thread/:tid
+implemented
+
 {
   content:'sth'
 }
@@ -29,6 +40,8 @@
 最后返回操作状态。
 
 ## POST /forum/:fid
+implemented
+
 {
   content:'sth'
 }
@@ -52,26 +65,51 @@
 并将其插入posts数据库。
 返回操作状态。
 
-## GET /thread/:tid?page=n
+## GET /thread/:tid?start=0&count=50
+implemented
+
 获取帖。
 从posts数据库中获取tid相符的、发布时间排序的前50个帖子，
-从第n*50个帖子开始（默认n=0）。
+从第0个帖子开始。
 
 ## PUT /thread/:tid
+cancelled
+
 {
   changed:content,
 }
 修改帖。将tid帖原文放入h属性数组内，
 随后将tid之若干属性按提交文档作更改。
 
-## GET /forum/all/:fid?page=n
+## GET /forum/:fid?order_by=toc
+todo
+
 获取发布序的帖列表。
 从thread数据库中获取fid相符的、按创建时间toc排序的帖子列表。
 
-## GET /forum/:fid?page=n
+## GET /forum/:fid
+implemented
+
 获取回复序的贴列表。
 从thread数据库中获取fid相符的、按回复时间tlm排序的帖子列表。
 
-## PUT /thread/move?tid=n&&fid=k
+## PUT /thread/move?tid=n&fid=k
+todo
+
 移动帖子。
 将tid帖子的fid属性更改为k。
+
+## GET /resources/:rid
+todo
+
+从数据库中取出rid记录并返回。
+
+## GET /resources/:rid
+todo
+
+从数据库中取出rid记录,以所记载的filename在预先设定的本地目录中寻找file，并pipe至response返回。
+
+## POST /resources
+todo
+
+上传，返回rid或者error.
