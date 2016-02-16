@@ -25,13 +25,20 @@ The author of these files shall not be held responsible for any terrorist attack
 
 
 ## To Get Started
-  1. Install Node.js for your system and make sure `npm` is available as a command.
-  2. `git clone` this project, or extract from zip, to somewhere nice
-  3. `npm update` there for the dependencies.
-  4. Make sure ArangoDB is listening on __localhost:8529__, then run __db_restore.command__ from Finder (OS X: may need `chmod +x` first) or `sh db_restore.command` (UNIX) to load the database.
-  5. run __start.bat__ from Explorer (on Windows), or run __start.command__ from Finder (OS X: may need `chmod +x` first) or `sh` __start.command__ (UNIX) to start the server in a CLI environment.
-  6. Press **Enter** in terminal window whenever to restart server. You may also visit `server:port/reload` to do the same.
+1. Install Node.js for your system and make sure `npm` is available as a command
+2. `git clone` this project, or extract from zip, to somewhere nice
+3. `npm update` there for the dependencies
+4. Make sure ArangoDB is listening on __localhost:8529__, then run __db_restore.command__ from Finder (OS X: may need `chmod +x` first) or `sh db_restore.command` (UNIX) to load the database from JSON files
+5. run __start.bat__ or __start.command__ or `sh` __start.command__ to start the server in a CLI environment
+6. Press **Enter** in terminal window whenever to restart server. You may also visit `server:port/reload` to do the same
 
+## 照顾大家 上面这段用国语再写一次
+1. 为你的操作系统安装Node.js，并确保 `npm` 命令在命令行中可用
+2. 通过 `git clone` 或者zip解压将项目弄到某处
+3. `npm update` 以获取依赖项
+4. 确保 ArangoDB 在 __localhost:8529__ 监听, 然后从Finder运行 __db_restore.command__ (OS X: 可能需要先 `chmod +x`) 或者 `sh db_restore.command` (UNIX) 以将JSON文件载入数据库
+5. 运行 __start.bat__ or __start.command__ or `sh` __start.command__ 以从命令行启动服务器
+6. 在命令行窗口中随时按下 **Enter** 就可以重启服务器。 你也可以访问 `server:port/reload` 实现同样效果
 
 ## For your convenience
 - by default listens on __localhost:1086__
