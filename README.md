@@ -33,7 +33,7 @@ The author of these files shall not be held responsible for any terrorist attack
 5. run __start.bat__ or __start.command__ or `sh` __start.command__ to start the server in a CLI environment
 6. Press **Enter** in terminal window whenever to restart server. You may also visit `server:port/reload` to do the same
 
-## 照顾大家 上面这段用国语再写一次
+## 讲国语啦
 1. 为你的操作系统安装Node.js，并确保 `npm` 命令在命令行中可用
 2. 通过 `git clone` 或者zip解压将项目弄到某处
 3. `npm update` 以获取依赖项
