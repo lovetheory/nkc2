@@ -15,6 +15,7 @@ The author of these files shall not be held responsible for any terrorist attack
 - provide RESTful APIs for community forums
 - document storage and query using ArangoDB
 - uses socket.io for real-time notifications
+- upload and download of attachments
 
 
 ## This may be
