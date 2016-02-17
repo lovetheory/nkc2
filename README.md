@@ -43,7 +43,7 @@ The author of these files shall not be held responsible for any terrorist attack
 
 ## For your convenience
 - by default listens on __localhost:1086__
-- `server_settings.js` includes several globally used server parameters and static serving routes
+- `server_settings.js` includes several globally used server parameters and static serving routes and URL rewrites
 - GET `server:port/html/jade/somename` will respond with rendered `/nkc_modules/jade/somename.jade`
 - Every unrouted path will end up returning 404.jade
 - `markdown`, `bbcode` and `plain` is available as filters when rendering .jade files using `require('jaderender')(filename,options)`.

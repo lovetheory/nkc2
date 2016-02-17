@@ -37,7 +37,8 @@ exports.root_serve_static =
 
 exports.urlrewrite = [
   {map:'/r/:rid',to:'/api/resources/get/:rid'},
-  {map:'/t/:tid',to:'/interface/thread/:tid'},
-  {map:'/f/:fid',to:'/interface/forum/:fid'},
+  {map:'/thread/:tid',to:'/interface/thread/:tid'},
+  {map:'/read/:tid',to:'/interface/thread/:tid'},
+  {map:'/forum/:fid',to:'/interface/forum/:fid'},
   {map:'/e*',to:'/interface/editor$1'},
 ];

@@ -23,16 +23,13 @@ jade.filters.bbcode = bbcodeconvert;
 jade.filters.plain = plain_escape;
 
 var jadeoptions = {
-  pretty:true,cache:false,
-  //cache:true,pretty:false,
-
   markdown:commonparser,
   bbcode:bbcodeconvert,
   plain:plain_escape,
   'dateString':dateString,
-
-  server:settings.server,
 };
+
+Object.assign(jadeoptions,settings.jadeoptions);
 
 function jaderender(filename,options){
   for(k in jadeoptions)
