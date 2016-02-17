@@ -34,3 +34,10 @@ exports.root_serve_static =
   {to:'nkc_modules/xbbcode'},
   {map:'/bootstrap',to:'bootstrap-3.3.6-dist'},
 ];
+
+exports.urlrewrite = [
+  {map:'/r/:rid',to:'/api/resources/get/:rid'},
+  {map:'/t/:tid',to:'/interface/thread/:tid'},
+  {map:'/f/:fid',to:'/interface/forum/:fid'},
+  {map:'/e*',to:'/interface/editor$1'},
+];

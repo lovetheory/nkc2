@@ -10,6 +10,7 @@ var jaderender = require('jaderender');
 
 var compression = require('compression');
 var express = require('express');
+var rewrite = require('express-urlrewrite');
 
 var nkc = express(); //main router
 var http = require('http').Server(nkc);
@@ -27,6 +28,14 @@ nkc.use((req,res,next)=>{
   requestLog(req);
   next();
 });
+
+//url rewrite
+for(i in settings.urlrewrite){
+  nkc.use(rewrite(
+    settings.urlrewrite[i].map,
+    settings.urlrewrite[i].to
+  ));
+}
 
 //api serving
 var api_handlers = require('api_handlers.js');
