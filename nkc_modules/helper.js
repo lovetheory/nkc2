@@ -4,6 +4,7 @@
 var moment = require('moment');
 var os = require('os');
 var colors = require('colors');
+var fs = require('fs');
 
 module.exports = function(){
 
@@ -96,5 +97,11 @@ module.exports = function(){
       return JSON.stringify({'title':title,'user':user,'content':content,'misc':misc});
     }
     return JSON.stringify({'title':title,'user':user,'content':content});
+  };
+
+  this.check_file_exist = function(path,callback){
+    fs.access(path, fs.R_OK , function(err){
+      err?callback(err):callback(null);
+    });
   };
 }

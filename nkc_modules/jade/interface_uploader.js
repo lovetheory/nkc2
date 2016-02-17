@@ -7,11 +7,12 @@ function uploadfile(){
     if(err){
       alert('not 200 failure: '+back);
     }else{
-      brrr=JSON.parse(back).redirect;
-      if(brrr){
-        //redirect('/interface/'+brrr);
+      brrr=JSON.parse(back);
+      if(brrr.rid){
+        //if redirection instruction exists
+        alert(brrr.rid);
       }else {
-        //redirect('/interface/'+target);
+        alert(back);
       }
     }
   });

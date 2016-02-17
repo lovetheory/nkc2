@@ -72,7 +72,7 @@ nkc.get('/reload',function(req,res){
   process.exit();
 });
 
-//statics
+//static file serves
 for(i in settings.root_serve_static)
 {
   if(settings.root_serve_static[i].map){

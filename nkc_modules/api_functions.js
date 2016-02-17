@@ -33,6 +33,10 @@ exports.get_new_uid = function(callback){
   queryfunc.incr_counter('users',callback);
 };
 
+exports.get_new_rid = function(callback){
+  queryfunc.incr_counter('resources',callback);
+};
+
 //post to a given thread.
 exports.post_to_thread = function(post,tid,callback,isFirst){
   //check existence
@@ -212,4 +216,8 @@ exports.create_user = function(user,callback){
       }
     }
   });
+}
+
+exports.get_resources = function(key,callback){
+  queryfunc.doc_load(key,'resources',callback);
 }

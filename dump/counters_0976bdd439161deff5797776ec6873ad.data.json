@@ -2,3 +2,5 @@
 {"type":2300,"key":"forums","rev":"932298843","data":{"_key":"forums","_rev":"932298843"}}
 {"type":2300,"key":"threads","rev":"2837954651","data":{"_key":"threads","_rev":"2837954651","count":3}}
 {"type":2300,"key":"posts","rev":"2838544475","data":{"_key":"posts","_rev":"2838544475","count":6}}
+{"type":2302,"key":"attachments","rev":"3910123611"}
+{"type":2300,"key":"resources","rev":"6129107035","data":{"_key":"resources","_rev":"6129107035","count":5}}

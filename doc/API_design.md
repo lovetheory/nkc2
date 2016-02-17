@@ -100,16 +100,16 @@ todo
 将tid帖子的fid属性更改为k。
 
 ## GET /resources/:rid
-todo
+implemented
 
 从数据库中取出rid记录并返回。
 
-## GET /resources/:rid
-todo
+## GET /resources/get/:rid
+implemented
 
 从数据库中取出rid记录,以所记载的filename在预先设定的本地目录中寻找file，并pipe至response返回。
 
 ## POST /resources
-todo
+implemented
 
-上传，返回rid或者error.
+上传，返回json对象，包含rid属性。或者error.
