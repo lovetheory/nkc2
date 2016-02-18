@@ -42,3 +42,9 @@ exports.urlrewrite = [
   {map:'/forum/:fid',to:'/interface/forum/:fid'},
   {map:'/e*',to:'/interface/editor$1'},
 ];
+
+exports.resource_paths = [
+  //trailing slash '/' is very important!!!
+  __projectroot + 'tmp/',
+  __projectroot + 'tmp2/',
+];

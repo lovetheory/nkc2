@@ -1,4 +1,4 @@
-module.paths.push('./nkc_modules'); //enable require-ment for this path
+module.paths.push(__projectroot + 'nkc_modules'); //enable require-ment for this path
 
 var helper = require('helper');
 

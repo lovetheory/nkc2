@@ -1,5 +1,5 @@
 //api request handlers
-module.paths.push('./nkc_modules'); //enable require-ment for this path
+module.paths.push(__projectroot + 'nkc_modules'); //enable require-ment for this path
 
 var moment = require('moment');
 
@@ -8,7 +8,9 @@ var fs = require('fs')
 var settings = require('server_settings.js');
 var helper_mod = require('helper.js')();
 var bodyParser = require('body-parser');
-var multer = require('multer');
+var multer = require('multer'); //multi-part parser, for upload
+
+var async = require('async');
 
 var request = require('request');
 
@@ -99,23 +101,18 @@ api.get('/resources/get/:rid',function(req,res){
     }
     //success
 
-    //download!!!!
-    var filepathname = __dirname + '/../tmp/'+robject.sname;
-
-    check_file_exist(filepathname,function(err){
+    fastest_file_from_paths(settings.resource_paths,robject.sname,function(err,best_filepathname){
       if(err){
-        //if file notexist
         res.status(404).json(report('filenotexisterr',err));
         return;
       }
 
-      //if file exists
-      var filename = path.basename(filepathname);
-
+      //if file exists somewhere
       res.setHeader('Content-disposition', 'inline; filename=' + robject.oname);
       res.setHeader('Content-type', robject.mime);
 
-      var filestream = fs.createReadStream(filepathname);
+      var filestream = fs.createReadStream(best_filepathname);
+      console.log(best_filepathname.green);
       filestream.pipe(res);
     });
   });

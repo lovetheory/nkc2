@@ -1,4 +1,5 @@
-module.paths.push('./nkc_modules'); //enable require-ment for this path
+global.__projectroot = __dirname + '/';//create global variable for project root directory
+module.paths.push(__projectroot + 'nkc_modules'); //enable require-ment for this path
 
 var moment = require('moment');
 

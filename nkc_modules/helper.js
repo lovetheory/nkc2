@@ -1,10 +1,12 @@
 //helper module
 
+module.paths.push(__projectroot + 'nkc_modules');
 //dependencies
 var moment = require('moment');
 var os = require('os');
 var colors = require('colors');
 var fs = require('fs');
+var async = require('async');
 
 module.exports = function(){
 
@@ -99,9 +101,34 @@ module.exports = function(){
     return JSON.stringify({'title':title,'user':user,'content':content});
   };
 
-  this.check_file_exist = function(path,callback){
+  this.check_single_file_exist = function(path,callback){
     fs.access(path, fs.R_OK , function(err){
-      err?callback(err):callback(null);
+      err?callback(false):callback(true);
     });
   };
+
+  this.fastest_file_from_paths = function(directories,filename,callback){
+    var fastest_file = '';
+    async.some(
+      directories,
+      function(directory,callback_percase){
+        this.check_single_file_exist(directory+filename,function(exists){
+          if(exists){
+            fastest_file = directory+filename;
+          }
+          callback_percase(exists);
+        });
+      },
+      function(finallyexists){
+        if(!finallyexists){
+          //if file not exist everywhere
+          callback('not exist anywhere!!');
+        }
+        callback(null,fastest_file);
+      }
+    );
+  }
+
+
+
 }
