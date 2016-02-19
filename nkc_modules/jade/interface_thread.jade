@@ -26,6 +26,7 @@ block content
           a.btn.btn-default(href='/interface/editor?target=#{replytarget}') 回帖
     .row
       br
+    include debug_output.jade
 block scripts
   script(src='/interface_common.js')
   script(src='/interface_thread.js')

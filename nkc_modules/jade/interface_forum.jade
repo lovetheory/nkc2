@@ -68,7 +68,7 @@ block content
                 
                   
           ul.list-group
-            each thread,index in threads
+            each thread,index in data.threads
               
               - var url = '/interface/thread/' + thread._key
               - var avatar = 'http://bbs.kechuang.org/windid/attachment/avatar/000/00/00/10_small.jpg'
@@ -82,16 +82,12 @@ block content
                     .row
                       .col-xs-8
                         a(href="#{url}") #[b #{thread.oc.t}] 
-                        p.lighttext #{dateString(thread.toc)} 虎哥
+                        p.lighttext #{dateString(thread.oc.toc)} 虎哥
                       
                       .col-xs-4
-                        p.lighttext #{dateString(thread.tlm)} novakon
+                        p.lighttext #{dateString(thread.lm.tlm)} novakon
                         
           .panel-body
             a.btn.btn-default(href='/interface/editor?target=#{replytarget}') 发帖                 
       
-      .col-md-6
-        .panel.panel-default
-          .panel-body
-            h4 Object Info - debug only
-            div!= plain(JSON.stringify(threads,null,2))
+    include debug_output.jade

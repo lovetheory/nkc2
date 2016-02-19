@@ -23,15 +23,15 @@ iface.use(function(req,res,next){
 
 //render forumview
 iface.get('/forum/:fid',function(req,res,next){
-  apifunc.get_thread_from_forum({
+  apifunc.get_threads_from_forum_as_forum({
     fid:req.params.fid,
     start:req.query.start,
     count:req.query.count,
-  },(err,body)=>{
+  },(err,data)=>{
     if(err){next(err);return;}
     //if nothing went wrong
     var opt = {};
-    opt.threads = body;
+    opt.data = data;
     opt.replytarget = 'forum/' + req.params.fid;
     try{
       var k = jaderender('nkc_modules/jade/interface_forum.jade',opt);

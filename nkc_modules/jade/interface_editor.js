@@ -13,13 +13,13 @@ function submit(){
 
   post_api(target,body,function(err,back){
     if(err){
-      alert('not 200 failure: '+back);
+      alert('failure: '+back);
     }else{
       brrr=JSON.parse(back).redirect;
       if(brrr){
-        redirect('/interface/'+brrr);
+        redirect('/'+brrr);
       }else {
-        redirect('/interface/'+target);
+        redirect('/'+target);
       }
     }
   });

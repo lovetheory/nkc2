@@ -21,22 +21,22 @@ var nkc = express(); //main router
 //----------------------
 //server definitions
 var use_https = settings.server.use_https;
-var target_server, redirection_server, tcp_router;
+//var target_server, redirection_server, tcp_router;
 
 if(use_https){
   var https_options = settings.https_options(); //load the pem files
 
-  target_server =
+  var target_server =
   require('https').Server(https_options,nkc);
 
-  redirection_server =
+  var redirection_server =
   require('http').createServer(function(req, res) {
     var host = req.headers['host'];
     res.writeHead(301, { "Location": "https://" + host + req.url });
     res.end();
   });
 
-  tcp_router = net.createServer(tcpConnection);
+  var tcp_router = net.createServer(tcpConnection);
 
   function tcpConnection(conn)
   {
@@ -50,7 +50,7 @@ if(use_https){
     });
   }
 }else {
-  target_server = require('http').Server(nkc);
+  var target_server = require('http').Server(nkc);
 }
 //-------------------------------
 

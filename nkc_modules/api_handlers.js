@@ -233,7 +233,7 @@ api.get('/thread/:tid', function (req, res, next){
   },
   (err,result)=>{
     if(err){next(err);return;}
-    res.json(result);
+    res.json(report(result));
   });
 });
 
@@ -250,8 +250,8 @@ api.post('/thread/:tid',function(req,res,next){
     if(err){
       res.status(500).json(report('error in /thread/post',err));
     }else{
-      var k = result;
-      k.redirect = 'thread/' + queryfunc.result_reform(k).id;
+      var k = {};
+      k.redirect = 'thread/' + result;
       res.json(report(k));
     }
   },
@@ -260,15 +260,15 @@ api.post('/thread/:tid',function(req,res,next){
 
 //GET /forum/*
 api.get('/forum/:fid',(req,res)=>{
-  apifunc.get_thread_from_forum({
+  apifunc.get_threads_from_forum_as_forum({
     fid:req.params.fid,
     start:req.query.start,
     count:req.query.count,
   },
-  (err,body)=>{
+  (err,data)=>{
     if(!err)
     {
-      res.json(body);
+      res.json(report(data));
     }
     else{
       res.status(500).json(report('cant get /forum/:fid',err));
@@ -310,8 +310,7 @@ api.get('*',(req,res)=>{
 
 //unhandled error handler
 api.use((err,req,res,next)=>{
-  report('error within /api',err.stack);
-  res.status(500).json({error:err.message});
+  res.status(500).json(report('error within /api',err));
 });
 
 exports.route_handler = api;

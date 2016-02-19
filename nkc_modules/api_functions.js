@@ -68,19 +68,11 @@ exports.post_to_thread = function(post,tid,callback,isFirst){
         //insert the new post into posts collection
         queryfunc.doc_save(newpost,'posts',(err,back)=>{
           if(err)callback(err);else{
+            callback(null,tid);
+            //okay to respond the user
 
-            //update the thread object
-            var props = {
-              tlm:timestamp,//update timestamp
-              lm:newpid.toString(),//point to newly created post
-            };
-
-            if(isFirst){//if this is the first post of the thread
-              props.oc = newpid.toString();
-              props.toc = timestamp;
-            }
-
-            queryfunc.doc_update(tid,'threads',props,callback);
+            //update thread object to make sync
+            queryfunc.update_thread(tid);
           }
         });
       }
@@ -151,19 +143,43 @@ exports.get_a_thread = (tid,callback)=>{
   queryfunc.doc_load(tid.toString(),'threads',callback);
 };
 
-//return a list of threads, whose selected posts are included.
-exports.get_thread_from_forum = (params,callback)=>
+//return a list of threads.
+exports.get_threads_from_forum = (params,callback)=>
 {
-  queryfunc.ftp_join({
+  queryfunc.doc_list({
     type:'threads',
     filter_by:'fid',
     equals:params.fid,
-    sort_by:'tlm',
+    sort_by:'lm.tlm',
     order:'desc',
     start:params.start,
     count:params.count,
   },
   callback);
+};
+
+//get forum object.
+exports.get_threads_from_forum_as_forum = (params,callback)=>{
+  async.waterfall
+  ([
+    function(next){
+      next(null,{});
+    },
+    function(result,next){
+      queryfunc.doc_load(params.fid,'forums',(err,forum)=>{
+        if(err){next(err);return;}
+        result.forum = forum;
+        next(null,result);
+      });
+    },
+    function(result,next){
+      exports.get_threads_from_forum(params,(err,threads)=>{
+        if(err){next(err);return;}
+        result.threads = threads;
+        next(null,result);
+      });
+    }
+  ],callback);
 };
 
 exports.get_posts_from_thread_as_thread = (params,callback)=>{

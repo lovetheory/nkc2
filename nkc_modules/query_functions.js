@@ -163,3 +163,64 @@ exports.ftp_join = (opt,callback)=>{
   };
   aqlall(aqlobj,callback);
 };
+
+//在对thread或者post作操作之后，更新thread的部分属性以确保其反应真实情况。
+exports.update_thread = (tid,callback)=>{
+  var aqlobj={
+    query:`
+    FOR t IN threads
+    FILTER t._key == @equals //specify a thread
+
+    let oc =(
+      FOR p IN posts
+      FILTER p.tid == t._key //all post of that thread
+      sort p.toc asc //sort by creation time, ascending
+      limit 0,1 //get first
+      return p
+    )
+    let lm = (
+      FOR p IN posts
+      FILTER p.tid == t._key //all post of that thread
+      sort p.toc desc //sort by creation time, descending
+      limit 0,1 //get first
+      return p
+    )
+    UPDATE t WITH {lm:lm[0],oc:oc[0]} IN threads
+    `
+    ,
+    params:{
+      'equals':tid,
+    },
+  };
+  aqlall(aqlobj,callback);
+  console.log('mmmmm');
+};
+
+//!!!danger!!! will make the database very busy.
+exports.update_all_threads = (callback)=>{
+  var aqlobj={
+    query:`
+    FOR t IN threads
+
+    let oc =(
+      FOR p IN posts
+      FILTER p.tid == t._key //all post of that thread
+      sort p.toc asc //sort by creation time, ascending
+      limit 0,1 //get first
+      return p
+    )
+    let lm = (
+      FOR p IN posts
+      FILTER p.tid == t._key //all post of that thread
+      sort p.toc desc //sort by creation time, descending
+      limit 0,1 //get first
+      return p
+    )
+    UPDATE t WITH {lm:lm[0],oc:oc[0]} IN threads
+    `
+    ,
+    params:{
+    },
+  };
+  aqlall(aqlobj,callback);
+};

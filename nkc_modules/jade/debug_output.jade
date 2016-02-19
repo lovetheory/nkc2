@@ -1,0 +1,8 @@
+if debug_output
+  if data
+    .row
+      .col-md-6
+        .panel.panel-default
+          .panel-body
+            h4 'data' Object Info - debug only
+            div!= plain(JSON.stringify(data,null,4))
