@@ -7,6 +7,8 @@ var settings = require('server_settings.js');
 var helper_mod = require('helper.js')();
 var bodyParser = require('body-parser');
 
+var async = require('async');
+
 var db = require('arangojs')(settings.arango.address);
 db.useDatabase('testdb');
 var testdata = db.collection('testdata');
@@ -124,6 +126,7 @@ exports.post_to_forum = function(post,fid,callback){
   });
 };
 
+//get post object from database
 exports.get_a_post = (pid,callback)=>{
   queryfunc.doc_load(pid.toString(),'posts',callback);
 };
@@ -143,6 +146,11 @@ exports.get_post_from_thread = (params,callback)=>
   callback);
 };
 
+//get thread object from database.
+exports.get_a_thread = (tid,callback)=>{
+  queryfunc.doc_load(tid.toString(),'threads',callback);
+};
+
 //return a list of threads, whose selected posts are included.
 exports.get_thread_from_forum = (params,callback)=>
 {
@@ -157,6 +165,31 @@ exports.get_thread_from_forum = (params,callback)=>
   },
   callback);
 };
+
+exports.get_posts_from_thread_as_thread = (params,callback)=>{
+  async.waterfall
+  ([
+    function(next){
+      next(null,{});
+    },
+    function(result,next){
+      exports.get_a_thread(params.tid,(err,thread)=>{
+        if(err){next(err);return;}
+        result.thread = thread;
+        next(null,result);
+      });
+    },
+    function(result,next){
+      exports.get_post_from_thread(params,(err,posts)=>{
+        if(err){next(err);return;}
+        result.posts = posts;
+        next(null,result);
+      });
+    },
+  ],
+  callback);
+};
+
 
 //check if an entity exists/ is available
 exports.exists = function(key,type,callback){

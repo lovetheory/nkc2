@@ -13,14 +13,14 @@ block content
   .container
     .row
       .col-md-9
-        if posts.length == 0
+        if data.posts.length == 0
           h4 您要找的帖子不存在。
         else
-          h4 #{posts[0].t}
+          h4 #{data.posts[0].t}
               
           .panel.panel-default
             .panel-body
-              each post,index in posts
+              each post,index in data.posts
                 include interface_thread_singlepost.jade
           
           a.btn.btn-default(href='/interface/editor?target=#{replytarget}') 回帖

@@ -225,20 +225,15 @@ api.get('/posts/:pid', function (req, res){
 
 ///----------------------------------------
 ///GET /thread/* handler
-api.get('/thread/:tid', function (req, res){
-  apifunc.get_post_from_thread({
+api.get('/thread/:tid', function (req, res, next){
+  apifunc.get_posts_from_thread_as_thread({
     tid:req.params.tid,
     start:req.query.start,
     count:req.query.count,
   },
-  (err,body)=>{
-    if(!err)
-    {//if nothing went wrong
-      res.json(body);
-    }
-    else {//if error happened
-      res.status(500).json(report('cant get /thread/:tid',err));
-    }
+  (err,result)=>{
+    if(err){next(err);return;}
+    res.json(result);
   });
 });
 

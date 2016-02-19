@@ -1,8 +1,18 @@
 exports.server={
   name:"nkc Development Server",
   port:1086,
-  address:'',
   github:'https://github.com/ctmakro/nkc2',
+
+  use_https:false,
+  //use_https:true,
+};
+
+exports.https_options = function(){
+  var fs = require('fs');
+  return {
+    key: fs.readFileSync('ssl/privatekey.pem'),
+    cert: fs.readFileSync('ssl/certificate.pem')
+  };
 };
 
 exports.jadeoptions= {

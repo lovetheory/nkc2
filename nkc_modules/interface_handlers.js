@@ -35,10 +35,7 @@ iface.get('/forum/:fid',function(req,res,next){
     opt.replytarget = 'forum/' + req.params.fid;
     try{
       var k = jaderender('nkc_modules/jade/interface_forum.jade',opt);
-    }catch(err){
-      next(err);
-      return;
-    }
+    }catch(err){next(err);return;}
     res.send(k);
   });
 });
@@ -46,22 +43,25 @@ iface.get('/forum/:fid',function(req,res,next){
 //render threadview
 ///----------------------------------------
 iface.get('/thread/:tid', function (req, res, next){
-  apifunc.get_post_from_thread({
+  apifunc.get_posts_from_thread_as_thread({
     tid:req.params.tid,
     start:req.query.start,
     count:req.query.count,
   },
-  (err,body)=>{
+  (err,data)=>{
     if(err){
       next(err);
       return;
     }
     //if nothing went wrong
     var opt = {};
-    opt.posts = body;
+    opt.data = data;
     opt.replytarget = 'thread/' + req.params.tid;
-
-    res.send(jaderender('nkc_modules/jade/interface_thread.jade',opt));
+    try{
+      var k = jaderender('nkc_modules/jade/interface_thread.jade',opt);
+    }
+    catch(err){next(err);return;}
+    res.send(k);
   });
 });
 
