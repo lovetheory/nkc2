@@ -20,6 +20,7 @@ exports.jadeoptions= {
   //cache:true,pretty:false,
   //globals:[]
   server:exports.server,
+  debug_output:true,
 };
 
 exports.arango={

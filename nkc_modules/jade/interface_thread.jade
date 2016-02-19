@@ -13,20 +13,25 @@ block content
   .container
     .row
       .col-md-9
-        if data.posts.length == 0
-          h4 您要找的帖子不存在。
-        else
-          h4 #{data.posts[0].t}
-              
-          .panel.panel-default
-            .panel-body
-              each post,index in data.posts
-                include interface_thread_singlepost.jade
+        div(style='margin-bottom: 10px;')
+          if data.posts.length == 0
+            h3 您要找的帖子不存在。
+          else
+            h3.d-inline #{data.posts[0].t}
+            p.d-inline.lighttext(style='margin-left: 10px; vertical-align:text-bottom;').
+              回到 #[a.lighttext(href='/forum/#{data.thread.fid}') #{data.thread.fid}] 
+       
+        .panel.panel-default
+          .panel-body
+            each post,index in data.posts
+              include interface_thread_singlepost.jade
           
-          a.btn.btn-default(href='/interface/editor?target=#{replytarget}') 回帖
+            hr
+            a.btn.btn-default(href='/interface/editor?target=#{replytarget}') 回帖
     .row
-      br
+      hr
     include debug_output.jade
+    
 block scripts
   script(src='/interface_common.js')
   script(src='/interface_thread.js')

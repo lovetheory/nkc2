@@ -27,8 +27,7 @@ var jadeoptions = {
   bbcode:bbcodeconvert,
   plain:plain_escape,
   'dateString':dateString,
-
-  debug_output:true,
+  
 };
 
 Object.assign(jadeoptions,settings.jadeoptions);
