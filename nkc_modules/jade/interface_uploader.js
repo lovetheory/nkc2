@@ -6,7 +6,7 @@ function post_upload(target,data,callback)
 
   xhr.upload.onprogress = function(e) {
     var percentComplete = (e.loaded / e.total) * 100;
-    console.log("Uploaded" + percentComplete + "%");
+    console.log("Uploaded " + percentComplete + "%");
   };
 
   xhr.onreadystatechange=function()
@@ -44,7 +44,6 @@ function upload_callback(err,back){
 
     brrr=JSON.parse(back);
     if(brrr.rid){
-      //if redirection instruction exists
       alert(brrr.rid);
     }else {
       alert(back);
