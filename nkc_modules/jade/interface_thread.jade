@@ -17,7 +17,7 @@ block content
           if data.posts.length == 0
             h3 您要找的帖子不存在。
           else
-            h3.d-inline #{data.posts[0].t}
+            h3.d-inline #{data.thread.oc.t}
             p.d-inline.lighttext(style='margin-left: 10px; vertical-align:text-bottom;').
               回到 #[a.lighttext(href='/forum/#{data.thread.fid}') #{data.thread.fid}] 
        
