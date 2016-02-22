@@ -17,6 +17,7 @@ var rewrite = require('express-urlrewrite');
 var request = require('request');
 
 var nkc = express(); //main router
+nkc.enable('trust proxy');
 
 //----------------------
 //server definitions
