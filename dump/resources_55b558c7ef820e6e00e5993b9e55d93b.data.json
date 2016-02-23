@@ -3,3 +3,6 @@
 {"type":2300,"key":"3","rev":"6088147035","data":{"_key":"3","_rev":"6088147035","size":69076,"oname":"logo.png","sname":"e6f420c53eea113f6f8919df0419026a","mime":"image\/png"}}
 {"type":2300,"key":"4","rev":"6091423835","data":{"_key":"4","_rev":"6091423835","size":69076,"oname":"logo.png","sname":"3e84c7d31db81d053e12a3eb78fed226","mime":"image\/png"}}
 {"type":2300,"key":"5","rev":"6129434715","data":{"_key":"5","_rev":"6129434715","size":69076,"oname":"logo.png","sname":"ff12f428a9c6f1e207e12cd737e7cacb","mime":"image\/png"}}
+{"type":2300,"key":"6","rev":"13815562331","data":{"_key":"6","_rev":"13815562331","size":17343,"oname":"1.jpeg","sname":"852cfe3fbb4807595f14ba735bbfc4a6","mime":"image\/jpeg"}}
+{"type":2300,"key":"7","rev":"19408732251","data":{"_key":"7","_rev":"19408732251","size":10975,"oname":"foo_dr.txt","sname":"6dd5203cb2541877ccfbb8befb6cfcb5","mime":"text\/plain"}}
+{"type":2300,"key":"8","rev":"19511885915","data":{"_key":"8","_rev":"19511885915","size":72787,"oname":"blob","sname":"c776d04945437a9e54848f9e1151337c","mime":"image\/png"}}
