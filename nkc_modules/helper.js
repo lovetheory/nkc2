@@ -123,6 +123,7 @@ module.exports = function(){
         if(!finallyexists){
           //if file not exist everywhere
           callback('not exist anywhere!!');
+          return;
         }
         callback(null,fastest_file);
       }
