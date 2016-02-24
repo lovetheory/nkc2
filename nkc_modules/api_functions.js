@@ -215,9 +215,9 @@ exports.exists = function(key,type,callback){
 exports.get_user_by_name = (username,callback)=>{
   queryfunc.doc_list({
     type:'users',
-    filter_by:'name',
+    filter_by:'username',
     equals:username,
-    sort_by:'name',
+    sort_by:'username',
     order:'asc',
   },
   callback);
@@ -229,7 +229,10 @@ exports.get_user = (uid,callback)=>{
 
 function user_exist_by_name(username,callback){
   exports.get_user_by_name(username,(err,back)=>{
-    if(err)callback(err);else{
+    if(err){
+      callback(err);
+    }
+    else{
       if(back.length==0){
         callback(null,false);//user not exist
       }else{
@@ -242,7 +245,7 @@ function user_exist_by_name(username,callback){
 //user creation
 exports.create_user = function(user,callback){
   //check if user exists.
-  user_exist_by_name(user.name,(err,back)=>{
+  user_exist_by_name(user.username,(err,back)=>{
     if(err)callback(err);else{
       if(back){
         //if user exists

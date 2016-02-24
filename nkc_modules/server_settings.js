@@ -44,6 +44,7 @@ exports.root_serve_static =
   {to:'nkc_modules/vue'},
   {to:'nkc_modules/jade'},
   {to:'nkc_modules/xbbcode'},
+  {to:'nkc_modules/'},
   {map:'/bootstrap',to:'bootstrap-3.3.6-dist'},
 ];
 

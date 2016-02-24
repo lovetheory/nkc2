@@ -288,10 +288,15 @@ api.get('/user/:uid',(req,res)=>{
   });
 });
 
+var regex_validation = require('nkc_regex_validation');
 //POST /user
 api.post('/user',(req,res)=>{
-  //todo: sanitize user object
   var userobj = req.body;
+  var violating = regex_validation.validate(userobj);
+  if(violating){
+    res.status(500).json(report('violated',violating));
+    return;
+  }
 
   apifunc.create_user(userobj,(err,back)=>{
     if(err){

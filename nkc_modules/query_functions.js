@@ -103,7 +103,7 @@ exports.doc_list = (opt,callback)=>{
     `
     ,
     params:{
-      'equals':opt.equals,
+      equals:opt.equals,
     },
   };
 

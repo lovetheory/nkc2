@@ -11,29 +11,15 @@ function register_submit(){
     return;
   }
 
-  var result = nkc_validate(userobj);
+  var result = nkc_validate_fields(userobj);
   if(result){
-    alert('项 '+result.toString()+' 的值不符合规定，请修改。');
+    alert('项 “'+result.toString()+'” 的值不符合要求，请修改。');
   }else{
-    alert('allright');
+    //alert('allright');
+    post_api('user',userobj,function(err,back){
+      if(err){alert(back);return;}
+      //else
+      alert(back);
+    });
   }
-
-}
-
-//return false if no violation, otherwise return first violating field.
-function nkc_validate(input){
-  //input is an object of fields awaiting validation.
-  for(i in nkc_validate_rules){
-    if(input[i]!==undefined&&input[i]!==null) //if field exists
-    if(nkc_validate_rules[i].test(input[i])==false)
-    return i.toString();
-  }
-  return false;
-}
-
-var nkc_validate_rules={
-  username: /^[A-Za-z0-9\-\_\u4e00-\u9fa5]{2,16}$/,
-  //中文，大小写字母，2到16个字
-  password: /^[A-Za-z0-9\_\-]{6,20}$/,
-
 }
