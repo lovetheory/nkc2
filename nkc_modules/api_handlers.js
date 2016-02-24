@@ -291,8 +291,9 @@ api.get('/user/:uid',(req,res)=>{
 //POST /user
 api.post('/user',(req,res)=>{
   //todo: sanitize user object
+  var userobj = req.body;
 
-  apifunc.create_user(req.body,(err,back)=>{
+  apifunc.create_user(userobj,(err,back)=>{
     if(err){
       res.status(500).json(report('cant create user',err));
     }
