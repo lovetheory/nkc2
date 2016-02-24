@@ -27,10 +27,10 @@ var jadeoptions = {
   bbcode:bbcodeconvert,
   plain:plain_escape,
   'dateString':dateString,
-  
+
 };
 
-Object.assign(jadeoptions,settings.jadeoptions);
+Object.assign(jadeoptions,settings.jadeoptions); //apply settings from settings.js
 
 function jaderender(filename,options){
   for(k in jadeoptions)

@@ -30,7 +30,7 @@ The author of these files shall not be held responsible for any terrorist attack
 2. `git clone` this project, or extract from zip, to somewhere nice
 3. `npm update` there for the dependencies
 4. Make sure ArangoDB is listening on __localhost:8529__, then run __db_restore.command__ from Finder (OS X: may need `chmod +x` first) or `sh db_restore.command` (UNIX) to load the database from JSON files
-5. run __start.bat__ or __start.command__ or `sh` __start.command__ to start the server in a CLI environment
+5. run __run_as_dev.bat__ or __run_as_dev.command__ to start the server in a CLI environment
 6. Press **Enter** in terminal window whenever to restart server. You may also visit `server:port/reload` to do the same
 
 ## 讲国语啦
@@ -38,7 +38,7 @@ The author of these files shall not be held responsible for any terrorist attack
 2. 通过 `git clone` 或者zip解压将项目弄到某处
 3. `npm update` 以获取依赖项
 4. 确保 ArangoDB 在 __localhost:8529__ 监听, 然后从Finder运行 __db_restore.command__ (OS X: 可能需要先 `chmod +x`) 或者 `sh db_restore.command` (UNIX) 以将JSON文件载入数据库
-5. 运行 __start.bat__ or __start.command__ or `sh` __start.command__ 以从命令行启动服务器
+5. 运行 __run_as_dev.bat__ or __run_as_dev.command__ 以从命令行启动服务器
 6. 在命令行窗口中随时按下 **Enter** 就可以重启服务器。 你也可以访问 `server:port/reload` 实现同样效果
 
 ## For your convenience

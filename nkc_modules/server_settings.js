@@ -16,11 +16,12 @@ exports.https_options = function(){
 };
 
 exports.jadeoptions= {
-  pretty:true,cache:false,
+  pretty:true,
+  cache:(development?false:true),
   //cache:true,pretty:false,
   //globals:[]
   server:exports.server,
-  debug_output:true,
+  debug_output:(development?true:false),
 };
 
 exports.arango={

@@ -1,6 +1,10 @@
 global.__projectroot = __dirname + '/';//create global variable for project root directory
 module.paths.push(__projectroot + 'nkc_modules'); //enable require-ment for this path
 
+global.environment = process.env.NODE_ENV?process.env.NODE_ENV:'development';
+global.development = environment !== 'production';
+console.log('running in '+environment+' mode');
+
 var moment = require('moment');
 var fs = require('fs');
 var net = require('net');
