@@ -53,6 +53,8 @@ exports.root_serve_static =
 ];
 
 exports.urlrewrite = [
+  {map:'/',to:'/forum/default'},
+  {map:'/api',to:'/'},
   {map:'/logout*',to:'/interface/logout$1'},
   {map:'/login*',to:'/interface/login$1'},
   {map:'/register*',to:'/interface/register$1'},
