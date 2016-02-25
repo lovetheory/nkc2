@@ -1,8 +1,8 @@
 extends bootstrap_base.jade
 
 block title
-  title if_t
-  meta#reply-target(value='#{replytarget}')
+  title #{data.thread.oc.t} - 科创论坛
+  meta#replytarget(value='#{data.replytarget}')
   
 block styles
   include nkc_styles.jade
@@ -27,10 +27,9 @@ block content
               include interface_thread_singlepost.jade
           
             hr
-            a.btn.btn-default(href='/interface/editor?target=#{replytarget}') 回帖
-    .row
-      hr
-    include debug_output.jade
+            a.btn.btn-default(href='/interface/editor?target=#{data.replytarget}') 回帖
+
+  include debug_output.jade
     
 block scripts
   script(src='/interface_common.js')

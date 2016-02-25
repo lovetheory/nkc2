@@ -6,9 +6,9 @@ block head
 block body
   h1 Sorry
   :markdown
-    request to path `#{url}` encountered an error.
+    request to path `#{data.url}` encountered an error.
   p message:
-  pre.intpad.zipline #{errormessage}
+  pre.intpad.zipline #{data.err.message}
   p stack:
-  pre.intpad.zipline #{errorstack}
+  pre.intpad.zipline #{data.err.stack}
   p(style="color:#999;") #{server.name}

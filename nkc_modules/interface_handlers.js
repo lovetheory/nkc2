@@ -17,9 +17,19 @@ var apifunc = require('api_functions');
 ///------------
 ///to be executed before all handlers below
 iface.use(function(req,res,next){
+  if(!res.data)
+  res.data = {}
   next();
 });
 
+iface.use(function(req,res,next){
+  //every page has a navbar, allright?
+  res.data.navbar = {};
+  //so, would you log in first please?
+  res.data.user = req.user;
+  res.data.userinfo = req.userinfo;
+  next();
+});
 
 //render forumview
 iface.get('/forum/:fid',function(req,res,next){
@@ -28,15 +38,13 @@ iface.get('/forum/:fid',function(req,res,next){
     start:req.query.start,
     count:req.query.count,
   },(err,data)=>{
-    if(err){next(err);return;}
+    if(err)return next(err);
     //if nothing went wrong
-    var opt = {};
-    opt.data = data;
-    opt.replytarget = 'forum/' + req.params.fid;
-    try{
-      var k = jaderender('nkc_modules/jade/interface_forum.jade',opt);
-    }catch(err){next(err);return;}
-    res.send(k);
+
+    Object.assign(res.data,data);
+    res.data.replytarget = 'forum/' + req.params.fid;
+    res.template = 'nkc_modules/jade/interface_forum.jade';
+    return next();
   });
 });
 
@@ -50,35 +58,67 @@ iface.get('/thread/:tid', function (req, res, next){
   },
   (err,data)=>{
     if(err){
-      next(err);
-      return;
+      return next(err);
     }
     //if nothing went wrong
-    var opt = {};
-    opt.data = data;
-    opt.replytarget = 'thread/' + req.params.tid;
-    try{
-      var k = jaderender('nkc_modules/jade/interface_thread.jade',opt);
-    }
-    catch(err){next(err);return;}
-    res.send(k);
+
+    res.data.replytarget = 'thread/' + req.params.tid;
+    Object.assign(res.data,data);
+    res.template = 'nkc_modules/jade/interface_thread.jade'
+    return next();
   });
 });
 
 //get editor
 ///--------------------
 iface.get('/editor',(req,res,next)=>{
-  var opt = {};
+  res.data.replytarget = req.query.target;
+  res.data.navbar.highlight = 'editor'; //navbar highlight
+  res.template = 'nkc_modules/jade/interface_editor.jade'
+  return next();
+});
 
-  var e = {
-    target:req.query.target,
-  };
+//get login
+iface.get('/login',(req,res,next)=>{
+  res.template = 'nkc_modules/jade/interface_user_login.jade';
+  next();
+});
 
-  opt.editor=e;
+//get register form
+iface.get('/register',(req,res,next)=>{
+  res.template = 'nkc_modules/jade/interface_user_register.jade';
+  next();
+});
 
-  res.send(jaderender('nkc_modules/jade/interface_editor.jade',opt));
+iface.get('/logout',(req,res,next)=>{
+  res.template = 'nkc_modules/jade/interface_user_logout.jade';
+
+  //put a signed cookie in header
+  res.cookie('userinfo',{info:'nkc_logged_out'},{
+    signed:true,
+    expires:(new Date(Date.now()-86400000)), //expire the cookie!
+    encode:String,
+  });
+
+  res.data.userinfo = null; //nullify the userinfo
+  res.data.user = null;
+
+  next();
+});
+
+//render phase: if template jade file exists
+iface.use((req,res,next)=>{
+  if(res.template)
+  {
+    try {var k = jaderender(res.template,res.data)}
+    catch(err){
+      return next(err);
+    }
+    return res.send(k);
+    //ends here, no more hassle
+  }
+  return next();
 });
 
 //unhandled error will be routed back to server.js
-
 exports.route_handler = iface;

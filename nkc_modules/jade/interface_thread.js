@@ -1,4 +1,4 @@
-var replyTarget = ga('reply-target','value');
+var replyTarget = ga('replytarget','value');
 
 function reply(){
   alert(replyTarget);

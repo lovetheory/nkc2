@@ -276,15 +276,47 @@ api.get('/forum/:fid',(req,res)=>{
   });
 });
 
-//GET /user
-api.get('/user/:uid',(req,res)=>{
-  apifunc.get_user(req.params.uid,(err,back)=>{
-    if(err){
-      res.status(500).json(report('cant get user',err));
+if(development){
+  //GET /user
+  api.get('/user/get/:uid',(req,res)=>{
+    apifunc.get_user(req.params.uid,(err,back)=>{
+      if(err){
+        res.status(500).json(report('cant get user',err));
+      }
+      else{
+        res.json(report(back));
+      }
+    });
+  });
+}
+
+//POST /user/login
+//test if user exists. if exist generate cookie.
+api.post('/user/login',(req,res,next)=>{
+  var loginobj = req.body;
+  apifunc.verify_user(loginobj,(err,back)=>{
+    if(err){return next(err);}
+    if(!back){return next('unmatch');}
+
+    //if user exists
+    var cookieobj = {
+      username:back.username,
+      uid:back._key,
+      lastlogin:Date.now(),
     }
-    else{
-      res.json(report(back));
-    }
+
+    //put a signed cookie in header
+    res.cookie('userinfo',JSON.stringify(cookieobj),{
+      signed:true,
+      maxAge:(86400*30*1000),
+      encode:String,
+    });
+    var signed_cookie = res.get('set-cookie');
+
+    //put the signed cookie in response, also
+    res.send(report({'cookie':signed_cookie,'instructions':
+    'please put this cookie in request header for api access'}));
+
   });
 });
 
@@ -306,6 +338,23 @@ api.post('/user',(req,res)=>{
       res.json(report(back));
     }
   });
+});
+
+//logout of USER
+//GET /user/logout
+api.get('/user/logout',(req,res)=>{
+  //put a signed cookie in header
+  res.cookie('userinfo',{info:'nkc_logged_out'},{
+    signed:true,
+    expires:(new Date(Date.now()-86400000)),
+    encode:String,
+  });
+
+  var signed_cookie = res.get('set-cookie');
+
+  //put the signed cookie in response, also
+  res.send(report({'cookie':signed_cookie,'instructions':
+  'you have logged out'}));
 });
 
 api.get('*',(req,res)=>{

@@ -1,7 +1,7 @@
 extends bootstrap_base.jade
 
 block title
-  title 注册
+  title 登陆
   
 block styles
   include nkc_styles.jade
@@ -12,42 +12,39 @@ block content
   .container
     .row
       .col-sm-12.col-md-9
-        h1 注册
-        p 欲于科创论坛交流，请先注册一个账号。
+        h1 登陆
+        p 还记得用户名吗？ 如果还没有账号，请 #[a(href='register') 注册]。
+        
         hr
         .form-horizontal()
           .form-group
             label.control-label.col-sm-3 用户名
             .col-sm-6
-              input#username.form-control(type='text' placeholder='字母、数字、汉字，区分大小写' onkeydown='username_keypress()')
+              input#username.form-control(type='text' placeholder='用户名' onkeydown='username_keypress()')
               
           .form-group
             label.control-label.col-sm-3 密码
             .col-sm-6
-              input#password.form-control(type='password' placeholder='至少6位' onkeydown='password_keypress()')
-            
-          .form-group
-            label.control-label.col-sm-3 再次输入密码
-            .col-sm-6
-              input#password2.form-control(type='password' placeholder='重复一次' onkeydown='password2_keypress()')
+              input#password.form-control(type='password' placeholder='密码' onkeydown='password_keypress()')
         
           .form-group
-            .col-sm-offset-3.col-sm-10
+            .col-sm-offset-3.col-sm-3
               //offset 2 grids
-              button.btn.btn-default(onclick='register_submit()') 提交
+              button.btn.btn-default(onclick='login_submit()') 提交
               
           .form-group
             .col-sm-offset-3.col-sm-6
               #error_info_panel.panel.panel-default(style='display:none;')
                 .panel-body
                   div#error_info.d-inline.lighttext() 
+      
 
   include debug_output.jade
     
 block scripts
   script(src='/interface_common.js')
-  script(src='/nkc_regex_validation.js')
-  script(src='/interface_user_register.js')
+  script(src='/interface_user_login.js')
+
 
       
                 

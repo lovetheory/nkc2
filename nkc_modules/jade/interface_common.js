@@ -3,6 +3,7 @@ function geid(id){return document.getElementById(id);}
 function gv(id){return geid(id).value;}
 function ga(id,attr){return geid(id).getAttribute(attr);}
 function hset(id,content){geid(id).innerHTML=content;}
+function display(id){geid(id).style = 'display:inherit;'}
 
 function post_api(target,body,callback)
 {

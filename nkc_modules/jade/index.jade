@@ -8,7 +8,16 @@ block body
     div.intpad
       div.intpad
         h1 #{server.name}
-        p Your IP is #{address}. #[a.grey(href='#{server.github}') #{server.github}]
+        p Your IP is #{data.address}. #[a.grey(href='#{server.github}') #{server.github}]
+        if data.user
+          :markdown
+            You are logged in as **#{data.user.username}** on **#{dateString(data.userinfo.lastlogin)}**. Your UID is **#{data.user._key}**.
+            
+            The time is now **#{dateString()}** on server.
+            
+        else
+          :markdown
+            You are not logged in.
   div
     div.halfpane.intpad
       div.intpad.zipline
@@ -22,4 +31,4 @@ block body
       div.intpad.zipline
         h1 Server Status
         pre
-          code #{osinfo}
+          code #{data.osinfo}

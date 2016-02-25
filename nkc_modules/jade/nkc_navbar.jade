@@ -6,21 +6,28 @@ style.
 nav.navbar.navbar-default
   .container-fluid
     .navbar-header
-      a.navbar-brand(href='#') 科创论坛
+      a.navbar-brand(href='/') 科创论坛
     
     .navbar-left
       ul.nav.navbar-nav
-        li.active
+        li(class="#{data.navbar.highlight=='tools'?'active':''}")
           a 工具
-        li
+        li(class="#{data.navbar.highlight=='tutorial'?'active':''}")
           a 教学
-        li
-          a 发帖
+        li(class="#{data.navbar.highlight=='editor'?'active':''}")
+          a(href='/e') 发帖
     
     .navbar-right
       ul.nav.navbar-nav
-        li
-          a 登录
+        if data.userinfo
+          li
+            a #{data.userinfo.username}
+          li
+            a(href='/logout') 登出
+        else
+          li
+            a(href='/login') 登录
+        
     .navbar-right
       form.navbar-form(role='search')
         .form-group

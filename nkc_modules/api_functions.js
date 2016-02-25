@@ -270,6 +270,23 @@ exports.create_user = function(user,callback){
   });
 }
 
+//determine if given password matches the username
+exports.verify_user = function(user,callback){
+  exports.get_user_by_name(user.username,(err,back)=>{
+    if(err)return callback(err);
+    if(back.length===0)//user not exist
+    return callback('user not exist by name');
+
+    //if user exists
+    if(back[0].password === user.password){
+      callback(null,back[0]); // return the user
+    }
+    else {
+      callback(null,false); //return false, indicating unmatch
+    }
+  });
+}
+
 exports.get_resources = function(key,callback){
   queryfunc.doc_load(key,'resources',callback);
 }

@@ -27,16 +27,18 @@ var jadeoptions = {
   bbcode:bbcodeconvert,
   plain:plain_escape,
   'dateString':dateString,
-
 };
 
 Object.assign(jadeoptions,settings.jadeoptions); //apply settings from settings.js
 
-function jaderender(filename,options){
-  for(k in jadeoptions)
-  {
-    options[k] = jadeoptions[k];
-  }
+function jaderender(filename,data){
+
+  // for(k in jadeoptions)
+  // {
+  //   options[k] = jadeoptions[k];
+  // }
+  var options = jadeoptions;
+  options.data = data;
 
   return jade.renderFile(filename,options);
 };

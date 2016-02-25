@@ -1,11 +1,15 @@
 exports.server={
   name:"nkc Development Server",
   port:1086,
+  https_port:10443,
   github:'https://github.com/ctmakro/nkc2',
 
   use_https:false,
   //use_https:true,
 };
+
+exports.cookie_secret='nkc';
+exports.compression_level=2;
 
 exports.https_options = function(){
   var fs = require('fs');
@@ -49,6 +53,9 @@ exports.root_serve_static =
 ];
 
 exports.urlrewrite = [
+  {map:'/logout*',to:'/interface/logout$1'},
+  {map:'/login*',to:'/interface/login$1'},
+  {map:'/register*',to:'/interface/register$1'},
   {map:'/r/:rid',to:'/api/resources/get/:rid'},
   {map:'/thread/:tid',to:'/interface/thread/:tid'},
   {map:'/read/:tid',to:'/interface/thread/:tid'},
