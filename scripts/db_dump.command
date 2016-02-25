@@ -2,10 +2,10 @@
 
 # goto lying directory
 cd -- "$(dirname "$0")"
-cd ..
 
 # self-leverage, make double-clickable in OS X
 chmod +x db_dump.command
+cd ..
 
 clear
 

@@ -6,6 +6,8 @@ cd -- "$(dirname "$0")"
 # self-leverage, make double-clickable in OS X
 chmod +x db_restore.command
 
+cd ..
+
 echo ----------------
 
 echo npm update
