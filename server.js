@@ -99,7 +99,8 @@ nkc.use((req,res,next)=>{
 //7. obtain user (from DB)
 nkc.use((req,res,next)=>{
   if(!req.userinfo)return next();//if userinfo (from cookie) not exist
-  if(req.url.indexOf('/avatar')>=0)return next();//if going for avatar
+  if(req.url.indexOf('/avatar')>=0 && req.method != 'POST')return next();
+  //if going for avatar
 
   //if userinfo exists
   console.log(req.userinfo);
