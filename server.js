@@ -105,8 +105,15 @@ nkc.use((req,res,next)=>{
   //if userinfo exists
   console.log(req.userinfo);
   apifunc.get_user(req.userinfo.uid,(err,back)=>{
-    if(err)return next(err);
-    req.user = back;
+    if(err)return next(); //let go
+    if(back.username==req.userinfo.username)
+    {
+      req.user = back;
+    }
+    else
+    {
+      //dont do a thing.
+    }
     return next();
   });
 });
