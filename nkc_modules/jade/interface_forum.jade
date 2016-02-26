@@ -35,7 +35,7 @@ block content
               .col-md-4
                 p.
                   今日：#{data.forum.stats.posts_today} 主题：#{data.forum.stats.threads_total} 总帖：#{data.forum.stats.posts_total}
-                版主：
+                text 版主：
                 for i,index in data.forum.owners
                   a.d-inline(href='#') #{index?', ':''}#{i.username}
                 
