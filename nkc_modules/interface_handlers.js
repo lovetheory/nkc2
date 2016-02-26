@@ -106,6 +106,12 @@ iface.get('/logout',(req,res,next)=>{
   next();
 });
 
+iface.get('/me',(req,res,next)=>{
+  res.template = 'nkc_modules/jade/interface_user_profile.jade';
+  res.replytarget = 'me';
+  next();
+});
+
 //render phase: if template jade file exists
 iface.use((req,res,next)=>{
   if(res.template)

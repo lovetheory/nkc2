@@ -26,11 +26,14 @@ function post_upload(target,data,callback)
 }
 
 ////server/api/ path to upload
-var upload_target = 'resources';
+var upload_target = ga('select-file','target');
 
 //on click of the upload button
 function uploadfile_click(){
   var formData = new FormData();
+
+  if(!geid('select-file').files[0])return alert('pick one, okay?');
+
   formData.append('file', geid('select-file').files[0]);
   post_upload(upload_target,formData,upload_callback);
 }

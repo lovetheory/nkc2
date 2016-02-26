@@ -3,7 +3,7 @@ module.paths.push(__projectroot + 'nkc_modules'); //enable require-ment for this
 
 var moment = require('moment')
 var path = require('path')
-var fs = require('fs')
+var fs = require('fs.extra')
 var settings = require('server_settings.js');
 var helper_mod = require('helper.js')();
 var bodyParser = require('body-parser');
@@ -31,9 +31,16 @@ api.use(function(req,res,next){
 });
 
 //multi-part parsing.
-var upload = multer({ dest: 'tmp/' });
-api.post('/resources', upload.single('file'), function (req, res) {
-  // req.file is the `avatar` file
+//note that multer is applied AFTER body-parser.
+var upload = multer(settings.upload_options);
+api.post('/resources', upload.single('file'), function (req, res, next) {
+  //obtain user first
+  if(!req.user)
+  {
+    return next('who are you? log in first.');
+  }
+
+  // req.file is the `file` file
   // req.body will hold the text fields, if there were any
   console.log(req.file);
   /*
@@ -49,10 +56,8 @@ api.post('/resources', upload.single('file'), function (req, res) {
 
   //obtain an rid first
   apifunc.get_new_rid((err,rid)=>{
-    if(err){
-      res.status(500).json(report('rid obtain err',err));
-      return;
-    }
+    if(err)return next(err);
+
     //rid got
     var robject = {
       _key:rid,
@@ -60,21 +65,59 @@ api.post('/resources', upload.single('file'), function (req, res) {
       sname:req.file.filename,//存储名
       size:req.file.size,
       mime:req.file.mimetype,
+      username:req.user.username,
+      uid:req.user._key,
     };
 
     //storage into db
     queryfunc.doc_save(robject,'resources',function(err,result){
-      if(err){
-        res.status(500).json(report('rid saving err',err));
-        return;
-      }
+      if(err)return next(err);
 
       //success
       result.rid = result['_key'];
-      res.json(report(result));
+      res.obj = result;
+      return next();
     });
   });
 });
+
+fs.mkdirp(settings.avatar_path); //place for avatars to move to after upload
+
+var avatar_upload = multer(settings.upload_options_avatar);
+api.post('/avatar', avatar_upload.single('file'), function(req,res,next){
+  console.log(req.file);
+  if(req.file.mimetype.indexOf('image')<0)//if not the right type of file
+  return next('wrong mimetype for avatar');
+  //obtain user first
+  if(!req.user)
+  return next('who are you? log in first.');
+
+  //otherwise should we allow..
+
+  //delete before move
+  fs.unlink(settings.avatar_path+req.user._key+'.jpg',function(err){
+    //ignore error
+    fs.move(
+      req.file.path,
+      settings.avatar_path+req.user._key+'.jpg',
+      function(err){
+        if(err)
+        {
+          return next(err);
+        }
+
+        res.obj = req.file;
+        return next();
+      }
+    );
+  });
+});
+
+
+api.get('/avatar/:uid',function(req,res,next){
+  res.status(404).send('');
+});
+
 
 api.get('/resources/:rid',function(req,res){
   var key = req.params.rid;
@@ -370,6 +413,14 @@ api.use('*',(req,res)=>{
 
 //unhandled error handler
 api.use((err,req,res,next)=>{
+  if(req.file)
+  {
+    //delete uploaded file when error happens
+    fs.unlink(req.file.filename,(err)=>{
+      if(err)report('error unlinking file, but dont even care',err);
+    });
+  }
+
   res.status(500).json(report('error within /api',err));
 });
 

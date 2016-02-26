@@ -1,9 +1,7 @@
 div
-  input#select-file(type='file')
-div
-  button(onclick='uploadfile_click()') tryup
-div#paste_target
-  p paste_target
-  
-script(src='/interface_common.js')
-script(src='/interface_uploader.js')
+  div
+    input#select-file(type='file' target='resources')
+  div
+    button(onclick='uploadfile_click()') tryup
+  div#paste_target
+    

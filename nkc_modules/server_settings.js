@@ -65,8 +65,36 @@ exports.urlrewrite = [
   {map:'/e*',to:'/interface/editor$1'},
 ];
 
-exports.resource_paths = [
+exports.resource_paths = [ //well, to find file simutaneously
   //trailing slash '/' is very important!!!
   __projectroot + 'tmp/',
   __projectroot + 'tmp2/',
+  __projectroot + 'resources/',
+  __projectroot + 'resources/avatar',
 ];
+
+//where resources are uploaded to
+exports.upload_options = {
+  dest: __projectroot + 'tmp/',
+  limits:
+  {
+    fields:20, //max number of file fields
+    fileSize:1048576, //1MB
+    files:1,//1 part/file a time please.
+    headerPairs:20, //kv pairs in header
+  }
+};
+
+exports.avatar_path = 'resources/avatar/';
+
+//user avatar upload
+exports.upload_options_avatar = {
+  dest: __projectroot + 'tmp/',
+  limits:
+  {
+    fields:20, //max number of file fields
+    fileSize:1024*100, //100kb
+    files:1,//1 part/file a time please.
+    headerPairs:20, //kv pairs in header
+  }
+};
