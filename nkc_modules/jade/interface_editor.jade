@@ -3,9 +3,6 @@ extends bootstrap_base.jade
 block title
   title 编辑器 - 科创论坛
   
-block styles
-  include nkc_styles.jade
-
 block content
   
   #ife.container
@@ -47,3 +44,11 @@ block scripts
   
   script(src='/interface_common.js')
   script(src='/interface_editor.js')
+  
+  if data.replytarget.indexOf('forum')>=0
+    script.
+      geid('title').focus();
+  else
+    script.
+      geid('content').focus();
+  
