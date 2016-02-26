@@ -1,7 +1,7 @@
 extends bootstrap_base.jade
 
 block title
-  title meh!
+  title #{data.forum.display_name}
   
 block styles
   include nkc_styles.jade
@@ -33,12 +33,11 @@ block content
                   #{data.forum.description}
                 a.btn.btn-default(href='/interface/editor?target=#{data.replytarget}') 发帖
               .col-md-4
-                p
+                p.
                   今日：#{data.forum.stats.posts_today} 主题：#{data.forum.stats.threads_total} 总帖：#{data.forum.stats.posts_total}
-                p
-                  版主：
-                  for i,index in data.forum.owners
-                    a(href='#') #{index?', ':''}#{i.username}
+                版主：
+                for i,index in data.forum.owners
+                  a.d-inline(href='#') #{index?', ':''}#{i.username}
                 
             .row
               .col-md-12
