@@ -50,9 +50,10 @@ exports.root_serve_static =
   {to:'nkc_modules/xbbcode'},
   {to:'nkc_modules/'},
   {map:'/bootstrap',to:'bootstrap-3.3.6-dist'},
+  //{map:'/avatar',to:'resources/avatar'},
 ];
 
-exports.urlrewrite = [
+exports.urlrewrite = [ //happens before serve_static
   {map:'/',to:'/forum/default'},
   {map:'/api',to:'/'},
 
@@ -76,7 +77,6 @@ exports.resource_paths = [
   __projectroot + 'tmp/',
   __projectroot + 'tmp2/',
   __projectroot + 'resources/',
-  __projectroot + 'resources/avatar/',
 ];
 
 //where resources are uploaded to
@@ -91,8 +91,18 @@ exports.upload_options = {
   }
 };
 
-exports.avatar_path = 'resources/avatar/';
-exports.default_avatar_path = 'resources/default_avatar.jpg';
+//where to find avatars.
+exports.avatar_paths=[
+  //well, in order to find file simutaneously in these places
+  //trailing slash '/' is very important!!!
+  __projectroot + 'resources/avatar/',
+];
+
+//where to save avatars.
+exports.avatar_path = __projectroot+'resources/avatar/';
+
+//where is default avatar.
+exports.default_avatar_path = __projectroot+'resources/default_avatar.jpg';
 
 //user avatar upload
 exports.upload_options_avatar = {

@@ -19,7 +19,10 @@ function login_submit(){
     //else
     //successfully logged in
     //alert(back);
-    if(document.referrer.toString().indexOf('register')>=0)
+    if(
+      document.referrer.toString().indexOf('register')>=0 ||
+      document.referrer.toString().indexOf('logout')>=0
+    )
     location.href = '/'; //dont go back to register form
     else
     location.href = document.referrer; //go back in history

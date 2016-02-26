@@ -73,7 +73,16 @@ for(i in settings.root_serve_static)
 nkc.use(compression({level:settings.compression_level}));//enable compression
 
 //4. log me
-nkc.use((req,res,next)=>{requestLog(req);next();});
+nkc.use((req,res,next)=>{
+  if(req.url.indexOf('/avatar')>=0)return next(); //dont record
+
+  var d=new Date();
+  dash();
+  console.log(dateString(d).cyan,
+  req.ip, req.method, req.originalUrl.cyan);
+
+  next();
+});
 
 //5. parse cookie
 nkc.use(cookieparser(settings.cookie_secret));
@@ -90,6 +99,7 @@ nkc.use((req,res,next)=>{
 //7. obtain user (from DB)
 nkc.use((req,res,next)=>{
   if(!req.userinfo)return next();//if userinfo (from cookie) not exist
+  if(req.url.indexOf('/avatar')>=0)return next();//if going for avatar
 
   //if userinfo exists
   console.log(req.userinfo);
@@ -158,7 +168,7 @@ nkc.use((err,req,res,next)=>{
   report('not handled',err.stack);
   var data = {};
   data.url = req.originalUrl;
-  data.err = err;
+  data.err = err.stack?err.stack:JSON.stringify(err);
   res.status(500).send(
     jaderender('nkc_modules/jade/500.jade',data)
   );

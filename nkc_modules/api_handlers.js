@@ -119,7 +119,7 @@ api.get('/avatar/:uid',function(req,res){
 
   //success
   fastest_file_from_paths(
-    settings.resource_paths, //from these path
+    settings.avatar_paths, //from these path
     uid+'.jpg', //get this file
     function(err,best_filepathname){
       if(err){
@@ -131,17 +131,7 @@ api.get('/avatar/:uid',function(req,res){
       res.setHeader('Content-disposition', 'inline; filename=' + uid+'.jpg');
       res.setHeader('Content-type', 'image/jpeg');
 
-      var filestream = fs.createReadStream(best_filepathname);
-
-      filestream.on('error',function(err){
-        console.log('err',best_filepathname.red);
-        return res.status(404).json(report('image not exist',err));
-      });
-
-      filestream.on('open',function(){
-        console.log('cool',best_filepathname.green);
-        filestream.pipe(res);
-      });
+      res.sendFile(best_filepathname);
     }
   );
 });

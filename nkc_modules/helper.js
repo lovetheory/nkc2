@@ -28,14 +28,6 @@ module.exports = function(){
     };
   };
 
-  //request logger
-  this.requestLog = function (req){
-    var d=new Date();
-    dash();
-    console.log(dateString(d).cyan,
-    req.ip, req.method, req.originalUrl.cyan);
-  };
-
   //error reporter
   this.report = function(description,err){
     if(err){
