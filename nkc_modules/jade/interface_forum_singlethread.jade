@@ -1,0 +1,22 @@
+- var url = '/thread/' + thread._key
+- var avatar = 'http://bbs.kechuang.org/windid/attachment/avatar/000/00/00/10_small.jpg'
+
+li.list-group-item(style='padding:8px;padding-left:15px;')
+  .media
+    .media-left.media-middle
+      a(href='#')
+        img.media-object.avatar(src='#{avatar}' style='width:45px;height:45px;')
+    .media-body.media-middle
+      .row
+        .col-xs-8
+          a(href="#{url}") #[b #{thread.oc.t}] 
+          //帖子标题链接
+          
+          p.lighttext.
+            #{dateString(thread.oc.toc)} #{thread.oc.username}
+          //帖子发布时间和发布者
+      
+        .col-xs-4
+          p.lighttext.
+            #{dateString(thread.lm.tlm)} #{thread.lm.username}
+          //帖子最后回复时间和回复者

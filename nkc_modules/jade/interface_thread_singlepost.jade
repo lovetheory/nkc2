@@ -15,7 +15,7 @@ else
       .col-xs-12
         if(post.t&&post.t!=''&&index!=0)
           h4.d-inline #{post.t}
-        p.d-inline.lighttext #username #{dateString(post.toc)}
+        p.d-inline.lighttext #{post.username} - #{dateString(post.toc)}
         case post.l
           when 'markdown'
             div!= markdown(post.c)

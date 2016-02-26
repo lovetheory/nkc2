@@ -55,7 +55,7 @@ exports.post_to_thread = function(post,tid,callback,isFirst){
       {
         //create a new post
         var timestamp = Date.now();
-        var newpost = {
+        var newpost = { //accept only listed attribute
           _key:newpid,
           tid:tid,
           toc:timestamp,
@@ -63,6 +63,8 @@ exports.post_to_thread = function(post,tid,callback,isFirst){
           c:post.c,
           t:post.t,
           l:post.l,
+          uid:post.uid,
+          username:post.username,
         };
 
         //insert the new post into posts collection
@@ -124,8 +126,7 @@ exports.get_a_post = (pid,callback)=>{
 };
 
 //return a list of posts within a thread.
-exports.get_post_from_thread = (params,callback)=>
-{
+exports.get_post_from_thread = (params,callback)=>{
   queryfunc.doc_list({
     type:'posts',
     filter_by:'tid',
@@ -144,8 +145,7 @@ exports.get_a_thread = (tid,callback)=>{
 };
 
 //return a list of threads.
-exports.get_threads_from_forum = (params,callback)=>
-{
+exports.get_threads_from_forum = (params,callback)=>{
   queryfunc.doc_list({
     type:'threads',
     filter_by:'fid',

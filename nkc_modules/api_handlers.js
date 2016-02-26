@@ -1,8 +1,7 @@
 //api request handlers
 module.paths.push(__projectroot + 'nkc_modules'); //enable require-ment for this path
 
-var moment = require('moment');
-
+var moment = require('moment')
 var path = require('path')
 var fs = require('fs')
 var settings = require('server_settings.js');
@@ -159,36 +158,66 @@ api.post('/angularfun',function(req,res){
 
 //----
 //counter increment api
-api.get('/new/:countername',(req,res)=>{
-  //queryfunc.incr_counter('threads',callback);
-  queryfunc.incr_counter(req.params.countername,(err,id)=>{
-    if(err){
-      res.status(500).json(report(req.params.countername +' retrieval error',err));
-    }else{
-      res.json(report(id));
-    }
+if(development){
+  api.get('/new/:countername',(req,res,next)=>{
+    //queryfunc.incr_counter('threads',callback);
+    queryfunc.incr_counter(req.params.countername,(err,id)=>{
+      if(err)return next(report(req.params.countername +' retrieval error',err));
+      res.obj = id;
+      next();
+    });
   });
+}
+
+//append userinfo into request body of POSTs
+//and necessary processing
+api.use(function preprocess_post(req,res,next){
+  if(req.method != 'POST')return next();//if not post request
+  if(!req.body.c)return next();//if body doesnt contain written content for posting, ignore
+  //require a user!!
+  if(!req.user)return next('contain content, but not logged in');
+
+  var r = validation.validatePost(req.body); //validate content
+  if(r!==true)//if failed to validate
+  {
+    return next(r);
+  }
+
+  req.body.uid = req.user._key;
+  req.body.username = req.user.username;
+
+  req.post_content_ready = true; //indicate req.body suits for posting
+  return next();
 });
+
 
 //POST /forum/:fid
 api.post('/forum/:fid',(req,res,next)=>{
-  var r = validation.validatePost(req.body);
-  if(r!=true)//if failed to validate
-  {
-    next(r);
-    return;
-  }
+  if(req.post_content_ready!==true)return next('content unready');
 
   apifunc.post_to_forum(req.body,req.params.fid.toString(),(err,result)=>{
-    if(err){
-      //res.json(report('mmm',err));
-      res.status(500).json('cant post to forum',err);
-    }else{
-      var k =result;
-      k.redirect = 'thread/'+ queryfunc.result_reform(k).id;
-      res.json(report(k));
-    }
+    if(err)return next(err);
+
+    var k =result;
+    k.redirect = 'thread/'+ queryfunc.result_reform(k).id;
+    console.log('ss');
+    res.obj = k;
+    return next();
   });
+});
+
+///POST /thread/* handler
+api.post('/thread/:tid',function(req,res,next){
+  if(req.post_content_ready!==true)return next('content unready');
+
+  apifunc.post_to_thread(req.body,req.params.tid,(err,result)=>{
+    if(err)return next(err);
+
+    result.redirect = 'thread/' + queryfunc.result_reform(result).id;
+    res.obj = result;
+    return next();
+  },
+  false);
 });
 
 //test handler.
@@ -204,22 +233,18 @@ api.get('/test2',(req,res)=>{
 
 ///----------------------------------------
 ///GET /posts/* handler
-api.get('/posts/:pid', function (req, res){
+api.get('/posts/:pid', function (req, res, next){
   //retrieve pid as parameter
   var pid=req.params.pid;
 
   //get the post from db
   apifunc.get_a_post(pid,(err,body)=>{
-    if(!err)
-    {//if nothing wrong
-      report(pid.toString()+' is hit');
-      //var result=postRepack(body);
-      res.json(report(body));
-    }
-    else
-    {//if error happened
-      res.status(500).json(report('pid not found within /posts/',err));
-    }
+    if(err)return next(err);
+    //if nothing wrong
+    report(pid.toString()+' is hit');
+    //var result=postRepack(body);
+    res.obj = body;
+    return next();
   });
 });
 
@@ -233,59 +258,30 @@ api.get('/thread/:tid', function (req, res, next){
   },
   (err,result)=>{
     if(err){next(err);return;}
-    res.json(report(result));
+    res.obj = result;next();
   });
 });
 
-///POST /thread/* handler
-api.post('/thread/:tid',function(req,res,next){
-  var r = validation.validatePost(req.body);
-  if(r!=true)//if failed to validate
-  {
-    next(r);//err thrown
-    return;
-  }
-
-  apifunc.post_to_thread(req.body,req.params.tid,(err,result)=>{
-    if(err){
-      res.status(500).json(report('error in /thread/post',err));
-    }else{
-      var k = {};
-      k.redirect = 'thread/' + result;
-      res.json(report(k));
-    }
-  },
-  false);
-});
-
 //GET /forum/*
-api.get('/forum/:fid',(req,res)=>{
+api.get('/forum/:fid',(req,res,next)=>{
   apifunc.get_threads_from_forum_as_forum({
     fid:req.params.fid,
     start:req.query.start,
     count:req.query.count,
   },
   (err,data)=>{
-    if(!err)
-    {
-      res.json(report(data));
-    }
-    else{
-      res.status(500).json(report('cant get /forum/:fid',err));
-    }
+    if(err)return next(err);
+    res.obj = data;
+    next();
   });
 });
 
 if(development){
   //GET /user
-  api.get('/user/get/:uid',(req,res)=>{
+  api.get('/user/get/:uid',(req,res,next)=>{
     apifunc.get_user(req.params.uid,(err,back)=>{
-      if(err){
-        res.status(500).json(report('cant get user',err));
-      }
-      else{
-        res.json(report(back));
-      }
+      if(err)return next(err);
+      res.obj = back;next();a
     });
   });
 }
@@ -314,35 +310,30 @@ api.post('/user/login',(req,res,next)=>{
     var signed_cookie = res.get('set-cookie');
 
     //put the signed cookie in response, also
-    res.send(report({'cookie':signed_cookie,'instructions':
-    'please put this cookie in request header for api access'}));
+    res.obj = {'cookie':signed_cookie,'instructions':
+    'please put this cookie in request header for api access'};
 
+    next();
   });
 });
 
 var regex_validation = require('nkc_regex_validation');
 //POST /user
-api.post('/user',(req,res)=>{
+api.post('/user',(req,res,next)=>{
   var userobj = req.body;
   var violating = regex_validation.validate(userobj);
-  if(violating){
-    res.status(500).json(report('violated',violating));
-    return;
-  }
+  if(violating)return next(violating);
 
   apifunc.create_user(userobj,(err,back)=>{
-    if(err){
-      res.status(500).json(report('cant create user',err));
-    }
-    else{
-      res.json(report(back));
-    }
+    if(err)return next(err);
+    res.obj = back;
+    next();
   });
 });
 
 //logout of USER
 //GET /user/logout
-api.get('/user/logout',(req,res)=>{
+api.get('/user/logout',(req,res,next)=>{
   //put a signed cookie in header
   res.cookie('userinfo',{info:'nkc_logged_out'},{
     signed:true,
@@ -353,11 +344,25 @@ api.get('/user/logout',(req,res)=>{
   var signed_cookie = res.get('set-cookie');
 
   //put the signed cookie in response, also
-  res.send(report({'cookie':signed_cookie,'instructions':
-  'you have logged out'}));
+  res.obj = {'cookie':signed_cookie,'instructions':
+  'you have logged out. now replace existing cookie with this one'};
+
+  next();
 });
 
-api.get('*',(req,res)=>{
+//send apidata back to client
+api.use((req,res,next)=>{
+  if(res.obj)
+  {
+    try{res.json(report(res.obj));}
+    catch(e){return next(e);}
+    return;
+  }
+  return next();
+});
+
+//404 endpoint
+api.use('*',(req,res)=>{
   res.status(404).json(
     report('endpoint not exist','endpoint not exist')
   );
