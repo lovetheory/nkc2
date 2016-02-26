@@ -4,20 +4,15 @@ block title
   title #{data.thread.oc.t} - 科创论坛
   meta#replytarget(value='#{data.replytarget}')
   
-block styles
-  include nkc_styles.jade
-  
 block content
-  include nkc_navbar.jade
-  
   .container
     .row
       .col-md-12
         div(style='margin-bottom: 10px;')
           if data.posts.length == 0
-            h3 您要找的帖子不存在。
+            h2 您要找的帖子不存在。
           else
-            h3.d-inline #{data.thread.oc.t}
+            h2.d-inline #{data.thread.oc.t}
             p.d-inline.lighttext(style='margin-left: 10px; vertical-align:text-bottom;').
               回到 #[a.lighttext(href='/forum/#{data.thread.fid}') #{data.thread.fid}] 
        

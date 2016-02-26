@@ -5,14 +5,17 @@ block head
   meta(http-equiv="X-UA-Compatible" content="IE=edge")
   meta(name="viewport" content="width=device-width, initial-scale=1")
   
-  link(href="/bootstrap/css/bootstrap.min.css" rel='stylesheet')
-  
-  block styles
-  
+  link(href="/bootstrap/css/bootstrap.css" rel='stylesheet')
+
   block title
     title bootstrap_base
   
 block body
+  
+  include nkc_styles.jade
+  block navbar
+    include nkc_navbar.jade
+
   block content
     h1 hello world!
   
