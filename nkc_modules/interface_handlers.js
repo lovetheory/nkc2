@@ -107,6 +107,7 @@ iface.get('/logout',(req,res,next)=>{
 });
 
 iface.get('/me',(req,res,next)=>{
+  if(!req.user)return next('require login');
   res.template = 'nkc_modules/jade/interface_user_profile.jade';
   res.replytarget = 'me';
   next();

@@ -13,7 +13,7 @@ function post_upload(target,data,callback)
   {
     if (xhr.readyState==4)
     {
-      if(xhr.status==200){
+      if(xhr.status>=200&&xhr.status<300){
         callback(null,xhr.responseText);
       }else {
         callback(true,xhr.status.toString()+' '+xhr.responseText);
@@ -44,13 +44,7 @@ function upload_callback(err,back){
     alert('not 200 failure: '+back);
   }else{
     //do something important here!!
-
-    brrr=JSON.parse(back);
-    if(brrr.rid){
-      alert(brrr.rid);
-    }else {
-      alert(back);
-    }
+    upload_success();
   }
 }
 

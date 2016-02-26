@@ -3,13 +3,14 @@ extends bootstrap_base.jade
 block title
   title #{data.user.username} - 科创论坛
   meta#replytarget(value='#{data.replytarget}')
-  
+
 block content
   .container
     .row
       .col-md-12
         .panel.panel-default
           .panel-body
+
             h1 #{data.user.username}
             img(src='/avatar/#{data.user._key}')
             
@@ -29,5 +30,10 @@ block content
 block scripts
   script(src='/interface_common.js')
   script(src='/interface_uploader.js')
+  
+  script.
+    function upload_success(){
+      location.reload();
+    }
       
       

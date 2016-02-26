@@ -55,22 +55,28 @@ exports.root_serve_static =
 exports.urlrewrite = [
   {map:'/',to:'/forum/default'},
   {map:'/api',to:'/'},
+
   {map:'/logout*',to:'/interface/logout$1'},
+  {map:'/me',to:'/interface/me'},
   {map:'/login*',to:'/interface/login$1'},
   {map:'/register*',to:'/interface/register$1'},
-  {map:'/r/:rid',to:'/api/resources/get/:rid'},
+
   {map:'/thread/:tid',to:'/interface/thread/:tid'},
   {map:'/read/:tid',to:'/interface/thread/:tid'},
   {map:'/forum/:fid',to:'/interface/forum/:fid'},
   {map:'/e*',to:'/interface/editor$1'},
+
+  {map:'/r/:rid',to:'/api/resources/get/:rid'},
+  {map:'/avatar/:uid',to:'/api/avatar/:uid'},
 ];
 
-exports.resource_paths = [ //well, to find file simutaneously
+exports.resource_paths = [
+  //well, in order to find file simutaneously in these places
   //trailing slash '/' is very important!!!
   __projectroot + 'tmp/',
   __projectroot + 'tmp2/',
   __projectroot + 'resources/',
-  __projectroot + 'resources/avatar',
+  __projectroot + 'resources/avatar/',
 ];
 
 //where resources are uploaded to
@@ -86,6 +92,7 @@ exports.upload_options = {
 };
 
 exports.avatar_path = 'resources/avatar/';
+exports.default_avatar_path = 'resources/default_avatar.jpg';
 
 //user avatar upload
 exports.upload_options_avatar = {

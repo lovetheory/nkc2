@@ -114,8 +114,36 @@ api.post('/avatar', avatar_upload.single('file'), function(req,res,next){
 });
 
 
-api.get('/avatar/:uid',function(req,res,next){
-  res.status(404).send('');
+api.get('/avatar/:uid',function(req,res){
+  var uid = req.params.uid;
+
+  //success
+  fastest_file_from_paths(
+    settings.resource_paths, //from these path
+    uid+'.jpg', //get this file
+    function(err,best_filepathname){
+      if(err){
+        //return res.status(404).json(report('image not exist',err));
+        best_filepathname = settings.default_avatar_path //set default_avatar
+      }
+
+      //if file exists somewhere
+      res.setHeader('Content-disposition', 'inline; filename=' + uid+'.jpg');
+      res.setHeader('Content-type', 'image/jpeg');
+
+      var filestream = fs.createReadStream(best_filepathname);
+
+      filestream.on('error',function(err){
+        console.log('err',best_filepathname.red);
+        return res.status(404).json(report('image not exist',err));
+      });
+
+      filestream.on('open',function(){
+        console.log('cool',best_filepathname.green);
+        filestream.pipe(res);
+      });
+    }
+  );
 });
 
 

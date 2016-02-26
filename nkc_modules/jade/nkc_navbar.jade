@@ -21,7 +21,7 @@ nav.navbar.navbar-default
       ul.nav.navbar-nav
         if data.userinfo
           li
-            a #{data.userinfo.username}
+            a(href='/me') #{data.userinfo.username}
           li
             a(href='/logout') 登出
         else
