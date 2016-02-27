@@ -24,10 +24,11 @@ block body
   block footer
     include nkc_footer.jade
   
+  block scripts 
+  //faster load of app-specific code
+  
   script(src='/jquery-1.11.1.js')
   script(src='/bootstrap/js/bootstrap.min.js')
-
-  block scripts
   
   script.
     console.error('你们码农千万要注意啊，不要“见着风是得雨”啊，看到这条消息，你码农本身也要判断，明白这意思吧？ 假使一些完全无中生有的东西，你再帮他console.error()一遍，你等于……你也有责任吧？')
