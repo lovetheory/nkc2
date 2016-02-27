@@ -37,6 +37,10 @@ exports.couchdb={
   port:5984
 };
 
+exports.static_settings = {
+  maxAge:1000*10, //cache everything for 10s
+};
+
 exports.root_serve_static =
 [
   //clientside js file serving

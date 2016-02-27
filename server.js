@@ -51,6 +51,13 @@ if(use_https){
 }
 //-------------------------------
 
+nkc.use((req,res,next)=>{
+  if(development)
+  console.log("  -".yellow,req.url);
+  //log everything
+  next();
+});
+
 //1. url rewrite
 for(i in settings.urlrewrite){
   nkc.use(rewrite(
@@ -63,18 +70,23 @@ for(i in settings.urlrewrite){
 for(i in settings.root_serve_static)
 {
   if(settings.root_serve_static[i].map){
-    nkc.use(settings.root_serve_static[i].map,express.static(settings.root_serve_static[i].to));
+    nkc.use(
+      settings.root_serve_static[i].map,
+      express.static(settings.root_serve_static[i].to,settings.static_settings)
+    );
   } else {
-    nkc.use(express.static(settings.root_serve_static[i].to));
+    nkc.use(
+      express.static(settings.root_serve_static[i].to,settings.static_settings)
+    );
   }
 }
 
 //3. gzip
 nkc.use(compression({level:settings.compression_level}));//enable compression
 
-//4. log me
+//4. log me : if not static resources
 nkc.use((req,res,next)=>{
-  if(req.url.indexOf('/avatar')>=0)return next(); //dont record
+  if(req.url.indexOf('/avatar')>=0)return next(); //dont record avatar requests
 
   var d=new Date();
   dash();
