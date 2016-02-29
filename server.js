@@ -81,6 +81,8 @@ for(i in settings.root_serve_static)
   }
 }
 
+nkc.use('/recruit',express.static('../ikc')); //serve company pages
+
 //3. gzip
 nkc.use(compression({level:settings.compression_level}));//enable compression
 
