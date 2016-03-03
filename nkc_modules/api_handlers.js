@@ -97,28 +97,31 @@ api.post('/avatar', avatar_upload.single('file'), function(req,res,next){
 
   //otherwise should we allow..
 
-  var destination_path = settings.avatar_path+req.user._key+'.jpg';
-  //delete before move
-  fs.unlink(destination_path,function(err){
-    //ignore error:
-    if(err)report('unlink err',err);
+  //process the avatar image.
+  im.avatarify(req.file.path,(err,back)=>{
+    //if the uploaded file has problems (not an actural image?)
+    if(err)return next(err);
 
-    fs.move(
-      req.file.path,
-      destination_path,
-      function(err){
-        if(err)
-        {
-          return next(err);
-        }
-        //process the avatar image.
-        im.avatarify(destination_path,(err,back)=>{
-          if(err)return next(err);
+    var destination_path = settings.avatar_path+req.user._key+'.jpg';
+    //delete before move
+    fs.unlink(destination_path,function(err){
+      if(err)report('avatar dest unlink err',err); //ignore
+
+      fs.move( //move to avatar path
+        req.file.path,
+        destination_path,
+        function(err){
+          if(err)
+          {
+            return next(err);
+          }
+
+          //finally here
           res.obj = destination_path;
           return next();
-        });
-      }
-    );
+        }
+      );
+    });
   });
 });
 

@@ -1,20 +1,22 @@
 //ImageMagick wrapper
-var im = {};
+
+module.paths.push('./nkc_modules'); //enable require-ment for this path
 
 const spawn = require('child_process').spawn; //introduce the spawn function
-module.paths.push('./nkc_modules'); //enable require-ment for this path
+var im = {};
+var settings = require('server_settings');
 
 function run_async(pathname,options,callback){
   var starttime = Date.now();
 
   var child = spawn(pathname, options);
+  var errorstring = '';
 
   child.stdout.on('data', (data) => {
-    console.log(`stdout: ${data}`);
   });
 
   child.stderr.on('data', (data) => {
-    console.log(`stderr: ${data}`);
+    errorstring += `${data}`;
   });
 
   child.on('close', (code) => {
@@ -27,28 +29,32 @@ function run_async(pathname,options,callback){
     );
 
     if(callback)
-    callback(code);
+    callback(code,errorstring);
   });
 
 };
 
 im.avatarify = function(path,callback){
+  //avatar square width
+  const size = settings.avatar_size?settings.avatar_size:192;
   run_async('convert',[ //please make sure ImageMagick exists in PATH
     path,
     '-strip',
     '-thumbnail',
-    '128x128^>',
+    `${size}x${size}^>`,
     '-gravity',
     'Center',
     '-crop',
-    '128x128+0+0',
+    `${size}x${size}+0+0`,
     path,
-  ],(code)=>{
+  ],(code,errorstring)=>{
     if(code==0){
       callback(null,0);
     }
     else {
-      callback(path+' converting error: '+code.toString(),code);
+      callback(path+' converting error: '+code.toString()+'\n'+
+      errorstring
+      ,code);
     }
   });
 };
