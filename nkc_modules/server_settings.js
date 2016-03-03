@@ -89,18 +89,11 @@ exports.upload_options = {
   limits:
   {
     fields:20, //max number of file fields
-    fileSize:1048576, //1MB
+    fileSize:1024*1024, //1MB
     files:1,//1 part/file a time please.
     headerPairs:20, //kv pairs in header
   }
 };
-
-//where to find avatars.
-exports.avatar_paths=[
-  //well, in order to find file simutaneously in these places
-  //trailing slash '/' is very important!!!
-  __projectroot + 'resources/avatar/',
-];
 
 //where to save avatars.
 exports.avatar_path = __projectroot+'resources/avatar/';
@@ -108,13 +101,21 @@ exports.avatar_path = __projectroot+'resources/avatar/';
 //where is default avatar.
 exports.default_avatar_path = __projectroot+'resources/default_avatar.jpg';
 
+//where to find avatars.
+exports.avatar_paths=[
+  //well, in order to find file simutaneously in these places
+  //trailing slash '/' is very important!!!
+  exports.avatar_path,
+
+];
+
 //user avatar upload
 exports.upload_options_avatar = {
   dest: __projectroot + 'tmp/',
   limits:
   {
     fields:20, //max number of file fields
-    fileSize:1024*100, //100kb
+    fileSize:1024*1024*3, //3MB
     files:1,//1 part/file a time please.
     headerPairs:20, //kv pairs in header
   }

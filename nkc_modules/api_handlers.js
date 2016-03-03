@@ -23,6 +23,7 @@ var api = express.Router();
 var validation = require('validation');
 var apifunc = require('api_functions');
 var queryfunc = require('query_functions');
+var im = require('im_functions');
 
 ///------------
 ///something here to be executed before all handlers below
@@ -86,28 +87,36 @@ fs.mkdirp(settings.avatar_path); //place for avatars to move to after upload
 var avatar_upload = multer(settings.upload_options_avatar);
 api.post('/avatar', avatar_upload.single('file'), function(req,res,next){
   console.log(req.file);
-  if(req.file.mimetype.indexOf('image')<0)//if not the right type of file
+  if([
+    'image/jpeg',
+    'image/png',
+  ].indexOf(req.file.mimetype)<0)//if not the right type of file
   return next('wrong mimetype for avatar');
   //obtain user first
-  if(!req.user)
-  return next('who are you? log in first.');
+  if(!req.user)return next('who are you? log in first.');
 
   //otherwise should we allow..
 
+  var destination_path = settings.avatar_path+req.user._key+'.jpg';
   //delete before move
-  fs.unlink(settings.avatar_path+req.user._key+'.jpg',function(err){
-    //ignore error
+  fs.unlink(destination_path,function(err){
+    //ignore error:
+    if(err)report('unlink err',err);
+
     fs.move(
       req.file.path,
-      settings.avatar_path+req.user._key+'.jpg',
+      destination_path,
       function(err){
         if(err)
         {
           return next(err);
         }
-
-        res.obj = req.file;
-        return next();
+        //process the avatar image.
+        im.avatarify(destination_path,(err,back)=>{
+          if(err)return next(err);
+          res.obj = destination_path;
+          return next();
+        });
       }
     );
   });

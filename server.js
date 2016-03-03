@@ -81,14 +81,16 @@ for(i in settings.root_serve_static)
   }
 }
 
+//ikc statics serving
 nkc.use('/recruit',express.static('../ikc')); //serve company pages
 
 //3. gzip
 nkc.use(compression({level:settings.compression_level}));//enable compression
 
-//4. log me : if not static resources
+//4. log request, if not static resources
 nkc.use((req,res,next)=>{
-  if(req.url.indexOf('/avatar')>=0)return next(); //dont record avatar requests
+  if(req.url.indexOf('/avatar/')>=0&&req.method=='GET')return next();
+  //dont record avatar requests
 
   var d=new Date();
   dash();
@@ -117,7 +119,8 @@ nkc.use((req,res,next)=>{
   //if going for avatar
 
   //if userinfo exists
-  console.log(req.userinfo);
+  console.log(JSON.stringify(req.userinfo).gray);
+
   apifunc.get_user(req.userinfo.uid,(err,back)=>{
     if(err)return next(); //let go
     if(back.username==req.userinfo.username)
