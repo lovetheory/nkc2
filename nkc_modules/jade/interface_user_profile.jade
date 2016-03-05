@@ -17,7 +17,7 @@ block content
             //upload section
             div
               div
-                input#select-file(type='file' target='avatar/')
+                input#select-file(type='file' target='avatar/' accept='image/*')
               div
                 button(onclick='uploadfile_click()') 上传
               div#paste_target 黏贴上传测试中。
@@ -29,7 +29,7 @@ block content
     
 block scripts
   script(src='/interface_common.js')
-  script(src='/interface_uploader.js')
+  script(src='/interface_uploader_one.js')
   
   script.
     function upload_success(){

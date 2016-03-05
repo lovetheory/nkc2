@@ -36,13 +36,45 @@ api.use(function(req,res,next){
 var upload = multer(settings.upload_options);
 api.post('/resources', upload.single('file'), function (req, res, next) {
   //obtain user first
-  if(!req.user)
+  if(!req.user)return next('who are you? log in first.');
+  if(!req.file)return next('shit not even a file. fuck.')
+
+  if([
+    'image/jpeg',
+    'image/png',
+  ].indexOf(req.file.mimetype)==0)//if is image
   {
-    return next('who are you? log in first.');
+    if(req.file.size>1024*512)//if file is larger than 512kb
+    {
+      im.attachify(req.file.path,function(err,back){
+        if(err)return next(err);
+        //after conversion
+        res.isImage = true;
+        return next();
+      });
+    }
+    else{
+      //if file smaller than
+      res.isImage = true;
+      return next();
+    }
   }
+  else{
+    //if not image, just usual file
+    res.isImage = false;
+    return next();
+  }
+  //deal the rest in next api.use
+});
+
+api.use((req,res,next)=>{
+  if(res.isImage!==true&&res.isImage!==false)return next();
+  //skip if not from upload operation.
+
+  //upload operation continues here.
 
   // req.file is the `file` file
-  // req.body will hold the text fields, if there were any
+  // req.body shall hold the text fields, if there were any
   console.log(req.file);
   /*
   { fieldname: 'file',
@@ -59,33 +91,63 @@ api.post('/resources', upload.single('file'), function (req, res, next) {
   apifunc.get_new_rid((err,rid)=>{
     if(err)return next(err);
 
-    //rid got
-    var robject = {
-      _key:rid,
-      oname:req.file.originalname,//原名
-      sname:req.file.filename,//存储名
-      size:req.file.size,
-      mime:req.file.mimetype,
-      username:req.user.username,
-      uid:req.user._key,
-    };
+    var extension = req.file.originalname.match(/^.*\.(.*)$/);
+    extension = extension?'.'+extension[1]:'';
 
-    //storage into db
-    queryfunc.doc_save(robject,'resources',function(err,result){
-      if(err)return next(err);
+    var savingname = rid + extension;
 
-      //success
-      result.rid = result['_key'];
-      res.obj = result;
-      return next();
+    var relative_path = settings.get_relative_path();
+
+    var destination_path = settings.upload_path;
+    var destination_file = destination_path + '/'+relative_path+'/'+savingname;
+
+    fs.mkdirp(destination_path + '/'+relative_path+'/',function(err){
+      if(err)return next('shit, shouldnt really happen, fuck');
+      //just to make VERY sure the directory exists.
+
+      fs.rename( //move to where uploaded files belong
+        req.file.path,
+        destination_file,
+        function(err){
+          if(err)
+          {
+            return next(err);
+          }
+
+          //can store into DB now
+          var robject = {
+            _key:rid,
+            oname:req.file.originalname,//原名
+            sname:savingname,//存储名
+            rpath:relative_path,//子路径，应为相对路径。
+            size:req.file.size,
+            mime:req.file.mimetype,
+            username:req.user.username,
+            uid:req.user._key,
+          };
+
+          //store into db
+          queryfunc.doc_save(robject,'resources',function(err,result){
+            if(err)return next(err);
+
+            //success
+            robject.rid = rid;
+            res.obj = robject;
+            return next();
+          });
+        }
+      );
     });
   });
 });
+
 
 fs.mkdirp(settings.avatar_path); //place for avatars to move to after upload
 
 var avatar_upload = multer(settings.upload_options_avatar);
 api.post('/avatar', avatar_upload.single('file'), function(req,res,next){
+  if(!req.file)return next('shit not even a file. fuck.');
+
   console.log(req.file);
   if([
     'image/jpeg',
@@ -102,14 +164,14 @@ api.post('/avatar', avatar_upload.single('file'), function(req,res,next){
     //if the uploaded file has problems (not an actural image?)
     if(err)return next(err);
 
-    var destination_path = settings.avatar_path+req.user._key+'.jpg';
+    var destination_file = settings.avatar_path+req.user._key+'.jpg';
     //delete before move
-    fs.unlink(destination_path,function(err){
+    fs.unlink(destination_file,function(err){
       if(err)report('avatar dest unlink err',err); //ignore
 
       fs.move( //move to avatar path
         req.file.path,
-        destination_path,
+        destination_file,
         function(err){
           if(err)
           {
@@ -117,7 +179,7 @@ api.post('/avatar', avatar_upload.single('file'), function(req,res,next){
           }
 
           //finally here
-          res.obj = destination_path;
+          res.obj = destination_file;
           return next();
         }
       );
@@ -149,37 +211,43 @@ api.get('/avatar/:uid',function(req,res){
 });
 
 
-api.get('/resources/:rid',function(req,res){
+api.get('/resources/:rid',function(req,res,next){
   var key = req.params.rid;
   //load from db
   apifunc.get_resources(key,function(err,result){
     if(err){
-      res.status(500).json(report('rid obtain err',err));
-      return;
+      return next(err);
     }
 
     //success
-    res.json(report(result));
+    res.obj = result;
+    return next();
   });
 });
 
-api.get('/resources/get/:rid',function(req,res){
+api.get('/resources/get/:rid',function(req,res,next){
   var key = req.params.rid;
   //load from db
   apifunc.get_resources(key,function(err,robject){
     if(err){
-      res.status(404).json(report('rid obtain err',err));
-      return;
+      return next(err);
     }
     //success
 
-    fastest_file_from_paths(settings.resource_paths,robject.sname,function(err,best_filepathname){
+    var destination_path = settings.upload_path;
+    var destination_plus_relative = destination_path + '/'+robject.rpath+'/';
+
+    fastest_file_from_paths(settings.resource_paths.concat(
+      [(robject.rpath?destination_plus_relative:null)]
+    ), //join the relative path.
+    robject.sname,
+    function(err,best_filepathname)
+    {
       if(err){
-        res.status(404).json(report('filenotexisterr',err));
-        return;
+        return next(err);
       }
 
-      //if file exists somewhere
+      //if file exists finally
       res.setHeader('Content-disposition', 'inline; filename=' + robject.oname);
       res.setHeader('Content-type', robject.mime);
 

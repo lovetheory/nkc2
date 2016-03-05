@@ -1,3 +1,5 @@
+var moment = require('moment');
+
 exports.server={
   name:"nkc Development Server",
   port:1086,
@@ -81,6 +83,7 @@ exports.resource_paths = [
   __projectroot + 'tmp/',
   __projectroot + 'tmp2/',
   __projectroot + 'resources/',
+  __projectroot + 'resources/upload/'
 ];
 
 //where resources are uploaded to
@@ -94,6 +97,14 @@ exports.upload_options = {
     headerPairs:20, //kv pairs in header
   }
 };
+
+//returns relative path for uploads.
+exports.upload_path = __projectroot + 'resources/upload/';
+
+exports.get_relative_path = function(){
+  return moment().format('/YYYY//MM/'); //relative path for new attachments
+  //for easy of manangement
+}
 
 //where to save avatars.
 exports.avatar_path = __projectroot+'resources/avatar/';

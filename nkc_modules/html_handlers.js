@@ -19,28 +19,50 @@ handler.use(function(req,res,next){
   next();
 });
 
+///------------
+///to be executed before all handlers below
+handler.use(function(req,res,next){
+  if(!res.data)
+  res.data = {}
+  next();
+});
+
+handler.use(function(req,res,next){
+  //every page has a navbar, allright?
+  res.data.navbar = {};
+  //so, would you log in first please?
+  res.data.user = req.user;
+  res.data.userinfo = req.userinfo;
+  next();
+});
+
 handler.use('/jade/',express.static('nkc_modules/jade')); //file serving
 
 //var hellojade = jade.compileFile('./nkc_modules/jade/hello.jade',jadeoptions)
 
 handler.get('/jade/:fn',(req,res,next)=>{
-  var opt = {};
-  opt.address = req.ip.toString();
-  opt.url = req.originalUrl;
-
   fs.access('nkc_modules/jade/'+req.params.fn+'.jade', fs.R_OK , function (err) {
-    if(err){
-      //pass next
-      next();
-    }else{
-      try{
-        res.send(jaderender('nkc_modules/jade/'+req.params.fn+'.jade',opt));
-      }
-      catch(err){
-        next(err);
-      }
-    }
+    if(err)
+    //pass next
+    return next(err);
+
+    res.template= 'nkc_modules/jade/'+req.params.fn+'.jade';
+    next();
   });
+});
+
+//render phase: if template jade file exists
+handler.use((req,res,next)=>{
+  if(res.template)
+  {
+    try {var k = jaderender(res.template,res.data)}
+    catch(err){
+      return next(err);
+    }
+    return res.send(k);
+    //ends here, no more hassle
+  }
+  return next();
 });
 
 //unhandled error will be routed back to server.js

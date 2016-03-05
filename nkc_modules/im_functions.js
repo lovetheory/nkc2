@@ -34,9 +34,10 @@ function run_async(pathname,options,callback){
 
 };
 
+//resize and crop to produce rectangular avatar.
 im.avatarify = function(path,callback){
   //avatar square width
-  const size = settings.avatar_size?settings.avatar_size:192;
+  const size = settings.avatar_size||192;
   run_async('convert',[ //please make sure ImageMagick exists in PATH
     path,
     '-strip',
@@ -58,5 +59,28 @@ im.avatarify = function(path,callback){
     }
   });
 };
+
+//resize if image too large.
+im.attachify = function(path,callback){
+
+  const maxwidth = settings.attachment_image_width||1280;
+  const maxheight = settings.attachment_image_height||16384;
+
+  run_async('convert',[ //please make sure ImageMagick exists in PATH
+    path,
+    '-resize',
+    `${maxwidth}x${maxheight}>`,
+    path,
+  ],(code,errorstring)=>{
+    if(code==0){
+      callback(null,0);
+    }
+    else {
+      callback(path+' converting error: '+code.toString()+'\n'+
+      errorstring
+      ,code);
+    }
+  });
+}
 
 module.exports = im;

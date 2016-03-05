@@ -1,0 +1,45 @@
+extends bootstrap_base.jade
+
+block title
+  title 附件上传测试
+
+block content        
+  .container
+    .row
+      .col-md-6
+        .panel.panel-default
+          .panel-body
+            //uploader section
+            .row(id = 'upload-file' target='resources/')
+              .col-xs-8
+                .row
+                  .col-xs-6
+                    input#select-file(type='file' multiple)
+                    br
+                  .col-xs-6
+                    button#upload-selected() 上传
+                .row
+                  .col-xs-12
+                    div#paste_target 黏贴上传测试中。
+                    
+                .row
+                  .col-xs-12
+                    div#print-result
+              
+              .col-xs-4
+                h1#number_counter
+            //end of uploader
+      .col-md-6
+        .panel.panel-default
+          .panel-body
+            h4 something unready here
+  include debug_output.jade
+
+block scripts
+  script(src='/interface_common.js')
+  script(src='/interface_attachment_uploader.js')
+  
+  script.
+    function each_upload_success(){
+      //location.reload();
+    }
