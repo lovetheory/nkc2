@@ -7,36 +7,24 @@ block content
   .container
     .row
       .col-md-6
-        .panel.panel-default
+        .panel.panel-default(id='file-uploading' target='resources/')
           .panel-body
             //uploader section
-            .row(id='file-uploading' target='resources/')
-              .col-xs-8
-                .row
-                  .col-xs-6
-                    input#file-selector(type='file' multiple)
-                    br
-                  .col-xs-6
-                    button#upload-button() 上传
-                .row
-                  .col-xs-12
-                    div#paste_target 黏贴上传测试中。
-                    
-                .row
-                  .col-xs-12
-                    div
-                      p#print-result
-              
-              .col-xs-4
-                h1#upload-counter
-            //end of uploader
-      .col-md-6
+            include interface_attachment_uploader_uploader.jade
+            
         .panel.panel-default
           .panel-body
-            h4 something unready here
+            textarea#content.form-control(rows='20' placeholder='内容')
+            
+      .col-md-6
+        .panel.panel-default
+          .panel-body(id='list-container' datasource='/api/resources/mine')
+            include interface_attachment_list_display.jade
+            
   include debug_output.jade
 
 block scripts
   script(src='/interface_common.js')
   script(src='/interface_attachment_uploader.js')
+  script(src='/interface_attachment_list_display.js')
   

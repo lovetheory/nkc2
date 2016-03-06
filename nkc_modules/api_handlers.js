@@ -238,6 +238,8 @@ api.get('/resources/info/:rid',function(req,res,next){
   });
 });
 
+fs.mkdirp(settings.thumbnails_path);
+
 api.get('/resources/thumb/:rid',function(req,res,next){
   //thumbnail. if is image, generate; if not, redirect to sth else.
   var key = req.params.rid;
@@ -301,8 +303,8 @@ api.get('/resources/mine',function(req,res,next){
   //sort by time, desc, first 10
 
   queryfunc.doc_list({
-    start:0,
-    count:10,
+    start:req.query.start,
+    count:req.query.count,
     type:'resources',
     filter_by:'uid',
     equals:req.user._key, //uid

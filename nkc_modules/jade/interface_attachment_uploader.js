@@ -64,6 +64,8 @@ var attachment_uploader = function(options){
       formData.append('file', items[i]);
       create_upload(formData);
     }
+
+    geid('file-selector').value = '';
   };
 
   //When paste happens
@@ -93,7 +95,8 @@ var uploader = attachment_uploader({
   upload_target:ga('file-uploading','target'),
 
   upload_success_callback:function(info){
-    geid('print-result').innerHTML += info + '<br>';
+    //refresh list if possible
+    if(list)list.refresh();
   },
 
   upload_failed_callback:function(info){
@@ -104,12 +107,11 @@ var uploader = attachment_uploader({
     geid('upload-counter').innerHTML = num.toString();
   },
 
-
 });
 
 window.onload = function() {
   //enable Ctrl + V paste
-  geid("paste_target").addEventListener("paste", uploader.paste_handler);
+  geid("paste-target").addEventListener("paste", uploader.paste_handler);
 
   //enable click
   geid('upload-button').addEventListener('click', uploader.uploadfile_click);

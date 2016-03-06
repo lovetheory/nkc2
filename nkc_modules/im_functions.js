@@ -141,6 +141,8 @@ im.info = function(path,callback){
 im.thumbnailify = function(path,dest,callback){
   run_async('convert',[
     path,
+    '-colorspace',
+    'RGB',
     '-thumbnail',
     '64x64',
     '-strip',

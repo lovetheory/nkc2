@@ -58,7 +58,7 @@ settings.root_serve_static =
   {to:'nkc_modules/'},
   {map:'/bootstrap',to:'bootstrap-3.3.6-dist'},
   //{map:'/avatar',to:'resources/avatar'},
-  {map:'/default',to:'/resources/'},
+  {map:'/default',to:'resources/'},
 ];
 
 settings.urlrewrite = [ //happens before serve_static

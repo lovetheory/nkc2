@@ -94,6 +94,8 @@ queryfunc.doc_update = (doc,collection_name,props,callback)=>{
 queryfunc.doc_list = (opt,callback)=>{
   if(!opt.start)opt.start=0;
   if(!opt.count)opt.count=100;
+  opt.start=Number(opt.start);
+  opt.count=Number(opt.count);
 
   var aqlobj={
     query:`

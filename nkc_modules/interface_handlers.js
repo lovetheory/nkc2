@@ -113,6 +113,13 @@ iface.get('/me',(req,res,next)=>{
   next();
 });
 
+iface.get('/uploader',(req,res,next)=>{
+  if(!req.user)return next('require login');
+  res.template = 'nkc_modules/jade/interface_attachment_uploader.jade';
+
+  next();
+});
+
 //render phase: if template jade file exists
 iface.use((req,res,next)=>{
   if(res.template)
