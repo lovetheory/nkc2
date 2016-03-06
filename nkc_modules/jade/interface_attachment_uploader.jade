@@ -10,24 +10,25 @@ block content
         .panel.panel-default
           .panel-body
             //uploader section
-            .row(id = 'upload-file' target='resources/')
+            .row(id='file-uploading' target='resources/')
               .col-xs-8
                 .row
                   .col-xs-6
-                    input#select-file(type='file' multiple)
+                    input#file-selector(type='file' multiple)
                     br
                   .col-xs-6
-                    button#upload-selected() 上传
+                    button#upload-button() 上传
                 .row
                   .col-xs-12
                     div#paste_target 黏贴上传测试中。
                     
                 .row
                   .col-xs-12
-                    div#print-result
+                    div
+                      p#print-result
               
               .col-xs-4
-                h1#number_counter
+                h1#upload-counter
             //end of uploader
       .col-md-6
         .panel.panel-default
@@ -39,7 +40,3 @@ block scripts
   script(src='/interface_common.js')
   script(src='/interface_attachment_uploader.js')
   
-  script.
-    function each_upload_success(){
-      //location.reload();
-    }

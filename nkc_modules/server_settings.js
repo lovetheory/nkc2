@@ -1,6 +1,7 @@
 var moment = require('moment');
+var settings = {};
 
-exports.server={
+settings.server={
   name:"nkc Development Server",
   port:1086,
   https_port:10443,
@@ -10,10 +11,10 @@ exports.server={
   //use_https:true,
 };
 
-exports.cookie_secret='nkc';
-exports.compression_level=2;
+settings.cookie_secret='nkc';
+settings.compression_level=2;
 
-exports.https_options = function(){
+settings.https_options = function(){
   var fs = require('fs');
   return {
     key: fs.readFileSync('ssl/privatekey.pem'),
@@ -21,29 +22,29 @@ exports.https_options = function(){
   };
 };
 
-exports.jadeoptions= {
+settings.jadeoptions= {
   pretty:true,
   cache:(development?false:true),
   //cache:true,pretty:false,
   //globals:[]
-  server:exports.server,
+  server:settings.server,
   debug_output:(development?true:false),
 };
 
-exports.arango={
+settings.arango={
   address:'http://127.0.0.1:8529'
 };
 
-exports.couchdb={
+settings.couchdb={
   address:"127.0.0.1",
   port:5984
 };
 
-exports.static_settings = {
+settings.static_settings = {
   maxAge:1000*10, //cache everything for 10s
 };
 
-exports.root_serve_static =
+settings.root_serve_static =
 [
   //clientside js file serving
   {to:'nkc_modules/chat'},
@@ -57,9 +58,10 @@ exports.root_serve_static =
   {to:'nkc_modules/'},
   {map:'/bootstrap',to:'bootstrap-3.3.6-dist'},
   //{map:'/avatar',to:'resources/avatar'},
+  {map:'/default',to:'/resources/'},
 ];
 
-exports.urlrewrite = [ //happens before serve_static
+settings.urlrewrite = [ //happens before serve_static
   {map:'/',to:'/forum/default'},
   {map:'/api',to:'/'},
 
@@ -75,9 +77,10 @@ exports.urlrewrite = [ //happens before serve_static
 
   {map:'/r/:rid',to:'/api/resources/get/:rid'},
   {map:'/avatar/:uid',to:'/api/avatar/:uid'},
+
 ];
 
-exports.resource_paths = [
+settings.resource_paths = [
   //well, in order to find file simutaneously in these places
   //trailing slash '/' is very important!!!
   __projectroot + 'tmp/',
@@ -87,41 +90,60 @@ exports.resource_paths = [
 ];
 
 //where resources are uploaded to
-exports.upload_options = {
+settings.upload_options = {
   dest: __projectroot + 'tmp/',
   limits:
   {
     fields:20, //max number of file fields
-    fileSize:1024*1024, //1MB
+    fileSize:1024*1024*30, //30MB
     files:1,//1 part/file a time please.
     headerPairs:20, //kv pairs in header
   }
 };
 
 //returns relative path for uploads.
-exports.upload_path = __projectroot + 'resources/upload/';
+settings.upload_path = __projectroot + 'resources/upload/';
 
-exports.get_relative_path = function(){
-  return moment().format('/YYYY//MM/'); //relative path for new attachments
-  //for easy of manangement
+settings.get_relative_path = function(){
+  return moment().format('/YYYY/MM/'); //relative path for new attachments
+  //into /YEAR/MONTH/ for ease of manangement
 }
 
+settings.attachment_image_width = 960;
+settings.attachment_image_height = 16384;
+
+//where is default watermark
+settings.default_watermark_path = __projectroot+'resources/default_watermark3.png';
+
+settings.size_largeimage = 1024*512; //500kb max
+
+//where to save thumbnails.
+settings.thumbnails_path = __projectroot+'resources/thumbnails/';
+
+//where is default thumbnail; use an URL redirection to allow caching
+settings.default_thumbnail_url = '/default/default_avatar.jpg';
+
+//---------------------------------------------
+
 //where to save avatars.
-exports.avatar_path = __projectroot+'resources/avatar/';
+settings.avatar_path = __projectroot+'resources/avatar/';
 
 //where is default avatar.
-exports.default_avatar_path = __projectroot+'resources/default_avatar.jpg';
+settings.default_avatar_path = __projectroot+'resources/default_avatar.jpg';
+//where is default avatar; use an URL redirection to allow caching
+settings.default_avatar_url = '/default/default_avatar.jpg';
+
 
 //where to find avatars.
-exports.avatar_paths=[
+settings.avatar_paths=[
   //well, in order to find file simutaneously in these places
   //trailing slash '/' is very important!!!
-  exports.avatar_path,
+  settings.avatar_path,
 
 ];
 
 //user avatar upload
-exports.upload_options_avatar = {
+settings.upload_options_avatar = {
   dest: __projectroot + 'tmp/',
   limits:
   {
@@ -131,3 +153,5 @@ exports.upload_options_avatar = {
     headerPairs:20, //kv pairs in header
   }
 };
+
+module.exports = settings;

@@ -42,9 +42,9 @@ api.post('/resources', upload.single('file'), function (req, res, next) {
   if([
     'image/jpeg',
     'image/png',
-  ].indexOf(req.file.mimetype)==0)//if is image
+  ].indexOf(req.file.mimetype)>=0)//if is image
   {
-    if(req.file.size>1024*512)//if file is larger than 512kb
+    if(req.file.size>settings.size_largeimage)//if file is larger than specified size
     {
       im.attachify(req.file.path,function(err,back){
         if(err)return next(err);
@@ -54,9 +54,21 @@ api.post('/resources', upload.single('file'), function (req, res, next) {
       });
     }
     else{
-      //if file smaller than
-      res.isImage = true;
-      return next();
+      //if file smaller than specified size
+      im.info(req.file.path,function(err,info){
+        if(err)return next(err);//what?
+        if((info.width<200&&info.height<400)||info.height<400||info.width<300)
+        {// if too small
+          res.isImage = true;
+          return next(); //no watermark, thx
+        }
+        //else
+        im.watermarkify(req.file.path,function(err,back){
+          if(err)return next(err);
+          res.isImage = true;
+          return next();
+        });
+      });
     }
   }
   else{
@@ -124,6 +136,7 @@ api.use((req,res,next)=>{
             mime:req.file.mimetype,
             username:req.user.username,
             uid:req.user._key,
+            toc:Date.now(), //time of creation.
           };
 
           //store into db
@@ -211,7 +224,7 @@ api.get('/avatar/:uid',function(req,res){
 });
 
 
-api.get('/resources/:rid',function(req,res,next){
+api.get('/resources/info/:rid',function(req,res,next){
   var key = req.params.rid;
   //load from db
   apifunc.get_resources(key,function(err,result){
@@ -221,6 +234,83 @@ api.get('/resources/:rid',function(req,res,next){
 
     //success
     res.obj = result;
+    return next();
+  });
+});
+
+api.get('/resources/thumb/:rid',function(req,res,next){
+  //thumbnail. if is image, generate; if not, redirect to sth else.
+  var key = req.params.rid;
+  //load from db
+  apifunc.get_resources(key,function(err,robject){
+    if(err){
+      return next(err);
+    }
+    //success
+
+    //1. check if is image
+    if(robject.mime.indexOf('image')!=0){
+      //if not image
+      res.redirect(settings.default_thumbnail_url);
+      return;
+    }
+
+    //if is image...
+
+    var thumbnail_path = settings.thumbnails_path + '/'+robject._key+'.jpg';
+    var destination_path = settings.upload_path;
+    var destination_plus_relative = destination_path + '/'+robject.rpath+'/';
+
+    //2. check if thumbnail exists
+    check_single_file_exist(thumbnail_path,function(exists){
+      if(exists){
+        res.sendFile(thumbnail_path);
+        console.log(thumbnail_path.green);
+        return;
+      }
+
+      //3. if not exist, find the original file
+      fastest_file_from_paths(settings.resource_paths.concat(
+        [(robject.rpath?destination_plus_relative:null)]
+      ), //join the relative path.
+      robject.sname,
+      function(err,best_filepathname){
+        if(err)return next(err);
+
+        //4. generate thumbnail for the file
+        im.thumbnailify(best_filepathname,thumbnail_path,function(err,back){
+          if(err)return next(err);
+
+          //5. respond with love
+          res.setHeader('Content-disposition', 'inline; filename=' + robject.rid+'.jpg');
+          res.setHeader('Content-type', 'image/jpeg');
+
+          res.sendFile(thumbnail_path);
+          console.log(thumbnail_path.green);
+        });
+      });
+    });
+  });
+});
+
+api.get('/resources/mine',function(req,res,next){
+  if(!req.user)return next('login please.')
+  //
+  //get rid from db where:
+  //username == req.user.username
+  //sort by time, desc, first 10
+
+  queryfunc.doc_list({
+    start:0,
+    count:10,
+    type:'resources',
+    filter_by:'uid',
+    equals:req.user._key, //uid
+    sort_by:'_key',
+    order:'desc',
+  },function(err,back){
+    if(err)return next(err);
+    res.obj = back;
     return next();
   });
 });
@@ -251,9 +341,11 @@ api.get('/resources/get/:rid',function(req,res,next){
       res.setHeader('Content-disposition', 'inline; filename=' + robject.oname);
       res.setHeader('Content-type', robject.mime);
 
-      var filestream = fs.createReadStream(best_filepathname);
+      res.sendFile(best_filepathname);
+
+      //var filestream = fs.createReadStream(best_filepathname);
       console.log(best_filepathname.green);
-      filestream.pipe(res);
+      //filestream.pipe(res);
     });
   });
 });

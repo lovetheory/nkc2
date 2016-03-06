@@ -17,6 +17,8 @@ var api = express.Router();
 
 var validation = require('validation');
 
+var queryfunc = {};
+
 function aqlall(aqlobj,callback){
   db.query(aqlobj.query,aqlobj.params)
   .then
@@ -39,7 +41,7 @@ function aqlall(aqlobj,callback){
   );
 };
 
-exports.incr_counter = function(countername,callback){
+queryfunc.incr_counter = function(countername,callback){
   var aqlobj = {
     query:`
     FOR c IN counters
@@ -64,21 +66,21 @@ exports.incr_counter = function(countername,callback){
 };
 
 //standardrize the result retrieved from Arangodb
-exports.result_reform = (result)=>{
+queryfunc.result_reform = (result)=>{
   return {
     'id' : result._key,
   };
 };
 
-exports.doc_save = (doc,collection_name,callback)=>{
+queryfunc.doc_save = (doc,collection_name,callback)=>{
   db.collection(collection_name).save(doc,callback);
 };
 
-exports.doc_load = (doc_key,collection_name,callback)=>{
+queryfunc.doc_load = (doc_key,collection_name,callback)=>{
   db.collection(collection_name).document(doc_key,callback);
 };
 
-exports.doc_update = (doc,collection_name,props,callback)=>{
+queryfunc.doc_update = (doc,collection_name,props,callback)=>{
   db.collection(collection_name).update(doc,props).then(
     body=>{
       callback(null,body);
@@ -89,7 +91,7 @@ exports.doc_update = (doc,collection_name,props,callback)=>{
   );
 };
 
-exports.doc_list = (opt,callback)=>{
+queryfunc.doc_list = (opt,callback)=>{
   if(!opt.start)opt.start=0;
   if(!opt.count)opt.count=100;
 
@@ -98,19 +100,21 @@ exports.doc_list = (opt,callback)=>{
     FOR c IN ${opt.type}
     FILTER c.${opt.filter_by} == @equals
     sort c.${opt.sort_by} ${opt.order}
-    limit ${opt.start}, ${opt.count}
+    limit @start, @count
     return c
     `
     ,
     params:{
       equals:opt.equals,
+      start:opt.start,
+      count:opt.count,
     },
   };
 
   aqlall(aqlobj,callback);
 };
 
-exports.doc_list_join = (opt,callback)=>{
+queryfunc.doc_list_join = (opt,callback)=>{
   if(!opt.start)opt.start=0;
   if(!opt.count)opt.count=100;
 
@@ -134,7 +138,7 @@ exports.doc_list_join = (opt,callback)=>{
 };
 
 //custom join function
-exports.ftp_join = (opt,callback)=>{
+queryfunc.ftp_join = (opt,callback)=>{
   if(!opt.start)opt.start=0;
   if(!opt.count)opt.count=100;
 
@@ -165,7 +169,7 @@ exports.ftp_join = (opt,callback)=>{
 };
 
 //在对thread或者post作操作之后，更新thread的部分属性以确保其反应真实情况。
-exports.update_thread = (tid,callback)=>{
+queryfunc.update_thread = (tid,callback)=>{
   var aqlobj={
     query:`
     FOR t IN threads
@@ -197,7 +201,7 @@ exports.update_thread = (tid,callback)=>{
 };
 
 //!!!danger!!! will make the database very busy.
-exports.update_all_threads = (callback)=>{
+queryfunc.update_all_threads = (callback)=>{
   var aqlobj={
     query:`
     FOR t IN threads
@@ -224,3 +228,5 @@ exports.update_all_threads = (callback)=>{
   };
   aqlall(aqlobj,callback);
 };
+
+module.exports = queryfunc;
