@@ -47,5 +47,5 @@ list.refresh();
 
 function text_insert(index)
 {
-  edInsertContent('content','[' + index.toString() + '] ')
+  edInsertContent('content','![](/r/' + index.toString() + ') ')
 }

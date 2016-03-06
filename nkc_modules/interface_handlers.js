@@ -72,7 +72,7 @@ iface.get('/thread/:tid', function (req, res, next){
 //get editor
 ///--------------------
 iface.get('/editor',(req,res,next)=>{
-  res.data.replytarget = req.query.target;
+  res.data.replytarget = req.query.target||'';
   res.data.navbar.highlight = 'editor'; //navbar highlight
   res.template = 'nkc_modules/jade/interface_editor.jade'
   return next();
@@ -115,6 +115,8 @@ iface.get('/me',(req,res,next)=>{
 
 iface.get('/uploader',(req,res,next)=>{
   if(!req.user)return next('require login');
+  res.data.navbar.highlight = 'uploader'; //navbar highlight
+
   res.template = 'nkc_modules/jade/interface_attachment_uploader.jade';
 
   next();
