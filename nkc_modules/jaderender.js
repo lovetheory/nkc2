@@ -8,6 +8,9 @@ var commonmark = require('commonmark');
 var plain_escape = require('jade/plain_escaper');
 var xbbcode = require('xbbcode/xbbcode');
 
+var moment = require('moment');
+moment.locale('zh-cn');//yo!
+
 function bbcodeconvert(input){
   return xbbcode.process({
     text:input,
@@ -22,11 +25,16 @@ jade.filters.markdown = commonparser;
 jade.filters.bbcode = bbcodeconvert;
 jade.filters.plain = plain_escape;
 
+function fromNow(time){
+  return moment(time).fromNow();
+}
+
 var jadeoptions = {
   markdown:commonparser,
   bbcode:bbcodeconvert,
   plain:plain_escape,
   'dateString':dateString,
+  'fromNow':fromNow,
 };
 
 Object.assign(jadeoptions,settings.jadeoptions); //apply settings from settings.js
