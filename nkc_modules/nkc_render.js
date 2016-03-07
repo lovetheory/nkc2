@@ -19,8 +19,21 @@ function nkc_render(options){
     var XBBCODE = require('xbbcode/xbbcode');
   }
 
-  var commonmark_replacement_rules = [
-    {regex:/\[r\=([0-9A-Za-z]*)]/gi, new:'<img src="/r/$1" style="max-width:100%;"/>'}, //image element
+  var replacement_rules = [
+    {
+      regex:/\[r\=([0-9A-Za-z]*)]/g, //XSS proof
+      new:'<a href="/r/$1" target="_blank"><img alt="$1" src="/r/$1" style="max-width:100%;"/></a>'
+    },
+    //image element when [r=1234]
+
+    {
+      regex:/\[rt\=([0-9A-Za-z]*)]\[([^\/\\\:\*\?\"\<\>\|]*)\/]/g, //XSS proof: filenames overkilled
+      new:'<a href="/r/$1" target="_blank"><img src="/rt/$1"/>$2</a>'
+      // function(match,p1,p2){
+      //   return '<a href="/r/$1" target="_blank"><img src="/rt/$1"/>$2</a>'.replace(/\$1/g,p1).replace(/\$2/g,render.plain_render(p2));
+      // }
+    },
+    //thumbnail element when [rt=1234][file.ext/]
   ];
 
   var commonreader = new commonmark.Parser();

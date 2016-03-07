@@ -29,15 +29,20 @@ var list_display = function(options){
 
       list_father.innerHTML = '';
       for(i in testdata){
+        var isImage = testdata[i].mime.indexOf('image')==0;
+
         list_father.innerHTML += html_replace(list_template,{
-          linksrc:'javascript:text_insert('+testdata[i]._key+')', //original
+          linksrc:isImage?
+          'javascript:content_insert_resource(`'+testdata[i]._key+'`)'
+          :'javascript:content_insert_resource_thumbnail(`'+testdata[i]._key+'`,`'+testdata[i].oname+'`)'
+          ,
+
           imgsrc:'/rt/' + testdata[i]._key, //thumbnail
           description:testdata[i].oname,
         });
       }
     });
   }
-
   return list_display;
 }
 
@@ -45,7 +50,12 @@ var list = list_display();
 
 list.refresh();
 
-function text_insert(index)
+function content_insert_resource(index)
 {
-  edInsertContent('content','[r=' + index.toString() + '] ')
+  edInsertContent('content','[r=' + index.toString() + ']\n\n');
+}
+
+function content_insert_resource_thumbnail(index,oname)
+{
+  edInsertContent('content','[rt=' + index.toString() + ']['+oname.toString()+'/]\n\n');
 }

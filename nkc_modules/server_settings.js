@@ -122,7 +122,7 @@ settings.size_largeimage = 1024*512; //500kb max
 settings.thumbnails_path = __projectroot+'resources/thumbnails/';
 
 //where is default thumbnail; use an URL redirection to allow caching
-settings.default_thumbnail_url = '/default/default_avatar.jpg';
+settings.default_thumbnail_url = '/default/default_thumbnail.png';
 
 //---------------------------------------------
 
