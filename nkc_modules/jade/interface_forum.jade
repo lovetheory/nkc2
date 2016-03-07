@@ -23,11 +23,11 @@ block content
                 //img(src='http://bbs.kechuang.org/themes/site/dingzhi/images/logo.png')
                 h1 #{data.forum.display_name}
             .row
-              .col-md-8
+              .col-xs-8
                 p.
                   #{data.forum.description}
                 a.btn.btn-default(href='/interface/editor?target=#{data.replytarget}') 发帖
-              .col-md-4
+              .col-xs-4
                 p.
                   今日：#{data.forum.stats.posts_today} 主题：#{data.forum.stats.threads_total} 总帖：#{data.forum.stats.posts_total}
                 text 版主：

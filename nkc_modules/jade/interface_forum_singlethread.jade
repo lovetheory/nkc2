@@ -1,14 +1,14 @@
 - var url = '/thread/' + thread._key
 - var avatar = '/avatar/' + thread.oc.uid
 
-li.list-group-item(style='padding:8px;padding-left:15px;')
+div.threaditem
   .media
     .media-left.media-middle
       a(href='#{url}')
         img.media-object.avatar(src='#{avatar}' style='width:45px;height:45px;')
-    .media-body.media-middle
+    .media-body.media-middle(style='padding-left:10px;')
       .row
-        .col-xs-8
+        .col-xs-6.col-md-8
           a.f12(href="#{url}") #{thread.oc.t} 
           //帖子标题链接
           
@@ -16,7 +16,9 @@ li.list-group-item(style='padding:8px;padding-left:15px;')
             #{dateString(thread.oc.toc)} #{thread.oc.username}
           //帖子发布时间和发布者
       
-        .col-xs-4
-          p.lighttext.
-            #{fromNow(thread.lm.tlm)} #{thread.lm.username}
+        .col-xs-3.col-md-2
+          p.lighttext #{fromNow(thread.lm.tlm)}
           //帖子最后回复时间和回复者
+          
+        .col-xs-3.col-md-2
+          p.lighttext #{thread.lm.username}
