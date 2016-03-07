@@ -22,7 +22,8 @@ function nkc_render(options){
   var replacement_rules = [
     {
       regex:/\[r\=([0-9A-Za-z]*)]/g, //XSS proof
-      new:'<a href="/r/$1" target="_blank"><img alt="$1" src="/r/$1" style="max-width:100%;"/></a>'
+      new:
+      '<a href="/r/$1" target="_blank"><img alt="$1" src="/r/$1"/></a><br/>'
     },
     //image element when [r=1234]
 
