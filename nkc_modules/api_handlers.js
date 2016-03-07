@@ -42,7 +42,7 @@ api.post('/resources', upload.single('file'), function (req, res, next) {
   if([
     'image/jpeg',
     'image/png',
-  ].indexOf(req.file.mimetype)>=0)//if is image
+  ].indexOf(req.file.mimetype)>=0)//if is processable image
   {
     if(req.file.size>settings.size_largeimage)//if file is larger than specified size
     {
@@ -58,9 +58,9 @@ api.post('/resources', upload.single('file'), function (req, res, next) {
       im.info(req.file.path,function(err,info){
         if(err)return next(err);//what?
         if((info.width<200&&info.height<400)||info.height<400||info.width<300)
-        {// if too small
+        {// if canvas too small, no watermark thx
           res.isImage = true;
-          return next(); //no watermark, thx
+          return next();
         }
         //else
         im.watermarkify(req.file.path,function(err,back){
@@ -251,7 +251,7 @@ api.get('/resources/thumb/:rid',function(req,res,next){
     //success
 
     //1. check if is image
-    if(robject.mime.indexOf('image')!=0){
+    if(['image/jpeg','image/png','image/gif','image/svg+xml'].indexOf(robject.mime)<0){
       //if not image
       res.redirect(settings.default_thumbnail_url);
       return;
@@ -263,7 +263,7 @@ api.get('/resources/thumb/:rid',function(req,res,next){
     var destination_path = settings.upload_path;
     var destination_plus_relative = destination_path + '/'+robject.rpath+'/';
 
-    //2. check if thumbnail exists
+    //2. check if thumbnail exists already
     check_single_file_exist(thumbnail_path,function(exists){
       if(exists){
         res.sendFile(thumbnail_path);

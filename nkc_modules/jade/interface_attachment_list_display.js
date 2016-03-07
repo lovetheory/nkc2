@@ -15,34 +15,35 @@ var list_display = function(options){
     return html;
   }
 
-  var testdata = []
+  var rlist = [];
 
   list_display.refresh = function(){
 
-    //obtain testdata here
+    //obtain rlist here
     get_api(datasource + '?count=20',function(err,back){
       if(err)return alert(err);
       try{
-        testdata = JSON.parse(back);
+        rlist = JSON.parse(back);
       }
-      catch(e){return alert(e);}  //console.log(testdata);
+      catch(e){return alert(e);}  //console.log(rlist);
 
       list_father.innerHTML = '';
-      for(i in testdata){
-        var isImage = testdata[i].mime.indexOf('image')==0;
+      for(i in rlist){
+        var isImage = ['image/jpeg','image/png','image/gif','image/svg+xml'].indexOf(rlist[i].mime)>=0;
 
         list_father.innerHTML += html_replace(list_template,{
           linksrc:isImage?
-          'javascript:content_insert_resource(`'+testdata[i]._key+'`)'
-          :'javascript:content_insert_resource_thumbnail(`'+testdata[i]._key+'`,`'+testdata[i].oname+'`)'
+          'javascript:content_insert_resource(`'+rlist[i]._key+'`)'
+          :'javascript:content_insert_resource_thumbnail(`'+rlist[i]._key+'`,`'+rlist[i].oname+'`)'
           ,
 
-          imgsrc:'/rt/' + testdata[i]._key, //thumbnail
-          description:testdata[i].oname,
+          imgsrc:'/rt/' + rlist[i]._key, //thumbnail
+          description:rlist[i].oname,
         });
       }
     });
   }
+  
   return list_display;
 }
 

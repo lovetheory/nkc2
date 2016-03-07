@@ -27,7 +27,7 @@ function nkc_render(options){
     //image element when [r=1234]
 
     {
-      regex:/\[rt\=([0-9A-Za-z]*)]\[([^\/\\\:\*\?\"\<\>\|]*)\/]/g, //XSS proof: filenames overkilled
+      regex:/\[rt\=([0-9A-Za-z]*)\]\[([^\/\\\:\*\?\"\<\>\|]*)\/]/g, //XSS proof: filenames overkilled
       new:'<a href="/r/$1" target="_blank"><img src="/rt/$1"/>$2</a>'
       // function(match,p1,p2){
       //   return '<a href="/r/$1" target="_blank"><img src="/rt/$1"/>$2</a>'.replace(/\$1/g,p1).replace(/\$2/g,render.plain_render(p2));
