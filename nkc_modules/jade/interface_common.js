@@ -53,15 +53,9 @@ function redirect(url){
 // http://alexking.org/projects/js-quicktags
 function edInsertContent(which, myValue) {
   myField = document.getElementById(which);
-  //IE support
-  if (document.selection&&false) {
-    myField.focus();
-    sel = document.selection.createRange();
-    sel.text = myValue;
-    myField.focus();
-  }
+
   //MOZILLA/NETSCAPE support
-  else if (myField.selectionStart || myField.selectionStart == '0') {
+  if (myField.selectionStart || myField.selectionStart == '0') {
     var startPos = myField.selectionStart;
     var endPos = myField.selectionEnd;
     var scrollTop = myField.scrollTop;
@@ -73,7 +67,16 @@ function edInsertContent(which, myValue) {
     myField.selectionStart = startPos + myValue.length;
     myField.selectionEnd = startPos + myValue.length;
     myField.scrollTop = scrollTop;
-  } else {
+  }
+  //IE support
+  else if (document.selection) {
+    myField.focus();
+    sel = document.selection.createRange();
+    sel.text = myValue;
+    myField.focus();
+  }
+  else
+  {
     myField.value += myValue;
     //myField.focus();
   }
