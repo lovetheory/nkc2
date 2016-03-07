@@ -52,7 +52,6 @@ var nkc_editor = function(){
   geid('title').addEventListener('keyup', editor.update);
   //enable click
   geid('content').addEventListener('keyup', editor.update);
-  geid('content').update_view = editor.update;
 
   geid('post').addEventListener('click', editor.submit);
   geid('lang').addEventListener('change',editor.update);

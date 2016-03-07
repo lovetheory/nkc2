@@ -52,32 +52,29 @@ function redirect(url){
 // Copyright (c) 2002-2008 Alex King
 // http://alexking.org/projects/js-quicktags
 function edInsertContent(which, myValue) {
-    myField = document.getElementById(which);
-	//IE support
-	if (document.selection) {
-		myField.focus();
-		sel = document.selection.createRange();
-		sel.text = myValue;
+  myField = document.getElementById(which);
+  //IE support
+  if (document.selection&&false) {
+    myField.focus();
+    sel = document.selection.createRange();
+    sel.text = myValue;
+    myField.focus();
+  }
+  //MOZILLA/NETSCAPE support
+  else if (myField.selectionStart || myField.selectionStart == '0') {
+    var startPos = myField.selectionStart;
+    var endPos = myField.selectionEnd;
+    var scrollTop = myField.scrollTop;
+    myField.value = myField.value.substring(0, startPos)
+    + myValue
+    + myField.value.substring(endPos, myField.value.length);
     //myField.focus();
-	}
-	//MOZILLA/NETSCAPE support
-	else if (myField.selectionStart || myField.selectionStart == '0') {
-		var startPos = myField.selectionStart;
-		var endPos = myField.selectionEnd;
-		var scrollTop = myField.scrollTop;
-		myField.value = myField.value.substring(0, startPos)
-		              + myValue
-                      + myField.value.substring(endPos, myField.value.length);
-		//myField.focus();
 
-    //qin: trigger change
-    if(myField.update_view)myField.update_view();
-
-		myField.selectionStart = startPos + myValue.length;
-		myField.selectionEnd = startPos + myValue.length;
-		myField.scrollTop = scrollTop;
-	} else {
-		myField.value += myValue;
-		myField.focus();
-	}
+    myField.selectionStart = startPos + myValue.length;
+    myField.selectionEnd = startPos + myValue.length;
+    myField.scrollTop = scrollTop;
+  } else {
+    myField.value += myValue;
+    //myField.focus();
+  }
 }

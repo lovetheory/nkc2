@@ -54,9 +54,11 @@ list.refresh();
 function content_insert_resource(index)
 {
   edInsertContent('content','[r=' + index.toString() + ']\n\n');
+  editor.update();
 }
 
 function content_insert_resource_thumbnail(index,oname)
 {
   edInsertContent('content','[rt=' + index.toString() + ']['+oname.toString()+'/]\n\n');
+  editor.update();
 }
