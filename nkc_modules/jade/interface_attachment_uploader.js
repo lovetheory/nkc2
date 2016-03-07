@@ -104,15 +104,17 @@ var uploader = attachment_uploader({
   },
 
   files_left_callback:function(num){
-    geid('upload-counter').innerHTML = num.toString();
+    if(num>0){
+      geid('upload-counter').innerHTML = num.toString()+' file(s) left...';
+    }else{
+      geid('upload-counter').innerHTML = 'no files uploading.';
+    }
   },
 
 });
 
-window.onload = function() {
-  //enable Ctrl + V paste
-  geid("paste-target").addEventListener("paste", uploader.paste_handler);
+//enable Ctrl + V paste
+geid("paste-target").addEventListener("paste", uploader.paste_handler);
 
-  //enable click
-  geid('upload-button').addEventListener('click', uploader.uploadfile_click);
-};
+//enable click
+geid('upload-button').addEventListener('click', uploader.uploadfile_click);

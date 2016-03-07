@@ -76,6 +76,7 @@ settings.urlrewrite = [ //happens before serve_static
   {map:'/e*',to:'/interface/editor$1'},
 
   {map:'/r/:rid',to:'/api/resources/get/:rid'},
+  {map:'/rt/:rid',to:'/api/resources/thumb/:rid'},
   {map:'/avatar/:uid',to:'/api/avatar/:uid'},
 
 ];

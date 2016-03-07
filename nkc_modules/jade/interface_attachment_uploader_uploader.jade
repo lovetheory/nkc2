@@ -1,20 +1,30 @@
 .row
-  .col-xs-8
-    .row
-      .col-xs-6
-        input#file-selector(type='file' multiple)
-        br
-      .col-xs-6
-        button#upload-button() 上传
+  .col-xs-12
     .row
       .col-xs-12
-        div#paste-target 黏贴上传测试中。
+        input#file-selector(type='file' multiple style='float:left;')
+        button.btn.btn-default#upload-button(style='float:left;') 上传
+        p#upload-counter(style='float:left; margin-left:20px')
+    .row
+      .col-xs-12
+        style.
+          .pastearea {
+            border-color: #ACC585;
+            border-width: 2px;
+            border-style: dashed;
+            background-color: #ECF3E2;
+            height: 60px;
+            margin-top:10px;
+            //margin-bottom:-15px;
+          }
+        
+        .pastearea#paste-target
+          p(align='middle') 黏贴上传测试中。
+          p(align='middle') 先点一下我，再 Ctrl+V 黏贴。
         
     .row
       .col-xs-12
         div
           p#print-result
-  
-  .col-xs-4
-    h1#upload-counter
+      
 //end of uploader

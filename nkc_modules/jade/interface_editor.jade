@@ -10,10 +10,10 @@ block content
       .col-md-6
         h4 编辑内容
         .form-group
-          input#title.form-control(type='text' placeholder='标题' onkeyup='update()')
+          input#title.form-control(type='text' placeholder='标题')
 
         .form-group
-          textarea#content.form-control(rows='20' placeholder='内容' onkeyup='update()')
+          textarea#content.form-control(rows='10' placeholder='内容')
           
         .form-inline
           .form-group
@@ -24,8 +24,17 @@ block content
               option Plain
               option BBCode
           
-            button#post.btn.btn-default(type='submit' onclick='submit()') 发表
-    
+            button#post.btn.btn-default(type='submit' style='float:right;') 发表
+        hr
+        .panel.panel-default
+          .panel-body(id='file-uploading' target='resources/')
+            //uploader section
+            include interface_attachment_uploader_uploader.jade
+            
+        .panel.panel-default
+          .panel-body(id='list-container' datasource='/api/resources/mine')
+            include interface_attachment_list_display.jade
+                
       .col-md-6
         h4 预览
         .panel.panel-default
@@ -44,6 +53,9 @@ block scripts
   
   script(src='/interface_common.js')
   script(src='/interface_editor.js')
+  
+  script(src='/interface_attachment_uploader.js')
+  script(src='/interface_attachment_list_display.js')
   
   if data.replytarget.indexOf('forum')>=0
     script.

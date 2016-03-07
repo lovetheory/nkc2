@@ -58,7 +58,7 @@ function edInsertContent(which, myValue) {
 		myField.focus();
 		sel = document.selection.createRange();
 		sel.text = myValue;
-    myField.focus();
+    //myField.focus();
 	}
 	//MOZILLA/NETSCAPE support
 	else if (myField.selectionStart || myField.selectionStart == '0') {
@@ -68,7 +68,11 @@ function edInsertContent(which, myValue) {
 		myField.value = myField.value.substring(0, startPos)
 		              + myValue
                       + myField.value.substring(endPos, myField.value.length);
-		myField.focus();
+		//myField.focus();
+
+    //qin: trigger change
+    if(myField.update_view)myField.update_view();
+
 		myField.selectionStart = startPos + myValue.length;
 		myField.selectionEnd = startPos + myValue.length;
 		myField.scrollTop = scrollTop;

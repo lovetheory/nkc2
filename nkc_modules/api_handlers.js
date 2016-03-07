@@ -308,7 +308,7 @@ api.get('/resources/mine',function(req,res,next){
     type:'resources',
     filter_by:'uid',
     equals:req.user._key, //uid
-    sort_by:'_key',
+    sort_by:'toc',
     order:'desc',
   },function(err,back){
     if(err)return next(err);

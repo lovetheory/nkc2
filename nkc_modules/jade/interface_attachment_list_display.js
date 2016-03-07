@@ -31,7 +31,7 @@ var list_display = function(options){
       for(i in testdata){
         list_father.innerHTML += html_replace(list_template,{
           linksrc:'javascript:text_insert('+testdata[i]._key+')', //original
-          imgsrc:'/api/resources/thumb/' + testdata[i]._key, //thumbnail
+          imgsrc:'/rt/' + testdata[i]._key, //thumbnail
           description:testdata[i].oname,
         });
       }

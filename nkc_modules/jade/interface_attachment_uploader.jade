@@ -6,7 +6,7 @@ block title
 block content        
   .container
     .row
-      .col-md-6
+      .col-lg-4
         .panel.panel-default(id='file-uploading' target='resources/')
           .panel-body
             //uploader section
@@ -16,7 +16,7 @@ block content
           .panel-body
             textarea#content.form-control(rows='20' placeholder='内容')
             
-      .col-md-6
+      .col-lg-8
         .panel.panel-default
           .panel-body(id='list-container' datasource='/api/resources/mine')
             include interface_attachment_list_display.jade
