@@ -28,22 +28,6 @@ var nkc_editor = function(){
     });
   }
 
-  //var commonmark = window.commonmark;
-  var commonreader = new commonmark.Parser();
-  var commonwriter = new commonmark.HtmlRenderer({ sourcepos: true });
-  function commonmarkconvert(cont){
-    var parsed = commonreader.parse(cont); // parsed is a 'Node' tree
-    // transform parsed if you like...
-    var result = commonwriter.render(parsed); // result is a String
-    return result;
-  }
-
-  function bbcodeconvert(input){
-    return XBBCODE.process({
-      text:input,
-    }).html;
-  }
-
   editor.update = function(){
     var title = gv('title');
     hset('parsedtitle',title); //XSS prone.
@@ -53,12 +37,12 @@ var nkc_editor = function(){
 
     switch(gv('lang').toLowerCase()){
       case 'markdown':
-      parsedcontent = commonmarkconvert(content);break;
+      parsedcontent = render.commonmark_render(content);break;
       case 'bbcode':
-      parsedcontent = bbcodeconvert(content);break;
+      parsedcontent = render.bbcode_render(content);break;
       case 'plain':
       default:
-      parsedcontent = plain_escape(content);break;
+      parsedcontent = render.plain_render(content);break;
     };
 
     hset('parsedcontent',parsedcontent); //XSS prone
@@ -68,11 +52,12 @@ var nkc_editor = function(){
   geid('title').addEventListener('keyup', editor.update);
   //enable click
   geid('content').addEventListener('keyup', editor.update);
+  geid('content').update_view = editor.update;
+
   geid('post').addEventListener('click', editor.submit);
+  geid('lang').addEventListener('change',editor.update);
 
   return editor;
 }
 
 var editor = nkc_editor();
-
-geid('content').update_view = editor.update;

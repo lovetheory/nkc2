@@ -4,35 +4,24 @@ var helper = require('helper');
 
 var jade = require('jade');
 var settings = require('server_settings.js');
-var commonmark = require('commonmark');
-var plain_escape = require('jade/plain_escaper');
-var xbbcode = require('xbbcode/xbbcode');
 
 var moment = require('moment');
 moment.locale('zh-cn');//yo!
 
-function bbcodeconvert(input){
-  return xbbcode.process({
-    text:input,
-  }).html;
-}
+var render = require('nkc_render');
 
-var commonreader = new commonmark.Parser();
-var commonwriter = new commonmark.HtmlRenderer();
-var commonparser = (input)=>{return commonwriter.render(commonreader.parse(input));} // result is a String
-
-jade.filters.markdown = commonparser;
-jade.filters.bbcode = bbcodeconvert;
-jade.filters.plain = plain_escape;
+jade.filters.markdown = render.commonmark_render;
+jade.filters.bbcode = render.bbcode_render;
+jade.filters.plain = render.plain_render;
 
 function fromNow(time){
   return moment(time).fromNow();
 }
 
 var jadeoptions = {
-  markdown:commonparser,
-  bbcode:bbcodeconvert,
-  plain:plain_escape,
+  markdown:render.commonmark_render,
+  bbcode:render.bbcode_render,
+  plain:render.plain_render,
   'dateString':dateString,
   'fromNow':fromNow,
 };
