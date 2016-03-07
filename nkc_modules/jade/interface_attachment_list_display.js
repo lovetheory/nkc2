@@ -33,8 +33,8 @@ var list_display = function(options){
 
         list_father.innerHTML += html_replace(list_template,{
           linksrc:isImage?
-          'javascript:content_insert_resource(`'+rlist[i]._key+'`)'
-          :'javascript:content_insert_resource_thumbnail(`'+rlist[i]._key+'`,`'+rlist[i].oname+'`)'
+          'javascript:content_insert_resource(\''+rlist[i]._key+'\')'
+          :'javascript:content_insert_resource_thumbnail(\''+rlist[i]._key+'\',\''+rlist[i].oname+'\')'
           ,
 
           imgsrc:'/rt/' + rlist[i]._key, //thumbnail
@@ -43,7 +43,7 @@ var list_display = function(options){
       }
     });
   }
-  
+
   return list_display;
 }
 

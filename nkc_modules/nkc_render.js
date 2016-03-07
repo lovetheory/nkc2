@@ -43,7 +43,7 @@ function nkc_render(options){
     safe:true, //ignore <tags>
   });
 
-  render.commonmark_render = (input)=>{
+  render.commonmark_render = function(input){
     var parsed = commonreader.parse(input);
     var rendered = commonwriter.render(parsed)
 
