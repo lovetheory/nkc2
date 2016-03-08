@@ -11,6 +11,11 @@ settings.server={
   //use_https:true,
 };
 
+settings.site={
+  name:"科创论坛",
+  description:"科技爱好者综合社区",
+};
+
 settings.cookie_secret='nkc';
 settings.compression_level=2;
 

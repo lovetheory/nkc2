@@ -23,7 +23,8 @@ function nkc_render(options){
     {
       regex:/\[r\=([0-9A-Za-z]*)]/g, //XSS proof
       new:
-      '<a href="/r/$1" target="_blank"><img alt="$1" src="/r/$1"/></a><br/>'
+      '<p><a href="/r/$1" target="_blank"><img alt="$1" src="/r/$1"/></a></p>'
+      //'<img alt="$1" src="/r/$1" class="img-responsive"/>'
     },
     //image element when [r=1234]
 

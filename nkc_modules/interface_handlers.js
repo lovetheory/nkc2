@@ -18,7 +18,9 @@ var apifunc = require('api_functions');
 ///to be executed before all handlers below
 iface.use(function(req,res,next){
   if(!res.data)
-  res.data = {}
+  res.data = {};
+
+  res.data.site = settings.site;
   next();
 });
 
