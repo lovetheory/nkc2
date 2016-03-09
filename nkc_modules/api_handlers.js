@@ -429,6 +429,8 @@ api.use(function preprocess_post(req,res,next){
 //POST /forum/:fid
 api.post('/forum/:fid',(req,res,next)=>{
   if(req.post_content_ready!==true)return next('content unready');
+  req.body.t = req.body.t.trim();
+  if(req.body.t.length<3)return next('title too short. write something would you?')
 
   apifunc.post_to_forum(req.body,req.params.fid.toString(),(err,result)=>{
     if(err)return next(err);

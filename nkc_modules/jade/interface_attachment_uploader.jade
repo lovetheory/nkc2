@@ -7,23 +7,24 @@ block content
   .container
     .row
       .col-xs-6.col-sm-5
+        h3 测试区
+        p 点击附件列表中的图标，可向下面这个文本框插入标记。这些标记将在帖子中被渲染为各种附件。
+        br
+        textarea#content.form-control(rows='10' placeholder='内容')
+        br
+        
         .panel.panel-default(id='file-uploading' target='resources/')
           .panel-body
             //uploader section
             include interface_attachment_uploader_uploader.jade
-            
-        h3 测试区
-        p 点击附件列表中的图标，可向下面这个文本框插入标记。这些标记将被渲染为各种附件。
-        br
-        textarea#content.form-control(rows='20' placeholder='内容')
-            
+        
+
       .col-xs-6.col-sm-7
         h3 附件列表
         p 列表包含所有被上传的文件。
         br
         .panel.panel-default
           .panel-body(id='list-container' datasource='/api/resources/mine')
-
             include interface_attachment_list_display.jade
             
   include debug_output.jade
