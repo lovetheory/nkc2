@@ -72,7 +72,7 @@ settings.urlrewrite = [ //happens before serve_static
   // {map:'/nkc',to:'/api'},//到时要删掉。
 
   {map:'/',to:'/forum/default'},
-  {map:'/api',to:'/'},
+  {map:'/index',to:'/'},
 
   {map:'/logout*',to:'/interface/logout$1'},
   {map:'/me',to:'/interface/me'},
