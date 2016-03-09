@@ -67,6 +67,10 @@ settings.root_serve_static =
 ];
 
 settings.urlrewrite = [ //happens before serve_static
+  {map:'/',to:'/api'},//到时要删掉。
+  {map:'/nkc/*',to:'/$1'}, //记得删掉
+  {map:'/nkc',to:'/api'},//到时要删掉。
+
   {map:'/',to:'/forum/default'},
   {map:'/api',to:'/'},
 

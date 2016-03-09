@@ -2,6 +2,13 @@
 nkc community project, version 2.
 currently under dev.
 
+## Todos
+在nkc_render.js中，markdown 被 commonmark parse 成 html之后，经过若干正则表达式，得到最终输出。
+例如，\\[r=123\\]表示图片附件，编号123。会被渲染成一张图片。但是目前加载此资源未必返回图片（如果资源是rar一样会response），应在服务端加入mime类型检查。
+又例如，\\[rt=123\\]\\[filename.ext/\\]表示点击下载附件，编号123。会被渲染成 缩略图+文件名的形式。适合插入文章内部。
+现在尚缺几种新的标记，例如[audio=123] [video=123]等等。它们应该被渲染成合适的播放器。
+另外这些标记和现有markdown有冲突，应参考discourse项目解决方案。
+另外，也需要引入诸如[smiles=331/]，以及$$latex-code$$这样的标签。总而言之，还有很多工作要做。
 
 ## License
 You are allowed to use these files for any purpose, as long as you admit that they are useful.
