@@ -19,7 +19,6 @@ var apifunc = require('api_functions');
 iface.use(function(req,res,next){
   if(!res.data)
   res.data = {};
-
   res.data.site = settings.site;
   next();
 });
@@ -33,6 +32,22 @@ iface.use(function(req,res,next){
   next();
 });
 
+iface.use(function(req,res,next){
+  if(req.url.indexOf('/forum/')==0||
+  req.url.indexOf('/thread/')==0)
+  {
+    //if requesting for above two paths
+    //apply forum list info
+    apifunc.get_all_forums(function(err,back){
+      if(err)next(err);
+      res.data.forums = back;
+      next();
+    });
+  }else {
+    next();
+  }
+});
+
 //render forumview
 iface.get('/forum/:fid',function(req,res,next){
   apifunc.get_threads_from_forum_as_forum({
@@ -44,6 +59,7 @@ iface.get('/forum/:fid',function(req,res,next){
     //if nothing went wrong
 
     Object.assign(res.data,data);
+
     res.data.replytarget = 'forum/' + req.params.fid;
     res.template = 'nkc_modules/jade/interface_forum.jade';
     return next();

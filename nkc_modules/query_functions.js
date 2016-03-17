@@ -91,6 +91,19 @@ queryfunc.doc_update = (doc,collection_name,props,callback)=>{
   );
 };
 
+queryfunc.doc_list_all = (opt,callback)=>{
+  var aqlobj = {
+    query:`
+    for i in ${opt.type}
+    return i
+    `
+    ,
+    params:{},
+  };
+
+  aqlall(aqlobj,callback);
+};
+
 queryfunc.doc_list = (opt,callback)=>{
   if(!opt.start)opt.start=0;
   if(!opt.count)opt.count=100;
