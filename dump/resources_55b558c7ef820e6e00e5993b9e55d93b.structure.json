@@ -1,1 +1,1 @@
-{"parameters":{"version":5,"type":2,"cid":"55585059","count":8,"indexBuckets":8,"deleted":false,"doCompact":true,"maximalSize":33554432,"name":"resources","isVolatile":false,"waitForSync":false},"indexes":[]}
+{"parameters":{"version":5,"type":2,"cid":"55585059","count":9,"indexBuckets":8,"deleted":false,"doCompact":true,"maximalSize":33554432,"name":"resources","isVolatile":false,"waitForSync":false},"indexes":[]}

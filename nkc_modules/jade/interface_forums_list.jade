@@ -1,0 +1,12 @@
+.panel.panel-default
+  .panel-heading
+    .f12 论坛列表
+  .panel-body
+    for i,index in data.forums
+      div(style='display:inline-block')
+        if data.forum
+          if i._key == data.forum._key
+            text > 
+        a(href='/forum/#{i._key}').
+          #{i.display_name} #[text(style='color:brown;') #{i.posts_today}]&nbsp;&nbsp;
+        br
