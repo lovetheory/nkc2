@@ -13,7 +13,18 @@ block title
 block content        
   .container
     .row
-      .col-md-10.col-md-offset-1
+      .col-md-2
+        .panel.panel-default
+          .panel-heading
+            .f12 论坛列表
+          .panel-body
+            for i,index in data.forums
+              if i._key == data.forum._key
+                text > 
+              a(href='/forum/#{i._key}').
+                #{i.display_name} #[span.badge #{i.posts_today}]
+              br
+      .col-md-10
         //split 10/12 for post area
           
         .panel.panel-default
@@ -29,7 +40,7 @@ block content
                 a.btn.btn-default(href='/interface/editor?target=#{data.replytarget}') 发帖
               .col-xs-4
                 p.
-                  今日：#{data.forum.stats.posts_today} 主题：#{data.forum.stats.threads_total} 总帖：#{data.forum.stats.posts_total}
+                  今日：#{data.forum.posts_today} 主题：#{data.forum.threads_total} 总帖：#{data.forum.posts_total}
                 text 版主：
                 for i,index in data.forum.owners
                   a.d-inline(href='#') #{index?', ':''}#{i.username}
