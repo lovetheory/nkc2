@@ -1,5 +1,8 @@
 #!/bin/sh
 
+PATH=$PATH:/Applications/ArangoDB-CLI.app/Contents/MacOS/
+export PATH
+
 # goto lying directory
 cd -- "$(dirname "$0")"
 

@@ -45,8 +45,25 @@ The author of these files shall not be held responsible for any terrorist attack
 5. 运行 __run_as_dev.bat__ or __run_as_dev.command__ 以从命令行启动服务器
 6. 在命令行窗口中随时按下 **Enter** 就可以重启服务器。 你也可以访问 `server:port/reload` 实现同样效果
 
+## Recommended way to install dependencies
+- ImageMagick
+  - Windows
+    - Official Site Download.
+  - OS X
+    - `brew install ImageMagick`
+  - CentOS
+    - check `scripts` directory.
+
+- ArangoDB
+  - Windows
+    - Installer.
+  - OSX
+    - Installer. run **ArangoDB-CLI.app** directly from **Applications**.
+  - CentOS
+    - check `scripts` directory. Change the version number when necessary.
+
 ## For your convenience
-- `/scripts` contains various scripts to accelerate deployment
+- `scripts` directory contains various scripts to accelerate deployment
 - by default listens on __localhost:1086__
 - `server_settings.js` includes several globally used server parameters and static serving routes and URL rewrites
 - GET `server:port/html/jade/somename` will respond with rendered `/nkc_modules/jade/somename.jade`
