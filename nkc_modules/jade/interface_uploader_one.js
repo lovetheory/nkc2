@@ -31,7 +31,7 @@ var upload_target = ga('select-file','target');
 //on click of the upload button
 function uploadfile_click(){
   if(!geid('select-file').files[0])return alert('pick one, okay?');
-  
+
   var formData = new FormData();
 
   formData.append('file', geid('select-file').files[0]);

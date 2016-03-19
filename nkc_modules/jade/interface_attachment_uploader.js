@@ -9,6 +9,7 @@ var attachment_uploader = function(options){
     xhr.upload.onprogress = function(e) {
       var percentComplete = (e.loaded / e.total) * 100;
       console.log("Uploaded " + percentComplete + "%");
+      options.percentage_callback(percentComplete);
     };
 
     xhr.onreadystatechange=function()
@@ -111,6 +112,9 @@ var uploader = attachment_uploader({
     }
   },
 
+  percentage_callback:function(pctg){
+    geid('upload-percentage').innerHTML = pctg.toString()+'%';
+  }
 });
 
 //enable Ctrl + V paste
