@@ -15,7 +15,7 @@ var list_display = function(options){
     return html;
   }
 
-  var rlist = [];
+  list_display.rlist = [];
 
   list_display.refresh = function(){
 
@@ -23,22 +23,27 @@ var list_display = function(options){
     get_api(datasource + '?count=20',function(err,back){
       if(err)return alert(err);
       try{
-        rlist = JSON.parse(back);
+        list_display.rlist = JSON.parse(back);
       }
       catch(e){return alert(e);}  //console.log(rlist);
 
+      if(Array.isArray(list_display.rlist)==false){
+        //because on error the api returns an json object,
+        list_display.rlist=[];return;
+      }
+
       list_father.innerHTML = '';
-      for(i in rlist){
-        var isImage = ['image/jpeg','image/png','image/gif','image/svg+xml'].indexOf(rlist[i].mime)>=0;
+      for(i in list_display.rlist){
+        //var isImage = ['image/jpeg','image/png','image/gif','image/svg+xml'].indexOf(rlist[i].mime)>=0;
 
         list_father.innerHTML += html_replace(list_template,{
-          linksrc:isImage?
-          'javascript:content_insert_resource(\''+rlist[i]._key+'\')'
-          :'javascript:content_insert_resource_thumbnail(\''+rlist[i]._key+'\',\''+rlist[i].oname+'\')'
+          linksrc://isImage?
+          'javascript:content_insert_resource('+ i +')'
+          //:'javascript:content_insert_resource_thumbnail(\''+rlist[i]._key+'\',\''+rlist[i].oname+'\')'
           ,
 
-          imgsrc:'/rt/' + rlist[i]._key, //thumbnail
-          description:rlist[i].oname,
+          imgsrc:'/rt/' + list_display.rlist[i]._key, //thumbnail
+          description: list_display.rlist[i].oname,
         });
       }
     });
@@ -53,7 +58,9 @@ list.refresh();
 
 function content_insert_resource(index)
 {
-  edInsertContent('content','[r=' + index.toString() + ']\n\n');
+  var robject=list.rlist[index];
+
+  edInsertContent('content','%{r='+robject._key+'\\'+robject.mime+'\\'+robject.oname + '\/}\n');
   editor.update();
 }
 
