@@ -113,7 +113,7 @@ var uploader = attachment_uploader({
   },
 
   percentage_callback:function(pctg){
-    geid('upload-percentage').innerHTML = pctg.toString()+'%';
+    geid('upload-percentage').innerHTML = pctg.toFixed()+'%';
   }
 });
 
