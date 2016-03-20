@@ -8,12 +8,12 @@ block content
     .row
       .col-xs-12
         h3 附件上传（测试版）
-        p 除了发帖界面，也可以在这里上传文件。
+        p 在这里上传的文件，在发帖界面一样可以看到。请直接去发帖界面上传文件。这个页面主要是为开发人员准备的。
         hr
     .row
       .col-xs-6.col-sm-5
-        h3 测试区
-        p 点击附件列表中的图标，可向下面这个文本框插入标记。这些标记将在帖子中被渲染为各种附件。
+        h3 测试区（要看效果，请去发帖界面）
+        p 点击附件列表中的图标，可向下面这个文本框插入标记。这些标记将在帖子中被渲染为合适的展示形式。
         br
         textarea#content.form-control(rows='10' placeholder='内容')
         br
@@ -26,7 +26,7 @@ block content
 
       .col-xs-6.col-sm-7
         h3 附件列表
-        p 列表包含所有被上传的文件。
+        p 列表包含所有当前用户上传的文件。
         br
         .panel.panel-default
           .panel-body(id='list-container' datasource='/api/resources/mine')

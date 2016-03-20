@@ -28,24 +28,41 @@ var nkc_editor = function(){
     });
   }
 
-  editor.update = function(){
-    var title = gv('title');
-    hset('parsedtitle',title); //XSS prone.
+  var debounce=false;
+  editor.update = function(e){
+    console.log(debounce,e);
+    if(!debounce)
+    {
+      var title = gv('title');
+      hset('parsedtitle',title); //XSS prone.
 
-    var content = gv('content');
-    var parsedcontent = '';
+      var content = gv('content');
+      var parsedcontent = '';
 
-    switch(gv('lang').toLowerCase()){
-      case 'markdown':
-      parsedcontent = render.commonmark_render(content);break;
-      case 'bbcode':
-      parsedcontent = render.bbcode_render(content);break;
-      case 'plain':
-      default:
-      parsedcontent = render.plain_render(content);break;
-    };
+      switch(gv('lang').toLowerCase()){
+        case 'markdown':
+        parsedcontent = render.commonmark_render(content);break;
+        case 'bbcode':
+        parsedcontent = render.bbcode_render(content);break;
+        case 'plain':
+        default:
+        parsedcontent = render.plain_render(content);break;
+      };
 
-    hset('parsedcontent',parsedcontent); //XSS prone
+      hset('parsedcontent',parsedcontent); //XSS prone
+
+      if(e==='reenter'){
+        //enough!
+        debounce=false;
+      }
+      else{
+        debounce = true;
+        setTimeout(function(){
+          debounce=false;
+          editor.update('reenter');
+        },500);
+      }
+    }
   }
 
   //enable click
