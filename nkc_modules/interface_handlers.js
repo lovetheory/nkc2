@@ -141,20 +141,21 @@ iface.get('/uploader',(req,res,next)=>{
 });
 
 iface.get('/questions',(req,res,next)=>{
-  if(!req.user)return next('你还没有登录。');
-
-  var param = req.user._key;
-
-  apifunc.get_questions(null,function(err,back){
-    if(err)return next(err);
-    res.data.questions_all = back;
-    apifunc.get_questions(param,function(err,back){
+  if(req.user){
+    apifunc.get_questions(null,function(err,back){
       if(err)return next(err);
-      res.data.questions = back;
-      res.template = 'nkc_modules/jade/questions_edit.jade';
-      next();
+      res.data.questions_all = back;
+      apifunc.get_questions(req.user._key,function(err,back){
+        if(err)return next(err);
+        res.data.questions = back;
+        res.template = 'nkc_modules/jade/questions_edit.jade';
+        next();
+      })
     })
-  })
+  }else{
+    res.template = 'nkc_modules/jade/questions_edit.jade';
+    next();
+  }
 });
 
 //render phase: if template jade file exists
