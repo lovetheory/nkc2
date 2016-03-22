@@ -26,6 +26,8 @@ var cookieparser = require('cookie-parser');
 var apifunc = require('api_functions');
 
 var nkc = express(); //main router
+
+nkc.set('json spaces',2);
 nkc.enable('trust proxy');
 
 //----------------------

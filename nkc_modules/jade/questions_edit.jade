@@ -53,6 +53,7 @@ block content
       .col-xs-12.col-sm-6  
         if data.user
           h4 所有最近提交的问题
+          a(href='/api/questions?all=true' target='_blank') 下载JSON格式
           .panel.panel-default
             .panel-body.post-body
               each q,index in data.questions_all
