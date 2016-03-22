@@ -68,3 +68,7 @@ function remove_question(qid){
     location.reload();
   })
 }
+
+function load_question(qstr){
+  box.value=qstr;
+}

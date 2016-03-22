@@ -24,4 +24,10 @@ case q.type
           text #{index+1}. #{a} 
           
 if q.uid == data.user._key
-  button.btn.btn-default(onclick='remove_question("#{q._key}")') 删掉
+  button.btn.btn-default(onclick="remove_question('#{q._key}')") 删掉
+- var qstr = q.question;
+- if(q.type=='ch4')for(i in q.answer){qstr+='\n$'+q.answer[i]};
+- if(q.type=='ans')qstr+='\n$'+q.answer;
+- qstr = encodeURI(qstr);
+
+button.btn.btn-default(onclick="load_question(decodeURI('#{qstr}'))") 复制到输入
