@@ -12,6 +12,17 @@ var db = require('arangojs')(settings.arango.address);
 db.useDatabase('nkc');
 var users = db.collection('users');
 
+['posts',
+'threads',
+'forums',
+'logs',
+'users',
+'counters',
+'resources',
+'questions',
+].map(function(collection_name){db.collection(collection_name).create()});
+//create every database, if not existent
+
 var express = require('express');
 var api = express.Router();
 
