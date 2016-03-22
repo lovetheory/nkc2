@@ -92,17 +92,42 @@ queryfunc.doc_update = (doc,collection_name,props,callback)=>{
 };
 
 queryfunc.doc_list_all = (opt,callback)=>{
+  if(!opt.start)opt.start=0;
+  if(!opt.count)opt.count=100;
+  opt.start=Number(opt.start);
+  opt.count=Number(opt.count);
+
   var aqlobj = {
     query:`
     for i in ${opt.type}
+    limit @start, @count
     return i
     `
     ,
-    params:{},
+    params:{
+      start:opt.start,
+      count:opt.count,
+    },
   };
 
   aqlall(aqlobj,callback);
 };
+
+queryfunc.doc_list_all_questions = function(opt,callback){
+  var aqlobj = {
+    query:`
+    for i in questions
+    sort i.toc desc
+    limit 0, 100
+    return i
+    `
+    ,
+    params:{
+    },
+  };
+
+  aqlall(aqlobj,callback);
+}
 
 queryfunc.doc_list = (opt,callback)=>{
   if(!opt.start)opt.start=0;

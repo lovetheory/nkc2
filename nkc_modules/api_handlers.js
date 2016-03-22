@@ -513,6 +513,35 @@ api.get('/forum/:fid',(req,res,next)=>{
   });
 });
 
+api.post('/questions',function(req,res,next){
+  if(!req.user)return next('require login');
+  if(!req.body)return next('bodyless');
+
+  var question = req.body;
+  question.username = req.user.username;
+  question.uid = req.user._key;
+  question.toc = Date.now();
+
+  apifunc.post_questions(question,function(err,back){
+    if(err)return next(err);
+    res.obj = back;
+    next();
+  });
+});
+
+api.get('/questions',function(req,res,next){
+  if(!req.user)return next('require login');
+
+  var param = req.user._key;
+  if(req.query['all'])param=null;
+
+  apifunc.get_questions(param,function(err,back){
+    if(err)return next(err);
+    res.obj = back;
+    next();
+  })
+});
+
 if(development){
   //GET /user
   api.get('/user/get/:uid',(req,res,next)=>{

@@ -300,4 +300,25 @@ apifunc.get_resources = function(key,callback){
   queryfunc.doc_load(key,'resources',callback);
 }
 
+apifunc.get_questions = function(uid,callback){
+  if(uid){
+    queryfunc.doc_list({
+      type:'questions',
+      filter_by:'uid',
+      equals:uid,
+      sort_by:'toc',
+      order:'desc',
+    },
+    callback);
+  }
+  else{
+    //if uid === null
+    queryfunc.doc_list_all_questions(null,callback);
+  }
+}
+
+apifunc.post_questions = function(question,callback){
+  queryfunc.doc_save(question,'questions',callback);
+}
+
 module.exports = apifunc;

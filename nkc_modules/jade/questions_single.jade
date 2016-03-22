@@ -1,0 +1,21 @@
+
+case q.type
+  when 'ans'
+    p
+      text.red 问答题：
+      text #{q.question}
+      text.lighttext   #{q.username} - #{fromNow(q.toc)}创建
+    p 答案：#{q.answer}
+  
+  when 'ch4'
+    p
+      text.red 选择题：
+      text #{q.question}
+      text.lighttext   #{q.username} - #{fromNow(q.toc)}创建
+    p
+      text 答案：
+      each a,index in q.answer
+        if index==0
+          text.red #{a} 
+        else
+          text #{a} 
