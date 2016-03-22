@@ -542,6 +542,22 @@ api.get('/questions',function(req,res,next){
   })
 });
 
+api.delete('/questions/:qid',function(req,res,next){
+  if(!req.user)return next('login pls');
+
+  queryfunc.doc_load(req.params.qid,'questions',function(err,back){
+    if(err)return next(err);
+    if(back.uid!==req.user._key)//if not owning the question
+    return next('not owning');
+
+    queryfunc.doc_kill(req.params.qid,'questions',function(err,back){
+      if(err)return next(err);
+      res.obj=back;
+      next();
+    })
+  });
+});
+
 if(development){
   //GET /user
   api.get('/user/get/:uid',(req,res,next)=>{

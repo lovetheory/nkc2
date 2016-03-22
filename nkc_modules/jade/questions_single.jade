@@ -5,7 +5,9 @@ case q.type
       text.red 问答题：
       text #{q.question}
       text.lighttext   #{q.username} - #{fromNow(q.toc)}创建
-    p 答案：#{q.answer}
+    p 
+      text 答案：
+      text.green #{q.answer}
   
   when 'ch4'
     p
@@ -16,6 +18,10 @@ case q.type
       text 答案：
       each a,index in q.answer
         if index==0
-          text.red #{a} 
+          text.green #{index+1}. #{a} 
         else
-          text #{a} 
+          text &nbsp;
+          text #{index+1}. #{a} 
+          
+if q.uid == data.user._key
+  button.btn.btn-default(onclick='remove_question("#{q._key}")') 删掉

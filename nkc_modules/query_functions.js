@@ -102,6 +102,10 @@ queryfunc.doc_update = (doc,collection_name,props,callback)=>{
   );
 };
 
+queryfunc.doc_kill = (doc_key,collection_name,callback)=>{
+  db.collection(collection_name).remove(doc_key,callback);
+};
+
 queryfunc.doc_list_all = (opt,callback)=>{
   if(!opt.start)opt.start=0;
   if(!opt.count)opt.count=100;

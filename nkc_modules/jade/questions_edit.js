@@ -4,7 +4,9 @@ function validate_and_submit(){
   var q = box.value.trim().replace(/\n/g,'');
   box.value=q;
   q=q.split('$');
-  
+
+  q = q.map(function(i){return i.trim()});
+
   if(q.indexOf('')>=0){
     //如果各列中有空字符串
     alert('格式可能不符，检查输入。')
@@ -52,8 +54,17 @@ function validate_and_submit(){
 function content_keypress(){
   e = event ? event :(window.event ? window.event : null);
   if(e.keyCode===13||e.which===13)
-  validate_and_submit();
+  {//validate_and_submit();
+  }
 }
 
 geid('post').addEventListener('click', validate_and_submit);
 geid('content').addEventListener('keyup', content_keypress);
+
+function remove_question(qid){
+  delete_api('/api/questions/'+qid.toString(),function(err,back){
+    if(err)return alert(err.toString());
+    //alert(back.toString());
+    location.reload();
+  })
+}

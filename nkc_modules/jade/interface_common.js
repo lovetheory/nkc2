@@ -42,6 +42,24 @@ function get_api(target,callback)
   xhr.send();
 };
 
+function delete_api(target,callback)
+{
+  var xhr = new XMLHttpRequest();
+  xhr.onreadystatechange=function()
+  {
+    if (xhr.readyState==4)
+    {
+      if(xhr.status>=200||xhr.status<400){
+        callback(null,xhr.responseText);
+      }else {
+        callback(xhr.status.toString()+' '+xhr.responseText);
+      }
+    }
+  }
+  xhr.open("DELETE",target.toString().toLowerCase(),true);
+  xhr.send();
+};
+
 function redirect(url){
   window.location=url;
 }
