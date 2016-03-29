@@ -13,6 +13,7 @@ var express = require('express');
 var iface = express.Router();
 
 var apifunc = require('api_functions');
+var async = require('async');
 
 ///------------
 ///to be executed before all handlers below
@@ -34,7 +35,8 @@ iface.use(function(req,res,next){
 
 iface.use(function(req,res,next){
   if(req.url.indexOf('/forum/')==0||
-  req.url.indexOf('/thread/')==0)
+  req.url.indexOf('/thread/')==0||
+  req.url.indexOf('/home')==0)
   {
     //if requesting for above two paths
     //apply forum list info
@@ -47,6 +49,31 @@ iface.use(function(req,res,next){
     next();
   }
 });
+
+//render front page
+iface.get('/home',function(req,res,next)
+{
+  async.each(res.data.forums,
+    function(forum,cb){
+      apifunc.get_threads_from_forum_as_forum({
+        fid:forum._key,
+        start:0,
+        count:6,
+        no_forum_inclusion:true, //do not include again..
+      },function(err,data){
+        if(err)return cb(err);
+        forum.threads = data.threads;
+        cb();
+      })
+    }
+    ,function(err){
+      if(err)return next(err);
+
+      res.template='nkc_modules/jade/interface_home.jade';
+      return next();
+    }
+  )
+})
 
 //render forumview
 iface.get('/forum/:fid',function(req,res,next){

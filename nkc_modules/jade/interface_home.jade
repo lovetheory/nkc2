@@ -1,0 +1,26 @@
+extends bootstrap_base.jade
+
+block title
+  title #{data.site.name} - #{data.site.description}
+
+block content        
+  .container
+    .row
+      each f,index in data.forums
+        .col-md-3.col-xs-6.col-sm-4
+          .panel.panel-default
+            .panel-body
+              a.f16(href='/forum/#{f._key}') #{f.display_name}
+              text.lighttext &nbsp;#{f.posts_today?f.posts_today:""}
+              hr
+              each t,index in f.threads
+                p
+                  - var avatar = '/avatar/' + t.oc.uid
+                  a(href='/thread/#{t._key}')
+                    img.avatar(src='#{avatar}' style='width:24px;height:24px;')
+                    text  #{t.oc.t}
+                    text.lighttext.rightalign #{fromNow(t.lm.toc)}
+          
+                
+              
+  include debug_output.jade

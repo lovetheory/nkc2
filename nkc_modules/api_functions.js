@@ -175,6 +175,9 @@ apifunc.get_threads_from_forum_as_forum = (params,callback)=>{
       next(null,{});
     },
     function(result,next){
+      if(params.no_forum_inclusion){
+        return next(null,result);
+      }
       queryfunc.doc_load(params.fid,'forums',(err,forum)=>{
         if(err){next(err);return;}
         result.forum = forum;
