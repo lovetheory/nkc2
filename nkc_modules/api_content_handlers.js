@@ -6,16 +6,8 @@ var path = require('path')
 var fs = require('fs.extra')
 var settings = require('server_settings.js');
 var helper_mod = require('helper.js')();
-var bodyParser = require('body-parser');
-var multer = require('multer'); //multi-part parser, for upload
 
 var async = require('async');
-
-var request = require('request');
-
-var db = require('arangojs')(settings.arango.address);
-db.useDatabase('testdb');
-var testdata = db.collection('testdata');
 
 var express = require('express');
 var api = express.Router();
@@ -23,13 +15,25 @@ var api = express.Router();
 var validation = require('validation');
 var apifunc = require('api_functions');
 var queryfunc = require('query_functions');
-var im = require('im_functions');
 
 ///------------
 ///something here to be executed before all handlers below
 api.use(function(req,res,next){
   next();
 });
+
+//----
+//counter increment api
+if(development){
+  api.get('/new/:countername',(req,res,next)=>{
+    //queryfunc.incr_counter('threads',callback);
+    queryfunc.incr_counter(req.params.countername,(err,id)=>{
+      if(err)return next(report(req.params.countername +' retrieval error',err));
+      res.obj = id;
+      next();
+    });
+  });
+}
 
 //append userinfo into request body of POSTs
 //and necessary processing

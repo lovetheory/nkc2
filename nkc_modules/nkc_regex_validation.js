@@ -1,7 +1,7 @@
 var nkc_validate_rules={
   username: /^[A-Za-z0-9\-\_\u4e00-\u9fa5]{2,16}$/,
   //中文，大小写字母，2到16个字
-  password: /^[A-Za-z0-9\_\-]{6,20}$/,
+  password: /^[\x20-\x7e]{6,20}$/, //from space(0x20) to ~(0x7e)
 }
 
 //return false if no violation, otherwise return first violating field.
