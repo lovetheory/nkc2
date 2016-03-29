@@ -13,9 +13,6 @@ block title
 block content        
   .container
     .row
-      .col-sm-3.col-md-2
-        include interface_forums_list.jade
-        
 
       .col-sm-9.col-md-10
         //split 10/12 for post area
@@ -75,5 +72,7 @@ block content
                         
           .panel-body
             a.btn.btn-default(href='/interface/editor?target=#{data.replytarget}') 发帖                 
-      
+      .col-sm-3.col-md-2
+        include interface_forums_list.jade
+              
   include debug_output.jade
