@@ -70,7 +70,7 @@ api.delete('/questions/:qid',function(req,res,next){
 api.get('/exam',function(req,res,next){
   if(req.user)return next('logout first, yo')
 
-  apifunc.exam_gen({ip:req.ip},function(err,back){
+  apifunc.exam_gen({iptrim:req.iptrim},function(err,back){
     if(err)return next(err);
 
     res.obj = {exam:back};
@@ -143,7 +143,7 @@ api.post('/exam',function(req,res,next){
     if(score<settings.exam.pass_score)return next('test failed');
     //passed the test.
 
-    queryfunc.doc_answersheet_from_ip(req.ip,function(err,back){
+    queryfunc.doc_answersheet_from_ip(req.iptrim,function(err,back){
       if(err)return next(err);
 
       if(back.length>0)
@@ -163,7 +163,7 @@ api.post('/exam',function(req,res,next){
 
         var answersheet = {
           records:records,
-          ip:req.ip,
+          ip:req.iptrim,
           score:score,
           toc:exam.toc,
           tsm:Date.now(),

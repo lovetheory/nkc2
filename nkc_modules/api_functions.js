@@ -349,7 +349,7 @@ apifunc.exam_gen = function(options,callback){
     //seed the random generator,
     //to provide the same set of questions during every refresh_period
     var rand = rs.create(
-      options.ip + Math.floor(Date.now()/settings.exam.refresh_period).toString()
+      options.iptrim + Math.floor(Date.now()/settings.exam.refresh_period).toString()
     );
 
     var qarr = [];

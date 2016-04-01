@@ -102,8 +102,8 @@ nkc.use((req,res,next)=>{
   req.ip, req.method, req.originalUrl.cyan);
 
   //reformat ipaddr, kill portnames suffix
-  req.ip = req.ip.trim().replace(/.*(:[0-9]{1,})$/,'');
-  console.log(req.ip);
+  req.iptrim = req.ip.trim().replace(/.*(:[0-9]{1,})$/,'');
+  console.log(req.iptrim);
   next();
 });
 
