@@ -140,7 +140,7 @@ api.post('/exam',function(req,res,next){
     }
     report(records);
 
-    if(score<4)return next('test failed');
+    if(score<settings.exam.pass_score)return next('test failed');
     //passed the test.
 
     queryfunc.doc_answersheet_from_ip(req.ip,function(err,back){

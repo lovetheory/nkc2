@@ -174,6 +174,9 @@ settings.exam = {
 
   succeed_interval:3600*1000*12, //12h
   //dont try within given amount of time after succeeded once.
+
+  pass_score:5,
+  number_of_questions:10,
 }
 
 module.exports = settings;

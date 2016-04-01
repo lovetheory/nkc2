@@ -37,6 +37,7 @@ block content
             br
           .panel.panel-default.f12
             .panel-body
+              meta(id='number_of_questions' value='#{data.exam.qarr.length}')
               each q,index in data.exam.qarr
                 p #{index+1}. #{q.question}
                 case q.type

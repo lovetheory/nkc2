@@ -1,7 +1,9 @@
 
 function submit(){
   var sheet = [];
-  for(var i=0;i<6;i++)
+  var number_of_questions = ga('number_of_questions','value');
+
+  for(var i=0;i<number_of_questions;i++)
   {
     var choice = geid('answer'+i.toString()).value;
     sheet.push(choice);
@@ -21,9 +23,9 @@ function submit(){
       window.location = '/interface/exam?result=fail';
       return;
     }
-      back = JSON.parse(back);
-      alert(back.token)
-      window.location = '/interface/exam?result='+back.token;
+    back = JSON.parse(back);
+    alert(back.token)
+    window.location = '/interface/exam?result='+back.token;
   })
 }
 

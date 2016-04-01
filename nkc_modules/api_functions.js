@@ -344,7 +344,7 @@ apifunc.exam_gen = function(options,callback){
     //questions got
 
     var qlen = questions.length;
-    if(qlen<7)return callback('no enough questions in base.')
+    if(qlen<settings.exam.number_of_questions)return callback('no enough questions in base.')
 
     //seed the random generator,
     //to provide the same set of questions during every refresh_period
@@ -353,7 +353,7 @@ apifunc.exam_gen = function(options,callback){
     );
 
     var qarr = [];
-    for(var i = 0;i<6;i++){
+    for(var i = 0;i<settings.exam.number_of_questions;i++){
       while(1)
       {
         var r = Math.floor(rand.random()*qlen);//random int btween 0 and qlen
