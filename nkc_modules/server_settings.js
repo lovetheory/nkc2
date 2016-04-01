@@ -166,7 +166,7 @@ settings.upload_options_avatar = {
 };
 
 settings.exam = {
-  refresh_period:(1800*1000), //30min
+  refresh_period:(900*1000), //15min
   //change questions every
 
   time_limit:(1800*1000),
