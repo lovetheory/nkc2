@@ -15,7 +15,7 @@ function post_api(target,body,callback)
       if(xhr.status==200){
         callback(null,xhr.responseText);
       }else {
-        callback(true,xhr.status.toString()+' '+xhr.responseText);
+        callback(xhr.status.toString()+' '+xhr.responseText);
       }
     }
   }

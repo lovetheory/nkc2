@@ -24,6 +24,8 @@ var request = require('request');
 var cookieparser = require('cookie-parser');
 
 var apifunc = require('api_functions');
+var queryfunc = require('query_functions');
+queryfunc.db_init();
 
 var nkc = express(); //main router
 

@@ -16,7 +16,7 @@ var nkc_editor = function(){
 
     post_api(target,body,function(err,back){
       if(err){
-        alert('failure: '+back);
+        alert(err);
       }else{
         brrr=JSON.parse(back).redirect;
         if(brrr){

@@ -14,6 +14,7 @@ settings.server={
 settings.site={
   name:"科创论坛",
   description:"科技爱好者综合社区",
+  copyright:"科创研究院 (c)2005-2016",
 };
 
 settings.cookie_secret='nkc';
@@ -163,5 +164,16 @@ settings.upload_options_avatar = {
     headerPairs:20, //kv pairs in header
   }
 };
+
+settings.exam = {
+  refresh_period:(1800*1000), //30min
+  //change questions every
+
+  time_limit:(1800*1000),
+  //should finish within
+
+  succeed_interval:3600*1000*12, //12h
+  //dont try within given amount of time after succeeded once.
+}
 
 module.exports = settings;

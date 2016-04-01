@@ -1,0 +1,63 @@
+extends bootstrap_base.jade
+
+block title
+  title 注册考试 - 科创论坛
+  
+block content
+  
+  .container
+    .row
+      if data.result
+        .col-xs-12
+          h1 测试完成
+          if data.result.length>10
+            //if success
+            .f12
+              text 恭喜你通过考试。你的注册码是: 
+              a(href='/interface/register?code=#{data.result}') #{data.result}
+          else
+            //if failed
+            .f12
+              :markdown
+                很遗憾，你没有通过考试啦……但没有关系，你同样可以去
+                [知乎](http://zhihu.com) 或者 [果壳网](http://guokr.com)
+                看看，也许这些地方比科创更适合你。
+              
+              
+      if data.exam
+        .col-xs-12
+          h1 欢迎来到科创论坛注册考试
+          hr
+          div.f12
+            p 本考试主要考察逻辑思维与解决问题能力，所涉及的绝大多数知识性内容位于公共领域。请认真思考及动手搜索后再回答。
+            p 如果30分钟内不提交答案，当前题目将失效，遇到这种情况请刷新页面。
+            p 通过考试后将获得注册码。同一IP地址在12小时内再次通过考试的，会被判频繁考试，不会获得注册码。
+            br
+          .panel.panel-default.f12
+            .panel-body
+              each q,index in data.exam.qarr
+                p #{index+1}. #{q.question}
+                case q.type
+                  when 'ans'
+                    input(type='text' id='answer#{index}')
+                  when 'ch4'
+                    - var prefixes = ['A','B','C','D']
+                    each c,cindex in q.choices
+                      meta(id='answer#{index}')
+                      //set value when chosen
+                      p
+                        input(type='radio' name='answer#{index}' value='#{cindex}' onclick='geid("answer#{index}").value=#{cindex}')
+                        text #{prefixes[cindex]}.  #{c}
+                      
+                hr
+              button#submit.btn.btn-default 交卷
+            
+            meta(id='exam' exam-object='#{encodeURI(JSON.stringify(data.exam))}')
+      
+    
+  
+  include debug_output.jade
+block scripts
+  
+  script(src='/interface_common.js')
+  script(src='/interface_exam.js')

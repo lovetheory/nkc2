@@ -22,6 +22,11 @@ api.use(require('api_resources_handlers'));
 //parse body. expect JSON;
 api.use(bodyparser.json());
 
+api.use(function(req,res,next){
+  if(!req.body&&req.method=='POST')return next('bodyless POST request');
+  next();
+});
+
 //api_content_handler
 api.use(require('api_content_handlers'))
 

@@ -12,16 +12,7 @@ var db = require('arangojs')(settings.arango.address);
 db.useDatabase('nkc');
 var users = db.collection('users');
 
-['posts',
-'threads',
-'forums',
-'logs',
-'users',
-'counters',
-'resources',
-'questions',
-].map(function(collection_name){db.collection(collection_name).create()});
-//create every database, if not existent
+
 
 var express = require('express');
 var api = express.Router();
@@ -29,6 +20,20 @@ var api = express.Router();
 var validation = require('validation');
 
 var queryfunc = {};
+
+queryfunc.db_init = function(callback){
+  ['posts',
+  'threads',
+  'forums',
+  'logs',
+  'users',
+  'counters',
+  'resources',
+  'questions',
+  'answersheets',
+  ].map(function(collection_name){db.collection(collection_name).create()});
+  //create every collection, if not existent
+}
 
 function aqlall(aqlobj,callback){
   db.query(aqlobj.query,aqlobj.params)
@@ -133,13 +138,49 @@ queryfunc.doc_list_all_questions = function(opt,callback){
     query:`
     for i in questions
     sort i.toc desc
-    limit 0, 100
+    limit 0, 1000
     return i
     `
     ,
     params:{
     },
   };
+
+  aqlall(aqlobj,callback);
+}
+
+queryfunc.doc_list_certain_questions = function(qlist,callback){
+  var aqlobj = {
+    query:
+    `
+    for i in @qlist
+    for q in questions
+    filter q._key == i
+    return q
+    `
+    ,
+    params:{
+      qlist:qlist,
+    },
+  }
+
+  aqlall(aqlobj,callback);
+}
+
+queryfunc.doc_answersheet_from_ip = function(ipstr,callback){
+  var aqlobj = {
+    query:
+    `
+    for a in answersheets
+    filter a.ip == @ipstr
+    sort a.tsm desc
+    return a
+    `
+    ,
+    params:{
+      ipstr:ipstr,
+    },
+  }
 
   aqlall(aqlobj,callback);
 }

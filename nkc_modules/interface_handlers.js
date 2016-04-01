@@ -185,6 +185,25 @@ iface.get('/questions',(req,res,next)=>{
   }
 });
 
+iface.get('/exam',function(req,res,next){
+  if(req.user)return next('logout first, yo')
+
+  res.template = 'nkc_modules/jade/interface_exam.jade';
+
+  if(req.query.result){
+    res.data.result = req.query.result
+
+    return next();
+  }
+
+  apifunc.exam_gen({ip:req.ip},function(err,back){
+    if(err)return next(err);
+
+    res.data.exam = back;
+    next();
+  })
+});
+
 //render phase: if template jade file exists
 iface.use((req,res,next)=>{
   if(res.template)

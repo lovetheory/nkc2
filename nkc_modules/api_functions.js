@@ -19,6 +19,7 @@ var api = express.Router();
 var validation = require('validation');
 var queryfunc = require('query_functions');
 
+var cookie_signature = require('cookie-signature');
 var apifunc = {};
 
 apifunc.get_new_pid = function(callback){
@@ -236,7 +237,12 @@ apifunc.get_user_by_name = (username,callback)=>{
 };
 
 apifunc.get_user = (uid,callback)=>{
-  queryfunc.doc_load(uid,'users',callback);
+  queryfunc.doc_load(uid,'users',function(err,back){
+    if(err)return callback(err);
+    //desensitize
+    back.password == null;
+    callback(null,back);
+  });
 };
 
 function user_exist_by_name(username,callback){
@@ -320,8 +326,79 @@ apifunc.get_questions = function(uid,callback){
   }
 }
 
+apifunc.get_certain_questions = function(qlist,callback)
+{
+  queryfunc.doc_list_certain_questions(qlist,callback);
+}
+
 apifunc.post_questions = function(question,callback){
   queryfunc.doc_save(question,'questions',callback);
+}
+
+var rs = require('random-seed')
+
+apifunc.exam_gen = function(options,callback){
+
+  apifunc.get_questions(null,function(err,questions){
+    if(err)return callback(err);
+    //questions got
+
+    var qlen = questions.length;
+    if(qlen<7)return callback('no enough questions in base.')
+
+    //seed the random generator,
+    //to provide the same set of questions during every refresh_period
+    var rand = rs.create(
+      options.ip + Math.floor(Date.now()/settings.exam.refresh_period).toString()
+    );
+
+    var qarr = [];
+    for(var i = 0;i<6;i++){
+      while(1)
+      {
+        var r = Math.floor(rand.random()*qlen);//random int btween 0 and qlen
+        if(qarr.indexOf(r)<0)//if selection not already exist in array
+        {
+          qarr.push(r);
+          break;
+        }
+      }
+    }
+
+    //now qarr should contain 6 numbers between 0 and qlen, no repeating.
+
+    for(i in qarr){
+      var qobj = {};
+      var originalquestion = questions[qarr[i]];
+
+      qobj.question = originalquestion.question;
+      qobj.type = originalquestion.type;
+      switch (qobj.type) {
+        case 'ch4':
+        //qobj.choices = shuffle(originalquestion.answer);
+        qobj.choices = originalquestion.answer;
+        shuffle(qobj.choices);
+        break;
+        default:break;
+      }
+      qobj.qid = originalquestion._key;
+      qarr[i]=qobj;
+    }
+
+    var exam = {};
+    exam.qarr = qarr;
+    exam.toc = Date.now();
+
+    var signature = ''; //generate signature, to avoid spoofing
+    for(i in exam.qarr){
+      signature += exam.qarr[i].qid;
+    }
+    signature += exam.toc.toString();
+
+    exam.signature = cookie_signature.sign(signature,settings.cookie_secret);
+
+    return callback(null,exam);
+  })
 }
 
 module.exports = apifunc;
