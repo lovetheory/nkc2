@@ -11,12 +11,14 @@ block content
         h1 注册
         p 欲于科创论坛交流，请先注册一个账号。
         hr
-        .form-horizontal()
+        .form-horizontal.f12
         
           .form-group
             label.control-label.col-sm-3 注册码
             .col-sm-6
               input#regcode.form-control(type='text' placeholder='必须有' value='#{data.req.query.code?data.req.query.code:""}')
+            .col-sm-3.control-label(style='text-align:left')
+              a(href='/interface/exam') 参加注册考试
               
           .form-group
             label.control-label.col-sm-3 用户名
