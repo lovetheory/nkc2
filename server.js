@@ -103,7 +103,7 @@ nkc.use((req,res,next)=>{
 
   //reformat ipaddr, kill portnames suffix
   req.iptrim = req.ip;
-  req.iptrim = req.iptrim.trim().replace( /[0-9]{1,}(:[0-9]{1,})$/ ,'');
+  req.iptrim = req.iptrim.trim().replace( /(:[0-9]{1,})$/ ,'');
   //req.iptrim = req.ip
   console.log(req.iptrim);
   next();
