@@ -3,6 +3,15 @@ function register_submit(){
     username : gv('username'),
     password : gv('password'),
     password2 : gv('password2'),
+    email:gv('email'),
+    regcode:gv('regcode'),
+  }
+
+  //client side validation
+  if(userobj.regcode.length<10){
+    geid('error_info').innerHTML = ('注册码填对了？')
+    display('error_info_panel')
+    return;
   }
 
   //client side validation
@@ -35,6 +44,12 @@ function register_submit(){
 function username_keypress(){
   e = event ? event :(window.event ? window.event : null);
   if(e.keyCode===13||e.which===13)
+  geid('email').focus();
+}
+
+function email_keypress(){
+  e = event ? event :(window.event ? window.event : null);
+  if(e.keyCode===13||e.which===13)
   geid('password').focus();
 }
 
@@ -49,3 +64,8 @@ function password2_keypress(){
   if(e.keyCode===13||e.which===13)
   register_submit();
 }
+
+if(gv('regcode')!='')
+geid('username').focus()
+else
+geid('regcode').focus()

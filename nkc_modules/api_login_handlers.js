@@ -70,11 +70,23 @@ api.post('/user',(req,res,next)=>{
   var violating = regex_validation.validate(userobj);
   if(violating)return next(violating);
 
-  apifunc.create_user(userobj,(err,back)=>{
-    if(err)return next(err);
-    res.obj = back;
-    next();
-  });
+  if(userobj.password!==userobj.password2)return next('password does not match');
+  if(!userobj.email)return next('emailess')
+  if(!userobj.username)return next('nameless')
+
+  if(!userobj.regcode)return next('regcodeless')
+
+  queryfunc.doc_load(userobj.regcode,'answersheets',function(err,ans){
+    if(err)return next('failed reconizing regcode')
+    if(Date.now() - ans.tsm>settings.exam.time_before_register)return next('expired, consider re-take the exam.')
+
+    apifunc.create_user(userobj,(err,back)=>{
+      if(err)return next(err);
+      res.obj = back;
+      next();
+    });
+
+  })
 });
 
 //logout of USER

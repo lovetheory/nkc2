@@ -12,10 +12,21 @@ block content
         p 欲于科创论坛交流，请先注册一个账号。
         hr
         .form-horizontal()
+        
+          .form-group
+            label.control-label.col-sm-3 注册码
+            .col-sm-6
+              input#regcode.form-control(type='text' placeholder='必须有' value='#{data.req.query.code?data.req.query.code:""}')
+              
           .form-group
             label.control-label.col-sm-3 用户名
             .col-sm-6
               input#username.form-control(type='text' placeholder='字母、数字、汉字，区分大小写' onkeydown='username_keypress()')
+              
+          .form-group
+            label.control-label.col-sm-3 邮箱
+            .col-sm-6
+              input#email.form-control(type='email' placeholder='john@example.com' onkeydown='email_keypress()')
               
           .form-group
             label.control-label.col-sm-3 密码
@@ -44,6 +55,3 @@ block scripts
   script(src='/interface_common.js')
   script(src='/nkc_regex_validation.js')
   script(src='/interface_user_register.js')
-
-      
-                

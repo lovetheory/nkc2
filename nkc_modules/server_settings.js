@@ -177,6 +177,8 @@ settings.exam = {
 
   pass_score:6,
   number_of_questions:10,
+
+  time_before_register:3600*1000*1, //1h
 }
 
 module.exports = settings;

@@ -21,6 +21,8 @@ iface.use(function(req,res,next){
   if(!res.data)
   res.data = {};
   res.data.site = settings.site;
+  res.data.req = req;
+  res.data.res = res;
   next();
 });
 

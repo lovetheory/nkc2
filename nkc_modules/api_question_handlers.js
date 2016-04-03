@@ -167,7 +167,7 @@ api.post('/exam',function(req,res,next){
           score:score,
           toc:exam.toc,
           tsm:Date.now(),
-          token:token,
+          _key:token,
         }
 
         queryfunc.doc_save(answersheet,'answersheets',function(err,back){
