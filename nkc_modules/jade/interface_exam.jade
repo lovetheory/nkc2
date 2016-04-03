@@ -14,16 +14,22 @@ block content
             //if success
             .f12
               text 恭喜你通过考试。你的注册码是: 
-              a(href='/interface/register?code=#{data.result}') #{data.result}
+              a(href='/interface/register?code=#{data.query.result}') #{data.query.result}
+              text &nbsp←点击跳转到注册页面。
           else
             //if failed
             .f12
               :markdown
                 很遗憾，你没有通过考试啦……但没有关系，你同样可以去
-                [知乎](http://zhihu.com) 或者 [果壳网](http://guokr.com)
+                [科学松鼠会](http://songshuhui.net/) 或者 [果壳网](http://guokr.com)
                 看看，也许这些地方比科创更适合你。
                 
                 如果你还想再考一次，请点[这里](/interface/exam)，而不要按浏览器的“退后”。
+                
+                ----
+                来自服务器的反馈：
+                
+                #{data.query.detail}
               
               
       if data.exam

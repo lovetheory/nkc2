@@ -19,12 +19,12 @@ function submit(){
   console.log(examobj);
   post_api('exam',examobj,function(err,back){
     if(err){
-      alert(err);
-      window.location = '/interface/exam?result=fail';
+      //alert(err);
+      window.location = '/interface/exam?result=fail&detail='+ (err);
       return;
     }
     back = JSON.parse(back);
-    alert(back.token)
+    //alert(back.token)
     window.location = '/interface/exam?result='+back.token;
   })
 }
