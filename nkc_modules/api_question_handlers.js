@@ -156,7 +156,7 @@ api.post('/exam',function(req,res,next){
       }
 
       //generate a random number, as invitation code
-      require('crypto').randomBytes(32, function(err, buffer) {
+      require('crypto').randomBytes(16, function(err, buffer) {
         if(err)return next(err);
 
         var token = buffer.toString('hex');
