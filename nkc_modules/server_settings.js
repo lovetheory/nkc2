@@ -18,6 +18,7 @@ settings.site={
 };
 
 settings.cookie_secret='nkc';
+settings.cookie_life=86400*30*1000; //30d
 settings.compression_level=2;
 
 settings.https_options = function(){

@@ -52,7 +52,7 @@ api.post('/user/login',(req,res,next)=>{
     //put a signed cookie in header
     res.cookie('userinfo',JSON.stringify(cookieobj),{
       signed:true,
-      maxAge:(86400*30*1000),
+      maxAge:settings.cookie_life,
     });
     var signed_cookie = res.get('set-cookie');
 
