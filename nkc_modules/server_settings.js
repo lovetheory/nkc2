@@ -17,7 +17,22 @@ settings.site={
   copyright:"科创研究院 (c)2005-2016",
 };
 
-settings.cookie_secret='nkc';
+function gen_secret(path)
+{
+  var fs = require('fs');
+  var secret = '';
+  try{
+    secret = fs.readFileSync(path,'utf8');
+  }
+  catch(err){
+    secret = Math.random().toString();
+    fs.writeFileSync(path,secret,'utf8');
+  }
+  if(development)console.log('server secret is: ',secret)
+  return secret;
+}
+
+settings.cookie_secret = gen_secret('secret.txt');
 settings.cookie_life=86400*30*1000; //30d
 settings.compression_level=2;
 
@@ -170,7 +185,7 @@ settings.exam = {
   refresh_period:(900*1000), //15min
   //change questions every
 
-  time_limit:(1800*1000),
+  time_limit:(1800*1000*2),
   //should finish within
 
   succeed_interval:3600*1000*12, //12h
