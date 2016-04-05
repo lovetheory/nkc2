@@ -36,6 +36,7 @@ if(development){
 //test if user exists. if exist generate cookie.
 api.post('/user/login',(req,res,next)=>{
   var loginobj = req.body;
+
   apifunc.verify_user(loginobj,(err,back)=>{
     if(err){return next(err);}
     if(!back){return next('unmatch');}
@@ -47,17 +48,20 @@ api.post('/user/login',(req,res,next)=>{
       lastlogin:Date.now(),
     }
 
+      console.log('hell');
     //put a signed cookie in header
     res.cookie('userinfo',JSON.stringify(cookieobj),{
       signed:true,
       maxAge:(86400*30*1000),
-      encode:String,
     });
     var signed_cookie = res.get('set-cookie');
+
+
 
     //put the signed cookie in response, also
     res.obj = {'cookie':signed_cookie,'instructions':
     'please put this cookie in request header for api access'};
+
 
     next();
   });
