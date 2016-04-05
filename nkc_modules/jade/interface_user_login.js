@@ -10,15 +10,19 @@ function login_submit(){
   return alert('同志，请出示密码！');
 
   post_api('user/login',userobj,function(err,back){
-    geid('error_info').innerHTML = back;
-    display('error_info_panel')
     if(err){
+      geid('error_info').innerHTML = err;
+      display('error_info_panel')
       geid('password').focus();
       return;
     }
     //else
     //successfully logged in
     //alert(back);
+
+    geid('error_info').innerHTML = back;
+    display('error_info_panel')
+
     if(
       document.referrer.toString().indexOf('register')>=0 ||
       document.referrer.toString().indexOf('logout')>=0

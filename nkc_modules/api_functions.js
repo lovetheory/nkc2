@@ -300,7 +300,7 @@ apifunc.verify_user = function(user,callback){
       callback(null,back[0]); // return the user
     }
     else {
-      callback(null,false); //return false, indicating unmatch
+      callback('password unmatch'); //return false, indicating unmatch
     }
   });
 }
