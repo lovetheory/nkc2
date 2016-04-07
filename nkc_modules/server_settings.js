@@ -17,7 +17,7 @@ settings.site={
   copyright:"科创研究院 (c)2005-2016",
 };
 
-function gen_secret(path)
+function get_secret(path)
 {
   var fs = require('fs');
   var secret = '';
@@ -25,14 +25,18 @@ function gen_secret(path)
     secret = fs.readFileSync(path,'utf8');
   }
   catch(err){
-    secret = Math.random().toString();
+    secret =
+    //Math.random().toString();
+    require('crypto').randomBytes(128).toString('hex');
+    //1024 bit! try crack with anything.
+
     fs.writeFileSync(path,secret,'utf8');
   }
   if(development)console.log('server secret is: ',secret)
   return secret;
 }
 
-settings.cookie_secret = gen_secret('secret.txt');
+settings.cookie_secret = get_secret('secret.txt');
 settings.cookie_life=86400*30*1000; //30d
 settings.compression_level=2;
 

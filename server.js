@@ -55,6 +55,8 @@ if(use_https){
 }
 //-------------------------------
 
+nkc.use(require('serve-favicon')(__dirname+'/favicon.ico'));
+
 nkc.use((req,res,next)=>{
   if(development)
   console.log("  -".yellow,req.url);
