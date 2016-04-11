@@ -130,6 +130,48 @@ apifunc.post_to_forum = function(post,fid,callback){
   });
 };
 
+apifunc.edit_post = function(post,pid,callback){
+
+  //load original post
+  queryfunc.doc_load(pid,'posts',function(err,original_post){
+    if(err)return callback(err);
+    //loaded
+
+    var timestamp = Date.now();
+
+    //create new post
+    var newpost = { //accept only listed attribute
+      _key:original_post._key,
+      tid:original_post.tid,
+      toc:original_post.toc,
+      tlm:timestamp,
+      c:post.c,
+      t:post.t,
+      l:post.l,
+      uid:original_post.uid,
+      username:original_post.username,
+    };
+
+    //modification to the original
+    original_post.pid = original_post._key;
+    original_post._key = undefined;
+
+    //now save original to history;
+    queryfunc.doc_save(original_post,'histories',function(err,back){
+      if(err)return callback(err);
+
+      //now update the existing with the newly created:
+      queryfunc.doc_update(newpost._key,'posts',newpost,function(err,back){
+        if(err)return callback(err);
+        back.tid = newpost.tid;
+        callback(null,back);
+        //update thread as needed.
+        queryfunc.update_thread(newpost.tid);
+      })
+    })
+  })
+}
+
 //get post object from database
 apifunc.get_a_post = (pid,callback)=>{
   queryfunc.doc_load(pid.toString(),'posts',callback);

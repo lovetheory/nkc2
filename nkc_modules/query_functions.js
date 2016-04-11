@@ -31,6 +31,7 @@ queryfunc.db_init = function(callback){
   'resources',
   'questions',
   'answersheets',
+  'histories',
   ].map(function(collection_name){db.collection(collection_name).create()});
   //create every collection, if not existent
 }
@@ -96,8 +97,8 @@ queryfunc.doc_load = (doc_key,collection_name,callback)=>{
   db.collection(collection_name).document(doc_key,callback);
 };
 
-queryfunc.doc_update = (doc,collection_name,props,callback)=>{
-  db.collection(collection_name).update(doc,props).then(
+queryfunc.doc_update = (doc_key,collection_name,props,callback)=>{
+  db.collection(collection_name).update(doc_key,props).then(
     body=>{
       callback(null,body);
     },

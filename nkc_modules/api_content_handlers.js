@@ -88,6 +88,18 @@ api.post('/thread/:tid',function(req,res,next){
   false);
 });
 
+api.post('/post/:pid',function(req,res,next){
+  if(req.post_content_ready!==true)return next('content unready');
+
+  apifunc.edit_post(req.body,req.params.pid,(err,result)=>{
+    if(err)return next(err);
+
+    result.redirect = 'thread/'+result.tid + '?post='+ result._key;
+    res.obj = result;
+    next();
+  });
+})
+
 //test handler.
 api.get('/test2',(req,res)=>{
   apifunc.post_to_thread({c:'fuckyou again yo bitch'},'29',(err,result)=>{
@@ -101,7 +113,7 @@ api.get('/test2',(req,res)=>{
 
 ///----------------------------------------
 ///GET /posts/* handler
-api.get('/posts/:pid', function (req, res, next){
+api.get('/post/:pid', function (req, res, next){
   //retrieve pid as parameter
   var pid=req.params.pid;
 

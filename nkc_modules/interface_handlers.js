@@ -119,10 +119,27 @@ iface.get('/thread/:tid', function (req, res, next){
 //get editor
 ///--------------------
 iface.get('/editor',(req,res,next)=>{
-  res.data.replytarget = req.query.target||'';
+  var target = req.query.target||"";
+  res.data.replytarget = target;
   res.data.navbar.highlight = 'editor'; //navbar highlight
   res.template = 'nkc_modules/jade/interface_editor.jade'
-  return next();
+
+  if(target.indexOf('post/')==0)
+  {
+    //if user appears trying to edit a post
+    var pid = target.slice(5);
+    console.log(pid);
+    //load from db
+    apifunc.get_a_post(pid,function(err,back){
+      if(err)return next(err);
+
+      res.data.original_post = back;
+      next();
+    })
+  }
+  else {
+    next();
+  }
 });
 
 //get login

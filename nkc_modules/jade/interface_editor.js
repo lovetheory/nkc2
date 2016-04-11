@@ -30,7 +30,7 @@ var nkc_editor = function(){
 
   var debounce=false;
   editor.update = function(e){
-    console.log(debounce,e);
+    //console.log(debounce,e);
     if(!debounce)
     {
       var title = gv('title');
@@ -77,3 +77,5 @@ var nkc_editor = function(){
 }
 
 var editor = nkc_editor();
+
+editor.update();
