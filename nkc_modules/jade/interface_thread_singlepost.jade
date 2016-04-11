@@ -31,4 +31,6 @@ else
         when 'plain'
         default
           div!= plain(post.c)
+    if post.toc!=post.tlm
+      p.lighttext [修改于 #{fromNow(post.tlm)} - #{dateString(post.tlm)}]
             
