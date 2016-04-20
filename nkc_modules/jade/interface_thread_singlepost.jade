@@ -17,10 +17,10 @@ else
     p.d-inline.lighttext
       text #{post.username} - #{fromNow(post.toc)} - 
       a(href='/thread/#{data.thread._key}?post=#{post._key}').lighttext #{dateString(post.toc)} 
-
-      if data.user._key == post.uid
-        text  - 
-        a(href='/e?target=post/#{post._key}') 编辑
+      if data.user
+        if data.user._key == post.uid
+          text  - 
+          a(href='/e?target=post/#{post._key}') 编辑
     div.f12.post-body
       //body of post
       case post.l
