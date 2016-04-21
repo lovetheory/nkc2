@@ -38,24 +38,15 @@ queryfunc.db_init = function(callback){
 
 function aqlall(aqlobj,callback){
   db.query(aqlobj.query,aqlobj.params)
-  .then
-  (
-    cursor => {
-      // cursor is a cursor for the query result
-      cursor.all()
-      .then(
-        vals => { //the array
-          callback(null,vals);
-        },
-        err => {
-          callback(err); //unlikely to happen
-        }
-      );
-    },
-    err => {
-      callback(err);
-    }
-  );
+  .then((cursor)=>{
+    return cursor.all();
+  })
+  .then((result_array)=>{
+    callback(null,result_array);
+  })
+  .catch((err)=>{
+    callback(err);
+  })
 };
 
 queryfunc.incr_counter = function(countername,callback){
