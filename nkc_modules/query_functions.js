@@ -12,8 +12,6 @@ var db = require('arangojs')(settings.arango.address);
 db.useDatabase('nkc');
 var users = db.collection('users');
 
-
-
 var express = require('express');
 var api = express.Router();
 
@@ -36,7 +34,19 @@ queryfunc.db_init = function(callback){
   //create every collection, if not existent
 }
 
+/*
+AQL Object
+  query: String
+    the AQL string.
+  params: Object
+    carries the values for fields within query.
+*/
+
 function aqlall(aqlobj,callback){
+  if(arguments.length===1){
+    return db.query(aqlobj.query,aqlobj.params) //returns a Promise
+  }
+
   db.query(aqlobj.query,aqlobj.params)
   .then((cursor)=>{
     return cursor.all();
@@ -48,6 +58,7 @@ function aqlall(aqlobj,callback){
     callback(err);
   })
 };
+
 
 queryfunc.incr_counter = function(countername,callback){
   var aqlobj = {
@@ -232,8 +243,8 @@ queryfunc.ftp_join = (opt,callback)=>{
 
   var aqlobj={
     query:`
-    FOR t IN ${opt.type}
-    FILTER t.${opt.filter_by} == @equals
+    FOR t IN @type
+    FILTER t.@filter_by == @equals
     sort t.${opt.sort_by} ${opt.order}
     limit ${opt.start}, ${opt.count}
     let j0 =(
@@ -250,7 +261,9 @@ queryfunc.ftp_join = (opt,callback)=>{
     `
     ,
     params:{
-      'equals':opt.equals,
+      equals:opt.equals,
+      type:opt.type,
+      filter_by:opt.filter_by,
     },
   };
   aqlall(aqlobj,callback);
