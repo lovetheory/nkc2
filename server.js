@@ -154,13 +154,15 @@ var api_handlers = require('api_handlers.js');
 nkc.use('/api',api_handlers.route_handler);
 
 //html serving
+// WE DONT USE THIS ANYMORE
 var html_handlers = require('html_handlers');
 nkc.use('/html',html_handlers.route_handler);
 
 var interface_handlers = require('interface_handlers');
 nkc.use('/interface',interface_handlers.route_handler);
 
-//chatroom serving
+// chatroom serving
+// WE DONT USE THIS ANYMORE
 var chat_handlers = require('chat_handlers.js');
 nkc.use('/chat',chat_handlers.route_handler);//routing
 
@@ -183,10 +185,13 @@ nkc.get('/',(req,res)=>{
   );
 });
 
-nkc.get('/reload',function(req,res){
-  res.send(`<h1>Reload Page to Stop Server</h1>`);
-  process.exit();
-});
+if(development){
+  //走投无路时，打开第一个锦囊
+  nkc.get('/reload',function(req,res){
+    res.send(`<h1>Reload Page to Stop Server</h1>`);
+    process.exit();
+  });
+}
 
 //7. error handling
 //unrouted url handler
