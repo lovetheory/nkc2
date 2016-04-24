@@ -24,6 +24,34 @@ function post_api(target,body,callback)
   xhr.send(JSON.stringify(body));
 };
 
+function managementRequest(obj,callback){
+  var xhr = new XMLHttpRequest();
+  xhr.onreadystatechange=function()
+  {
+    if (xhr.readyState==4)
+    {
+      try{
+        var res;
+        res = JSON.parse(xhr.responseText);
+        if(xhr.status<200||xhr.status>=400)throw res;
+        if(res.error)throw res;
+
+        callback(null,res);
+      }catch(err){
+        callback(err);
+      }
+    }
+  }
+
+  try{
+    xhr.open("POST","/api/management",true);
+    xhr.setRequestHeader("Content-type","application/json");
+    xhr.send(JSON.stringify(body));
+  }catch(err){
+    callback(err);
+  }
+}
+
 function get_api(target,callback)
 {
   var xhr = new XMLHttpRequest();
