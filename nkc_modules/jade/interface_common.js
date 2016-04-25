@@ -46,7 +46,7 @@ function generalRequest(obj,opt,callback){
   try{
     xhr.open(opt.method,opt.url,true);
     xhr.setRequestHeader("Content-type","application/json");
-    xhr.send(JSON.stringify(body));
+    xhr.send(JSON.stringify(obj));
   }catch(err){
     callback(err);
   }
