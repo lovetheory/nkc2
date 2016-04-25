@@ -24,7 +24,7 @@ function post_api(target,body,callback)
   xhr.send(JSON.stringify(body));
 };
 
-function managementRequest(obj,callback){
+function generalRequest(obj,opt,callback){
   var xhr = new XMLHttpRequest();
   xhr.onreadystatechange=function()
   {
@@ -44,12 +44,37 @@ function managementRequest(obj,callback){
   }
 
   try{
-    xhr.open("POST","/api/management",true);
+    xhr.open(opt.method,opt.url,true);
     xhr.setRequestHeader("Content-type","application/json");
     xhr.send(JSON.stringify(body));
   }catch(err){
     callback(err);
   }
+}
+
+function managementRequest(obj,callback){
+  generalRequest(obj,{
+    method:'POST',
+    url:'/api/management',
+  },callback);
+}
+
+function viewRequest(obj,callback){
+  generalRequest(obj,{
+    method:'GET',
+    url:'/api/view',
+  },callback);
+}
+
+function exampleRequest(){
+  managementRequest({
+    methodName:'what',
+    object:'ever',
+    param1:'okay',
+  },function(err,back){
+    if(err)return alert(err);
+    alert(back);
+  })
 }
 
 function get_api(target,callback)
