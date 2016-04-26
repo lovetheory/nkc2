@@ -19,7 +19,7 @@ var validation = require('validation');
 
 var queryfunc = {};
 
-queryfunc.db_init = function(callback){
+queryfunc.db_init = function(){
   ['posts',
   'threads',
   'forums',
@@ -30,37 +30,26 @@ queryfunc.db_init = function(callback){
   'questions',
   'answersheets',
   'histories',
-  ].map(function(collection_name){db.collection(collection_name).create()});
-  //create every collection, if not existent
+].map(function(collection_name){db.collection(collection_name).create()});
+//create every collection, if not existent
 }
 
 /*
 AQL Object
-  query: String
-    the AQL string.
-  params: Object
-    carries the values for fields within query.
+query: String
+the AQL string.
+params: Object
+carries the values for fields within query.
 */
 
-function aqlall(aqlobj,callback){
-  if(arguments.length===1){
-    return db.query(aqlobj.query,aqlobj.params) //returns a Promise
-  }
-
-  db.query(aqlobj.query,aqlobj.params)
-  .then((cursor)=>{
+function aqlall(aqlobj){
+  return db.query(aqlobj.query,aqlobj.params) //returns a Promise
+  .then(cursor=>{
     return cursor.all();
-  })
-  .then((result_array)=>{
-    callback(null,result_array);
-  })
-  .catch((err)=>{
-    callback(err);
   })
 };
 
-
-queryfunc.incr_counter = function(countername,callback){
+queryfunc.incr_counter = function(countername){
   var aqlobj = {
     query:`
     FOR c IN counters
@@ -73,15 +62,14 @@ queryfunc.incr_counter = function(countername,callback){
     },
   };
 
-  aqlall(aqlobj,(err,vals)=>{
-    if(err)callback(err);else {
-      if(vals.length==1){
-        callback(null,vals[0].toString());
-      } else {
-        callback('counter '+countername.toString()+' may not be available');
-      }
+  return aqlall(aqlobj)
+  .then(vals=>{
+    if(vals.length==1){
+      return vals[0].toString()
     }
-  });
+    throw ('counter '+countername.toString()+' may not be available')
+  })
+
 };
 
 //standardrize the result retrieved from Arangodb
@@ -91,30 +79,23 @@ queryfunc.result_reform = (result)=>{
   };
 };
 
-queryfunc.doc_save = (doc,collection_name,callback)=>{
-  db.collection(collection_name).save(doc,callback);
+queryfunc.doc_save = (doc,collection_name)=>{
+  return db.collection(collection_name).save(doc)
 };
 
-queryfunc.doc_load = (doc_key,collection_name,callback)=>{
-  db.collection(collection_name).document(doc_key,callback);
+queryfunc.doc_load = (doc_key,collection_name)=>{
+  return db.collection(collection_name).document(doc_key)
 };
 
-queryfunc.doc_update = (doc_key,collection_name,props,callback)=>{
-  db.collection(collection_name).update(doc_key,props).then(
-    body=>{
-      callback(null,body);
-    },
-    err=>{
-      callback(err);
-    }
-  );
+queryfunc.doc_update = (doc_key,collection_name,props)=>{
+  return db.collection(collection_name).update(doc_key,props)
 };
 
-queryfunc.doc_kill = (doc_key,collection_name,callback)=>{
-  db.collection(collection_name).remove(doc_key,callback);
+queryfunc.doc_kill = (doc_key,collection_name)=>{
+  return db.collection(collection_name).remove(doc_key)
 };
 
-queryfunc.doc_list_all = (opt,callback)=>{
+queryfunc.doc_list_all = (opt)=>{
   if(!opt.start)opt.start=0;
   if(!opt.count)opt.count=100;
   opt.start=Number(opt.start);
@@ -133,10 +114,10 @@ queryfunc.doc_list_all = (opt,callback)=>{
     },
   };
 
-  aqlall(aqlobj,callback);
+  return aqlall(aqlobj);
 };
 
-queryfunc.doc_list_all_questions = function(opt,callback){
+queryfunc.doc_list_all_questions = function(opt){
   var aqlobj = {
     query:`
     for i in questions
@@ -149,10 +130,10 @@ queryfunc.doc_list_all_questions = function(opt,callback){
     },
   };
 
-  aqlall(aqlobj,callback);
+  return aqlall(aqlobj);
 }
 
-queryfunc.doc_list_certain_questions = function(qlist,callback){
+queryfunc.doc_list_certain_questions = function(qlist){
   var aqlobj = {
     query:
     `
@@ -167,10 +148,10 @@ queryfunc.doc_list_certain_questions = function(qlist,callback){
     },
   }
 
-  aqlall(aqlobj,callback);
+  return aqlall(aqlobj);
 }
 
-queryfunc.doc_answersheet_from_ip = function(ipstr,callback){
+queryfunc.doc_answersheet_from_ip = function(ipstr){
   var aqlobj = {
     query:
     `
@@ -185,10 +166,10 @@ queryfunc.doc_answersheet_from_ip = function(ipstr,callback){
     },
   }
 
-  aqlall(aqlobj,callback);
+  return aqlall(aqlobj);
 }
 
-queryfunc.doc_list = (opt,callback)=>{
+queryfunc.doc_list = (opt)=>{
   if(!opt.start)opt.start=0;
   if(!opt.count)opt.count=100;
   opt.start=Number(opt.start);
@@ -210,10 +191,10 @@ queryfunc.doc_list = (opt,callback)=>{
     },
   };
 
-  aqlall(aqlobj,callback);
+  return aqlall(aqlobj);
 };
 
-queryfunc.doc_list_join = (opt,callback)=>{
+queryfunc.doc_list_join = (opt)=>{
   if(!opt.start)opt.start=0;
   if(!opt.count)opt.count=100;
 
@@ -233,11 +214,11 @@ queryfunc.doc_list_join = (opt,callback)=>{
     },
   };
 
-  aqlall(aqlobj,callback);
+  return aqlall(aqlobj);
 };
 
 //custom join function
-queryfunc.ftp_join = (opt,callback)=>{
+queryfunc.ftp_join = (opt)=>{
   if(!opt.start)opt.start=0;
   if(!opt.count)opt.count=100;
 
@@ -266,11 +247,11 @@ queryfunc.ftp_join = (opt,callback)=>{
       filter_by:opt.filter_by,
     },
   };
-  aqlall(aqlobj,callback);
+  return aqlall(aqlobj);
 };
 
 //在对thread或者post作操作之后，更新thread的部分属性以确保其反应真实情况。
-queryfunc.update_thread = (tid,callback)=>{
+queryfunc.update_thread = (tid)=>{
   var aqlobj={
     query:`
     FOR t IN threads
@@ -297,12 +278,11 @@ queryfunc.update_thread = (tid,callback)=>{
       'equals':tid,
     },
   };
-  aqlall(aqlobj,callback);
-  console.log('mmmmm');
+  return aqlall(aqlobj);
 };
 
 //!!!danger!!! will make the database very busy.
-queryfunc.update_all_threads = (callback)=>{
+queryfunc.update_all_threads = ()=>{
   var aqlobj={
     query:`
     FOR t IN threads
@@ -327,7 +307,7 @@ queryfunc.update_all_threads = (callback)=>{
     params:{
     },
   };
-  aqlall(aqlobj,callback);
+  return aqlall(aqlobj);
 };
 
 module.exports = queryfunc;

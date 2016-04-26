@@ -31,11 +31,12 @@ api.post('/questions',function(req,res,next){
   question.uid = req.user._key;
   question.toc = Date.now();
 
-  apifunc.post_questions(question,function(err,back){
-    if(err)return next(err);
+  apifunc.post_questions(question)
+  .then(back=>{
     res.obj = back;
-    next();
-  });
+  })
+  .then(next)
+  .catch(next)
 });
 
 api.get('/questions',function(req,res,next){
@@ -44,38 +45,41 @@ api.get('/questions',function(req,res,next){
   var param = req.user._key;
   if(req.query['all'])param=null;
 
-  apifunc.get_questions(param,function(err,back){
-    if(err)return next(err);
+  apifunc.get_questions(param)
+  .then(back=>{
     res.obj = back;
     next();
   })
+  .catch(next)
 });
 
 api.delete('/questions/:qid',function(req,res,next){
   if(!req.user)return next('login pls');
 
-  queryfunc.doc_load(req.params.qid,'questions',function(err,back){
-    if(err)return next(err);
+  queryfunc.doc_load(req.params.qid,'questions')
+  .then(back=>{
     if(back.uid!==req.user._key)//if not owning the question
-    return next('not owning');
+    throw 'not owning';
 
-    queryfunc.doc_kill(req.params.qid,'questions',function(err,back){
-      if(err)return next(err);
-      res.obj=back;
-      next();
-    })
-  });
+    return queryfunc.doc_kill(req.params.qid,'questions')
+  })
+  .then(back=>{
+    res.obj=back;
+    next();
+  })
+  .catch(next)
 });
 
 api.get('/exam',function(req,res,next){
   if(req.user)return next('logout first, yo')
 
-  apifunc.exam_gen({iptrim:req.iptrim},function(err,back){
-    if(err)return next(err);
-
+  apifunc.exam_gen({iptrim:req.iptrim})
+  .then(back=>{
     res.obj = {exam:back};
     next();
   })
+  .catch(next)
+
 });
 
 api.post('/exam',function(req,res,next){
@@ -108,11 +112,14 @@ api.post('/exam',function(req,res,next){
     qidlist.push(exam.qarr[i].qid)
   }
 
-  apifunc.get_certain_questions(qidlist,function(err,back){
-    if(err)return next(err);
-    var questions = back;
-    var score = 0;
-    var records = [];
+  var token;
+  var questions;
+  var score = 0;
+  var records = [];
+
+  apifunc.get_certain_questions(qidlist)
+  .then(back=>{
+    questions = back;
 
     for(i in questions){
       var correctness = false;
@@ -143,45 +150,47 @@ api.post('/exam',function(req,res,next){
     if(score<settings.exam.pass_score)return next('test failed');
     //passed the test.
 
-    queryfunc.doc_answersheet_from_ip(req.iptrim,function(err,back){
-      if(err)return next(err);
-
-      if(back.length>0)
+    return queryfunc.doc_answersheet_from_ip(req.iptrim)
+  })
+  .then(back=>{
+    if(back.length>0)
+    {
+      if(Date.now() - back[0].tsm < settings.exam.succeed_interval)
+      //if re-succeed an exam within given amount of time
       {
-        if(Date.now() - back[0].tsm < settings.exam.succeed_interval)
-        //if re-succeed an exam within given amount of time
-        {
-          return next('You succeeded too often. You don\'t really have to.')
-        }
+        throw 'You succeeded too often. You don\'t really have to.'
       }
+    }
 
-      //generate a random number, as invitation code
+    return new Promise(function(resolve,reject){
       require('crypto').randomBytes(16, function(err, buffer) {
-        if(err)return next(err);
-
-        var token = buffer.toString('hex');
-
-        var answersheet = {
-          records:records,
-          ip:req.iptrim,
-          score:score,
-          toc:exam.toc,
-          tsm:Date.now(),
-          _key:token,
-        }
-
-        queryfunc.doc_save(answersheet,'answersheets',function(err,back){
-          if(err)return next(err);
-
-          res.obj = {
-            token:token,
-          }
-          next();
-        })
-      });
-
+        if(err)return reject(err);
+        resolve(buffer);
+      })
     })
   })
+  .then(buffer=>{
+
+    token = buffer.toString('hex');
+
+    var answersheet = {
+      records:records,
+      ip:req.iptrim,
+      score:score,
+      toc:exam.toc,
+      tsm:Date.now(),
+      _key:token,
+    }
+
+    return queryfunc.doc_save(answersheet,'answersheets')
+  })
+  .then(back=>{
+    res.obj = {
+      token:token,
+    }
+    next();
+  })
+  .catch(next);
 })
 
 

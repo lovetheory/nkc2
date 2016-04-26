@@ -26,12 +26,15 @@ api.use(function(req,res,next){
 //counter increment api
 if(development){
   api.get('/new/:countername',(req,res,next)=>{
-    //queryfunc.incr_counter('threads',callback);
-    queryfunc.incr_counter(req.params.countername,(err,id)=>{
-      if(err)return next(report(req.params.countername +' retrieval error',err));
+    queryfunc.incr_counter(req.params.countername)
+    .catch((err)=>{
+      throw report(req.params.countername +' retrieval error',err);
+    })
+    .then(id=>{
       res.obj = id;
       next();
-    });
+    })
+    .catch(next);
   });
 }
 
@@ -63,53 +66,41 @@ api.post('/forum/:fid',(req,res,next)=>{
   req.body.t = req.body.t.trim();
   if(req.body.t.length<3)return next('title too short. write something would you?')
 
-  apifunc.post_to_forum(req.body,req.params.fid.toString(),(err,result)=>{
-    if(err)return next(err);
-
-    var k =result;
-    k.redirect = 'thread/'+ queryfunc.result_reform(k).id;
+  apifunc.post_to_forum(req.body,req.params.fid.toString())
+  .then(result=>{
+    var k = result;
+    k.redirect = 'thread/'+ k.tid;
     console.log('ss');
     res.obj = k;
-    return next();
-  });
+    next();
+  })
+  .catch(next);
 });
 
 ///POST /thread/* handler
 api.post('/thread/:tid',function(req,res,next){
   if(req.post_content_ready!==true)return next('content unready');
 
-  apifunc.post_to_thread(req.body,req.params.tid,(err,result)=>{
-    if(err)return next(err);
-
-    result.redirect = 'thread/' + queryfunc.result_reform(result).id;
+  apifunc.post_to_thread(req.body,req.params.tid)
+  .then(result=>{
+    result.redirect = 'thread/' + req.params.tid;
     res.obj = result;
-    return next();
-  },
-  false);
+    next();
+  })
+  .catch(next)
 });
 
 api.post('/post/:pid',function(req,res,next){
   if(req.post_content_ready!==true)return next('content unready');
 
-  apifunc.edit_post(req.body,req.params.pid,(err,result)=>{
-    if(err)return next(err);
-
+  apifunc.edit_post(req.body,req.params.pid)
+  .then(result=>{
     result.redirect = 'thread/'+result.tid + '?post='+ result._key;
     res.obj = result;
     next();
-  });
+  })
+  .catch(next)
 })
-
-//test handler.
-api.get('/test2',(req,res)=>{
-  apifunc.post_to_thread({c:'fuckyou again yo bitch'},'29',(err,result)=>{
-    if(err){
-      res.status(500).json(report('error in test2',err));
-    }else{
-      res.json(report(result));
-    }
-  });
-});
 
 ///----------------------------------------
 ///GET /posts/* handler
@@ -118,14 +109,14 @@ api.get('/post/:pid', function (req, res, next){
   var pid=req.params.pid;
 
   //get the post from db
-  apifunc.get_a_post(pid,(err,body)=>{
-    if(err)return next(err);
-    //if nothing wrong
+  apifunc.get_a_post(pid)
+  .then(()=>{
     report(pid.toString()+' is hit');
     //var result=postRepack(body);
     res.obj = body;
     return next();
-  });
+  })
+  .catch(next)
 });
 
 ///----------------------------------------
@@ -135,11 +126,12 @@ api.get('/thread/:tid', function (req, res, next){
     tid:req.params.tid,
     start:req.query.start,
     count:req.query.count,
-  },
-  (err,result)=>{
-    if(err){next(err);return;}
-    res.obj = result;next();
-  });
+  })
+  .then(result=>{
+    res.obj = result;
+    next();
+  })
+  .catch(next)
 });
 
 //GET /forum/*
@@ -148,12 +140,12 @@ api.get('/forum/:fid',(req,res,next)=>{
     fid:req.params.fid,
     start:req.query.start,
     count:req.query.count,
-  },
-  (err,data)=>{
-    if(err)return next(err);
+  })
+  .then(data=>{
     res.obj = data;
     next();
-  });
+  })
+  .catch(next)
 });
 
 module.exports = api;

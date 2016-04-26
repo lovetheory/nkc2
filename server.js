@@ -132,19 +132,17 @@ nkc.use((req,res,next)=>{
   //if userinfo exists
   console.log(JSON.stringify(req.userinfo).gray);
 
-  apifunc.get_user(req.userinfo.uid,(err,back)=>{
-    if(err)return next(); //let go
+  apifunc.get_user(req.userinfo.uid)
+  .then((back)=>{
     if(back.username==req.userinfo.username)
     {
       req.user = back;
     }
-    else
-    {
-      //dont do a thing.
-    }
-
     return next();
-  });
+  })
+  .catch(()=>{
+    next()
+  })
 });
 
 //8. routes

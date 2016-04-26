@@ -39,29 +39,31 @@ api.post('/resources', upload.single('file'), function (req, res, next) {
   {
     if(req.file.size>settings.size_largeimage)//if file is larger than specified size
     {
-      im.attachify(req.file.path,function(err,back){
-        if(err)return next(err);
+      im.attachify(req.file.path)
+      .then(back=>{
         //after conversion
         res.isImage = true;
         return next();
-      });
+      })
+      .catch(next)
     }
     else{
       //if file smaller than specified size
-      im.info(req.file.path,function(err,info){
-        if(err)return next(err);//what?
+      im.info(req.file.path)
+      .then(info=>{
         if((info.width<200&&info.height<400)||info.height<400||info.width<300)
         {// if canvas too small, no watermark thx
           res.isImage = true;
           return next();
         }
         //else
-        im.watermarkify(req.file.path,function(err,back){
-          if(err)return next(err);
-          res.isImage = true;
-          return next();
-        });
-      });
+        return im.watermarkify(req.file.path)
+      })
+      .then(back=>{
+        res.isImage = true;
+        return next();
+      })
+      .catch(next)
     }
   }
   else{
@@ -93,9 +95,8 @@ api.use((req,res,next)=>{
   */
 
   //obtain an rid first
-  apifunc.get_new_rid((err,rid)=>{
-    if(err)return next(err);
-
+  apifunc.get_new_rid()
+  .then(rid=>{
     var extension = req.file.originalname.match(/^.*\.(.*)$/);
     extension = extension?'.'+extension[1]:'';
 
@@ -133,18 +134,18 @@ api.use((req,res,next)=>{
           };
 
           //store into db
-          queryfunc.doc_save(robject,'resources',function(err,result){
-            if(err)return next(err);
-
-            //success
+          queryfunc.doc_save(robject,'resources')
+          .then(result=>{
             robject.rid = rid;
             res.obj = robject;
             return next();
-          });
+          })
+          .catch(next);
         }
       );
     });
-  });
+  })
+  .catch(next)
 });
 
 
@@ -166,7 +167,8 @@ api.post('/avatar', avatar_upload.single('file'), function(req,res,next){
   //otherwise should we allow..
 
   //process the avatar image.
-  im.avatarify(req.file.path,(err,back)=>{
+  im.avatarify(req.file.path)
+  .then((back)=>{
     //if the uploaded file has problems (not an actural image?)
     if(err)return next(err);
 
@@ -190,7 +192,9 @@ api.post('/avatar', avatar_upload.single('file'), function(req,res,next){
         }
       );
     });
-  });
+
+  })
+  .catch(next)
 });
 
 
@@ -220,15 +224,13 @@ api.get('/avatar/:uid',function(req,res){
 api.get('/resources/info/:rid',function(req,res,next){
   var key = req.params.rid;
   //load from db
-  apifunc.get_resources(key,function(err,result){
-    if(err){
-      return next(err);
-    }
-
+  apifunc.get_resources(key)
+  .then(result=>{
     //success
     res.obj = result;
     return next();
-  });
+  })
+  .catch(next);
 });
 
 fs.mkdirp(settings.thumbnails_path);
@@ -237,11 +239,8 @@ api.get('/resources/thumb/:rid',function(req,res,next){
   //thumbnail. if is image, generate; if not, redirect to sth else.
   var key = req.params.rid;
   //load from db
-  apifunc.get_resources(key,function(err,robject){
-    if(err){
-      return next(err);
-    }
-    //success
+  apifunc.get_resources(key)
+  .then((robject)=>{
 
     //1. check if is image
     if(['image/jpeg','image/png','image/gif','image/svg+xml'].indexOf(robject.mime)<0){
@@ -273,19 +272,20 @@ api.get('/resources/thumb/:rid',function(req,res,next){
         if(err)return next(err);
 
         //4. generate thumbnail for the file
-        im.thumbnailify(best_filepathname,thumbnail_path,function(err,back){
-          if(err)return next(err);
-
+        im.thumbnailify(best_filepathname,thumbnail_path)
+        .then(function(back){
           //5. respond with love
           res.setHeader('Content-disposition', 'inline; filename=' + robject.rid+'.jpg');
           res.setHeader('Content-type', 'image/jpeg');
 
           res.sendFile(thumbnail_path);
           console.log(thumbnail_path.green);
-        });
+        })
+        .catch(next);
       });
     });
-  });
+  })
+  .catch(next)
 });
 
 api.get('/resources/mine',function(req,res,next){
@@ -303,21 +303,20 @@ api.get('/resources/mine',function(req,res,next){
     equals:req.user._key, //uid
     sort_by:'toc',
     order:'desc',
-  },function(err,back){
-    if(err)return next(err);
+  })
+  .then(function(back){
     res.obj = back;
     return next();
-  });
+  })
+  .catch(next)
+
 });
 
 api.get('/resources/get/:rid',function(req,res,next){
   var key = req.params.rid;
   //load from db
-  apifunc.get_resources(key,function(err,robject){
-    if(err){
-      return next(err);
-    }
-    //success
+  apifunc.get_resources(key)
+  .then(function(robject){
 
     var destination_path = settings.upload_path;
     var destination_plus_relative = destination_path + '/'+robject.rpath+'/';
@@ -342,7 +341,8 @@ api.get('/resources/get/:rid',function(req,res,next){
       console.log(best_filepathname.green);
       //filestream.pipe(res);
     });
-  });
+  })
+  .catch(next)
 });
 
 module.exports = api;

@@ -25,10 +25,12 @@ api.use(function(req,res,next){
 if(development){
   //GET /user
   api.get('/user/get/:uid',(req,res,next)=>{
-    apifunc.get_user(req.params.uid,(err,back)=>{
-      if(err)return next(err);
-      res.obj = back;next();a
-    });
+    apifunc.getuser(req.params.uid)
+    .then(back=>{
+      res.obj = back;
+      next()
+    })
+    .catch(next);
   });
 }
 
@@ -37,9 +39,9 @@ if(development){
 api.post('/user/login',(req,res,next)=>{
   var loginobj = req.body;
 
-  apifunc.verify_user(loginobj,(err,back)=>{
-    if(err){return next(err);}
-    if(!back){return next('unmatch');}
+  apifunc.verify_user(loginobj)
+  .then(back=>{
+    if(!back)throw 'unmatch';
 
     //if user exists
     var cookieobj = {
@@ -48,7 +50,6 @@ api.post('/user/login',(req,res,next)=>{
       lastlogin:Date.now(),
     }
 
-      console.log('hell');
     //put a signed cookie in header
     res.cookie('userinfo',JSON.stringify(cookieobj),{
       signed:true,
@@ -56,15 +57,41 @@ api.post('/user/login',(req,res,next)=>{
     });
     var signed_cookie = res.get('set-cookie');
 
-
-
     //put the signed cookie in response, also
     res.obj = {'cookie':signed_cookie,'instructions':
     'please put this cookie in request header for api access'};
 
-
     next();
-  });
+  })
+  .catch(next);
+
+  // apifunc.verify_user(loginobj,(err,back)=>{
+  //   if(err){return next(err);}
+  //   if(!back){return next('unmatch');}
+  //
+  //   //if user exists
+  //   var cookieobj = {
+  //     username:back.username,
+  //     uid:back._key,
+  //     lastlogin:Date.now(),
+  //   }
+  //
+  //   //put a signed cookie in header
+  //   res.cookie('userinfo',JSON.stringify(cookieobj),{
+  //     signed:true,
+  //     maxAge:settings.cookie_life,
+  //   });
+  //   var signed_cookie = res.get('set-cookie');
+  //
+  //
+  //
+  //   //put the signed cookie in response, also
+  //   res.obj = {'cookie':signed_cookie,'instructions':
+  //   'please put this cookie in request header for api access'};
+  //
+  //
+  //   next();
+  // });
 });
 
 var regex_validation = require('nkc_regex_validation');
@@ -80,17 +107,33 @@ api.post('/user',(req,res,next)=>{
 
   if(!userobj.regcode)return next('regcodeless')
 
-  queryfunc.doc_load(userobj.regcode,'answersheets',function(err,ans){
-    if(err)return next('failed reconizing regcode')
-    if(Date.now() - ans.tsm>settings.exam.time_before_register)return next('expired, consider re-take the exam.')
-
-    apifunc.create_user(userobj,(err,back)=>{
-      if(err)return next(err);
-      res.obj = back;
-      next();
-    });
-
+  queryfunc.doc_load(userobj.regcode,'answersheets')
+  .catch(err=>{
+    throw ('failed reconizing regcode')
   })
+  .then(ans=>{
+    if(Date.now() - ans.tsm>settings.exam.time_before_register)
+    throw ('expired, consider re-take the exam.')
+
+    return apifunc.create_user(userobj)
+  })
+  .then(back=>{
+    res.obj = back;
+    next();
+  })
+  .catch(next);
+
+  // queryfunc.doc_load(userobj.regcode,'answersheets',function(err,ans){
+  //   if(err)return next('failed reconizing regcode')
+  //   if(Date.now() - ans.tsm>settings.exam.time_before_register)return next('expired, consider re-take the exam.')
+  //
+  //   apifunc.create_user(userobj,(err,back)=>{
+  //     if(err)return next(err);
+  //     res.obj = back;
+  //     next();
+  //   });
+  //
+  // })
 });
 
 //logout of USER

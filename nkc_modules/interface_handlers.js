@@ -38,15 +38,17 @@ iface.use(function(req,res,next){
 iface.use(function(req,res,next){
   if(req.url.indexOf('/forum/')==0||
   req.url.indexOf('/thread/')==0||
-  req.url.indexOf('/home')==0)
+  req.url.indexOf('/home')==0||
+  true)
   {
-    //if requesting for above two paths
+    //if requesting for above paths
     //apply forum list info
-    apifunc.get_all_forums(function(err,back){
-      if(err)next(err);
+    apifunc.get_all_forums()
+    .then(function(back){
       res.data.forums = back;
       next();
-    });
+    })
+    .catch(next);
   }else {
     next();
   }
@@ -55,26 +57,26 @@ iface.use(function(req,res,next){
 //render front page
 iface.get('/home',function(req,res,next)
 {
-  async.each(res.data.forums,
-    function(forum,cb){
-      apifunc.get_threads_from_forum_as_forum({
-        fid:forum._key,
-        start:0,
-        count:6,
-        no_forum_inclusion:true, //do not include again..
-      },function(err,data){
-        if(err)return cb(err);
-        forum.threads = data.threads;
-        cb();
-      })
-    }
-    ,function(err){
-      if(err)return next(err);
+  async.each(res.data.forums,function(forum,cb){
+    apifunc.get_threads_from_forum_as_forum({
+      fid:forum._key,
+      start:0,
+      count:6,
+      no_forum_inclusion:true, //do not include again..
+    })
+    .then(function(back){
+      forum.threads = back.threads;
+      cb();
+    })
+    .catch(err=>{
+      cb(err);
+    })
+  },function(err){
+    if(err)return next(err);
 
-      res.template='nkc_modules/jade/interface_home.jade';
-      return next();
-    }
-  )
+    res.template='nkc_modules/jade/interface_home.jade';
+    return next();
+  })
 })
 
 //render forumview
@@ -83,16 +85,16 @@ iface.get('/forum/:fid',function(req,res,next){
     fid:req.params.fid,
     start:req.query.start,
     count:req.query.count,
-  },(err,data)=>{
-    if(err)return next(err);
+  })
+  .then((data)=>{
     //if nothing went wrong
-
     Object.assign(res.data,data);
 
     res.data.replytarget = 'forum/' + req.params.fid;
     res.template = 'nkc_modules/jade/interface_forum.jade';
     return next();
-  });
+  })
+  .catch(next)
 });
 
 //render threadview
@@ -102,18 +104,17 @@ iface.get('/thread/:tid', function (req, res, next){
     tid:req.params.tid,
     start:req.query.start,
     count:req.query.count,
-  },
-  (err,data)=>{
-    if(err){
-      return next(err);
-    }
+  })
+  .then((data)=>{
     //if nothing went wrong
 
     res.data.replytarget = 'thread/' + req.params.tid;
     Object.assign(res.data,data);
     res.template = 'nkc_modules/jade/interface_thread.jade'
     return next();
-  });
+  })
+  .catch(next)
+
 });
 
 //get editor
@@ -128,18 +129,18 @@ iface.get('/editor',(req,res,next)=>{
   {
     //if user appears trying to edit a post
     var pid = target.slice(5);
-    console.log(pid);
+    report(pid);
     //load from db
-    apifunc.get_a_post(pid,function(err,back){
-      if(err)return next(err);
-
+    apifunc.get_a_post(pid)
+    .then(function(back){
       res.data.original_post = back;
       next();
     })
+    .catch(next)
+
+    return;
   }
-  else {
-    next();
-  }
+  next();
 });
 
 //get login
@@ -188,16 +189,18 @@ iface.get('/uploader',(req,res,next)=>{
 
 iface.get('/questions',(req,res,next)=>{
   if(req.user){
-    apifunc.get_questions(null,function(err,back){
-      if(err)return next(err);
+    apifunc.get_questions(null)
+    .then(function(back){
       res.data.questions_all = back;
-      apifunc.get_questions(req.user._key,function(err,back){
-        if(err)return next(err);
-        res.data.questions = back;
-        res.template = 'nkc_modules/jade/questions_edit.jade';
-        next();
-      })
+      return apifunc.get_questions(req.user._key)
     })
+    .then(function(back){
+      res.data.questions = back;
+      res.template = 'nkc_modules/jade/questions_edit.jade';
+      next();
+    })
+    .catch(next)
+
   }else{
     res.template = 'nkc_modules/jade/questions_edit.jade';
     next();
@@ -215,12 +218,12 @@ iface.get('/exam',function(req,res,next){
     return next();
   }
 
-  apifunc.exam_gen({ip:req.ip},function(err,back){
-    if(err)return next(err);
-
+  apifunc.exam_gen({ip:req.ip})
+  .then(function(back){
     res.data.exam = back;
     next();
   })
+  .catch(next);
 });
 
 //render phase: if template jade file exists
