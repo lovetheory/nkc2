@@ -39,16 +39,16 @@ iface.use(function(req,res,next){
   if(req.url.indexOf('/forum/')==0||
   req.url.indexOf('/thread/')==0||
   req.url.indexOf('/home')==0||
-  true)
+  false)
   {
     //if requesting for above paths
     //apply forum list info
     apifunc.get_all_forums()
     .then(function(back){
       res.data.forums = back;
-      next();
     })
-    .catch(next);
+    .then(next)
+    .catch(next)
   }else {
     next();
   }
@@ -66,11 +66,9 @@ iface.get('/home',function(req,res,next)
     })
     .then(function(back){
       forum.threads = back.threads;
-      cb();
     })
-    .catch(err=>{
-      cb(err);
-    })
+    .then(cb)
+    .catch(cb)
   },function(err){
     if(err)return next(err);
 
@@ -92,8 +90,8 @@ iface.get('/forum/:fid',function(req,res,next){
 
     res.data.replytarget = 'forum/' + req.params.fid;
     res.template = 'nkc_modules/jade/interface_forum.jade';
-    return next();
   })
+  .then(next)
   .catch(next)
 });
 
@@ -111,8 +109,9 @@ iface.get('/thread/:tid', function (req, res, next){
     res.data.replytarget = 'thread/' + req.params.tid;
     Object.assign(res.data,data);
     res.template = 'nkc_modules/jade/interface_thread.jade'
-    return next();
+
   })
+  .then(next)
   .catch(next)
 
 });
@@ -134,9 +133,8 @@ iface.get('/editor',(req,res,next)=>{
     apifunc.get_a_post(pid)
     .then(function(back){
       res.data.original_post = back;
-      next();
     })
-    .catch(next)
+    .then(next).catch(next)
 
     return;
   }
@@ -197,9 +195,8 @@ iface.get('/questions',(req,res,next)=>{
     .then(function(back){
       res.data.questions = back;
       res.template = 'nkc_modules/jade/questions_edit.jade';
-      next();
     })
-    .catch(next)
+    .then(next).catch(next)
 
   }else{
     res.template = 'nkc_modules/jade/questions_edit.jade';
@@ -208,7 +205,7 @@ iface.get('/questions',(req,res,next)=>{
 });
 
 iface.get('/exam',function(req,res,next){
-  if(req.user)return next('logout first, yo')
+  if(req.user) throw ('logout first, yo')
 
   res.template = 'nkc_modules/jade/interface_exam.jade';
 
@@ -221,9 +218,9 @@ iface.get('/exam',function(req,res,next){
   apifunc.exam_gen({ip:req.ip})
   .then(function(back){
     res.data.exam = back;
-    next();
   })
-  .catch(next);
+  .then(next)
+  .catch(next)
 });
 
 //render phase: if template jade file exists
