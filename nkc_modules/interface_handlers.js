@@ -39,7 +39,7 @@ iface.use(function(req,res,next){
   if(req.url.indexOf('/forum/')==0||
   req.url.indexOf('/thread/')==0||
   req.url.indexOf('/home')==0||
-  false)
+  true)
   {
     //if requesting for above paths
     //apply forum list info
@@ -170,14 +170,14 @@ iface.get('/logout',(req,res,next)=>{
 });
 
 iface.get('/me',(req,res,next)=>{
-  if(!req.user)return next('require login');
+  if(!req.user)throw ('require login');
   res.template = 'nkc_modules/jade/interface_user_profile.jade';
   res.replytarget = 'me';
   next();
 });
 
 iface.get('/uploader',(req,res,next)=>{
-  if(!req.user)return next('require login');
+  if(!req.user)throw ('require login');
   res.data.navbar.highlight = 'uploader'; //navbar highlight
 
   res.template = 'nkc_modules/jade/interface_attachment_uploader.jade';
@@ -229,7 +229,7 @@ iface.use((req,res,next)=>{
   {
     try {var k = jaderender(res.template,res.data)}
     catch(err){
-      return next(err);
+      throw (err);
     }
     return res.send(k);
     //ends here, no more hassle
