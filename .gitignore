@@ -2,6 +2,7 @@
 /misc
 /tmp
 /tmp2
+/tmp_avatar
 /ssl
 /resources/avatar
 /resources/im_test
@@ -10,3 +11,4 @@
 secret.txt
 favicon.psd
 /.idea
+/.vscode
