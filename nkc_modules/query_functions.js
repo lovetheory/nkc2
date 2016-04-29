@@ -49,6 +49,10 @@ function aqlall(aqlobj){
   })
 };
 
+queryfunc.AQL = function(querystring,parameter){
+  return aqlall({query:querystring,params:parameter});
+}
+
 queryfunc.incr_counter = function(countername){
   var aqlobj = {
     query:`

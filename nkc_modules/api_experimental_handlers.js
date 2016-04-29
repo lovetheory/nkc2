@@ -4,26 +4,22 @@ module.paths.push(__projectroot + 'nkc_modules'); //enable require-ment for this
 var express = require('express');
 var api = express.Router();
 
-var validation = require('validation');
+var APIroutine = require('api_experimental_routine')
 
-///------------
-///something here to be executed before all handlers below
-api.use(function(req,res,next){
-  next();
-});
+api.use('/experimental', (req,res,next)=>{
+  if(req.method=='POST')return next()
 
-api.get('/failure',function(req,res,next){
-  var alpha = 0
-  res.obj = {
-    wrong:1/alpha,
+  for(key in req.query){
+    req.body[key] = req.query[key]
   }
-  next();
+  next()
 })
 
-var modificationAPI = require('api_experimental_modifications')
-
-api.post('/modification',function(req,res,next){
-  modificationAPI(req,res)
+api.all('/experimental',function(req,res,next){
+  APIroutine({
+    user:req.user,
+    body:req.body
+  })
   .then((result)=>{
     res.obj = result;
   })

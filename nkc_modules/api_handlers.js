@@ -23,7 +23,7 @@ api.use(require('api_resources_handlers'));
 api.use(bodyparser.json());
 
 api.use(function(req,res,next){
-  if(!req.body&&req.method=='POST')return next('bodyless POST request');
+  if(!req.body&&req.method=='POST')throw ('bodyless POST request');
   next();
 });
 

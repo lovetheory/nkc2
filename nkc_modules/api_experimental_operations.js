@@ -6,10 +6,12 @@ var path = require('path')
 var fs = require('fs.extra')
 var settings = require('server_settings.js');
 var helper_mod = require('helper.js')();
+var queryfunc = require('query_functions')
+var AQL = queryfunc.AQL
 
-var operationTable = {}
+var operations = {}
 
-operationTable.modificationTable = { //table for modification operations.
+var table = { //table for modification operations.
   moveThread:{
     operation:function(params){
       //do something to move the thread
@@ -24,14 +26,47 @@ operationTable.modificationTable = { //table for modification operations.
       return Promise.resolve()
     },
   },
+
   removePost:{
     operation:function(params){
       //do something to remove the post, my friend
+
     },
     requiredParams:{
       pid:String,
     }
-  }
+  },
+
+  viewThread:{
+    operation:function(params){
+      //do sth to get threadlist
+      return Promise.resolve()
+      .then(()=>{
+        return {view:'success'}
+      })
+    },
+    requiredParams:{
+      tid:String
+    }
+  },
+
+  testList:{
+    operation:function(params){
+      return AQL(`
+        for t in threads
+        limit 0,10
+        return t
+        `,{
+
+        }
+      )
+      .then(array=>{
+        return {threads:array}
+      })
+    },
+  },
 }
 
-module.exports = operationTable
+operations.table = table
+
+module.exports = operations
