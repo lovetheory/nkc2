@@ -67,25 +67,8 @@ settings.couchdb={
 };
 
 settings.static_settings = {
-  maxAge:1000*10, //cache everything for 10s
+  maxAge:1000*10, //cache everything for 30s
 };
-
-settings.root_serve_static =
-[
-  //clientside js file serving
-  {to:'nkc_modules/chat'},
-  {to:'nkc_modules/jquery'},
-  {to:'nkc_modules/angular'},
-  {to:'node_modules/marked/lib'},
-  {to:'node_modules/commonmark/dist'},
-  {to:'nkc_modules/vue'},
-  {to:'nkc_modules/jade'},
-  {to:'nkc_modules/xbbcode'},
-  {to:'nkc_modules/'},
-  {map:'/bootstrap',to:'bootstrap-3.3.6-dist'},
-  //{map:'/avatar',to:'resources/avatar'},
-  {map:'/default',to:'resources/'},
-];
 
 settings.urlrewrite = [ //happens before serve_static
   // {map:'/',to:'/api'},//到时要删掉。
@@ -107,8 +90,25 @@ settings.urlrewrite = [ //happens before serve_static
 
   {map:'/r/:rid',to:'/api/resources/get/:rid'},
   {map:'/rt/:rid',to:'/api/resources/thumb/:rid'},
-  {map:'/avatar/:uid',to:'/api/avatar/:uid'},
+  {map:'/avatar/:uid',to:'/api/avatar/:uid.jpg'},
+];
 
+settings.root_serve_static =
+[
+  //clientside js file serving
+  {to:'nkc_modules/chat'},
+  {to:'nkc_modules/jquery'},
+  {to:'nkc_modules/angular'},
+  {to:'node_modules/marked/lib'},
+  {to:'node_modules/commonmark/dist'},
+  {to:'nkc_modules/vue'},
+  {to:'nkc_modules/jade'},
+  {to:'nkc_modules/xbbcode'},
+  {to:'nkc_modules/'},
+  {map:'/bootstrap',to:'bootstrap-3.3.6-dist'},
+  //{map:'/avatar',to:'resources/avatar'},
+  {map:'/default',to:'resources/'},
+  {map:'/api/avatar/',to:'resources/avatar'},
 ];
 
 settings.resource_paths = [

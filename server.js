@@ -11,7 +11,6 @@ var moment = require('moment');
 var fs = require('fs');
 var net = require('net');
 
-var permissions = require('permissions');
 var helper_mod = require('helper')();
 
 var jaderender = require('jaderender');
@@ -57,8 +56,8 @@ if(use_https){
 
 nkc.use(require('serve-favicon')(__dirname+'/favicon.ico'));
 
+if(development)
 nkc.use((req,res,next)=>{
-  if(development)
   console.log("  -".yellow,req.url);
   //log everything
   next();
@@ -87,6 +86,10 @@ for(i in settings.root_serve_static)
   }
 }
 
+//default avatar redirection
+nkc.use(rewrite('/api/avatar/*','/default_avatar/default_avatar.jpg')) //if avatar not served
+nkc.use('/default_avatar/',express.static('resources/',settings.static_settings)) //staticify
+
 //ikc statics serving
 nkc.use('/recruit',express.static('../ikc')); //serve company pages
 
@@ -95,7 +98,7 @@ nkc.use(compression({level:settings.compression_level}));//enable compression
 
 //4. log request, if not static resources
 nkc.use((req,res,next)=>{
-  if(req.url.indexOf('/avatar/')>=0&&req.method=='GET')return next();
+  //if(req.url.indexOf('/avatar/')>=0&&req.method=='GET')return next();
   //dont record avatar requests
 
   var d=new Date();
@@ -105,9 +108,9 @@ nkc.use((req,res,next)=>{
 
   //reformat ipaddr, kill portnames suffix
   req.iptrim = req.ip;
-  req.iptrim = req.iptrim.trim().replace( /(:[0-9]{1,})$/ ,'');
+  req.iptrim = req.iptrim.trim().replace( /(:[0-9]{1,})$/ ,''); //kill colon-port
   //req.iptrim = req.ip
-  console.log(req.iptrim);
+  if(development)console.log(req.iptrim);
   next();
 });
 
@@ -138,10 +141,11 @@ nkc.use((req,res,next)=>{
     {
       req.user = back;
     }
-    return next();
   })
-  .catch(()=>{
-    next()
+  .then(next)
+  .catch((err)=>{
+    report('error requesting for user',err)
+    next() //let go even if error.
   })
 });
 
