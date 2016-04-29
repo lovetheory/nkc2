@@ -223,6 +223,11 @@ iface.get('/exam',function(req,res,next){
   .catch(next)
 });
 
+iface.get('/experimental',function(req,res,next){
+  res.template = 'nkc_modules/jade/interface_experimental.jade'
+  next()
+})
+
 //render phase: if template jade file exists
 iface.use((req,res,next)=>{
   if(res.template)

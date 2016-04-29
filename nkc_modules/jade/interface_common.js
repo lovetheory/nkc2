@@ -26,14 +26,13 @@ function post_api(target,body,callback)
 
 function generalRequest(obj,opt,callback){
   var xhr = new XMLHttpRequest();
-  xhr.onreadystatechange=function()
-  {
+  xhr.onreadystatechange=function(){
     if (xhr.readyState==4)
     {
       try{
         var res;
         res = JSON.parse(xhr.responseText);
-        if(xhr.status<200||xhr.status>=400)throw res;
+        if(xhr.status==0||xhr.status>=400)throw res;
         if(res.error)throw res;
 
         callback(null,res);
@@ -50,6 +49,13 @@ function generalRequest(obj,opt,callback){
   }catch(err){
     callback(err);
   }
+}
+
+function nkcExperimentalAPI(obj,callback){
+  generalRequest(obj,{
+    method:'POST',
+    url:'/api/experimental'
+  },callback);
 }
 
 function managementRequest(obj,callback){
