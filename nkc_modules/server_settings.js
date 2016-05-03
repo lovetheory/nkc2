@@ -98,7 +98,7 @@ settings.root_serve_static =
   //clientside js file serving
   {to:'nkc_modules/chat'},
   {to:'nkc_modules/jquery'},
-  {to:'nkc_modules/angular'},
+  {to:'nkc_modules/react'},
   {to:'node_modules/marked/lib'},
   {to:'node_modules/commonmark/dist'},
   {to:'nkc_modules/vue'},
