@@ -1,26 +1,29 @@
+module.paths.push('./nkc_modules'); //enable require-ment for this path
+
+var operations = require('api_experimental_operations');
+var table = operations.table;
+
 var permissions = {};
 
 //证书，每张证书将包含不同的权限
 var certificates={
-  god:{//cert name
-    post:true,//perm name
-    move:true,
-    issue:true,
-    modify:true,
-  },
+  dev:operations.listAll(), //grandmaster
 
   moderator:{
     post:true,
     move:true,
     modify:true,
+    addThreadToCart:true,
+    addPostToCart:true,
+    removePost:true,
   },
 
   default:{ //by default given to every registered user
     post:true,
     self_modify:true,
-    moveThread:true,
-    removePost:true,
     testList:true,
+    listCart:true,
+    clearCart:true,
   },
 
   specialist:{
@@ -31,7 +34,6 @@ var certificates={
     viewThread:true,
     viewForum:true,
     viewHome:true,
-
   }
 
 };
@@ -40,9 +42,9 @@ var certificates={
 permissions.getPermissionsFromCerts = (certsArray)=>{
   var permissionsOfCerts={};
 
-  for(s in certsArray)
+  for(i in certsArray)
   {
-    var permissionsOfCert = certificates[certsArray[s]];
+    var permissionsOfCert = certificates[certsArray[i]];
     Object.assign(permissionsOfCerts,permissionsOfCert)
   }
   return permissionsOfCerts
