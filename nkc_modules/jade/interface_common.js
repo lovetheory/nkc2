@@ -51,35 +51,15 @@ function generalRequest(obj,opt,callback){
   }
 }
 
-function nkcExperimentalAPI(obj,callback){
-  generalRequest(obj,{
-    method:'POST',
-    url:'/api/experimental'
-  },callback);
-}
-
-function managementRequest(obj,callback){
-  generalRequest(obj,{
-    method:'POST',
-    url:'/api/management',
-  },callback);
-}
-
-function viewRequest(obj,callback){
-  generalRequest(obj,{
-    method:'GET',
-    url:'/api/view',
-  },callback);
-}
-
-function exampleRequest(){
-  managementRequest({
-    methodName:'what',
-    object:'ever',
-    param1:'okay',
-  },function(err,back){
-    if(err)return alert(err);
-    alert(back);
+function nkcExperimentalAPI(obj){
+  return new Promise(function(resolve,reject){
+    generalRequest(obj,{
+      method:'POST',
+      url:'/api/experimental'
+    },function(err,back){
+      if(err)return reject(err);
+      resolve(back);
+    });
   })
 }
 
@@ -122,6 +102,59 @@ function delete_api(target,callback)
 function redirect(url){
   window.location=url;
 }
+
+var nkcAPI = {
+  addPostToCart:function(pid){
+    return nkcExperimentalAPI({
+      operation:'addPostToCart',
+      pid:pid,
+    })
+    .then(back=>{
+      alert('post added to cart')
+    })
+    .catch(err=>{
+      alert(err.toString());
+    })
+  },
+
+  addThreadToCart:function(tid){
+    return nkcExperimentalAPI({
+      operation:'addThreadToCart',
+      tid:tid,
+    })
+    .then(back=>{
+      alert('thread added to cart')
+    })
+    .catch(err=>{
+      alert(err.toString());
+    })
+  },
+
+  listCart:function(tid){
+    return nkcExperimentalAPI({
+      operation:'listCart',
+    })
+  },
+
+  clearCart:function(){
+    return nkcExperimentalAPI({
+      operation:'clearCart'
+    })
+  },
+
+  moveThread:function(tid,fid){
+    return nkcExperimentalAPI({
+      operation:'moveThread',
+      tid:tid,
+      fid:fid,
+    })
+  },
+
+}
+
+
+
+
 
 //in memory of alex king
 // JS QuickTags version 1.3.1

@@ -42,7 +42,6 @@ function getPermissionList(user){
 function testPermission(params){
   // test if user is applicapable of executing operation specified by params.
   var permissionList = getPermissionList(params.user);
-  report('permlist: ')
   report(permissionList);
 
   if(!permissionList[params.operation]){ //user does not have permission for this operation

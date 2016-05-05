@@ -14,17 +14,20 @@ block content
             h2 您要找的帖子不存在。
           else
             h2.d-inline #{data.thread.oc.t}
-            p.d-inline.lighttext(style='margin-left: 10px; vertical-align:text-bottom;').
-              回到 #[a.lighttext(href='/forum/#{data.thread.fid}') #{data.thread.fid}] 
-       
-        .panel.panel-default
-          .panel-body
-            each post,index in data.posts
-              include interface_thread_singlepost.jade
+            p.d-inline.lighttext(style='margin-left: 10px; vertical-align:text-bottom;')
+              span 回到 
+              a.lighttext(href='/forum/#{data.thread.fid}') #{data.thread.fid} 
               
-            hr
-            a.btn.btn-default(href='/interface/editor?target=#{data.replytarget}') 回帖
-            
+              a(href="javascript:nkcAPI.addThreadToCart('#{data.thread._key}')") 加入管理车
+       
+            .panel.panel-default
+              .panel-body
+                each post,index in data.posts
+                  include interface_thread_singlepost.jade
+                  
+                hr
+                a.btn.btn-default(href='/interface/editor?target=#{data.replytarget}') 回帖
+                
       .col-sm-3.col-md-2
         include interface_forums_list.jade
   include debug_output.jade

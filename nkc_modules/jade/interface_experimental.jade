@@ -1,9 +1,11 @@
 extends bootstrap_base.jade
 
 block title
+  link(href='/interface_experimental.css' rel='stylesheet')
   title 管理界面测试
   
 block content
+  
   .container
     .row
       .col-xs-12
@@ -11,16 +13,19 @@ block content
         
     hr
     .row
-      .col-xs-3
+      .col-xs-12
         .panel.panel-default.f12
           .panel-body
-            h4 管理车
-            #managementCart
-              button.btn.btn-default(v-on:click='refresh') 刷新
-              p(v-for='i in items')
-                span {{i._id}}
-        
+            #Root
+
+      .col-xs-6
+        .panel.panel-default.f12
+          .panel-body
+            h4 这里是回显
+            pre#logger
+                
 block scripts
-  script(src='/vue.js')
+  script(src='/react.js')
+  script(src='/JSXTransformer.js')
   script(src='/interface_common.js')
-  script(src='/interface_experimental.js')
+  script(type='text/jsx' src='/interface_experimental.js')
