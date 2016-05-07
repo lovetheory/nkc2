@@ -103,58 +103,13 @@ function redirect(url){
   window.location=url;
 }
 
-var nkcAPI = {
-  addPostToCart:function(pid){
-    return nkcExperimentalAPI({
-      operation:'addPostToCart',
-      pid:pid,
-    })
-    .then(back=>{
-      alert('post added to cart')
-    })
-    .catch(err=>{
-      alert(err.toString());
-    })
-  },
-
-  addThreadToCart:function(tid){
-    return nkcExperimentalAPI({
-      operation:'addThreadToCart',
-      tid:tid,
-    })
-    .then(back=>{
-      alert('thread added to cart')
-    })
-    .catch(err=>{
-      alert(err.toString());
-    })
-  },
-
-  listCart:function(tid){
-    return nkcExperimentalAPI({
-      operation:'listCart',
-    })
-  },
-
-  clearCart:function(){
-    return nkcExperimentalAPI({
-      operation:'clearCart'
-    })
-  },
-
-  moveThread:function(tid,fid){
-    return nkcExperimentalAPI({
-      operation:'moveThread',
-      tid:tid,
-      fid:fid,
-    })
-  },
-
+function nkcAPI(operationName,remainingParams){
+  if(!remainingParams){
+    var remainingParams={}
+  }
+  remainingParams.operation = operationName;
+  return nkcExperimentalAPI(remainingParams)
 }
-
-
-
-
 
 //in memory of alex king
 // JS QuickTags version 1.3.1

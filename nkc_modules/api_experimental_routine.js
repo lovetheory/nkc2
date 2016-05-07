@@ -52,7 +52,8 @@ function testPermission(params){
   var operation = params.operation
 
   if(table[operation].testPermission){
-    return table[operation].testPermission(params)
+    return Promise.resolve(params)
+    .then(table[operation].testPermission)
     .catch(err=>{
       throw 'permission test failed'
     })
@@ -87,7 +88,10 @@ function APIroutine(context){
 
   params.user = context.user
 
-  return testPermission(params)
+  return Promise.resolve()
+  .then(()=>{
+    return testPermission(params)
+  })
   .then(()=>{
     //passed all test
     return executeOperation(params)

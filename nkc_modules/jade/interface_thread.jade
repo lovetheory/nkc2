@@ -18,7 +18,7 @@ block content
               span 回到 
               a.lighttext(href='/forum/#{data.thread.fid}') #{data.thread.fid} 
               
-              a(href="javascript:nkcAPI.addThreadToCart('#{data.thread._key}')") 加入管理车
+              a(href="javascript:cartThread('#{data.thread._key}')") 加入管理车
        
             .panel.panel-default
               .panel-body

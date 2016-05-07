@@ -94,7 +94,7 @@ function InitThreadControl(options){
       refresh:{
         text:'获取管理车',
         action:function(){
-          return nkcAPI.listCart()
+          return nkcAPI('listCart')
           .then((result)=>{
             pc.list = result
             logme('已获取管理车：共 '+result.length+' 项')
@@ -138,7 +138,7 @@ function InitThreadControl(options){
       clearCart:{
         text:'清除服务器端',
         action:function(){
-          nkcAPI.clearCart()
+          nkcAPI('clearCart')
           .then(pc.actions.refresh)
           .then(()=>{
             logme('服务器端管理车已清除')
@@ -225,7 +225,7 @@ function moveSelectedThread(fid){
       count++;
       var tid = item._key
       p = p.then(()=>{
-        return nkcAPI.moveThread(tid,fid)
+        return nkcAPI('moveThread',{tid,fid})
       })
       .then((result)=>{
         logme('thread '+tid+' moved to '+fid)

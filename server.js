@@ -240,5 +240,3 @@ process.openStdin().addListener('data',function(d){
   if(d.toString().trim()=='')
   process.exit();
 });
-
-//console.log(permissions.getpermissions(['god','default']));
