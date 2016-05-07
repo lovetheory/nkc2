@@ -2,31 +2,45 @@
 nkc community project, version 2.
 currently under dev.
 
-## Todos
-在nkc_render.js中，markdown 被 commonmark parse 成 html之后，经过若干正则表达式，得到最终输出。
-例如，\\[r=123\\]表示图片附件，编号123。会被渲染成一张图片。但是目前加载此资源未必返回图片（如果资源是rar一样会response），应在服务端加入mime类型检查。
-又例如，\\[rt=123\\]\\[filename.ext/\\]表示点击下载附件，编号123。会被渲染成 缩略图+文件名的形式。适合插入文章内部。
-现在尚缺几种新的标记，例如[audio=123] [video=123]等等。它们应该被渲染成合适的播放器。
-另外这些标记和现有markdown有冲突，应参考discourse项目解决方案。
-另外，也需要引入诸如[smiles=331/]，以及$$latex-code$$这样的标签。总而言之，还有很多工作要做。
-
 ## License
 You are allowed to use these files for any purpose, as long as you admit that they are useful.
 The author of these files shall not be held responsible for any terrorist attacks or global climate changes caused by the use of these files.
 
+## Stack
+- Framework: Express 4
+- Template Language: Jade (now called Pug)
+- Database: ArangoDB
+- Image Processing: ImageMagick
+- Frontend Framework: Raw JavaScript + React (Admin Panel), need `Promise` support in browser (Does not support IE before Polyfilling)
 
-## What it does/ How it works
-- serves static files
-- render then serve .jade files
-- ...if paths are properly routed with express
-- exposes RESTful APIs
-- document storage and query using ArangoDB
-- uses socket.io for real-time notifications
-- upload and download of attachments
-- manipulate the images uploaded for various uses
+## How to add an API
 
+!We are currently refactoring the code.
+1. (If the API is for data modification/retrieval) Visit __localhost:8529__. Learn AQL basics from ArangoDB Official Documentation. Write AQL. Test to see if your query works.
+2. Implement the API function in JavaScript. See `api_experimental_operations.js`.
+3. Make sure the current user has `'dev'` certificate. For users with other certificates, Modify `permissions.js`.
+4. Reload Server.
 
-## This may be an example for those new to Node.js and express
+## How to call an API
+- In browser
+  ````html
+  <script src='/interface_common.js'/>
+  <script>
+    nkcAPI('nameOfOperation',{someParameter:'someValue'})
+    .then(alert)
+    .catch(alert)
+  </script>
+  ````
+
+- In general
+
+  An HTTP request should be made with cookies (for User Authentication) to `/api/experimental`, with JSON body.
+  ````javascript
+  {
+    "operation":"nameOfOperation",
+    "someParameter":"someValue"
+  }
+  ````
 
 ## To Get Started
 1. Install Node.js, ImageMagick for your system and make sure `npm` and `convert` is available as a command from CLI.
@@ -37,7 +51,7 @@ The author of these files shall not be held responsible for any terrorist attack
 6. Press **Enter** in terminal window whenever to restart server. You may also visit `server:port/reload` to do the same
 
 
-## 讲国语啦
+## 这样开始
 1. 为你的操作系统安装Node.js 和 ImageMagick，并确保 `npm` 与 `convert` 命令在命令行中可用
 2. 通过 `git clone` 或者zip解压将本项目弄到某处
 3. 在该处 `npm update` 以获取依赖项
@@ -48,19 +62,25 @@ The author of these files shall not be held responsible for any terrorist attack
 ## Recommended way to install dependencies
 - ImageMagick
   - Windows
-    - Official Site Download.
+
+    Official Site Download.
   - OS X
-    - `brew install ImageMagick`
+
+    `brew install ImageMagick`
   - CentOS
-    - check `scripts` directory.
+
+    check `scripts` directory.
 
 - ArangoDB
   - Windows
-    - Installer.
+
+    Installer.
   - OSX
-    - Installer. run **ArangoDB-CLI.app** directly from **Applications**.
+
+    Installer. run **ArangoDB-CLI.app** directly from **Applications**.
   - CentOS
-    - check `scripts` directory. Change the version number when necessary.
+
+    check `scripts` directory. Change the version number when necessary.
 
 ## For your convenience
 - `scripts` directory contains various scripts to accelerate deployment

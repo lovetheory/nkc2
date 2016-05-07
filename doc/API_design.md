@@ -1,3 +1,7 @@
+```
+this document was deprecated.
+```
+
 # doc/API_design.md
 RELAX
 

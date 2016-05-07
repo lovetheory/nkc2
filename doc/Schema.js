@@ -10,6 +10,12 @@ var user=
 
   email:String, //电子邮件地址
   regcode:String, //注册码
+
+  certs:[String,String] //证书，即权限组
+  cart:[ //管理车
+    {itemtype:'thread', id:'12'},
+    {itemtype:'thread', id:'13'},
+  ]
 }
 
 var post={ //post 表示楼
