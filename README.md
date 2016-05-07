@@ -15,7 +15,8 @@ The author of these files shall not be held responsible for any terrorist attack
 
 ## How to add an API
 
-!We are currently refactoring the code.
+We are currently refactoring the code.
+
 1. (If the API is for data modification/retrieval) Visit __localhost:8529__. Learn AQL basics from ArangoDB Official Documentation. Write AQL. Test to see if your query works.
 2. Implement the API function in JavaScript. See `api_experimental_operations.js`.
 3. Make sure the current user has `'dev'` certificate. For users with other certificates, Modify `permissions.js`.
