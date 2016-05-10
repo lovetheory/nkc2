@@ -15,11 +15,11 @@ The author of these files shall not be held responsible for any terrorist attack
 
 ## How to add an API
 
-We are currently refactoring the code.
+We are currently refactoring. To help, read the following carefully.
 
 1. (If the API is for data modification/retrieval) Visit __localhost:8529__. Learn AQL basics from ArangoDB Official Documentation. Write AQL. Test to see if your query works.
-2. Implement the API function in JavaScript. See `api_experimental_operations.js`.
-3. Make sure the current user has `'dev'` certificate. For users with other certificates, Modify `permissions.js`.
+2. Implement the API function in JavaScript. Please refer to `nkc_modules/api_experimental_operations/example.js`.
+3. Make sure the current user has `'dev'` certificate (can call every API once implemented). To allow users with other certificates to call that API, Modify `permissions.js`.
 4. Reload Server.
 
 ## How to call an API
@@ -27,9 +27,9 @@ We are currently refactoring the code.
   ````html
   <script src='/interface_common.js'/>
   <script>
-    nkcAPI('nameOfOperation',{someParameter:'someValue'})
-    .then(alert)
-    .catch(alert)
+    nkcAPI('exampleOperation',{someParameter:'someValue'})
+    .then(jalert)
+    .catch(jalert)
   </script>
   ````
 
@@ -60,6 +60,12 @@ We are currently refactoring the code.
 5. 运行 __run_as_dev.bat__ or __run_as_dev.command__ 以从命令行启动服务器
 6. 在命令行窗口中随时按下 **Enter** 就可以重启服务器。 你也可以访问 `server:port/reload` 实现同样效果
 
+## Deployment
+0. Do all above and make sure things does work
+1. Install the forever package: `npm install forever -g`
+2. Bash: `sh run_as_production.sh` Windows CMD: `run_as_production.sh`(or doubleclick)
+3. Report bugs when necessary.
+
 ## Recommended way to install dependencies
 - ImageMagick
   - Windows
@@ -89,8 +95,6 @@ We are currently refactoring the code.
 - `server_settings.js` includes several globally used server parameters and static serving routes and URL rewrites
 - GET `server:port/html/jade/somename` will respond with rendered `/nkc_modules/jade/somename.jade`
 - Every unrouted path will end up returning 404.jade
-- `markdown`, `bbcode` and `plain` is available as filters when rendering .jade files using `require('jaderender')(filename,options)`.
 - `query_functions.js` is the database wrapper
 - `api_functions.js` contains all the API functions. They are called before serving API/HTML requests
-- `whatever_handlers.js` contains route endpoints, in the form of __Express__ middlewares
 - `im_functions.js` contains wrapper for ImageMagick binaries.

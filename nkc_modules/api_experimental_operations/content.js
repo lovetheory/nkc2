@@ -1,4 +1,3 @@
-//api content request handlers
 module.paths.push(__projectroot + 'nkc_modules'); //enable require-ment for this path
 
 var moment = require('moment')
@@ -167,7 +166,7 @@ table.postTo = {
     post:Object,
   },
   testPermission:function(params){
-    
+
 
   }
 }

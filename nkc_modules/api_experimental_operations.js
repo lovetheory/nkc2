@@ -10,6 +10,7 @@ var AQL = queryfunc.AQL
 var operations = {}
 
 var table = {} //table of operations.
+operations.table = table
 
 var normalizedPath = __projectroot+'nkc_modules/api_experimental_operations/'
 
@@ -29,29 +30,15 @@ for(i in externalTables){
   }
 }
 
-//this is an example API
-table.exampleOperation={
-  operation:function(params){
-    //what clientside receives:
-    return {hello:'world',someParameter:params.someParameter} //you may return value or Promise here.
-  },
-  requiredParams:{
-    someParameter:String,
-  }
-}
-
 table.listAllOperations = {
   operation:operations.listAll,
 }
 
-operations.table = table
-
 var ops = {}
-for(i in operations.table){
+for(i in table){
   ops[i]=true;
 }
 operations.listAll = function(){
   return ops;
 }
-
 module.exports = operations
