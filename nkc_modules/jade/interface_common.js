@@ -5,6 +5,10 @@ function ga(id,attr){return geid(id).getAttribute(attr);}
 function hset(id,content){geid(id).innerHTML=content;}
 function display(id){geid(id).style = 'display:inherit;'}
 
+function jalert(obj){
+  alert(JSON.stringify(obj))
+}
+
 function post_api(target,body,callback)
 {
   var xhr = new XMLHttpRequest();

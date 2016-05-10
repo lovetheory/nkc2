@@ -24,6 +24,7 @@ var certificates={
     testList:true,
     listCart:true,
     clearCart:true,
+    postTo:true,
   },
 
   specialist:{
@@ -35,7 +36,6 @@ var certificates={
     viewForum:true,
     viewHome:true,
   }
-
 };
 
 //certs is [] of permission names

@@ -13,19 +13,15 @@ var nkc_editor = function(){
     if(body.c==''){alert('请填写内容。');return;}
     if(target==''){alert('请填写发表至的目标。');return;}
 
-
-    post_api(target,body,function(err,back){
-      if(err){
-        alert(err);
-      }else{
-        brrr=JSON.parse(back).redirect;
-        if(brrr){
-          redirect('/'+brrr);
-        }else {
-          redirect('/'+target);
-        }
-      }
-    });
+    return nkcAPI('postTo',{
+      target,
+      post:body,
+    })
+    .then(result=>{
+      var redirectTarget = result.redirect;
+      redirect(redirectTarget?redirectTarget:'/'+target)
+    })
+    .catch(jalert)
   }
 
   var debounce=false;

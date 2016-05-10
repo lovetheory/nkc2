@@ -28,8 +28,6 @@ table.moveThread = {
     //get original fid of given tid, and check if user is moderator to fid.
     //if(getThread(params.tid).owner.indexOf(params.user)<0) return Promise.reject('you cant move that')
 
-
-
     return 0;
   },
 }

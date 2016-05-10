@@ -279,7 +279,7 @@ queryfunc.update_thread = (tid)=>{
     `
     ,
     params:{
-      'equals':tid,
+      equals:tid,
     },
   };
   return aqlall(aqlobj);
