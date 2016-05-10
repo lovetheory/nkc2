@@ -1,8 +1,12 @@
+module.paths.push(__projectroot + 'nkc_modules'); //enable require-ment for this path
+
 var moment = require('moment');
+require('helper')()
 var settings = {};
 
 settings.server={
   name:"nkc Development Server",
+  copyright:'(c)2016 Guangdong Aililun(LoveTheory) Technology Co Ltd',
   port:1086,
   https_port:10443,
   github:'https://github.com/ctmakro/nkc2',
@@ -32,7 +36,6 @@ function get_secret(path)
 
     fs.writeFileSync(path,secret,'utf8');
   }
-  if(development)console.log('server secret is: ',secret)
   return secret;
 }
 
