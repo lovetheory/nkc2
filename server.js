@@ -6,12 +6,15 @@ global.development = environment !== 'production';
 console.log('running in '+environment+' mode');
 
 var settings = require('server_settings');
+require('helper')();
+
+dash()
+report(settings.server.copyright)
+if(development)report('server secret is: '+settings.cookie_secret.slice(0,32)+"...")
 
 var moment = require('moment');
 var fs = require('fs');
 var net = require('net');
-
-var helper_mod = require('helper')();
 
 var jaderender = require('jaderender');
 
@@ -221,19 +224,21 @@ nkc.use((err,req,res,next)=>{
 //server listening settings
 if(use_https){
   ///-----start https server-----
-  target_server.listen(settings.server.https_port);
+  target_server.listen(settings.server.https_port,listenhandle);
   //-----start http redirection server-----
   redirection_server.listen(settings.server.port);
 }
 else{
   //if not using https
-  target_server.listen(settings.server.port);
+  target_server.listen(settings.server.port,listenhandle);
 }
 
-var listening_addr = target_server.address().address;
-var listening_port = target_server.address().port;
-dash();
-report(settings.server.name+' listening on '+listening_addr+' '+listening_port);
+function listenhandle(){
+  var listening_addr = target_server.address().address;
+  var listening_port = target_server.address().port;
+  dash();
+  report(settings.server.name+' listening on '+listening_addr+' '+listening_port);
+}
 
 //end process after pressing ENTER, for debugging purpose
 process.openStdin().addListener('data',function(d){
