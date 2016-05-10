@@ -11,11 +11,17 @@ var operations = {}
 
 var table = {} //table of operations.
 
+var normalizedPath = __projectroot+'nkc_modules/api_experimental_operations/'
+
 //inclusion from other files
-var externalTables = [
-  require('api_experimental_operations/management'),
-  require('api_experimental_operations/content'),
-];
+var externalTables = [];
+
+require("fs").readdirSync(normalizedPath).forEach(function(file) {
+  if(file.toString().split('.').pop().toLowerCase()=='js'){
+    externalTables.push(require("./api_experimental_operations/" + file));
+    report(file.toString()+' loaded')
+  }
+});
 
 for(i in externalTables){
   for(k in externalTables[i]){
@@ -44,7 +50,6 @@ var ops = {}
 for(i in operations.table){
   ops[i]=true;
 }
-
 operations.listAll = function(){
   return ops;
 }
