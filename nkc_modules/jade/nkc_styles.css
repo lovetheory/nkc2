@@ -79,7 +79,7 @@ h4,h5,h6 {
 
 }
 .ForumThreadItem {
-  padding: 1px;
+  padding-bottom: 6px;
   padding-left: 0px;
 }
 .ForumThreadItemAvatar {
@@ -89,6 +89,7 @@ h4,h5,h6 {
 .ForumThreadItemContent {
   vertical-align: middle;
   width: 100%;
+  padding: 0;
   padding-left: 15px;
   display: table-cell;
 }

@@ -1,29 +1,29 @@
 - var url = '/thread/' + thread._key
 - var avatar = '/avatar/' + thread.oc.uid
 
-div.ForumThreadItem
-  div
-    .ForumThreadItemAvatar
-      a(href='#{url}')
-        img.media-object.avatar(src='#{avatar}' style='width:45px;height:45px;')
-    .ForumThreadItemContent
-      .row
-        .col-xs-6.col-md-8
-        
+.ForumThreadItem
+  .ForumThreadItemAvatar
+    a(href='#{url}')
+      img.media-object.avatar(src='#{avatar}' style='width:45px;height:45px;')
+  .ForumThreadItemContent
+    .row
+      .col-xs-6.col-md-8
+      
+        div
           a.f12(href="#{url}") #{thread.oc.t} 
           //帖子标题链接
           
           if thread.count>1
             span.lighttext #{thread.count-1} 回复
           //楼数
-          
-          p.lighttext.
-            #{dateString(thread.oc.toc)} #{thread.oc.username}
+        
+        div
+          span.lighttext #{dateString(thread.oc.toc)} #{thread.oc.username}
           //帖子发布时间和发布者
-      
-        .col-xs-3.col-md-2
-          p.lighttext.text-center #{fromNow(thread.lm.tlm)}
+    
+      .col-xs-3.col-md-2
+        span.lighttext.text-center #{fromNow(thread.lm.tlm)}
           //帖子最后回复时间和回复者
-          
-        .col-xs-3.col-md-2
-          p.lighttext.text-center #{thread.lm.username}
+        
+      .col-xs-3.col-md-2
+        span.lighttext.text-center #{thread.lm.username}
