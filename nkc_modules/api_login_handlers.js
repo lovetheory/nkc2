@@ -54,6 +54,7 @@ api.post('/user/login',(req,res,next)=>{
     res.cookie('userinfo',JSON.stringify(cookieobj),{
       signed:true,
       maxAge:settings.cookie_life,
+      httpOnly:true,
     });
     var signed_cookie = res.get('set-cookie');
 
@@ -64,34 +65,6 @@ api.post('/user/login',(req,res,next)=>{
     next();
   })
   .catch(next);
-
-  // apifunc.verify_user(loginobj,(err,back)=>{
-  //   if(err){return next(err);}
-  //   if(!back){return next('unmatch');}
-  //
-  //   //if user exists
-  //   var cookieobj = {
-  //     username:back.username,
-  //     uid:back._key,
-  //     lastlogin:Date.now(),
-  //   }
-  //
-  //   //put a signed cookie in header
-  //   res.cookie('userinfo',JSON.stringify(cookieobj),{
-  //     signed:true,
-  //     maxAge:settings.cookie_life,
-  //   });
-  //   var signed_cookie = res.get('set-cookie');
-  //
-  //
-  //
-  //   //put the signed cookie in response, also
-  //   res.obj = {'cookie':signed_cookie,'instructions':
-  //   'please put this cookie in request header for api access'};
-  //
-  //
-  //   next();
-  // });
 });
 
 var regex_validation = require('nkc_regex_validation');
