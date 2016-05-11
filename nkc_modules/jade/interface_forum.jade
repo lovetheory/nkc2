@@ -16,62 +16,60 @@ block content
 
       .col-sm-9.col-md-10
         //split 10/12 for post area
+        .row
+          .col-md-12
+            //img(src='http://bbs.kechuang.org/themes/site/dingzhi/images/logo.png')
+            h1 #{data.forum.display_name}
+        .row
+          .col-xs-8
+            p.
+              #{data.forum.description}
+            a.btn.btn-default(href='/interface/editor?target=#{data.replytarget}') 发帖
+          .col-xs-4
+            p.
+              今日：#{data.forum.posts_today} 主题：#{data.forum.threads_total} 总帖：#{data.forum.posts_total}
+            text 版主：
+            for i,index in data.forum.owners
+              a.d-inline(href='#') #{index?', ':''}#{i.username}
+            
+        .row
+          .col-md-12
+            nav
+              ul.pagination.marginless
+                each val,index in [1,2,3,4,5,6,'>>']
+                  if index==0
+                    li.active
+                      a(href='#')=val
+                  else
+                    li
+                      a(href='#')=val
+              ul.pagination.marginless
+                each val,index in ['所有','精华']
+                  if index==0
+                    li.active
+                      a(href='#')=val
+                  else
+                    li
+                      a(href='#')=val
           
-        .panel.panel-default
-          .panel-body(style='padding-bottom:0px;')
-            .row
-              .col-md-12
-                //img(src='http://bbs.kechuang.org/themes/site/dingzhi/images/logo.png')
-                h1 #{data.forum.display_name}
-            .row
-              .col-xs-8
-                p.
-                  #{data.forum.description}
-                a.btn.btn-default(href='/interface/editor?target=#{data.replytarget}') 发帖
-              .col-xs-4
-                p.
-                  今日：#{data.forum.posts_today} 主题：#{data.forum.threads_total} 总帖：#{data.forum.posts_total}
-                text 版主：
-                for i,index in data.forum.owners
-                  a.d-inline(href='#') #{index?', ':''}#{i.username}
+              ul.pagination.marginless
+                each val,index in ['回复序','发布序']
+                  if index==0
+                    li.active
+                      a(href='#')=val
+                  else
+                    li
+                      a(href='#')=val
                 
-            .row
-              .col-md-12
-                nav
-                  ul.pagination.marginless
-                    each val,index in [1,2,3,4,5,6,'>>']
-                      if index==0
-                        li.active
-                          a(href='#')=val
-                      else
-                        li
-                          a(href='#')=val
-                  ul.pagination.marginless
-                    each val,index in ['所有','精华']
-                      if index==0
-                        li.active
-                          a(href='#')=val
-                      else
-                        li
-                          a(href='#')=val
-              
-                  ul.pagination.marginless
-                    each val,index in ['回复序','发布序']
-                      if index==0
-                        li.active
-                          a(href='#')=val
-                      else
-                        li
-                          a(href='#')=val
-                
-                  
-          ul.list-group
-            each thread,index in data.threads
-              include interface_forum_singlethread.jade
+               
+        .ForumThreadList
+          each thread,index in data.threads
+            include interface_forum_singlethread.jade
 
                         
-          .panel-body
-            a.btn.btn-default(href='/interface/editor?target=#{data.replytarget}') 发帖                 
+          
+          a.btn.btn-default(href='/interface/editor?target=#{data.replytarget}') 发帖
+          
       .col-sm-3.col-md-2
         include interface_forums_list.jade
               

@@ -75,13 +75,22 @@ h4,h5,h6 {
   font-family: "Helvetica Neue",Helvetica,Arial,"Microsoft YaHei","微软雅黑",sans-serif;
 }
 
-.threaditem {
-  padding: 5px;
+.ForumThreadList{
+
+}
+.ForumThreadItem {
+  padding: 1px;
+  padding-left: 0px;
+}
+.ForumThreadItemAvatar {
+  vertical-align: middle;
+  display: table-cell;
+}
+.ForumThreadItemContent {
+  vertical-align: middle;
+  width: 100%;
   padding-left: 15px;
-  //border-style: dashed;
-  border-width: 0;
-  border-top-width: 1px;
-  border-color: rgba(0, 0, 0, 0.1);
+  display: table-cell;
 }
 
 .post-body img {

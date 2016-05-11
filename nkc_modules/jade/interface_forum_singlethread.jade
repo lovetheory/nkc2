@@ -1,12 +1,12 @@
 - var url = '/thread/' + thread._key
 - var avatar = '/avatar/' + thread.oc.uid
 
-div.threaditem
-  .media
-    .media-left.media-middle
+div.ForumThreadItem
+  div
+    .ForumThreadItemAvatar
       a(href='#{url}')
         img.media-object.avatar(src='#{avatar}' style='width:45px;height:45px;')
-    .media-body.media-middle(style='padding-left:10px;')
+    .ForumThreadItemContent
       .row
         .col-xs-6.col-md-8
         
