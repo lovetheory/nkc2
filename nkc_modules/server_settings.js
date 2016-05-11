@@ -9,7 +9,7 @@ settings.server={
   copyright:'(c)2016 Guangdong Aililun(LoveTheory) Technology Co Ltd',
   port:1086,
   https_port:10443,
-  github:'https://github.com/ctmakro/nkc2',
+  github:'https://github.com/lovetheory/nkc2',
 
   use_https:false,
   //use_https:true,
