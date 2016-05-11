@@ -56,10 +56,11 @@ function testPermission(params){
     return Promise.resolve(params)
     .then(table[operation].testPermission)
     .catch(err=>{
-      throw 'permission test failed'
+      report('permission test failed')
+      throw err
     })
   }
-  return Promise.resolve()
+  return
 }
 
 function executeOperation(params)
@@ -75,17 +76,11 @@ function executeOperation(params)
 //returns:
 //  Promise
 function APIroutine(context){
-  /*sample input*/
-  var samplebody = {
-    operation:'removePost',
-    pid:'12',
-  }
-  /*sample input ends*/
 
   if(!context.body) throw 'submit with body, please'
   var params = context.body; //parameter object
   report(params);
-  verifySubmittedParams(params); //check whether required parameters presents
+  verifySubmittedParams(params); //check whether all required parameters presents
 
   params.user = context.user
 
@@ -97,7 +92,7 @@ function APIroutine(context){
     //passed all test
     return executeOperation(params)
   })
-  .then((result)=>{
+  .then(result=>{
     report('operation '+params.operation+' successfully executed')
     return result
   })

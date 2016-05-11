@@ -299,19 +299,25 @@ queryfunc.update_all_threads = ()=>{
 
     let oc =(
       FOR p IN posts
-      FILTER p.tid == t._key //all post of that thread
+      FILTER p.tid == @tid //all post of that thread
       sort p.toc asc //sort by creation time, ascending
       limit 0,1 //get first
       return p
     )
     let lm = (
       FOR p IN posts
-      FILTER p.tid == t._key //all post of that thread
+      FILTER p.tid == @tid //all post of that thread
       sort p.toc desc //sort by creation time, descending
       limit 0,1 //get first
       return p
     )
-    UPDATE t WITH {lm:lm[0],oc:oc[0]} IN threads
+    let count = (
+      for p in posts
+      filter p.tid == @tid
+      COLLECT WITH COUNT INTO k
+      return k
+    )
+    UPDATE t WITH {lm:lm[0],oc:oc[0],count:count[0]} IN threads
     `
     ,
     params:{
