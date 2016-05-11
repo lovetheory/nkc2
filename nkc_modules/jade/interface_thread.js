@@ -9,5 +9,5 @@ function cartThread(tid){
   .then(()=>{
     alert('success '+tid)
   })
-  .catch(alert)
+  .catch(jalert)
 }

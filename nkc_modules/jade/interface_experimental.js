@@ -241,7 +241,7 @@ function moveSelectedThread(fid){
 
 var loggerlist = []
 function logme(tolog){
-  loggerlist.push(tolog.toString());
+  loggerlist.push(JSON.stringify(tolog));
   loggerlist = loggerlist.slice(-20,20);
 
   var logtext = ''

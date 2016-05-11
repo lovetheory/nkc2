@@ -172,3 +172,9 @@ table.postTo = {
 
   }
 }
+
+table.updateAllThreads = {
+  operation:function(params){
+    return queryfunc.update_all_threads()
+  }
+}

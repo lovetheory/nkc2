@@ -78,13 +78,11 @@ table.addPostToCart={
 
 table.listCart={
   operation:function(params){
-    var uid=params.user._key
+    var cart = params.user.cart?params.user.cart:[]
     return AQL(
       `
-      for u in users filter u._key == @uid
-
       let threads=(
-        for i in u.cart
+        for i in @cart
         filter i.itemtype == 'thread'
         for t in threads
         filter t._key == i.id
@@ -92,7 +90,7 @@ table.listCart={
       )
 
       let posts=(
-        for i in u.cart
+        for i in @cart
         filter i.itemtype == 'post'
         for t in posts
         filter t._key == i.id
@@ -102,7 +100,7 @@ table.listCart={
       return UNION(threads,posts)
       `
       ,{
-        uid:uid,
+        cart,
       }
     )
     .then(res=>{
@@ -115,13 +113,5 @@ table.clearCart={
   operation:function(params){
     var uid = params.user._key
     return queryfunc.doc_update(uid,'users',{cart:[]})
-    return AQL(`
-      for u in users
-      filter u._key == @uid
-      update u with { cart:[] } in users
-      `,{
-        uid:uid,
-      }
-    )
   }
 }

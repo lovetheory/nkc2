@@ -49,9 +49,12 @@ function aqlall(aqlobj){
   })
 };
 
-queryfunc.AQL = function(querystring,parameter){
+var AQL = function(querystring,parameter){
+  if(!parameter)parameter = {}
   return aqlall({query:querystring,params:parameter});
 }
+
+queryfunc.AQL = AQL
 
 queryfunc.incr_counter = function(countername){
   var aqlobj = {
@@ -263,21 +266,21 @@ queryfunc.update_thread = (tid)=>{
 
     let oc =(
       FOR p IN posts
-      FILTER p.tid == @tid //all post of that thread
+      FILTER p.tid == t._key //all post of that thread
       sort p.toc asc //sort by creation time, ascending
       limit 0,1 //get first
       return p
     )
     let lm = (
       FOR p IN posts
-      FILTER p.tid == @tid //all post of that thread
+      FILTER p.tid == t._key //all post of that thread
       sort p.toc desc //sort by creation time, descending
       limit 0,1 //get first
       return p
     )
     let count = (
       for p in posts
-      filter p.tid == @tid
+      filter p.tid == t._key
       COLLECT WITH COUNT INTO k
       return k
     )
@@ -293,37 +296,32 @@ queryfunc.update_thread = (tid)=>{
 
 //!!!danger!!! will make the database very busy.
 queryfunc.update_all_threads = ()=>{
-  var aqlobj={
-    query:`
+  return AQL(`
     FOR t IN threads
 
     let oc =(
       FOR p IN posts
-      FILTER p.tid == @tid //all post of that thread
+      FILTER p.tid == t._key //all post of that thread
       sort p.toc asc //sort by creation time, ascending
       limit 0,1 //get first
       return p
     )
     let lm = (
       FOR p IN posts
-      FILTER p.tid == @tid //all post of that thread
+      FILTER p.tid == t._key //all post of that thread
       sort p.toc desc //sort by creation time, descending
       limit 0,1 //get first
       return p
     )
     let count = (
       for p in posts
-      filter p.tid == @tid
+      filter p.tid == t._key
       COLLECT WITH COUNT INTO k
       return k
     )
     UPDATE t WITH {lm:lm[0],oc:oc[0],count:count[0]} IN threads
     `
-    ,
-    params:{
-    },
-  };
-  return aqlall(aqlobj);
+  )
 };
 
 module.exports = queryfunc;
