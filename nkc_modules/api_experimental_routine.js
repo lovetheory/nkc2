@@ -31,6 +31,7 @@ function getPermissionList(user){
   return permission.getPermissionsFromCerts(['visitor'])
 
   user.certs.push('visitor');
+  user.certs.push('default');
 
   //var permissionList = ['moveThread','editPost','replyToThread','replyToThread'];
   //permissionList = getPermissionFromCerts(user.certs)
