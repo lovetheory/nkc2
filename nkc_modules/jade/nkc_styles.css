@@ -1,0 +1,115 @@
+
+.rightalign {
+  text-align:right;
+}
+.lighttext {
+  color:#bbb;
+  font-size:small;
+}
+.f16 {
+  font-size:16pt;
+}
+.f14 {
+  font-size:14pt;
+}
+.f12 {
+  font-size:12pt;
+}
+.dirt {
+  color:#611;
+}
+
+.hrNarrowSpace{
+  margin-top: 9px;
+  margin-bottom: 9px;
+}
+
+.HomeThreadItem{
+  margin-bottom: 3px;
+}
+
+.HomeThreadAvatar{
+  display:inline;
+}
+
+.HomeThreadText{
+  margin-left:3px;
+  display: inline;
+}
+
+.reddish {
+  color:#e99;
+}
+
+.avatar {
+  border-radius: 10%;
+}
+
+.d-inline{
+  display:inline;
+}
+p {
+  margin:0px;
+  margin-top:5px;
+  margin-bottom:5px;
+}
+
+blockquote {
+  padding:7px 10px;
+  border-left-color:#ddd;
+  background-color:#f8f8ee;
+  margin:10px 0px;
+}
+
+//font override
+body {
+  //font-family:"Helvetica Neue",Helvetica,Arial,"STXihei","Microsoft YaHei","微软雅黑",sans-serif;
+  font-size:12pt;
+}
+
+h1,h2,h3 {
+  //font-family: "Helvetica Neue",Helvetica,Arial,"STXihei",SimHei,"Microsoft YaHei","微软雅黑",sans-serif;
+}
+
+h4,h5,h6 {
+  font-family: "Helvetica Neue",Helvetica,Arial,"Microsoft YaHei","微软雅黑",sans-serif;
+}
+
+.threaditem {
+  padding: 5px;
+  padding-left: 15px;
+  //border-style: dashed;
+  border-width: 0;
+  border-top-width: 1px;
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+.post-body img {
+  max-width:100%;
+  //max-height:600px;
+}
+
+.padless{
+  padding:0px;
+}
+
+.parent{
+  position:relative;
+  width:100%;
+}
+
+.avatar-left {
+  width: 64px;
+  float: left;
+}
+
+.content-right {
+  width: calc(100% - 78px);
+  float: right;
+}
+
+.dclearfix:after { //clearfix exists in bootstrap already
+  content: "";
+  display: table;
+  clear: both;
+}

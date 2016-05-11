@@ -9,8 +9,13 @@ div.threaditem
     .media-body.media-middle(style='padding-left:10px;')
       .row
         .col-xs-6.col-md-8
+        
           a.f12(href="#{url}") #{thread.oc.t} 
           //帖子标题链接
+          
+          if thread.count>1
+            span.lighttext #{thread.count-1} 回复
+          //楼数
           
           p.lighttext.
             #{dateString(thread.oc.toc)} #{thread.oc.username}
