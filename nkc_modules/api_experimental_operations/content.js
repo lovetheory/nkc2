@@ -46,10 +46,12 @@ var postToThread = function(post,tid,user){
   })
   .then(saveResult=>{
     //update thread object to make sync
-    queryfunc.update_thread(tid);
-    saveResult.tid = tid;
-    saveResult.redirect = 'thread/' + tid.toString()
-    return saveResult;
+    return queryfunc.update_thread(tid)
+    .then(r=>{
+      saveResult.tid = tid;
+      saveResult.redirect = 'thread/' + tid.toString()
+      return saveResult;
+    })
     //okay to respond the user
   })
 };
