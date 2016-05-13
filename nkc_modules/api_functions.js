@@ -343,12 +343,15 @@ apifunc.get_user_by_name = (username,callback)=>{
   callback);
 };
 
-apifunc.get_user = (uid,callback)=>{
+apifunc.get_user = (uid)=>{
   return queryfunc.doc_load(uid,'users')
   .then(doc=>{
     //desensitize
-    doc.password == null;
-    doc.password2 == null;
+
+    doc.password = undefined;
+    doc.password2 = undefined;
+    doc.hashtype = undefined;
+
     return doc;
   })
 };
