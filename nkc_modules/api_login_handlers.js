@@ -22,18 +22,6 @@ api.use(function(req,res,next){
   next();
 });
 
-if(development){
-  //GET /user
-  api.get('/user/get/:uid',(req,res,next)=>{
-    apifunc.getuser(req.params.uid)
-    .then(back=>{
-      res.obj = back;
-      next()
-    })
-    .catch(next);
-  });
-}
-
 //POST /user/login
 //test if user exists. if exist generate cookie.
 api.post('/user/login',(req,res,next)=>{

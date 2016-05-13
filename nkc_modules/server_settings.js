@@ -78,7 +78,7 @@ settings.urlrewrite = [ //happens before serve_static
   // {map:'/nkc/*',to:'/$1'}, //记得删掉
   // {map:'/nkc',to:'/api'},//到时要删掉。
 
-  {map:'/',to:'/interface/home'},
+  {map:'/',to:'/home'},
   {map:'/index',to:'/'},
 
   {map:'/logout*',to:'/interface/logout$1'},
@@ -87,6 +87,10 @@ settings.urlrewrite = [ //happens before serve_static
 
   {map:/^\/exam\?{0,1}(.*)/,to:'/api/experimental?&operation=viewExam&$1'},
   {map:/^\/register\?{0,1}(.*)/,to:'/api/experimental?&operation=viewRegister&$1'},
+  {map:/^\/home\?{0,1}(.*)/,to:'/api/experimental?&operation=viewHome&$1'},
+
+  {map:/^\/forum\/([^\?]*)\?{0,1}(.*)/,to:'/api/experimental?&operation=viewForum&fid=$1&$2'},
+
 
   {map:'/thread/:tid',to:'/interface/thread/:tid'},
   {map:'/read/:tid',to:'/interface/thread/:tid'},

@@ -84,11 +84,34 @@ table.viewHome = {
   }
 }
 
-table.viewThread = {
+table.viewForum = {
   operation:params=>{
+    var data = defaultData(params)
+    data.template = jadeDir+ 'interface_forum.jade'
 
+    return apifunc.get_threads_from_forum_as_forum({
+      fid:params.fid,
+      start:0,
+      count:100,
+    })
+    .then((result)=>{
+      //if nothing went wrong
+      Object.assign(data,result)
+      //return apifunc.get_all_forums()
+      return AQL
+      (
+        `for f in forums
+        return f
+        `
+      )
+    })
+    .then(forums=>{
+      data.forums = forums
+      data.replytarget = 'forum/' + params.fid;
+      return data
+    })
   },
   requiredParams:{
-    tid:String,
+    fid:String,
   }
 }

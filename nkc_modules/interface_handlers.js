@@ -54,46 +54,6 @@ iface.use(function(req,res,next){
   }
 });
 
-//render front page
-iface.get('/home',function(req,res,next)
-{
-  async.each(res.data.forums,function(forum,cb){
-    apifunc.get_threads_from_forum_as_forum({
-      fid:forum._key,
-      start:0,
-      count:6,
-      no_forum_inclusion:true, //do not include again..
-    })
-    .then(function(back){
-      forum.threads = back.threads;
-    })
-    .then(cb)
-    .catch(cb)
-  },function(err){
-    if(err)return next(err);
-
-    res.template='nkc_modules/jade/interface_home.jade';
-    return next();
-  })
-})
-
-//render forumview
-iface.get('/forum/:fid',function(req,res,next){
-  apifunc.get_threads_from_forum_as_forum({
-    fid:req.params.fid,
-    start:req.query.start,
-    count:req.query.count,
-  })
-  .then((data)=>{
-    //if nothing went wrong
-    Object.assign(res.data,data);
-
-    res.data.replytarget = 'forum/' + req.params.fid;
-    res.template = 'nkc_modules/jade/interface_forum.jade';
-  })
-  .then(next)
-  .catch(next)
-});
 
 //render threadview
 ///----------------------------------------

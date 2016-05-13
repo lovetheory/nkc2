@@ -8,8 +8,7 @@ block content
     .row
       each f,index in data.forums
         .col-md-3.col-xs-6.col-sm-4
-          //.panel.panel-default
-            //.panel-body
+
           a.f16(href='/forum/#{f._key}') #{f.display_name}
           span.lighttext &nbsp;#{f.posts_today?f.posts_today:""}
           hr.hrNarrowSpace

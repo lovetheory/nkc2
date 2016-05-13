@@ -356,7 +356,7 @@ apifunc.get_user = (uid)=>{
   })
 };
 
-function user_exist_by_name(username,callback){
+function user_exist_by_name(username){
   return apifunc.get_user_by_name(username)
   .then(back=>{
     if(back.length==0){
