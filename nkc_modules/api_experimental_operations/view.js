@@ -10,18 +10,22 @@ var validation = require('validation')
 var AQL = queryfunc.AQL
 var apifunc = require('api_functions')
 
+var jadeDir = __projectroot + 'nkc_modules/jade/'
+
 var table = {};
 module.exports = table;
 
-function defaultData(){ //default data obj for views
+function defaultData(params){ //default data obj for views
+  var user = params?params.user:null
   return {
     site:settings.site,
+    user,
   }
 }
 
 table.viewExam = {
   operation:function(params){
-    var data = defaultData()
+    var data = defaultData(params)
 
     data.template = 'nkc_modules/jade/interface_exam.jade' //will render if property 'template' exists
 
@@ -47,11 +51,44 @@ table.viewExam = {
 
 table.viewRegister = {
   operation:function(params){
-    var data = defaultData()
+    var data = defaultData(params)
 
     data.code = params.code
     data.template = 'nkc_modules/jade/interface_user_register.jade'
 
     return data
+  }
+}
+
+table.viewHome = {
+  operation:params=>{
+    var data = defaultData(params)
+    data.template = jadeDir+ 'interface_home.jade'
+
+    return AQL(`
+      for f in forums
+      let threads = (
+        for t in threads
+        filter t.fid == f._key
+        sort t.tlm desc
+        limit 0,6
+        return t
+      )
+      return MERGE(f,{threads})
+      `
+    )
+    .then(forums=>{
+      data.forums = forums;
+      return data;
+    })
+  }
+}
+
+table.viewThread = {
+  operation:params=>{
+
+  },
+  requiredParams:{
+    tid:String,
   }
 }
