@@ -1,4 +1,7 @@
 # nkc2
+
+![bannerlogo](/resources/kclogo_umaru1_nc.png)
+
 nkc community project, version 2.
 currently under dev.
 
