@@ -11,9 +11,9 @@ function nkc_validate_fields(input){
   for(i in nkc_validate_rules){
     if(input[i]!==undefined&&input[i]!==null) //if field exists
     if(nkc_validate_rules[i].test(input[i])==false)
-    return i.toString();
+    throw i.toString() +' not in correct format';
   }
-  return false;
+  return true;
 }
 
 

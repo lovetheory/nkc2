@@ -5,6 +5,7 @@ style.
 
 //nav.navbar.navbar-default
 div
+  - var navbar = data.navbar || {}
   .container-fluid
     .row(style='background-color:#f3f3f3;margin-bottom: 10px; padding-bottom: 3px;border-bottom-color: rgb(221, 221, 221); border-bottom-width: 1px; border-bottom-style: solid;')
       .col-xs-12.col-sm-2
@@ -14,13 +15,13 @@ div
       
       .col-xs-12.col-sm-4
         ul.pagination(style='margin-top:8px; margin-bottom:0px')
-          li(class="#{data.navbar.highlight=='tools'?'active':''}")
+          li(class="#{navbar.highlight=='tools'?'active':''}")
             a 工具
-          li(class="#{data.navbar.highlight=='tutorial'?'active':''}")
+          li(class="#{navbar.highlight=='tutorial'?'active':''}")
             a 教学
-          li(class="#{data.navbar.highlight=='editor'?'active':''}")
+          li(class="#{navbar.highlight=='editor'?'active':''}")
             a(href='/e') 发帖
-          li(class="#{data.navbar.highlight=='uploader'?'active':''}")
+          li(class="#{navbar.highlight=='uploader'?'active':''}")
             a(href='/interface/uploader') 上传
       
       .col-xs-8.col-sm-4

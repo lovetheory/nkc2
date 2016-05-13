@@ -70,18 +70,6 @@ api.delete('/questions/:qid',function(req,res,next){
   .catch(next)
 });
 
-api.get('/exam',function(req,res,next){
-  if(req.user)return next('logout first, yo')
-
-  apifunc.exam_gen({iptrim:req.iptrim})
-  .then(back=>{
-    res.obj = {exam:back};
-    next();
-  })
-  .catch(next)
-
-});
-
 api.post('/exam',function(req,res,next){
   if(req.user)return next('not logged out.')
 

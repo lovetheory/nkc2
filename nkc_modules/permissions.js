@@ -31,10 +31,16 @@ var certificates={
     move:true,
   },
 
-  visitor:{ //by default given to everybody
+  visitor:{ //by default given to everyone
     viewThread:true,
     viewForum:true,
     viewHome:true,
+
+    viewExam:true,
+    submitExam:true,
+
+    viewRegister:true,
+    userRegister:true,
   }
 };
 

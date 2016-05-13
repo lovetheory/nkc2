@@ -12,20 +12,17 @@ function submit(){
   var exam = JSON.parse(decodeURI(ga('exam','exam-object')));
 
   var examobj={
-    exam:exam,
-    sheet:sheet,
+    exam,
+    sheet,
   }
 
   console.log(examobj);
-  post_api('exam',examobj,function(err,back){
-    if(err){
-      //alert(err);
-      window.location = '/interface/exam?result=fail&detail='+ (err);
-      return;
-    }
-    back = JSON.parse(back);
-    //alert(back.token)
-    window.location = '/interface/exam?result='+back.token;
+  return nkcAPI('submitExam',examobj)
+  .then(result=>{
+    window.location = '/exam?result=' + result.token
+  })
+  .catch(err=>{
+    window.location = '/exam?result=fail&detail=' + encodeURI(JSON.stringify(err))
   })
 }
 

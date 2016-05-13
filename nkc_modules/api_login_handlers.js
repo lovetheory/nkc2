@@ -67,48 +67,6 @@ api.post('/user/login',(req,res,next)=>{
   .catch(next);
 });
 
-var regex_validation = require('nkc_regex_validation');
-//POST /user
-api.post('/user',(req,res,next)=>{
-  var userobj = req.body;
-  var violating = regex_validation.validate(userobj);
-  if(violating)return next(violating);
-
-  if(userobj.password!==userobj.password2)return next('password does not match');
-  if(!userobj.email)return next('emailess')
-  if(!userobj.username)return next('nameless')
-
-  if(!userobj.regcode)return next('regcodeless')
-
-  queryfunc.doc_load(userobj.regcode,'answersheets')
-  .catch(err=>{
-    throw ('failed reconizing regcode')
-  })
-  .then(ans=>{
-    if(Date.now() - ans.tsm>settings.exam.time_before_register)
-    throw ('expired, consider re-take the exam.')
-
-    return apifunc.create_user(userobj)
-  })
-  .then(back=>{
-    res.obj = back;
-    next();
-  })
-  .catch(next);
-
-  // queryfunc.doc_load(userobj.regcode,'answersheets',function(err,ans){
-  //   if(err)return next('failed reconizing regcode')
-  //   if(Date.now() - ans.tsm>settings.exam.time_before_register)return next('expired, consider re-take the exam.')
-  //
-  //   apifunc.create_user(userobj,(err,back)=>{
-  //     if(err)return next(err);
-  //     res.obj = back;
-  //     next();
-  //   });
-  //
-  // })
-});
-
 //logout of USER
 //GET /user/logout
 api.get('/user/logout',(req,res,next)=>{

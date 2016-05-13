@@ -8,6 +8,8 @@ var settings = require('server_settings.js');
 var helper_mod = require('helper.js')();
 var bodyparser = require('body-parser');
 
+var jaderender = require('jaderender');
+
 var express = require('express');
 var api = express.Router();
 
@@ -23,7 +25,7 @@ api.use(require('api_resources_handlers'));
 api.use(bodyparser.json());
 
 api.use(function(req,res,next){
-  if(!req.body&&req.method=='POST')throw ('bodyless POST request');
+  //if(!req.body&&req.method=='POST')throw ('bodyless POST request');
   next();
 });
 
@@ -41,12 +43,20 @@ api.use(require('api_experimental_handlers'));
 
 //send apidata back to client
 api.use((req,res,next)=>{
-  if(res.obj)
+  var obj = res.obj
+  if(obj)
   {
-    try{res.json(report(res.obj));}
-    catch(e){return next(e);}
-    return; //return without continue
+    if(!obj.template){
+      return res.json(report(obj));
+      //return without continue
+    }
+    else{
+      //if template specified
+      var k = jaderender(obj.template,obj)
+      return res.send(k);
+    }
   }
+
   return next();
 });
 

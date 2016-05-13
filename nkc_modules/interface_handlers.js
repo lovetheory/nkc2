@@ -147,12 +147,6 @@ iface.get('/login',(req,res,next)=>{
   next();
 });
 
-//get register form
-iface.get('/register',(req,res,next)=>{
-  res.template = 'nkc_modules/jade/interface_user_register.jade';
-  next();
-});
-
 iface.get('/logout',(req,res,next)=>{
   res.template = 'nkc_modules/jade/interface_user_logout.jade';
 
@@ -204,25 +198,6 @@ iface.get('/questions',(req,res,next)=>{
   }
 });
 
-iface.get('/exam',function(req,res,next){
-  if(req.user) throw ('logout first, yo')
-
-  res.template = 'nkc_modules/jade/interface_exam.jade';
-
-  if(req.query.result){
-    res.data.result = req.query.result
-
-    return next();
-  }
-
-  apifunc.exam_gen({ip:req.ip})
-  .then(function(back){
-    res.data.exam = back;
-  })
-  .then(next)
-  .catch(next)
-});
-
 iface.get('/experimental',function(req,res,next){
   res.template = 'nkc_modules/jade/interface_experimental.jade'
   next()
@@ -232,10 +207,7 @@ iface.get('/experimental',function(req,res,next){
 iface.use((req,res,next)=>{
   if(res.template)
   {
-    try {var k = jaderender(res.template,res.data)}
-    catch(err){
-      throw (err);
-    }
+    var k = jaderender(res.template,res.data)
     return res.send(k);
     //ends here, no more hassle
   }

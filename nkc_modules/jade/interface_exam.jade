@@ -14,7 +14,7 @@ block content
             //if success
             .f12
               text 恭喜你通过考试。你的注册码是: 
-              a(href='/interface/register?code=#{data.query.result}') #{data.query.result}
+              a(href='/register?code=#{data.result}') #{data.result}
               text &nbsp←点击跳转到注册页面。
           else
             //if failed
@@ -29,7 +29,7 @@ block content
                 ----
                 来自服务器的反馈：
                 ```
-                #{data.query.detail}
+                #{data.detail}
                 ```
               
       if data.exam

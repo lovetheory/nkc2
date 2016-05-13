@@ -18,7 +18,10 @@ api.use('/experimental', (req,res,next)=>{
 api.all('/experimental',function(req,res,next){
   APIroutine({
     user:req.user,
-    body:req.body
+    body:req.body,
+
+    _req:req, //Use of these two are not encouraged. For special purpose APIs only.
+    _res:res,
   })
   .then((result)=>{
     res.obj = result;

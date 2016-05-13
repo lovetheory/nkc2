@@ -83,6 +83,8 @@ function APIroutine(context){
   verifySubmittedParams(params); //check whether all required parameters presents
 
   params.user = context.user
+  params._req = context._req
+  params._res = context._res
 
   return Promise.resolve()
   .then(()=>{
@@ -90,7 +92,12 @@ function APIroutine(context){
   })
   .then(()=>{
     //passed all test
-    return executeOperation(params)
+    var r =  executeOperation(params)
+    if(r){
+      return r;
+    }else{
+      return {};
+    }
   })
   .then(result=>{
     report('operation '+params.operation+' successfully executed')

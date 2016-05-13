@@ -20,7 +20,7 @@ var externalTables = [];
 require("fs").readdirSync(normalizedPath).forEach(function(file) {
   if(file.toString().split('.').pop().toLowerCase()=='js'){
     externalTables.push(require("./api_experimental_operations/" + file));
-    report(file.toString()+' loaded')
+    report('loaded from ' + file.toString())
   }
 });
 
