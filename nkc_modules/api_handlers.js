@@ -77,6 +77,11 @@ api.use((err,req,res,next)=>{
     });
   }
 
+  if(res.obj){
+    if(res.obj.template){
+      throw err
+    }
+  }
   res.status(500).json(report('error within /api',err));
 });
 
