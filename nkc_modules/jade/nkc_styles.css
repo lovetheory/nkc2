@@ -93,6 +93,25 @@ h4,h5,h6 {
   padding-left: 15px;
   display: table-cell;
 }
+.ThreadBox{
+
+}
+.ThreadTitle {
+  display: inline-block;
+  margin-bottom: 0;
+}
+.ThreadTitleAuxillary{
+  margin-left: 10px;
+  vertical-align:text-bottom;
+}
+.ThreadTitleHr {
+  margin-top: 10px;
+  margin-bottom: 13px;
+}
+.ThreadSinglePostHr {
+  margin-top: 10px;
+  margin-bottom: 12px;
+}
 
 .post-body img {
   max-width:100%;
