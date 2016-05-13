@@ -25,7 +25,9 @@ block content
               each post,index in data.posts
                 include interface_thread_singlepost.jade
                 
-              hr
+                //horizontal line
+                hr.ThreadSinglePostHr
+              
               a.btn.btn-default(href='/interface/editor?target=#{data.replytarget}') 回帖
                 
       .col-sm-3.col-md-2
