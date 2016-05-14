@@ -56,4 +56,12 @@ permissions.getPermissionsFromCerts = (certsArray)=>{
   return permissionsOfCerts
 };
 
+permissions.listAllCertificates = ()=>{
+  var all = []
+  for(i in certificates){
+    all.push(i)
+  }
+  return all;
+}
+
 module.exports = permissions;
