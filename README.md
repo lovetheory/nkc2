@@ -61,7 +61,7 @@ The author of these files shall not be held responsible for any terrorist attack
 We are currently refactoring. To help, read the following carefully.
 
 1. (If the API is for data modification/retrieval) Visit __localhost:8529__. Learn AQL basics from ArangoDB Official Documentation. Write AQL. Test to see if your query works.
-2. Implement the API function in JavaScript. Please refer to `nkc_modules/api_experimental_operations/example.js`.
+2. Implement the API function in JavaScript. Please refer to `nkc_modules/api_operations/example.js`.
 3. Make sure the current user has `'dev'` certificate (can call every API once implemented). To allow users with other certificates to call that API, Modify `permissions.js`.
 4. Reload Server.
 
@@ -78,7 +78,7 @@ We are currently refactoring. To help, read the following carefully.
 
 - In general
 
-  An HTTP request should be made with cookies (for User Authentication) to `/api/experimental`, with JSON body.
+  An HTTP request should be made with cookies (for User Authentication) to `/api/operation`, with JSON body.
   ````javascript
   {
     "operation":"nameOfOperation",
