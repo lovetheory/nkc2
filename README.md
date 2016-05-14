@@ -3,18 +3,27 @@
 ![bannerlogo](/resources/kclogo_umaru1_nc.png)
 
 nkc community project, version 2.
-currently under dev.
+Currently under dev.
+
+## Recruitment
+
+Join our company. We expect applicants:
+1. Have good understanding of Promise in JavaScript.
+2. Have no problem reading ArangoDB's documentation.
+3. Can read/ write/ speak Chinese fluently.
 
 ## License
-You are allowed to use these files for any purpose, as long as you admit that they are useful.
+You are allowed to use these files for any purpose, as long as you admit that they are useful[1].
 The author of these files shall not be held responsible for any terrorist attacks or global climate changes caused by the use of these files.
 
-## Stack
-- Framework: Express 4
-- Template Language: Jade (now called Pug)
-- Database: ArangoDB
-- Image Processing: ImageMagick
-- Frontend Framework: Raw JavaScript + React (Admin Panel), need `Promise` support in browser (Does not support IE before Polyfilling)
+1. Before we change our mind.
+
+## Reading list
+- Framework: **Express 4** (if you want to implement framework level features)
+- Template Language: **Jade** (now called Pug. Best template language, ever)
+- Database: **ArangoDB** (best of NoSQL)
+- Image Processing: **ImageMagick** (one and only)
+- Frontend Framework: Raw JavaScript + **React** (Admin Panel), need `Promise` support in browser (Does not support IE before Polyfilling)
 
 ## Security Updates
 
@@ -22,7 +31,31 @@ The author of these files shall not be held responsible for any terrorist attack
   remote execution capabilities to hackers.
   Make sure you are using the latest version of ImageMagick (7.0.1-3 as for now), otherwise please do upgrade immediately.
 
-## How to add an API
+## Recommended way to install dependencies
+- ImageMagick
+  - Windows
+
+    Official Site Download.
+  - OS X
+
+    `brew install ImageMagick`
+  - CentOS
+
+    check `scripts` directory.
+
+- ArangoDB
+  - Windows
+
+    Installer.
+  - OSX
+
+    Installer. run **ArangoDB-CLI.app** directly from **Applications**.
+  - CentOS
+
+    check `scripts` directory. Change the version number when necessary.
+
+
+## How to implement an API
 
 We are currently refactoring. To help, read the following carefully.
 
@@ -75,28 +108,6 @@ We are currently refactoring. To help, read the following carefully.
 2. Bash: `sh run_as_production.sh` Windows CMD: `run_as_production.sh`(or doubleclick)
 3. Report bugs when necessary.
 
-## Recommended way to install dependencies
-- ImageMagick
-  - Windows
-
-    Official Site Download.
-  - OS X
-
-    `brew install ImageMagick`
-  - CentOS
-
-    check `scripts` directory.
-
-- ArangoDB
-  - Windows
-
-    Installer.
-  - OSX
-
-    Installer. run **ArangoDB-CLI.app** directly from **Applications**.
-  - CentOS
-
-    check `scripts` directory. Change the version number when necessary.
 
 ## For your convenience
 - `scripts` directory contains various scripts to accelerate deployment
