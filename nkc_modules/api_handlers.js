@@ -35,9 +35,6 @@ api.use(require('api_content_handlers'))
 //
 api.use(require('api_question_handlers'))
 
-//login handlers
-api.use(require('api_login_handlers'));
-
 //new API
 api.use(require('api_experimental_handlers'));
 

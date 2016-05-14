@@ -81,13 +81,14 @@ settings.urlrewrite = [ //happens before serve_static
   {map:'/',to:'/home'},
   {map:'/index',to:'/'},
 
-  {map:'/logout*',to:'/interface/logout$1'},
   {map:'/me',to:'/interface/me'},
-  {map:'/login*',to:'/interface/login$1'},
 
   {map:/^\/exam\?{0,1}(.*)/,to:'/api/experimental?&operation=viewExam&$1'},
   {map:/^\/register\?{0,1}(.*)/,to:'/api/experimental?&operation=viewRegister&$1'},
   {map:/^\/home\?{0,1}(.*)/,to:'/api/experimental?&operation=viewHome&$1'},
+
+  {map:/^\/logout\?{0,1}(.*)/,to:'/api/experimental?&operation=viewLogout&$1'},
+  {map:/^\/login\?{0,1}(.*)/,to:'/api/experimental?&operation=viewLogin&$1'},
 
   {map:/^\/forum\/([^\?]*)\?{0,1}(.*)/,to:'/api/experimental?&operation=viewForum&fid=$1&$2'},
   {map:/^\/thread\/([^\?]*)\?{0,1}(.*)/,to:'/api/experimental?&operation=viewThread&tid=$1&$2'},

@@ -60,28 +60,6 @@ iface.get('/editor',(req,res,next)=>{
   next();
 });
 
-//get login
-iface.get('/login',(req,res,next)=>{
-  res.template = 'nkc_modules/jade/interface_user_login.jade';
-  next();
-});
-
-iface.get('/logout',(req,res,next)=>{
-  res.template = 'nkc_modules/jade/interface_user_logout.jade';
-
-  //put a signed cookie in header
-  res.cookie('userinfo',{info:'nkc_logged_out'},{
-    signed:true,
-    expires:(new Date(Date.now()-86400000)), //expire the cookie!
-    encode:String,
-  });
-
-  res.data.userinfo = null; //nullify the userinfo
-  res.data.user = null;
-
-  next();
-});
-
 iface.get('/me',(req,res,next)=>{
   if(!req.user)throw ('require login');
   res.template = 'nkc_modules/jade/interface_user_profile.jade';

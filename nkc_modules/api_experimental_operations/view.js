@@ -157,3 +157,32 @@ table.viewThread = {
     tid:String,
   }
 }
+
+table.viewLogout = {
+  operation:function(params){
+    var data=defaultData(params)
+    data.template = jadeDir+'interface_user_logout.jade'
+
+    data.user = undefined
+    params._res.cookie('userinfo',{info:'nkc_logged_out'},{
+      signed:true,
+      expires:(new Date(Date.now()-86400000)),
+    });
+
+    var signed_cookie = params._res.get('set-cookie');
+
+    //put the signed cookie in response, also
+    Object.assign(data, {'cookie':signed_cookie,'instructions':
+    'you have logged out. you may replace existing cookie with this one'})
+
+    return data;
+  },
+}
+
+table.viewLogin = {
+  operation:params=>{
+    var data = defaultData(params)
+    data.template = jadeDir+'interface_user_login.jade'
+    return data
+  }
+}

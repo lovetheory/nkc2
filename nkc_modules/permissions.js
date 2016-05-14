@@ -41,6 +41,11 @@ var certificates={
 
     viewRegister:true,
     userRegister:true,
+
+    userLogin:true,
+    userLogout:true,
+    viewLogout:true,
+    viewLogin:true,
   }
 };
 
