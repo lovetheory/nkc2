@@ -29,9 +29,6 @@ api.use(function(req,res,next){
   next();
 });
 
-//api_content_handler
-api.use(require('api_content_handlers'))
-
 //
 api.use(require('api_question_handlers'))
 
@@ -75,8 +72,8 @@ api.use((err,req,res,next)=>{
   }
 
   if(res.obj){
-    if(res.obj.template){
-      throw err
+    if(res.obj.template){ //if html output is chosen
+      throw err //let server.js error handler catch.
     }
   }
   res.status(500).json(report('error within /api',err));
