@@ -55,33 +55,4 @@ api.get('/post/:pid', function (req, res, next){
   .catch(next)
 });
 
-///----------------------------------------
-///GET /thread/* handler
-api.get('/thread/:tid', function (req, res, next){
-  apifunc.get_posts_from_thread_as_thread({
-    tid:req.params.tid,
-    start:req.query.start,
-    count:req.query.count,
-  })
-  .then(result=>{
-    res.obj = result;
-    next();
-  })
-  .catch(next)
-});
-
-//GET /forum/*
-api.get('/forum/:fid',(req,res,next)=>{
-  apifunc.get_threads_from_forum_as_forum({
-    fid:req.params.fid,
-    start:req.query.start,
-    count:req.query.count,
-  })
-  .then(data=>{
-    res.obj = data;
-    next();
-  })
-  .catch(next)
-});
-
 module.exports = api;
