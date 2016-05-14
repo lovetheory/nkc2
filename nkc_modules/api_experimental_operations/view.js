@@ -84,6 +84,15 @@ table.viewHome = {
   }
 }
 
+function get_all_forums(){
+  return AQL
+  (
+    `for f in forums
+    return f
+    `
+  )
+}
+
 table.viewForum = {
   operation:params=>{
     var data = defaultData(params)
@@ -98,12 +107,7 @@ table.viewForum = {
       //if nothing went wrong
       Object.assign(data,result)
       //return apifunc.get_all_forums()
-      return AQL
-      (
-        `for f in forums
-        return f
-        `
-      )
+      return get_all_forums()
     })
     .then(forums=>{
       data.forums = forums
@@ -113,5 +117,43 @@ table.viewForum = {
   },
   requiredParams:{
     fid:String,
+  }
+}
+
+table.viewThread = {
+  operation:params=>{
+    var data=defaultData(params)
+    data.template = jadeDir + 'interface_thread.jade'
+    var tid = params.tid
+
+    return AQL(
+      `
+      let thread = document(threads,@tid)
+      let forum = document(forums,thread.fid)
+      let posts = (
+        for p in posts
+        filter p.tid == thread._key
+        sort p.toc asc
+        limit 0,100
+        return p
+      )
+      return {thread,forum,posts}
+      `,
+      {
+        tid,
+      }
+    )
+    .then(result=>{
+      Object.assign(data,result[0]);
+      return get_all_forums()
+    })
+    .then(forums=>{
+      data.forums = forums
+      data.replytarget = 'thread/' + tid
+      return data
+    })
+  },
+  requiredParams:{
+    tid:String,
   }
 }

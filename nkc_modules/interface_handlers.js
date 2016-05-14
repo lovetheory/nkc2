@@ -35,47 +35,6 @@ iface.use(function(req,res,next){
   next();
 });
 
-iface.use(function(req,res,next){
-  if(req.url.indexOf('/forum/')==0||
-  req.url.indexOf('/thread/')==0||
-  req.url.indexOf('/home')==0||
-  true)
-  {
-    //if requesting for above paths
-    //apply forum list info
-    apifunc.get_all_forums()
-    .then(function(back){
-      res.data.forums = back;
-    })
-    .then(next)
-    .catch(next)
-  }else {
-    next();
-  }
-});
-
-
-//render threadview
-///----------------------------------------
-iface.get('/thread/:tid', function (req, res, next){
-  apifunc.get_posts_from_thread_as_thread({
-    tid:req.params.tid,
-    start:req.query.start,
-    count:req.query.count,
-  })
-  .then((data)=>{
-    //if nothing went wrong
-
-    res.data.replytarget = 'thread/' + req.params.tid;
-    Object.assign(res.data,data);
-    res.template = 'nkc_modules/jade/interface_thread.jade'
-
-  })
-  .then(next)
-  .catch(next)
-
-});
-
 //get editor
 ///--------------------
 iface.get('/editor',(req,res,next)=>{

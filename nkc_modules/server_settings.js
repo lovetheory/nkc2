@@ -90,11 +90,8 @@ settings.urlrewrite = [ //happens before serve_static
   {map:/^\/home\?{0,1}(.*)/,to:'/api/experimental?&operation=viewHome&$1'},
 
   {map:/^\/forum\/([^\?]*)\?{0,1}(.*)/,to:'/api/experimental?&operation=viewForum&fid=$1&$2'},
+  {map:/^\/thread\/([^\?]*)\?{0,1}(.*)/,to:'/api/experimental?&operation=viewThread&tid=$1&$2'},
 
-
-  {map:'/thread/:tid',to:'/interface/thread/:tid'},
-  {map:'/read/:tid',to:'/interface/thread/:tid'},
-  {map:'/forum/:fid',to:'/interface/forum/:fid'},
   {map:'/e*',to:'/interface/editor$1'},
 
   {map:'/r/:rid',to:'/api/resources/get/:rid'},
