@@ -46,7 +46,7 @@ var postToThread = function(post,tid,user){
   })
   .then(saveResult=>{
     //update thread object to make sync
-    return queryfunc.update_thread(tid)
+    return update_thread(tid)
     .then(r=>{
       saveResult.tid = tid;
       saveResult.redirect = '/thread/' + tid.toString()
@@ -85,8 +85,6 @@ var postToForum = function(post,fid,user){
     {
       _key:newtid.toString(),//key must be string.
       fid:fid.toString(),
-      toc:timestamp,
-      tlm:timestamp,
     };
 
     //save this new thread
@@ -128,7 +126,7 @@ var postToPost = function(post,pid,user){ //modification.
   })
   .then(result=>{
     //update thread as needed.
-    return queryfunc.update_thread(tid)
+    return update_thread(tid)
     .then(updateresult=>{
       result.tid = tid;
       result.redirect = '/thread/' + tid +'?post=' + result._key
@@ -196,6 +194,145 @@ table.getPost = {
 
 table.updateAllThreads = {
   operation:function(params){
-    return queryfunc.update_all_threads()
+    return update_all_threads()
   }
 }
+
+table.updateAllForums = {
+  operation:function(params){
+    return updateAllForums()
+  }
+}
+
+function updateForum(fid){
+  return AQL(`
+    let forum = document(forums,@fid)
+
+    let postcount = (
+      for t in threads
+      filter t.fid == forum._key
+      return t.count
+    )
+
+    let count_posts = sum(postcount)
+    let count_threads = length(postcount)
+
+    let count_posts_today = sum(
+      for t in threads
+      filter t.fid == forum._key && t.tlm > DATE_NOW()-86400*1000
+      return t.count_today
+    )
+
+    update forum with {count_posts,count_posts_today,count_threads} in forums
+    return NEW
+    `,
+    {
+      fid,
+    }
+  )
+  .then(result=>{return result[0]})
+}
+
+function updateAllForums(){
+  return AQL(`
+    for forum in forums
+
+    let postcount = (
+      for t in threads
+      filter t.fid == forum._key
+      return t.count
+    )
+
+    let count_posts = sum(postcount)
+    let count_threads = length(postcount)
+
+    let count_posts_today = sum(
+      for t in threads
+      filter t.fid == forum._key && t.tlm > DATE_NOW()-86400*1000
+      return t.count_today
+    )
+
+    update forum with {count_posts,count_posts_today,count_threads} in forums
+    `
+  )
+}
+
+
+//在对thread或者post作操作之后，更新thread的部分属性以确保其反应真实情况。
+update_thread = (tid)=>{
+  var aqlobj={
+    query:`
+    FOR t IN threads
+    FILTER t._key == @tid //specify a thread
+
+    let oc =(
+      FOR p IN posts
+      FILTER p.tid == t._key //all post of that thread
+      sort p.toc asc //sort by creation time, ascending
+      limit 0,1 //get first
+      return p
+    )[0]
+    let lm = (
+      FOR p IN posts
+      FILTER p.tid == t._key //all post of that thread
+      sort p.toc desc //sort by creation time, descending
+      limit 0,1 //get first
+      return p
+    )[0]
+    let count = (
+      for p in posts
+      filter p.tid == t._key
+      COLLECT WITH COUNT INTO k
+      return k
+    )[0]
+    let count_today = (
+      for p in posts
+      filter p.tid == t._key && p.toc > DATE_NOW()-86400*1000
+      COLLECT WITH COUNT INTO k
+      return k
+    )[0]
+    UPDATE t WITH {toc:oc.toc,tlm:lm.tlm,lm,oc,count,count_today} IN threads
+    `
+    ,
+    params:{
+      tid,
+    },
+  };
+  return aqlall(aqlobj);
+};
+
+//!!!danger!!! will make the database very busy.
+update_all_threads = ()=>{
+  return AQL(`
+    FOR t IN threads
+
+    let oc =(
+      FOR p IN posts
+      FILTER p.tid == t._key //all post of that thread
+      sort p.toc asc //sort by creation time, ascending
+      limit 0,1 //get first
+      return p
+    )[0]
+    let lm = (
+      FOR p IN posts
+      FILTER p.tid == t._key //all post of that thread
+      sort p.toc desc //sort by creation time, descending
+      limit 0,1 //get first
+      return p
+    )[0]
+    let count = (
+      for p in posts
+      filter p.tid == t._key
+      COLLECT WITH COUNT INTO k
+      return k
+    )[0]
+    let count_today = (
+      for p in posts
+      filter p.tid == t._key && p.toc > DATE_NOW()-86400*1000
+      COLLECT WITH COUNT INTO k
+      return k
+    )[0]
+    UPDATE t WITH {toc:oc.toc,tlm:lm.tlm,lm,oc,count,count_today} IN threads
+    `
+  )
+};
