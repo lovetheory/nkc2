@@ -57,7 +57,7 @@ if(use_https){
 }
 //-------------------------------
 
-nkc.use(require('serve-favicon')(__dirname+'/favicon.ico'));
+nkc.use(require('serve-favicon')(__dirname+'/resources/favicon.ico'));
 
 if(development)
 nkc.use((req,res,next)=>{
