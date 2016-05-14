@@ -20,7 +20,7 @@ The author of these files shall not be held responsible for any terrorist attack
 
 - 20160514: ImageMagick was found to contain security exploits that provides
   remote execution capabilities to hackers.
-  Make sure you are using the latest version of ImageMagick (7.0.1-3 recommended), otherwise please do upgrade immediately.
+  Make sure you are using the latest version of ImageMagick (7.0.1-3 as for now), otherwise please do upgrade immediately.
 
 ## How to add an API
 
