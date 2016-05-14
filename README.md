@@ -16,6 +16,12 @@ The author of these files shall not be held responsible for any terrorist attack
 - Image Processing: ImageMagick
 - Frontend Framework: Raw JavaScript + React (Admin Panel), need `Promise` support in browser (Does not support IE before Polyfilling)
 
+## Security Updates
+
+- 20160514: ImageMagick was found to contain security exploits that provides
+  remote execution capabilities to hackers.
+  Make sure you are using the latest version of ImageMagick (7.0.1-3 recommended), otherwise please do upgrade immediately.
+
 ## How to add an API
 
 We are currently refactoring. To help, read the following carefully.
