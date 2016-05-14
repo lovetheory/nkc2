@@ -8,6 +8,7 @@ Currently under dev.
 ## Recruitment
 
 Join our company. We expect applicants:
+
 1. Have good understanding of Promise in JavaScript.
 2. Have no problem reading ArangoDB's documentation.
 3. Can read/ write/ speak Chinese fluently.
@@ -16,7 +17,7 @@ Join our company. We expect applicants:
 You are allowed to use these files for any purpose, as long as you admit that they are useful[1].
 The author of these files shall not be held responsible for any terrorist attacks or global climate changes caused by the use of these files.
 
-1. Before we change our mind.
+[1] Before we change our mind.
 
 ## Reading list
 - Framework: **Express 4** (if you want to implement framework level features)
