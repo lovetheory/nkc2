@@ -25,6 +25,7 @@ var certificates={
     listCart:true,
     clearCart:true,
     postTo:true,
+    getPost:true,
   },
 
   specialist:{

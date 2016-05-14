@@ -173,6 +173,27 @@ table.postTo = {
   }
 }
 
+table.getPost = {
+  operation:params=>{
+    var pid = params.pid
+    
+    return AQL(`
+      let p = document(posts,@pid)
+      return p
+      `,
+      {
+        pid,
+      }
+    )
+    .then(result=>{
+      return result[0]
+    })
+  },
+  requiredParams:{
+    pid:String,
+  }
+}
+
 table.updateAllThreads = {
   operation:function(params){
     return queryfunc.update_all_threads()
