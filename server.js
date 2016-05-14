@@ -158,11 +158,6 @@ nkc.use((req,res,next)=>{
 var api_handlers = require('api_handlers.js');
 nkc.use('/api',api_handlers.route_handler);
 
-//html serving
-// WE DONT USE THIS ANYMORE
-var html_handlers = require('html_handlers');
-nkc.use('/html',html_handlers.route_handler);
-
 var interface_handlers = require('interface_handlers');
 nkc.use('/interface',interface_handlers.route_handler);
 

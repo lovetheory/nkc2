@@ -186,3 +186,11 @@ table.viewLogin = {
     return data
   }
 }
+
+table.viewExperimental = {
+  operation:params=>{
+    var data = defaultData(params)
+    data.template = jadeDir+'interface_experimental.jade'
+    return data
+  }
+}

@@ -89,6 +89,7 @@ settings.urlrewrite = [ //happens before serve_static
 
   {map:/^\/logout\?{0,1}(.*)/,to:'/api/experimental?&operation=viewLogout&$1'},
   {map:/^\/login\?{0,1}(.*)/,to:'/api/experimental?&operation=viewLogin&$1'},
+    {map:/^\/experimental\?{0,1}(.*)/,to:'/api/experimental?&operation=viewExperimental&$1'},
 
   {map:/^\/forum\/([^\?]*)\?{0,1}(.*)/,to:'/api/experimental?&operation=viewForum&fid=$1&$2'},
   {map:/^\/thread\/([^\?]*)\?{0,1}(.*)/,to:'/api/experimental?&operation=viewThread&tid=$1&$2'},
