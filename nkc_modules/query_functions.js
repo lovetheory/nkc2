@@ -284,7 +284,13 @@ queryfunc.update_thread = (tid)=>{
       COLLECT WITH COUNT INTO k
       return k
     )
-    UPDATE t WITH {lm:lm[0],oc:oc[0],count:count[0]} IN threads
+    let count_today = (
+      for p in posts
+      filter p.tid == t._key && p.toc > DATE_NOW()-86400*1000
+      COLLECT WITH COUNT INTO k
+      return k
+    )
+    UPDATE t WITH {lm:lm[0],oc:oc[0],count:count[0],count_today:count_today[0]} IN threads
     `
     ,
     params:{
@@ -319,7 +325,13 @@ queryfunc.update_all_threads = ()=>{
       COLLECT WITH COUNT INTO k
       return k
     )
-    UPDATE t WITH {lm:lm[0],oc:oc[0],count:count[0]} IN threads
+    let count_today = (
+      for p in posts
+      filter p.tid == t._key && p.toc > DATE_NOW()-86400*1000
+      COLLECT WITH COUNT INTO k
+      return k
+    )
+    UPDATE t WITH {lm:lm[0],oc:oc[0],count:count[0],count_today:count_today[0]} IN threads
     `
   )
 };
