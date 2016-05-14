@@ -12,14 +12,14 @@ var operations = {}
 var table = {} //table of operations.
 operations.table = table
 
-var normalizedPath = __projectroot+'nkc_modules/api_experimental_operations/'
+var normalizedPath = __projectroot+'nkc_modules/api_operations/'
 
 //inclusion from other files
 var externalTables = [];
 
 require("fs").readdirSync(normalizedPath).forEach(function(file) {
   if(file.toString().split('.').pop().toLowerCase()=='js'){
-    externalTables.push(require("./api_experimental_operations/" + file));
+    externalTables.push(require("./api_operations/" + file));
     report('loaded from ' + file.toString())
   }
 });

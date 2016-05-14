@@ -1,12 +1,12 @@
-//api content request handlers
+
 module.paths.push(__projectroot + 'nkc_modules'); //enable require-ment for this path
 
 var express = require('express');
 var api = express.Router();
 
-var APIroutine = require('api_experimental_routine')
+var APIroutine = require('api_operation_routine')
 
-api.use('/experimental', (req,res,next)=>{
+api.use('/operation', (req,res,next)=>{
   if(req.method=='POST')return next()
 
   for(key in req.query){
@@ -15,7 +15,7 @@ api.use('/experimental', (req,res,next)=>{
   next()
 })
 
-api.all('/experimental',function(req,res,next){
+api.all('/operation',function(req,res,next){
   APIroutine({
     user:req.user,
     body:req.body,

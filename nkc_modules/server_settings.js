@@ -83,16 +83,16 @@ settings.urlrewrite = [ //happens before serve_static
 
   {map:'/me',to:'/interface/me'},
 
-  {map:/^\/exam\?{0,1}(.*)/,to:'/api/experimental?&operation=viewExam&$1'},
-  {map:/^\/register\?{0,1}(.*)/,to:'/api/experimental?&operation=viewRegister&$1'},
-  {map:/^\/home\?{0,1}(.*)/,to:'/api/experimental?&operation=viewHome&$1'},
+  {map:/^\/exam\?{0,1}(.*)/,to:'/api/operation?&operation=viewExam&$1'},
+  {map:/^\/register\?{0,1}(.*)/,to:'/api/operation?&operation=viewRegister&$1'},
+  {map:/^\/home\?{0,1}(.*)/,to:'/api/operation?&operation=viewHome&$1'},
 
-  {map:/^\/logout\?{0,1}(.*)/,to:'/api/experimental?&operation=viewLogout&$1'},
-  {map:/^\/login\?{0,1}(.*)/,to:'/api/experimental?&operation=viewLogin&$1'},
-    {map:/^\/experimental\?{0,1}(.*)/,to:'/api/experimental?&operation=viewExperimental&$1'},
+  {map:/^\/logout\?{0,1}(.*)/,to:'/api/operation?&operation=viewLogout&$1'},
+  {map:/^\/login\?{0,1}(.*)/,to:'/api/operation?&operation=viewLogin&$1'},
+    {map:/^\/experimental\?{0,1}(.*)/,to:'/api/operation?&operation=viewExperimental&$1'},
 
-  {map:/^\/forum\/([^\?]*)\?{0,1}(.*)/,to:'/api/experimental?&operation=viewForum&fid=$1&$2'},
-  {map:/^\/thread\/([^\?]*)\?{0,1}(.*)/,to:'/api/experimental?&operation=viewThread&tid=$1&$2'},
+  {map:/^\/forum\/([^\?]*)\?{0,1}(.*)/,to:'/api/operation?&operation=viewForum&fid=$1&$2'},
+  {map:/^\/thread\/([^\?]*)\?{0,1}(.*)/,to:'/api/operation?&operation=viewThread&tid=$1&$2'},
 
   {map:'/e*',to:'/interface/editor$1'},
 

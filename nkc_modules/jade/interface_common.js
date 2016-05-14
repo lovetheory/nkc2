@@ -55,11 +55,11 @@ function generalRequest(obj,opt,callback){
   }
 }
 
-function nkcExperimentalAPI(obj){
+function nkcOperationAPI(obj){
   return new Promise(function(resolve,reject){
     generalRequest(obj,{
       method:'POST',
-      url:'/api/experimental'
+      url:'/api/operation'
     },function(err,back){
       if(err)return reject(err);
       resolve(back);
@@ -112,7 +112,7 @@ function nkcAPI(operationName,remainingParams){
     var remainingParams={}
   }
   remainingParams.operation = operationName;
-  return nkcExperimentalAPI(remainingParams)
+  return nkcOperationAPI(remainingParams)
 }
 
 //in memory of alex king

@@ -1,7 +1,7 @@
 
 module.paths.push(__projectroot + 'nkc_modules'); //enable require-ment for this path
 
-var operations = require('api_experimental_operations')
+var operations = require('api_operations')
 var table = operations.table
 var permission = require('permissions')
 
