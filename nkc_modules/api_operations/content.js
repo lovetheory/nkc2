@@ -49,7 +49,7 @@ var postToThread = function(post,tid,user){
     return queryfunc.update_thread(tid)
     .then(r=>{
       saveResult.tid = tid;
-      saveResult.redirect = 'thread/' + tid.toString()
+      saveResult.redirect = '/thread/' + tid.toString()
       return saveResult;
     })
     //okay to respond the user
@@ -131,7 +131,7 @@ var postToPost = function(post,pid,user){ //modification.
     return queryfunc.update_thread(tid)
     .then(updateresult=>{
       result.tid = tid;
-      result.redirect = 'thread/' + tid +'?post=' + result._key
+      result.redirect = '/thread/' + tid +'?post=' + result._key
       return result;
     })
   })
@@ -176,7 +176,7 @@ table.postTo = {
 table.getPost = {
   operation:params=>{
     var pid = params.pid
-    
+
     return AQL(`
       let p = document(posts,@pid)
       return p
