@@ -12,7 +12,7 @@ block content
             a.f16(href='/forum/#{f._key}') #{f.display_name}
           .HomeForumTitleSecondary
             if f.count_posts_today > 0
-              span.lighttext 是日 #{f.count_posts_today||""}
+              span.lighttext 今 #{f.count_posts_today||""}
           hr.hrNarrowSpace
           each thread,index in f.threads
             .HomeThreadItem.f12

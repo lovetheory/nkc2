@@ -27,7 +27,7 @@ block content
             a.btn.btn-default(href='/interface/editor?target=#{data.replytarget}') 撰
           .col-xs-4
             p
-              span 是日 #{data.forum.count_posts_today} | 著 #{data.forum.count_threads} | 復 #{data.forum.count_posts}
+              span 今 #{data.forum.count_posts_today} | 著 #{data.forum.count_threads} | 復 #{data.forum.count_posts}
             span 督：
             for i,index in data.forum.owners
               a.d-inline(href='#') #{index?', ':''}#{i.username}
