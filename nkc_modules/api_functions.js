@@ -9,10 +9,6 @@ var bodyParser = require('body-parser');
 
 var async = require('async');
 
-var db = require('arangojs')(settings.arango.address);
-db.useDatabase('testdb');
-var testdata = db.collection('testdata');
-
 var express = require('express');
 var api = express.Router();
 

@@ -13,7 +13,11 @@ settings.server={
 
   use_https:false,
   //use_https:true,
+
+  database_name:'nkc',
 };
+
+report('database_name: '+settings.server.database_name)
 
 settings.site={
   name:"科创论坛",

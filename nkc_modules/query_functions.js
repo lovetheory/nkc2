@@ -9,7 +9,8 @@ var helper_mod = require('helper.js')();
 var bodyParser = require('body-parser');
 
 var db = require('arangojs')(settings.arango.address);
-db.useDatabase('nkc');
+db.useDatabase(settings.server.database_name);
+
 var users = db.collection('users');
 
 var express = require('express');
@@ -32,6 +33,18 @@ queryfunc.db_init = function(){
   'histories',
 ].map(function(collection_name){db.collection(collection_name).create()});
 //create every collection, if not existent
+}
+
+queryfunc.createCollection = collection_name=>{
+  return db.collection(collection_name).create()
+}
+
+queryfunc.dropCollection = collection_name=>{
+  return db.collection(collection_name).drop()
+}
+
+queryfunc.importCollection = (docarray,collname)=>{
+  return db.collection(collname).import(docarray)
 }
 
 /*
