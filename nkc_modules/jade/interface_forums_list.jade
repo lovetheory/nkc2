@@ -1,12 +1,13 @@
 .panel.panel-default
   .panel-heading
-    .f12 论坛列表
+    .f12 一览
   .panel-body
     for i,index in data.forums
-      div(style='display:inline-block')
+      .ForumsListBody
         if data.forum
           if i._key == data.forum._key
-            text > 
-        a(href='/forum/#{i._key}').
-          #{i.display_name} #[text(style='color:brown;') #{i.posts_today}]&nbsp;&nbsp;
-        br
+            span > 
+        a(href='/forum/#{i._key}')
+          span #{i.display_name} 
+          span(style='color:brown;') #{i.count_posts_today||""}
+        

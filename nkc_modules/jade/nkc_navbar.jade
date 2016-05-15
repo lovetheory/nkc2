@@ -16,13 +16,13 @@ div
       .col-xs-12.col-sm-4
         ul.pagination(style='margin-top:8px; margin-bottom:0px')
           li(class="#{navbar.highlight=='tools'?'active':''}")
-            a 工具
+            a 器
           li(class="#{navbar.highlight=='tutorial'?'active':''}")
-            a 教学
+            a 学
           li(class="#{navbar.highlight=='editor'?'active':''}")
-            a(href='/e') 发帖
+            a(href='/e') 著
           li(class="#{navbar.highlight=='uploader'?'active':''}")
-            a(href='/interface/uploader') 上传
+            a(href='/interface/uploader') 传
       
       .col-xs-8.col-sm-4
         .row(style='margin-top:8px;')
@@ -37,8 +37,8 @@ div
             .col-xs-12(style='margin:13px 0;')
               a(href='/me') #{data.user.username}
               text &nbsp;&nbsp;
-              a(href='/logout') 登出
+              a(href='/logout') 别
           else
             .col-xs-12(style='margin:13px 0;')
-              a(href='/login') 登录
+              a(href='/login') 录
           

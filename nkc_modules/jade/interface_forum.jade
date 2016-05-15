@@ -24,11 +24,11 @@ block content
           .col-xs-8
             p.
               #{data.forum.description}
-            a.btn.btn-default(href='/interface/editor?target=#{data.replytarget}') 发帖
+            a.btn.btn-default(href='/interface/editor?target=#{data.replytarget}') 撰
           .col-xs-4
-            p.
-              今日：#{data.forum.posts_today} 主题：#{data.forum.threads_total} 总帖：#{data.forum.posts_total}
-            text 版主：
+            p
+              span 是日 #{data.forum.count_posts_today} | 著 #{data.forum.count_threads} | 復 #{data.forum.count_posts}
+            span 督：
             for i,index in data.forum.owners
               a.d-inline(href='#') #{index?', ':''}#{i.username}
             
@@ -44,7 +44,7 @@ block content
                     li
                       a(href='#')=val
               ul.pagination.marginless
-                each val,index in ['所有','精华']
+                each val,index in ['俱','精']
                   if index==0
                     li.active
                       a(href='#')=val
@@ -53,7 +53,7 @@ block content
                       a(href='#')=val
           
               ul.pagination.marginless
-                each val,index in ['回复序','发布序']
+                each val,index in ['復序','帖序']
                   if index==0
                     li.active
                       a(href='#')=val
@@ -68,7 +68,7 @@ block content
 
                         
           
-          a.btn.btn-default(href='/interface/editor?target=#{data.replytarget}') 发帖
+          a.btn.btn-default(href='/interface/editor?target=#{data.replytarget}') 撰
           
       .col-sm-3.col-md-2
         include interface_forums_list.jade

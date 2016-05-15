@@ -8,22 +8,25 @@ block content
     .row
       each f,index in data.forums
         .col-md-3.col-xs-6.col-sm-4
-
-          a.f16(href='/forum/#{f._key}') #{f.display_name}
-          span.lighttext &nbsp;#{f.posts_today?f.posts_today:""}
+          .HomeForumTitlePrimary
+            a.f16(href='/forum/#{f._key}') #{f.display_name}
+          .HomeForumTitleSecondary
+            if f.count_posts_today > 0
+              span.lighttext 是日 #{f.count_posts_today||""}
           hr.hrNarrowSpace
           each thread,index in f.threads
-            .HomeThreadItem
+            .HomeThreadItem.f12
               - var avatar = '/avatar/' + thread.oc.uid
-              .HomeThreadAvatar
+              .HomeThreadAvatarPosition
                 a(href='/thread/#{thread._key}')
-                  img.avatar(src='#{avatar}' style='width:24px;height:24px;')
+                  img.avatar.HomeThreadAvatar(src='#{avatar}')
                 
               .HomeThreadText
                 a(href='/thread/#{thread._key}')
                   span #{thread.oc.t} 
+              .HomeThreadTextRightAlign
                 if thread.count>1
-                  span.lighttext.reddish #{thread.count-1} 
+                  span.lighttext.reddish.f12 #{thread.count-1} 復
                 //span.lighttext.rightalign #{fromNow(thread.lm.toc)}
               
                 

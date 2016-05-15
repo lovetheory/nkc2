@@ -24,17 +24,45 @@
   margin-bottom: 9px;
 }
 
+.HomeForumTitlePrimary{
+  display: inline-block;
+}
+.HomeForumTitleSecondary{
+  display: inline-block;
+  margin-left: 10px;
+}
 .HomeThreadItem{
   margin-bottom: 3px;
+  border-color: black;
+  //border-style: dashed;
+  border-width: 1px;
+  position: relative;
 }
 
-.HomeThreadAvatar{
+.HomeThreadAvatarPosition {
   display:inline;
+}
+.HomeThreadAvatar{
+  width :24px;
+  height:24px;
 }
 
 .HomeThreadText{
   margin-left:3px;
   display: inline;
+}
+
+.HomeThreadTextRightAlign{
+  display:block;
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  /* font-size: 12pt; */
+}
+
+.ForumsListBody{
+  display: inline-block;
+  width: 110px;
 }
 
 .reddish {
@@ -103,6 +131,12 @@ h4,h5,h6 {
 .ThreadTitleAuxillary{
   margin-left: 10px;
   vertical-align:text-bottom;
+}
+
+.ThreadTitleAuxillaryLink{
+  right: 20px;
+  position: absolute;
+  top: 5px;
 }
 .ThreadTitleHr {
   margin-top: 10px;
