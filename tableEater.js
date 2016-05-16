@@ -1,8 +1,9 @@
 //the epic conversion program
 
 var timestamp = Date.now()
-function stamp(){
-  console.log((Date.now()-timestamp )/1000 +'s');
+function stamp(str){
+  str = str||''
+  console.log((Date.now()-timestamp )/1000 +'s ',str);
 }
 
 global.__projectroot = __dirname + '/';//create global variable for project root directory
@@ -48,10 +49,12 @@ function sqlquery(qstring,placeholders){
 
 function recreateCollection(name){
   return queryfunc.dropCollection(name)
-  .then()
   .catch(err=>{})
   .then(()=>{
-    queryfunc.createCollection(name)
+    return queryfunc.createCollection(name)
+  })
+  .then(()=>{
+    stamp(name+' collection recreated')
   })
 }
 
@@ -64,7 +67,7 @@ function getTableLength(tablename){
 }
 
 function importUsers(){
-  stamp()
+  stamp('start user import, sql start')
   return recreateCollection('users')
   .then(res=>{
 
@@ -81,14 +84,26 @@ function importUsers(){
     })
     .then(res=>{
       obj1.userscoreinfo = res;
+      //return sqlquery('SELECT * FROM test.pw_windid_user_info')
+      return sqlquery(`SELECT * FROM test.pw_windid_user_info
+        left join test.pw_user_info
+        on test.pw_windid_user_info.uid=test.pw_user_info.uid`
+      )
+    })
+    .then(res=>{
+      obj1.userbdayinfo = res;
       return obj1
     })
   })
   .then(obj1=>{
+    stamp('sql ended')
+
     var rows = obj1.userbaseinfo.rows
     var scorearray = obj1.userscoreinfo.rows
+    var bdayarray = obj1.userbdayinfo.rows
 
     console.log(scorearray.length);
+    console.log(bdayarray.length);
 
     var newuserset = []
     var prom = Promise.resolve()
@@ -96,6 +111,10 @@ function importUsers(){
     for(i in rows){
       var user = rows[i]
       var userscore = scorearray[i]
+      var userbday = bdayarray[i]
+
+      var bdaynumber = userbday.byear>0?userbday.byear*10000 + userbday.bmonth*100 +userbday.bday:undefined;
+
       var newuser = {
         _key:user.uid.toString(),
         toc:user.regdate * 1000,
@@ -110,6 +129,10 @@ function importUsers(){
 
         xsf:userscore.credit1||undefined,
         kcb:userscore.credit2,
+        bday:bdaynumber,
+
+        intro_text:userbday.profile||undefined,
+        post_sign:userbday.bbs_sign||undefined,
       }
 
       newuserset.push(newuser);
@@ -118,24 +141,115 @@ function importUsers(){
       }
     }
 
-    stamp()
+    stamp('user convert ended, now inserting arango')
     return queryfunc.importCollection(newuserset,'users')
   })
   .then(res=>{
     console.log(res);
-    console.log('users import ended');
-    stamp()
+    stamp('users import ended')
   })
 }
 
-importUsers()
+function importForums(){
+  stamp('start forum import')
+  return recreateCollection('forums')
+  .then(()=>{
+    return sqlquery('SELECT * FROM test.pw_bbs_forum')
+  })
+  .then(res=>{
+    var bbsrows = res.rows
+    var forums = []
+
+    for(i in bbsrows){
+      var forum = bbsrows[i]
+
+      forums.push({
+        _key:forum.fid.toString(),
+        parentid:forum.parentid.toString(),
+        display_name:forum.name,
+        description:forum.descrip,
+        order:forum.vieworder,
+        type:forum.type,
+      })
+    }
+
+    return queryfunc.importCollection(forums,'forums')
+  })
+  .then(res=>{
+    console.log(res);
+    stamp('forums import ended')
+  })
+}
+
+function importPostsAll(){
+  return recreateCollection('posts')
+  .then(()=>{
+    return importPostsOneBatch(0)
+  })
+}
+
+var postcounter = 0
+function importPostsOneBatch(start){
+  stamp('sqlstart')
+  var length
+
+  return sqlquery('SELECT * FROM test.pw_bbs_posts limit ?,100000',[start])
+
+  .then(res=>{
+    stamp('sqlended')
+    var parr = res.rows
+
+    var newposts = []
+
+    for(i in parr){
+      var post = parr[i]
+      newposts.push({
+        _key:post.pid.toString(),
+        tid:post.tid.toString(),
+        l:post.useubb?'pwbb':undefined,
+        rpid:post.rpid?post.rpid.toString():undefined,
+        t:post.subject.length>0?post.subject:undefined,
+        c:post.content,
+        uid:post.created_userid.toString(),
+        ipoc:post.created_ip||undefined,
+        toc:post.created_time*1000,
+
+        tlm:post.modified_time*1000||post.created_time*1000,
+        uidlm:post.modified_userid||undefined,
+
+        disabled:post.disabled?true:undefined,
+      })
+    }
+
+    stamp('end converting now inserting arango')
+    length = newposts.length
+    return queryfunc.importCollection(newposts,'posts')
+  })
+  .then(res=>{
+    stamp('arango insert ended')
+    console.log(length);
+
+    if(length<90000){
+      console.log('end of posts');
+      return
+    }
+    else {
+      postcounter+=length
+      console.log('pc',postcounter);
+      return importPostsOneBatch(postcounter)
+    }
+  })
+}
+
+Promise.resolve()
+.then(importUsers)
+.then(importForums)
+.then(importPostsAll)
 .then(()=>{
-  console.log('all done...');
-  stamp()
+  stamp('all done')
 })
 .catch(err=>{
   console.log(err);
-
 })
 .then(()=>{
   console.log('ending sql connection...');
