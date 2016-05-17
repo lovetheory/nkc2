@@ -2,12 +2,33 @@
   .panel-heading
     .f12 一览
   .panel-body
-    for i,index in data.forums
-      .ForumsListBody
-        if data.forum
-          if i._key == data.forum._key
-            span > 
-        a(href='/forum/#{i._key}')
-          span #{i.display_name} 
-          span(style='color:brown;') #{i.count_posts_today||""}
+  
+    - var cindex = 0
+    each group,gindex in data.forumlist
+      - var groupcolor = Math.floor(Math.random()*16777216).toString('16')
+      
+      .ForumsListBody.ForumsListGroupItem
+        - var parent = group.parentforum
+        span #{parent.display_name}
+      
+      each f,findex in group.forumgroup 
+        - var index = cindex + findex
+        
+        .ForumsListBody.ForumsListForumItem
+          - var marker = false
+          if data.forum
+            if f._key == data.forum._key
+              - marker = true
+              span.reddish > 
+          a(href='/forum/#{f._key}')
+            if marker
+              span.reddish #{f.display_name} 
+            else
+              span #{f.display_name} 
+            span(style='color:brown;') #{f.count_posts_today||""}
+        
+      - cindex += group.forumgroup.length
+  
+  
+
         

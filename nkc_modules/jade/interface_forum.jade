@@ -29,8 +29,9 @@ block content
             p
               span 今 #{data.forum.count_posts_today} | 著 #{data.forum.count_threads} | 復 #{data.forum.count_posts}
             span 督：
-            for i,index in data.forum.owners
-              a.d-inline(href='#') #{index?', ':''}#{i.username}
+            if data.forum.owners
+              for i,index in data.forum.owners
+                a.d-inline(href='#') #{index?', ':''}#{i.username}
             
         .row
           .col-md-12

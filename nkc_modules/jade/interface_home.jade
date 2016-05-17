@@ -4,31 +4,15 @@ block title
   title #{data.site.name} - #{data.site.description}
 
 block content        
-  .container
+  .container-fluid
     .row
-      each f,index in data.forums
-        .col-md-3.col-xs-6.col-sm-4
-          .HomeForumTitlePrimary
-            a.f16(href='/forum/#{f._key}') #{f.display_name}
-          .HomeForumTitleSecondary
-            if f.count_posts_today > 0
-              span.lighttext 今 #{f.count_posts_today||""}
-          hr.hrNarrowSpace
-          each thread,index in f.threads
-            .HomeThreadItem.f12
-              - var avatar = '/avatar/' + thread.oc.uid
-              .HomeThreadAvatarPosition
-                a(href='/thread/#{thread._key}')
-                  img.avatar.HomeThreadAvatar(src='#{avatar}')
-                
-              .HomeThreadText
-                a(href='/thread/#{thread._key}')
-                  span #{thread.oc.t} 
-              .HomeThreadTextRightAlign
-                if thread.count>1
-                  span.lighttext.reddish.f12 #{thread.count-1} 復
-                //span.lighttext.rightalign #{fromNow(thread.lm.toc)}
+      - var cindex = 0
+      each group,gindex in data.grouparray
+        - var groupcolor = Math.floor(Math.random()*16777216).toString('16')
+        each f,findex in group.forumgroup 
+          - var index = cindex + findex
+          include interface_home_singleforum.jade
+          
+        - cindex += group.forumgroup.length
               
-                
-              
-  include debug_output.jade
+  //include debug_output.jade

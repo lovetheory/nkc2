@@ -20,27 +20,47 @@
 }
 
 .hrNarrowSpace{
-  margin-top: 9px;
+  margin-top: 10px;
   margin-bottom: 9px;
 }
-
+.HomeForumContainer{
+margin-bottom: 15px;
+/* height: 220px; */
+/* overflow-y: hidden; */
+}
+.HomeForumTitle{
+  height: 26px;
+  position: relative;
+}
 .HomeForumTitlePrimary{
-  display: inline-block;
+  display: block;
+  position: absolute;
+  white-space: nowrap;
+  overflow:hidden !important;
+  /* text-overflow: ellipsis; */
+  right: 20px;
+  left: 0;
+  top: 0;
 }
 .HomeForumTitleSecondary{
-  display: inline-block;
-  margin-left: 10px;
+  display: block;
+  position: absolute;
+  right: 0px;
+  bottom: 0px;
 }
 .HomeThreadItem{
   margin-bottom: 3px;
   border-color: black;
-  //border-style: dashed;
+  //
+  border-style: dashed;
   border-width: 1px;
   position: relative;
+  display: block;
+  width: 100%;
 }
 
 .HomeThreadAvatarPosition {
-  display:inline;
+  display: inline-block;
 }
 .HomeThreadAvatar{
   width :24px;
@@ -48,12 +68,28 @@
 }
 
 .HomeThreadText{
-  margin-left:3px;
-  display: inline;
+  /* margin-left:3px; */
+  /* display: inline-block; */
+  position: absolute;
+  top: 1px;
+  left: 31px;
+  right: 27px;
+  /* width: 200px; */
+  /* height: 30px; */
+  /* overflow: hidden; */
+}
+
+.HomeThreadTextInner{
+    display: inline-block;
+    white-space: pre;
+    overflow:hidden !important;
+    /* text-overflow: ellipsis; */
+    /* width: calc(100% - 58px); */
+    width: 100%;
 }
 
 .HomeThreadTextRightAlign{
-  display:block;
+  display: inline-block;
   position: absolute;
   right: 0px;
   top: 0px;
@@ -63,6 +99,12 @@
 .ForumsListBody{
   display: inline-block;
   width: 110px;
+}
+.ForumsListGroupItem{
+color: #ccc;
+}
+.ForumsListForumItem{
+padding-left: 10px;
 }
 
 .reddish {

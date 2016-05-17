@@ -60,6 +60,21 @@ table.viewRegister = {
   }
 }
 
+function getForumList() {
+  return AQL(`
+    for f in forums
+    filter f.type == 'forum'
+    let nf = f
+
+    collect parent = nf.parentid into forumgroup = nf
+    let parentforum = document(forums,parent)
+    let group =  {parentforum,forumgroup}
+    sort group.parentforum.order asc
+    return group
+    `
+  )
+}
+
 table.viewHome = {
   operation:params=>{
     var data = defaultData(params)
@@ -67,18 +82,27 @@ table.viewHome = {
 
     return AQL(`
       for f in forums
-      let threads = (
+      filter f.type == 'forum'
+      let threads =
+      (
         for t in threads
         filter t.fid == f._key
         sort t.tlm desc
         limit 0,6
         return t
       )
-      return MERGE(f,{threads})
+      let nf = merge(f,{threads})
+
+      collect parent = nf.parentid into forumgroup = nf
+      let parentforum = document(forums,parent)
+      let group =  {parentforum,forumgroup}
+      sort group.parentforum.order asc
+      return group
       `
     )
-    .then(forums=>{
-      data.forums = forums;
+    .then(grouparray=>{
+      data.grouparray = grouparray;
+      //data.forums = forums;
       return data;
     })
   }
@@ -107,10 +131,10 @@ table.viewForum = {
       //if nothing went wrong
       Object.assign(data,result)
       //return apifunc.get_all_forums()
-      return get_all_forums()
+      return getForumList()
     })
-    .then(forums=>{
-      data.forums = forums
+    .then(forumlist=>{
+      data.forumlist = forumlist
       data.replytarget = 'forum/' + params.fid;
       return data
     })
@@ -145,10 +169,10 @@ table.viewThread = {
     )
     .then(result=>{
       Object.assign(data,result[0]);
-      return get_all_forums()
+      return getForumList()
     })
-    .then(forums=>{
-      data.forums = forums
+    .then(forumlist=>{
+      data.forumlist = forumlist
       data.replytarget = 'thread/' + tid
       return data
     })

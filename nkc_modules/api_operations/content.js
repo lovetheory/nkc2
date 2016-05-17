@@ -235,20 +235,18 @@ function updateForum(fid){
 
 function updateAllForums(){
   return AQL(`
-    for forum in forums
+    for t in threads
+    collect fid = t.fid into tgroup = t.count
 
-    let postcount = (
-      for t in threads
-      filter t.fid == forum._key
-      return t.count
-    )
+    let forum = document(forums,fid)
+    filter forum!=null
 
-    let count_posts = sum(postcount)
-    let count_threads = length(postcount)
+    let count_posts = sum(tgroup)
+    let count_threads = length(tgroup)
 
     let count_posts_today = sum(
-      for t in threads
-      filter t.fid == forum._key && t.tlm > DATE_NOW()-86400*1000
+      for t in tgroup
+      filter t.tlm > DATE_NOW()-86400*1000
       return t.count_today
     )
 
@@ -291,7 +289,7 @@ update_thread = (tid)=>{
       COLLECT WITH COUNT INTO k
       return k
     )[0]
-    UPDATE t WITH {toc:oc.toc,tlm:lm.tlm,lm,oc,count,count_today} IN threads
+    UPDATE t WITH {toc:oc.toc,tlm:lm.toc,lm,oc,count,count_today} IN threads
     `
     ,
     params:{
@@ -304,35 +302,30 @@ update_thread = (tid)=>{
 //!!!danger!!! will make the database very busy.
 update_all_threads = ()=>{
   return AQL(`
-    FOR t IN threads
+    for p in posts
+    collect tid = p.tid into postg = p
 
-    let oc =(
-      FOR p IN posts
-      FILTER p.tid == t._key //all post of that thread
-      sort p.toc asc //sort by creation time, ascending
-      limit 0,1 //get first
-      return p
-    )[0]
-    let lm = (
-      FOR p IN posts
-      FILTER p.tid == t._key //all post of that thread
-      sort p.toc desc //sort by creation time, descending
-      limit 0,1 //get first
-      return p
-    )[0]
-    let count = (
-      for p in posts
-      filter p.tid == t._key
-      COLLECT WITH COUNT INTO k
-      return k
-    )[0]
+    let thread = document(threads,tid)
+    filter thread!=null
+
+    let oc = (for p in postg sort p.toc asc limit 1 return p)[0]
+    let lm = (for p in postg sort p.tlm desc limit 1 return p)[0]
+    let count = length(postg)
     let count_today = (
-      for p in posts
-      filter p.tid == t._key && p.toc > DATE_NOW()-86400*1000
+      for p in postg
+      filter p.toc > DATE_NOW()-86400*1000
       COLLECT WITH COUNT INTO k
       return k
-    )[0]
-    UPDATE t WITH {toc:oc.toc,tlm:lm.tlm,lm,oc,count,count_today} IN threads
+    )
+    
+    update thread with {
+      count,
+      count_today,
+      oc,
+      lm,
+      toc:oc.toc,
+      tlm:lm.toc
+    } in threads
     `
   )
 };
