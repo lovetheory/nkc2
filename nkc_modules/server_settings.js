@@ -14,7 +14,7 @@ settings.server={
   use_https:false,
   //use_https:true,
 
-  database_name:'nkc',
+  database_name:'test',
 };
 
 report('database_name: '+settings.server.database_name)
@@ -103,7 +103,12 @@ settings.urlrewrite = [ //happens before serve_static
   {map:'/r/:rid',to:'/api/resources/get/:rid'},
   {map:'/rt/:rid',to:'/api/resources/thumb/:rid'},
   {map:'/avatar/:uid',to:'/api/avatar/:uid.jpg'},
+  {map:'/avatar_small/:uid',to:'/api/avatar_small/:uid.jpg'},
 ];
+
+//where to save avatars.
+settings.avatar_path = __projectroot+'resources/newavatar/';
+settings.avatar_path_small = __projectroot+'resources/newavatar_small/';
 
 settings.root_serve_static =
 [
@@ -120,7 +125,8 @@ settings.root_serve_static =
   {map:'/bootstrap',to:'bootstrap-3.3.6-dist'},
   //{map:'/avatar',to:'resources/avatar'},
   {map:'/default',to:'resources/'},
-  {map:'/api/avatar/',to:'resources/avatar'},
+  {map:'/api/avatar/',to:settings.avatar_path},
+  {map:'/api/avatar_small/',to:settings.avatar_path_small},
 ];
 
 settings.resource_paths = [
@@ -168,8 +174,7 @@ settings.default_thumbnail_url = '/default/default_thumbnail.png';
 
 //---------------------------------------------
 
-//where to save avatars.
-settings.avatar_path = __projectroot+'resources/avatar/';
+
 
 //where is default avatar.
 settings.default_avatar_path = __projectroot+'resources/default_avatar.jpg';
