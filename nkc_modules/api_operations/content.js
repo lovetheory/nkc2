@@ -289,7 +289,7 @@ update_thread = (tid)=>{
       COLLECT WITH COUNT INTO k
       return k
     )[0]
-    UPDATE t WITH {toc:oc.toc,tlm:lm.toc,lm,oc,count,count_today} IN threads
+    UPDATE t WITH {toc:oc.toc,tlm:lm.toc,lm:lm._key,oc:oc._key,count,count_today} IN threads
     `
     ,
     params:{
@@ -316,13 +316,13 @@ update_all_threads = ()=>{
       filter p.toc > DATE_NOW()-86400*1000
       COLLECT WITH COUNT INTO k
       return k
-    )
-    
+    )[0]
+
     update thread with {
       count,
       count_today,
-      oc,
-      lm,
+      oc:oc._key,
+      lm:lm._key,
       toc:oc.toc,
       tlm:lm.toc
     } in threads
