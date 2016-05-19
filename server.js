@@ -27,6 +27,7 @@ var cookieparser = require('cookie-parser');
 
 var apifunc = require('api_functions');
 var queryfunc = require('query_functions');
+
 queryfunc.db_init();
 
 var nkc = express(); //main router
@@ -91,6 +92,8 @@ for(i in settings.root_serve_static)
 
 //default avatar redirection
 nkc.use(rewrite('/api/avatar/*','/default_avatar/default_avatar.jpg')) //if avatar not served
+nkc.use(rewrite('/api/avatar_small/*','/default_avatar/default_avatar_small.jpg')) //if avatar not served
+
 nkc.use('/default_avatar/',express.static('resources/',settings.static_settings)) //staticify
 
 //ikc statics serving
