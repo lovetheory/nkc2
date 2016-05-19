@@ -63,7 +63,7 @@ table.viewRegister = {
 function getForumList() {
   return AQL(`
     for f in forums
-    filter f.type == 'forum'
+    filter f.type == 'forum' && f.parentid !=null
     let nf = f
 
     collect parent = nf.parentid into forumgroup = nf
@@ -76,20 +76,30 @@ function getForumList() {
 }
 
 table.viewHome = {
+  init:function(){
+    return queryfunc.createIndex('threads',{
+      fields:['fid','toc'],
+      type:'skiplist',
+      unique:'false',
+      sparse:'false',
+    })
+  },
   operation:params=>{
     var data = defaultData(params)
     data.template = jadeDir+ 'interface_home.jade'
 
     return AQL(`
       for f in forums
-      filter f.type == 'forum'
+      filter f.type == 'forum' && f.parentid !=null
       let threads =
       (
         for t in threads
         filter t.fid == f._key
         sort t.tlm desc
         limit 0,6
-        return t
+
+        let oc = document(posts,t.oc)
+        return merge(t,{oc})
       )
       let nf = merge(f,{threads})
 
@@ -118,24 +128,52 @@ function get_all_forums(){
 }
 
 table.viewForum = {
+  init:function(){
+    return queryfunc.createIndex('threads',{
+      fields:['fid','tlm'],
+      type:'skiplist',
+      unique:'false',
+      sparse:'false',
+    })
+  },
   operation:params=>{
     var data = defaultData(params)
     data.template = jadeDir+ 'interface_forum.jade'
+    var fid = params.fid;
 
-    return apifunc.get_threads_from_forum_as_forum({
-      fid:params.fid,
-      start:0,
-      count:100,
-    })
+    return AQL(`
+      let forum = document(forums,@fid)
+      let threads = (
+        for t in threads
+        filter t.fid == forum._key
+        sort t.tlm desc
+        limit @start,@count
+
+        let oc = document(posts,t.oc)
+        let lm = document(posts,t.lm)
+        let ocuser = document(users,oc.uid)
+        let lmuser = document(users,lm.uid)
+
+        return merge(t,{oc,ocuser,lmuser})
+      )
+      return {forum,threads}
+
+      `,
+      {
+        fid,
+        start:0,
+        count:100,
+      }
+    )
     .then((result)=>{
       //if nothing went wrong
-      Object.assign(data,result)
+      Object.assign(data,result[0])
       //return apifunc.get_all_forums()
       return getForumList()
     })
     .then(forumlist=>{
       data.forumlist = forumlist
-      data.replytarget = 'forum/' + params.fid;
+      data.replytarget = 'forum/' + fid;
       return data
     })
   },
@@ -145,6 +183,14 @@ table.viewForum = {
 }
 
 table.viewThread = {
+  init:function(){
+    return queryfunc.createIndex('posts',{
+      fields:['tid','toc'],
+      type:'skiplist',
+      unique:'false',
+      sparse:'false',
+    })
+  },
   operation:params=>{
     var data=defaultData(params)
     data.template = jadeDir + 'interface_thread.jade'
@@ -153,15 +199,20 @@ table.viewThread = {
     return AQL(
       `
       let thread = document(threads,@tid)
+
       let forum = document(forums,thread.fid)
+      let oc = document(posts,thread.oc)
+
       let posts = (
         for p in posts
         filter p.tid == thread._key
         sort p.toc asc
-        limit 0,100
-        return p
+        limit 0,50
+        let user = document(users,p.uid)
+
+        return merge(p,{user})
       )
-      return {thread,forum,posts}
+      return {thread,oc,forum,posts}
       `,
       {
         tid,

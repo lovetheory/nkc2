@@ -17,17 +17,17 @@ if index%2==0
     .HomeForumTitleSecondary
       if f.count_posts_today > 0
         span.lighttext 今 #{f.count_posts_today||""}
-  hr.hrNarrowSpace(style='border-color:##{groupcolor};')
+  hr.hrNarrowSpace
   each thread,index in f.threads
     .HomeThreadItem.f12
-      - var avatar = '/avatar/' + thread.oc.uid
+      - var avatar = '/avatar_small/' + thread.oc.uid
       .HomeThreadAvatarPosition
         a(href='/thread/#{thread._key}')
           img.avatar.HomeThreadAvatar(src='#{avatar}')
         
       .HomeThreadText
         a(href='/thread/#{thread._key}')
-          span.HomeThreadTextInner #{thread.oc.t.slice(0,18)} 
+          span.HomeThreadTextInner #{thread.oc.t} 
       .HomeThreadTextRightAlign
         if thread.count>1
           span.lighttext.reddish.f12 #{thread.count-1}

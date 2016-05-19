@@ -6,10 +6,10 @@
     - var cindex = 0
     each group,gindex in data.forumlist
       - var groupcolor = Math.floor(Math.random()*16777216).toString('16')
-      
+      - var parent = group.parentforum
       .ForumsListBody.ForumsListGroupItem
-        - var parent = group.parentforum
-        span #{parent.display_name}
+        
+        span #{parent?parent.display_name:''}
       
       each f,findex in group.forumgroup 
         - var index = cindex + findex

@@ -1,5 +1,8 @@
 - var url = '/thread/' + thread._key
-- var avatar = '/avatar/' + thread.oc.uid
+- var ocuser = thread.ocuser
+- var lmuser = thread.lmuser
+- var oc = thread.oc
+- var avatar = '/avatar/' + oc.uid
 
 .ForumThreadItem
   .ForumThreadItemAvatar
@@ -10,20 +13,21 @@
       .col-xs-6.col-md-8
       
         div
-          a.f12(href="#{url}") #{thread.oc.t} 
+          a.f12(href="#{url}") #{oc.t} 
           //帖子标题链接
           
           if thread.count>1
-            span.lighttext #{thread.count-1} 回复
+            span.ForumThreadItemReply #{thread.count-1} 回复
           //楼数
         
         div
-          span.lighttext #{dateString(thread.oc.toc)} #{thread.oc.username}
+          span.lighttext.ForumThreadItemCreationTime #{dateString(thread.toc)}
+          span.lighttext.ForumThreadItemUsername #{ocuser.username}
           //帖子发布时间和发布者
     
       .col-xs-3.col-md-2
-        span.lighttext.text-center #{fromNow(thread.lm.tlm)}
+        span.lighttext.text-center #{fromNow(thread.tlm)}
           //帖子最后回复时间和回复者
         
       .col-xs-3.col-md-2
-        span.lighttext.text-center #{thread.lm.username}
+        span.lighttext.text-center #{lmuser.username}

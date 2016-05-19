@@ -29,8 +29,8 @@
 /* overflow-y: hidden; */
 }
 .HomeForumTitle{
-  height: 26px;
-  position: relative;
+height: 26px;
+position: relative;
 }
 .HomeForumTitlePrimary{
   display: block;
@@ -163,6 +163,19 @@ h4,h5,h6 {
   padding-left: 15px;
   display: table-cell;
 }
+.ForumThreadItemReply{
+display: inline-block;
+color: #D28A78;
+}
+.ForumThreadItemUsername{
+display: inline-block;
+color: #9E9E9E;
+}
+.ForumThreadItemCreationTime{
+  display: inline-block;
+  margin-right: 10px;
+}
+
 .ThreadBox{
 
 }
@@ -171,14 +184,16 @@ h4,h5,h6 {
   margin-bottom: 0;
 }
 .ThreadTitleAuxillary{
+  display: inline-block;
   margin-left: 10px;
-  vertical-align:text-bottom;
+  margin-top: 8px;
 }
 
 .ThreadTitleAuxillaryLink{
-  right: 20px;
-  position: absolute;
-  top: 5px;
+  display: inline-block;
+  margin-left: 10px;
+  /* position: absolute; */
+  /* top: 5px; */
 }
 .ThreadTitleHr {
   margin-top: 10px;

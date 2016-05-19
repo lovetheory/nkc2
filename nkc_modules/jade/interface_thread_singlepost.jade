@@ -11,7 +11,7 @@
     if(post.t&&post.t!=''&&index!=0)
       h4.d-inline.dirt #{post.t}
     p.d-inline.lighttext
-      text #{post.username} - #{fromNow(post.toc)} - 
+      text #{post.user?post.user.username:''} - #{fromNow(post.toc)} - 
       a(href='/thread/#{data.thread._key}?post=#{post._key}').lighttext #{dateString(post.toc)} 
       if data.user
         if data.user._key == post.uid
