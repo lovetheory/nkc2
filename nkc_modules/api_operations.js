@@ -27,6 +27,9 @@ require("fs").readdirSync(normalizedPath).forEach(function(file) {
 for(i in externalTables){
   for(k in externalTables[i]){
     table[k] = externalTables[i][k]
+    if(table[k].init){
+      table[k].init()
+    }
   }
 }
 
