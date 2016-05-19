@@ -15,6 +15,42 @@ module.exports = table;
 
 var regex_validation = require('nkc_regex_validation');
 
+var create_user = function(user){
+  //check if user exists.
+
+  return AQL(`for u in users filter u.username == @newusername return u`,
+    {newusername:user.username}
+  )
+  .then(resultArr=>{
+    if(resultArr.length!=0)throw 'username exists already. pick another one'
+
+    //user not exist, create user now!
+    //obtain an uid first...
+    return apifunc.get_new_uid()
+  })
+  .then((newuid)=>{
+    var timestamp = Date.now();
+
+    var newuser = {
+      _key:newuid,
+      username:user.username,
+      toc:timestamp,
+      tlv:timestamp,
+    }
+
+    var newuser_personal = {
+      _key:newuid,
+      email:user.email,
+      password:user.password,
+    }
+
+    return queryfunc.doc_save(newuser,'users')
+    .then(()=>{
+      return queryfunc.doc_save(newuser_personal,'users_personal')
+    })
+  })
+}
+
 table.userRegister = {
   operation:function(params){
     var userobj = {
@@ -35,7 +71,8 @@ table.userRegister = {
     .then(ans=>{
       if(Date.now() - ans.tsm>settings.exam.time_before_register)
       throw ('expired, consider re-take the exam.')
-      return apifunc.create_user(userobj)
+
+      return create_user(userobj)
     })
 
   },
@@ -48,19 +85,44 @@ table.userRegister = {
   },
 }
 
+function md5(str){
+  var md5 = require('crypto').createHash('md5')
+  md5.update(str)
+  return md5.digest('hex')
+}
+
 table.userLogin = {
   operation:function(params){
+    var user = {}
+
     return apifunc.get_user_by_name(params.username)
     .then((back)=>{
       if(back.length!==1)//user not exist
       throw ('user not exist by name');
 
-      var user = back[0]
-      //if user exists
-      if(user.password !== params.password){
-        throw ('password unmatch')
-      }
+      user = back[0]
 
+      return queryfunc.doc_load(user._key,'users_personal')
+    })
+    .then(user_personal=>{
+
+      switch (user_personal.hashtype) {
+        case 'pw9':
+        var pass = params.password
+        var hash = user_personal.password.hash
+        var salt = user_personal.password.salt
+
+        var hashed = md5(md5(pass)+salt)
+        if(hashed!==hash){
+          throw('password unmatch')
+        }
+        break;
+
+        default:
+        if(user_personal.password !== params.password){ //fallback to plain
+          throw ('password unmatch')
+        }
+      }
 
       //if user exists
       var cookieobj = {
