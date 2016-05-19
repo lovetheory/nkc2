@@ -35,6 +35,37 @@ queryfunc.db_init = function(){
 //create every collection, if not existent
 }
 
+
+function createIndex(coll,details){
+  var def = {
+    type:'skiplist',
+    unique:false,
+    sparse:false,
+  }
+  Object.assign(def,details)
+  return db.collection(coll).createIndex(def)
+  .then(res=>{
+    report(`index ${def.fields} created on ${coll}`)
+  })
+}
+
+queryfunc.createIndex = createIndex;
+
+queryfunc.allNecessaryIndexes = ()=>{
+
+
+  return Promise.all([
+    createIndex('threads',{fields:['fid','toc']}),
+    createIndex('threads',{fields:['tlm']}),
+    createIndex('threads',{fields:['fid','tlm'],sparse:false}),
+
+    //createIndex('posts',{fields:['tid','toc']}),
+    //createIndex('posts',{fields:['tid','tlm']}),
+    createIndex('posts',{fields:['tid'],type:'hash'}),
+    //createIndex('posts',{fields:['tid']}),
+  ])
+}
+
 queryfunc.createCollection = collection_name=>{
   return db.collection(collection_name).create()
 }
