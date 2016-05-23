@@ -24,13 +24,13 @@
   margin-bottom: 9px;
 }
 .HomeForumContainer{
-margin-bottom: 15px;
-/* height: 220px; */
-/* overflow-y: hidden; */
+  margin-bottom: 15px;
+  /* height: 220px; */
+  /* overflow-y: hidden; */
 }
 .HomeForumTitle{
-height: 26px;
-position: relative;
+  height: 26px;
+  position: relative;
 }
 .HomeForumTitlePrimary{
   display: block;
@@ -80,12 +80,12 @@
 }
 
 .HomeThreadTextInner{
-    display: inline-block;
-    white-space: pre;
-    overflow:hidden !important;
-    /* text-overflow: ellipsis; */
-    /* width: calc(100% - 58px); */
-    width: 100%;
+  display: inline-block;
+  white-space: pre;
+  overflow:hidden !important;
+  /* text-overflow: ellipsis; */
+  /* width: calc(100% - 58px); */
+  width: 100%;
 }
 
 .HomeThreadTextRightAlign{
@@ -101,10 +101,10 @@
   width: 110px;
 }
 .ForumsListGroupItem{
-color: #ccc;
+  color: #ccc;
 }
 .ForumsListForumItem{
-padding-left: 10px;
+  padding-left: 10px;
 }
 
 .reddish {
@@ -151,29 +151,35 @@ h4,h5,h6 {
 .ForumThreadItem {
   padding-bottom: 6px;
   padding-left: 0px;
+  position: relative;
 }
 .ForumThreadItemAvatar {
   vertical-align: middle;
   display: table-cell;
+  width: 45px;
 }
 .ForumThreadItemContent {
   vertical-align: middle;
-  width: 100%;
+  position: relative;
   padding: 0;
-  padding-left: 15px;
+  padding-left: 10px;
   display: table-cell;
 }
-.ForumThreadItemReply{
-display: inline-block;
-color: #D28A78;
+.ForumThreadItemReplyCount{
+  display: inline-block;  color: #D28A78;}
+
+.ForumThreadItemReplyInfo{
+  display: table-cell;
+  vertical-align: middle;
+  width: 100px;
 }
 .ForumThreadItemUsername{
-display: inline-block;
-color: #9E9E9E;
+  display: inline-block;
+  color: #9E9E9E;
 }
 .ForumThreadItemCreationTime{
-  display: inline-block;
-  margin-right: 10px;
+  display: inline-block;
+  margin-right: 10px;
 }
 
 .ThreadBox{

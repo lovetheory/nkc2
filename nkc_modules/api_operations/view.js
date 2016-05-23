@@ -94,8 +94,9 @@ table.viewHome = {
       let threads =
       (
         for t in threads
-        filter t.fid == f._key
+        filter t.fid == f._key && t.disabled!=true
         sort t.tlm desc
+
         limit 0,6
 
         let oc = document(posts,t.oc)
@@ -145,7 +146,7 @@ table.viewForum = {
       let forum = document(forums,@fid)
       let threads = (
         for t in threads
-        filter t.fid == forum._key
+        filter t.fid == forum._key && t.disabled!=true
         sort t.tlm desc
         limit @start,@count
 
@@ -205,7 +206,7 @@ table.viewThread = {
 
       let posts = (
         for p in posts
-        filter p.tid == thread._key
+        filter p.tid == thread._key && p.disabled!=true
         sort p.toc asc
         limit 0,50
         let user = document(users,p.uid)

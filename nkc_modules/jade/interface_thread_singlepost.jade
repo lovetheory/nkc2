@@ -11,8 +11,11 @@
     if(post.t&&post.t!=''&&index!=0)
       h4.d-inline.dirt #{post.t}
     p.d-inline.lighttext
-      text #{post.user?post.user.username:''} - #{fromNow(post.toc)} - 
+      span #{post.user?post.user.username:''} - #{fromNow(post.toc)} - 
       a(href='/thread/#{data.thread._key}?post=#{post._key}').lighttext #{dateString(post.toc)} 
+      .ThreadTitleAuxillaryLink
+        a(href="javascript:cartPost('#{post._key}')") 加入管理车
+        
       if data.user
         if data.user._key == post.uid
           text  - 
@@ -29,4 +32,5 @@
           div!= plain(post.c)
     if post.toc!=post.tlm
       p.lighttext [修改于 #{fromNow(post.tlm)} - #{dateString(post.tlm)}]
+    //span #{post.user?post.user.post_sign:''}
             
