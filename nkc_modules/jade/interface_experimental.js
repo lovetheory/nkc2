@@ -147,6 +147,20 @@ function InitThreadControl(options){
         },
       },
 
+      disableSelectedPost:{
+        text:'将选中楼设为删除',
+        action:function(){
+          return disablePosts()
+          .then(count=>{
+            if(count!=0){
+              logme(count.toString()+' executed')
+              pc.actions.refresh()
+            }
+          })
+          .catch(logme)
+        }
+      },
+
       recycleSelectedThread:{
         text:'将选中帖子移动到回收站',
         action:function(){
@@ -216,7 +230,7 @@ pc.render()
 pc.actions.refresh();
 
 function moveSelectedThread(fid){
-  var p = Promise.resolve(0);
+  var parr=[]
   var count = 0;
   for(i in pc.list){
     var item = pc.list[i]
@@ -224,15 +238,41 @@ function moveSelectedThread(fid){
     if(type=='threads'&&item.selected){
       count++;
       var tid = item._key
-      p = p.then(()=>{
-        return nkcAPI('moveThread',{tid,fid})
-      })
-      .then((result)=>{
-        logme('thread '+tid+' moved to '+fid)
-      })
+      parr.push(
+        nkcAPI('moveThread',{tid,fid})
+        .then((result)=>{
+          logme('thread '+tid+' moved to '+fid)
+        })
+      )
     }
   }
-  return p
+  return Promise.all(parr)
+  .then(()=>{
+    return count;
+  })
+}
+
+function disablePosts(){
+  var parr = []
+  var count = 0;
+  for(i in pc.list){
+    var item = pc.list[i]
+    var type = item._id.split('/')[0];
+
+    if(type=='posts'&&item.selected){
+      count++;
+
+      var pid = item._key;
+      parr.push(
+        nkcAPI('disablePost',{pid})
+        .then((result)=>{
+          logme(result._key + ' killed')
+        })
+      )
+    }
+
+  }
+  return Promise.all(parr)
   .then(()=>{
     return count;
   })

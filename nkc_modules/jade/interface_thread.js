@@ -11,3 +11,11 @@ function cartThread(tid){
   })
   .catch(jalert)
 }
+
+function cartPost(pid){
+  return nkcAPI('addPostToCart',{pid})
+  .then(()=>{
+    alert('success '+pid)
+  })
+  .catch(jalert)
+}
