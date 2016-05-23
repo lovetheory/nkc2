@@ -32,20 +32,28 @@ table.moveThread = {
   },
 }
 
+table.disablePost = {
+  operation:function(params){
+    return queryfunc.doc_update(params.pid,'posts',{disabled:true})
+  },
+  requiredParams:{
+    pid:String,
+  },
+  testPermission:function(params){
+    return 0;
+  },
+}
+
 table.addThreadToCart={
   operation:function(params){
     var uid = params.user._key
-    var tid = params.tid
+    var tid = params.tid.toString()
     return AQL(`
-      for u in users
-      filter u._key == @uid
-      update u with { cart:SLICE(UNIQUE(PUSH(u.cart,@obj)),-30) } in users
+      let u = document(users,@uid)
+      update u with { cart:SLICE(UNIQUE(PUSH(u.cart,@cid)),-30) } in users
       `,{
-        uid,
-        obj:{
-          itemtype:'thread',
-          id:tid
-        },
+        uid:uid,
+        cid:'threads/'+tid,
       }
     )
   },
@@ -57,17 +65,13 @@ table.addThreadToCart={
 table.addPostToCart={
   operation:function(params){
     var uid = params.user._key
-    var pid = params.pid
+    var pid = params.pid.toString()
     return AQL(`
-      for u in users
-      filter u._key == @uid
-      update u with { cart:SLICE(UNIQUE(PUSH(u.cart,@obj)),-30) } in users
+      let u = document(users,@uid)
+      update u with { cart:SLICE(UNIQUE(PUSH(u.cart,@cid)),-30) } in users
       `,{
         uid:uid,
-        obj:{
-          itemtype:'post',
-          id:pid
-        },
+        cid:'posts/'+pid,
       }
     )
   },
@@ -78,34 +82,19 @@ table.addPostToCart={
 
 table.listCart={
   operation:function(params){
-    var cart = params.user.cart?params.user.cart:[]
+    var cart = params.user.cart?params.user.cart:[];
     return AQL(
       `
-      let threads=(
-        for i in @cart
-        filter i.itemtype == 'thread'
-        for t in threads
-        filter t._key == i.id
-        return t
-      )
-
-      let posts=(
-        for i in @cart
-        filter i.itemtype == 'post'
-        for t in posts
-        filter t._key == i.id
-        return t
-      )
-
-      return UNION(threads,posts)
+      for i in @cart
+      let c = document(i)
+      filter c != null
+      let oc = document(posts,c.oc)
+      return merge(c,{oc})
       `
       ,{
         cart,
       }
     )
-    .then(res=>{
-      return res[0];
-    })
   },
 }
 
