@@ -1,3 +1,7 @@
+# Volatile
+
+The repository is currently in a volatile state(deadline approaching). Don't pull from it before July...
+
 # nkc2
 
 ![bannerlogo](/resources/kclogo_umaru1_nc.png)
