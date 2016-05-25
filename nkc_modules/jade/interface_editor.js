@@ -17,7 +17,7 @@ var nkc_editor = function(){
       target,
       post:body,
     })
-    .then(result=>{
+    .then(function(result){
       var redirectTarget = result.redirect;
       redirect(redirectTarget?redirectTarget:'/'+target)
     })

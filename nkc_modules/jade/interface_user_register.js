@@ -6,7 +6,7 @@ function error_report(str)
 
 function register_submit(){
   return Promise.resolve()
-  .then(()=>{
+  .then(function(){
     var userobj={
       username : gv('username'),
       password : gv('password'),
@@ -28,13 +28,13 @@ function register_submit(){
     }
 
     nkc_validate_fields(userobj);
-    
+
     return nkcAPI('userRegister',userobj)
   })
-  .then(result=>{
+  .then(function(result){
     window.location = '/login'
   })
-  .catch(err=>{
+  .catch(function(err){
     error_report(err);
   })
 

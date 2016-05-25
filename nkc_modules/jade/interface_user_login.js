@@ -10,7 +10,7 @@ function login_submit(){
   return alert('我在门口捡到了你的密码，下次不要忘了');
 
   nkcAPI('userLogin',userobj)
-  .then(res=>{
+  .then(function(res){
     geid('error_info').innerHTML = JSON.stringify(res);
     display('error_info_panel')
 
@@ -22,7 +22,7 @@ function login_submit(){
     else
     location.href = document.referrer; //go back in history
   })
-  .catch(err=>{
+  .catch(function(err){
     geid('error_info').innerHTML = JSON.stringify(err);
     display('error_info_panel')
     geid('password').focus();

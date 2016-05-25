@@ -18,10 +18,10 @@ function submit(){
 
   console.log(examobj);
   return nkcAPI('submitExam',examobj)
-  .then(result=>{
+  .then(function(result){
     window.location = '/exam?result=' + result.token
   })
-  .catch(err=>{
+  .catch(function(err){
     window.location = '/exam?result=fail&detail=' + encodeURI(JSON.stringify(err))
   })
 }

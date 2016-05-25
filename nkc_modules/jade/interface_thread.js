@@ -6,7 +6,7 @@ function reply(){
 
 function cartThread(tid){
   return nkcAPI('addThreadToCart',{tid})
-  .then(()=>{
+  .then(function(){
     alert('success '+tid)
   })
   .catch(jalert)
@@ -14,7 +14,7 @@ function cartThread(tid){
 
 function cartPost(pid){
   return nkcAPI('addPostToCart',{pid})
-  .then(()=>{
+  .then(function(){
     alert('success '+pid)
   })
   .catch(jalert)

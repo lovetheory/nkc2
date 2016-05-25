@@ -95,7 +95,7 @@ function InitThreadControl(options){
         text:'获取管理车',
         action:function(){
           return nkcAPI('listCart')
-          .then((result)=>{
+          .then(function(result){
             pc.list = result
             logme('已获取管理车：共 '+result.length+' 项')
           })
@@ -140,7 +140,7 @@ function InitThreadControl(options){
         action:function(){
           nkcAPI('clearCart')
           .then(pc.actions.refresh)
-          .then(()=>{
+          .then(function(){
             logme('服务器端管理车已清除')
           })
           .catch(logme)
@@ -151,7 +151,7 @@ function InitThreadControl(options){
         text:'将选中楼设为删除',
         action:function(){
           return disablePosts()
-          .then(count=>{
+          .then(function(count){
             if(count!=0){
               logme(count.toString()+' executed')
               pc.actions.refresh()
@@ -165,7 +165,7 @@ function InitThreadControl(options){
         text:'将选中帖子移动到回收站',
         action:function(){
           return moveSelectedThread('recycle')
-          .then(count=>{
+          .then(function(count){
             if(count!=0){
               logme(count.toString()+' executed')
               pc.actions.refresh()
@@ -240,14 +240,14 @@ function moveSelectedThread(fid){
       var tid = item._key
       parr.push(
         nkcAPI('moveThread',{tid,fid})
-        .then((result)=>{
+        .then(function(result){
           logme('thread '+tid+' moved to '+fid)
         })
       )
     }
   }
   return Promise.all(parr)
-  .then(()=>{
+  .then(function(){
     return count;
   })
 }
@@ -265,7 +265,7 @@ function disablePosts(){
       var pid = item._key;
       parr.push(
         nkcAPI('disablePost',{pid})
-        .then((result)=>{
+        .then(function(result){
           logme(result._key + ' killed')
         })
       )
@@ -273,7 +273,7 @@ function disablePosts(){
 
   }
   return Promise.all(parr)
-  .then(()=>{
+  .then(function(){
     return count;
   })
 }
