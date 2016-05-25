@@ -191,6 +191,14 @@ table.viewThread = {
       unique:'false',
       sparse:'false',
     })
+    .then(()=>{
+      return queryfunc.createIndex('resources',{
+        fields:['pid'],
+        type:'hash',
+        unique:'false',
+        sparse:'false',
+      })
+    })
   },
   operation:params=>{
     var data=defaultData(params)
@@ -209,9 +217,16 @@ table.viewThread = {
         filter p.tid == thread._key && p.disabled!=true
         sort p.toc asc
         limit 0,50
+
         let user = document(users,p.uid)
 
-        return merge(p,{user})
+        let r = (
+          for r in resources
+          filter r.pid == p._key
+          return r
+        )
+
+        return merge(p,{user,r})
       )
       return {thread,oc,forum,posts}
       `,
@@ -221,6 +236,8 @@ table.viewThread = {
     )
     .then(result=>{
       Object.assign(data,result[0]);
+    })
+    .then(result=>{
       return getForumList()
     })
     .then(forumlist=>{
