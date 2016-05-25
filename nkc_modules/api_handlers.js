@@ -40,15 +40,17 @@ api.use((req,res,next)=>{
   var obj = res.obj
   if(obj)
   {
+    if(obj.responseSent){
+      return
+    }
+
     if(!obj.template){
       return res.json(report(obj));
       //return without continue
     }
-    else{
-      //if template specified
-      var k = jaderender(obj.template,obj)
-      return res.send(k);
-    }
+    //if template specified
+    var k = jaderender(obj.template,obj)
+    return res.send(k);
   }
 
   return next();
