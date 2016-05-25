@@ -119,10 +119,116 @@ function nkc_render(options){
   render.bbcode_render = function(input){
     return XBBCODE.process({
       text:input,
-    }).html;
+    })
+    .html
+    .replace(/&#91;/g,'[')
+    .replace(/&#93;/g,']')
+    .replace(/\[[/]{0,1}backcolor[=#a-zA-Z0-9]{0,16}]/g,'')
   }
 
   render.plain_render = plain_escape;
+
+  var getHTMLForResource = function(r){
+    var rid = r._key
+    var oname = r.oname
+
+    var extension = r.oname.split('.').pop()
+
+    var replaced = ''
+
+    switch (extension) {
+      case 'jpg':
+      case 'jpeg':
+      case 'gif':
+      case 'png':
+      case 'svg':
+
+      replaced =
+      '<a href="/r/:rid" target="_blank" title=":oname"><img alt=":rid" src="/r/:rid" /></a><br/>'
+      .replace(/:rid/g,rid)
+      .replace(/:oname/g,plain_escape(oname))
+
+      break;
+      //audio section
+      case 'mp3':
+      case 'mid':
+      case 'wma':
+      case 'ogg':
+      replaced =
+      '<a href="/r/:rid" download>:oname</a><br><audio src="/r/:rid" controls preload="none">你的浏览器可能不支持audio标签播放音乐。升级吧。</audio>'
+      .replace(/:rid/g,rid)
+      .replace(/:oname/g,plain_escape(oname))
+      break;
+
+      case 'mp4'://these are standards
+      case 'webm':
+      case 'ogg':
+      replaced =
+      '<a href="/r/:rid" download>:oname</a><br><video src="/r/:rid" controls preload="none">你的浏览器可能不支持video标签播放视频。升级吧。</video>'
+      .replace(/:rid/g,rid)
+      .replace(/:oname/g,plain_escape(oname))
+      break;
+
+      default: replaced =
+      '<a href="/r/:rid" download><img src="/rt/:rid"/>:oname</a>'
+      .replace(/:rid/g,rid)
+      .replace(/:oname/g,plain_escape(oname))
+    }
+
+    return replaced
+  }
+
+  //replace attachment tags in text to their appropriate HTML representation
+  var attachment_filter = function(stringToFilter,post){
+    return stringToFilter.replace(/\{r=([0-9a-z]{1,16})\}/g,function(match,p1,offset,string){
+      var rid = p1
+      for(i in post.r){
+        var r = post.r[i]
+        if(r._key==rid){
+          return getHTMLForResource(r)
+        }
+      }
+      return '(查无附件:' + rid + ')'
+    })
+  }
+
+  var bbcode_experimental = function(post){
+    var content = post.c||''
+
+    var html = render.bbcode_render(content)
+    html = html.replace(/\n/g,'<br>').replace(/\[attachment=([0-9]{1,16})\]/g,'{r=$1}')
+    html = attachment_filter(html,post)
+
+    return html
+  }
+
+  var markdown_experimental = function(post){
+    var parsed = commonreader.parse(input);
+    var rendered = commonwriter.render(parsed)
+    rendered = attachment_filter(rendered,post)
+
+    return rendered;
+  }
+
+  render.experimental_render = function(post){
+    var content = post.c||''
+    var lang = post.l||''
+
+    var renderedHTML = ''
+
+    switch (lang) {
+      case 'pwbb':
+      renderedHTML = bbcode_experimental(post)
+      break;
+      case 'markdown':
+      renderedHTML = markdown_experimental(post)
+      break;
+      default:
+      renderedHTML = plain_escape(content)
+    }
+
+    return renderedHTML
+  }
 
   return render;
 }

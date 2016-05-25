@@ -14,6 +14,8 @@ jade.filters.markdown = render.commonmark_render;
 jade.filters.bbcode = render.bbcode_render;
 jade.filters.plain = render.plain_render;
 
+jade.filters.experimental = render.experimental_render
+
 function fromNow(time){
   return moment(time).fromNow();
 }
@@ -22,8 +24,9 @@ var jadeoptions = {
   markdown:render.commonmark_render,
   bbcode:render.bbcode_render,
   plain:render.plain_render,
-  'dateString':dateString,
-  'fromNow':fromNow,
+  experimental_render:render.experimental_render,
+  dateString:dateString,
+  fromNow:fromNow,
 };
 
 Object.assign(jadeoptions,settings.jadeoptions); //apply settings from settings.js

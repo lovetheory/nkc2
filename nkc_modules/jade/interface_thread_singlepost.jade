@@ -20,16 +20,9 @@
         if data.user._key == post.uid
           text  - 
           a(href='/e?target=post/#{post._key}') 编辑
-    div.f12.post-body
-      //body of post
-      case post.l
-        when 'markdown'
-          div!= markdown(post.c)
-        when 'bbcode'
-          div!= bbcode(post.c)
-        when 'plain'
-        default
-          div!= plain(post.c)
+    div.ThreadPostBody!= experimental_render(post)
+
+
     if post.toc!=post.tlm
       p.lighttext [修改于 #{fromNow(post.tlm)} - #{dateString(post.tlm)}]
     //span #{post.user?post.user.post_sign:''}
