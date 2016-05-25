@@ -89,7 +89,7 @@ function nkc_render(options){
           break;
 
           default: replaced =
-          '<a href="/r/$1" download><img src="/rt/$1"/>$2</a>'
+          '<a href="/r/$1" download><img src="/rt/$1"/><span>$2</span></a>'
           .replace(/\$1/g,rid)
           .replace(/\$2/g,filename)
         }
@@ -130,7 +130,14 @@ function nkc_render(options){
 
   var getHTMLForResource = function(r){
     var rid = r._key
-    var oname = r.oname
+    var oname_safe = plain_escape(r.oname)
+    var filesize = r.size
+
+    var k = function(number){
+      return number.toPrecision(3)
+    }
+
+    var fileSizeString = (filesize>1024)?((filesize>1024*1024)?k(filesize/1048576)+'M':k(filesize/1024)+'k'):k(filesize)+'b'
 
     var extension = r.oname.split('.').pop()
 
@@ -144,9 +151,7 @@ function nkc_render(options){
       case 'svg':
 
       replaced =
-      '<a href="/r/:rid" target="_blank" title=":oname"><img alt=":rid" src="/r/:rid" /></a><br/>'
-      .replace(/:rid/g,rid)
-      .replace(/:oname/g,plain_escape(oname))
+      `<a href="/r/${rid}" target="_blank" title="${oname_safe}"><img class="PostContentImage" alt="${rid}" src="/r/${rid}" /></a><br/>`
 
       break;
       //audio section
@@ -155,24 +160,27 @@ function nkc_render(options){
       case 'wma':
       case 'ogg':
       replaced =
-      '<a href="/r/:rid" download>:oname</a><br><audio src="/r/:rid" controls preload="none">你的浏览器可能不支持audio标签播放音乐。升级吧。</audio>'
-      .replace(/:rid/g,rid)
-      .replace(/:oname/g,plain_escape(oname))
+      `<a href="/r/${rid}" download>${oname_safe}</a><br><audio src="/r/${rid}" controls preload="none">你的浏览器可能不支持audio标签播放音乐。升级吧。</audio>`
+
       break;
 
       case 'mp4'://these are standards
       case 'webm':
       case 'ogg':
       replaced =
-      '<a href="/r/:rid" download>:oname</a><br><video src="/r/:rid" controls preload="none">你的浏览器可能不支持video标签播放视频。升级吧。</video>'
-      .replace(/:rid/g,rid)
-      .replace(/:oname/g,plain_escape(oname))
+      `<a href="/r/${rid}" download>${oname_safe}</a><br><video src="/r/${rid}" controls preload="none">你的浏览器可能不支持video标签播放视频。升级吧。</video>`
+
       break;
 
       default: replaced =
-      '<a href="/r/:rid" download><img src="/rt/:rid"/>:oname</a>'
-      .replace(/:rid/g,rid)
-      .replace(/:oname/g,plain_escape(oname))
+      `
+      <div class="PostResourceDownload">
+      <a class="PostResourceDownloadLink" href="/r/${rid}" download>
+      <img class="PostResourceDownloadThumbnail" src="/rt/${rid}"/>${oname_safe}
+      </a>
+      <span class="PostResourceFileSize">${fileSizeString}</span>
+      </div>
+      `
     }
 
     return replaced
