@@ -93,14 +93,15 @@ settings.urlrewrite = [ //happens before serve_static
 
   {map:/^\/logout\?{0,1}(.*)/,to:'/api/operation?&operation=viewLogout&$1'},
   {map:/^\/login\?{0,1}(.*)/,to:'/api/operation?&operation=viewLogin&$1'},
-    {map:/^\/experimental\?{0,1}(.*)/,to:'/api/operation?&operation=viewExperimental&$1'},
+  {map:/^\/experimental\?{0,1}(.*)/,to:'/api/operation?&operation=viewExperimental&$1'},
 
   {map:/^\/forum\/([^\?]*)\?{0,1}(.*)/,to:'/api/operation?&operation=viewForum&fid=$1&$2'},
   {map:/^\/thread\/([^\?]*)\?{0,1}(.*)/,to:'/api/operation?&operation=viewThread&tid=$1&$2'},
 
   {map:'/e*',to:'/interface/editor$1'},
 
-  {map:'/r/:rid',to:'/api/resources/get/:rid'},
+  {map:'/r/:rid',to:'/api/operation?&operation=getResource&rid=:rid'},
+  //  {map:'/r/:rid',to:'/api/resources/get/:rid'},
   {map:'/rt/:rid',to:'/api/resources/thumb/:rid'},
   {map:'/avatar/:uid',to:'/api/avatar/:uid.jpg'},
   {map:'/avatar_small/:uid',to:'/api/avatar_small/:uid.jpg'},
