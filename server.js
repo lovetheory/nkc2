@@ -21,7 +21,6 @@ var jaderender = require('jaderender');
 var compression = require('compression');
 var express = require('express');
 var rewrite = require('express-urlrewrite');
-var request = require('request');
 
 var cookieparser = require('cookie-parser');
 
@@ -78,23 +77,22 @@ for(i in settings.urlrewrite){
 //2. static file serves
 for(i in settings.root_serve_static)
 {
+  var to = settings.root_serve_static[i].to
+
   if(settings.root_serve_static[i].map){
-    nkc.use(
-      settings.root_serve_static[i].map,
-      express.static(settings.root_serve_static[i].to,settings.static_settings)
-    );
+    var map = settings.root_serve_static[i].map
+
+    nkc.use(map,express.static(to,settings.static_settings))
   } else {
-    nkc.use(
-      express.static(settings.root_serve_static[i].to,settings.static_settings)
-    );
+    nkc.use(express.static(to,settings.static_settings));
   }
 }
 
 //default avatar redirection
-nkc.use(rewrite('/api/avatar/*','/default_avatar/default_avatar.jpg')) //if avatar not served
-nkc.use(rewrite('/api/avatar_small/*','/default_avatar/default_avatar_small.jpg')) //if avatar not served
+nkc.use(rewrite('/api/avatar/*','/default/default_avatar.jpg')) //if avatar not served
+nkc.use(rewrite('/api/avatar_small/*','/default/default_avatar_small.jpg')) //if avatar not served
 
-nkc.use('/default_avatar/',express.static('resources/',settings.static_settings)) //staticify
+nkc.use('/default/',express.static('resources/default_things/',settings.static_settings)) //staticify
 
 //ikc statics serving
 nkc.use('/recruit',express.static('../ikc')); //serve company pages

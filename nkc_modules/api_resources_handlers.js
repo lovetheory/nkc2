@@ -128,7 +128,7 @@ api.use((req,res,next)=>{
             rpath:relative_path,//子路径，应为相对路径。
             size:req.file.size,
             mime:req.file.mimetype,
-            username:req.user.username,
+            //username:req.user.username,
             uid:req.user._key,
             toc:Date.now(), //time of creation.
           };
@@ -197,30 +197,6 @@ api.post('/avatar', avatar_upload.single('file'), function(req,res,next){
   .catch(next)
 });
 
-
-api.get('/avatar/:uid',function(req,res){
-  var uid = req.params.uid;
-
-  //success
-  fastest_file_from_paths(
-    settings.avatar_paths, //from these path
-    uid+'.jpg', //get this file
-    function(err,best_filepathname){
-      if(err){
-        //return res.status(404).json(report('image not exist',err));
-        best_filepathname = settings.default_avatar_path //set default_avatar
-      }
-
-      //if file exists somewhere
-      res.setHeader('Content-disposition', 'inline; filename=' + uid+'.jpg');
-      res.setHeader('Content-type', 'image/jpeg');
-
-      res.sendFile(best_filepathname);
-    }
-  );
-});
-
-
 api.get('/resources/info/:rid',function(req,res,next){
   var key = req.params.rid;
   //load from db
@@ -234,59 +210,6 @@ api.get('/resources/info/:rid',function(req,res,next){
 });
 
 fs.mkdirp(settings.thumbnails_path);
-
-api.get('/resources/thumb/:rid',function(req,res,next){
-  //thumbnail. if is image, generate; if not, redirect to sth else.
-  var key = req.params.rid;
-  //load from db
-  apifunc.get_resources(key)
-  .then((robject)=>{
-
-    //1. check if is image
-    if(['image/jpeg','image/png','image/gif','image/svg+xml'].indexOf(robject.mime)<0){
-      //if not image
-      res.redirect(settings.default_thumbnail_url);
-      return;
-    }
-
-    //if is image...
-
-    var thumbnail_path = settings.thumbnails_path + '/'+robject._key+'.jpg';
-    var destination_path = settings.upload_path;
-    var destination_plus_relative = destination_path + '/'+robject.rpath+'/';
-
-    //2. check if thumbnail exists already
-    check_single_file_exist(thumbnail_path,function(exists){
-      if(exists){
-        res.sendFile(thumbnail_path);
-        console.log(thumbnail_path.green);
-        return;
-      }
-
-      //3. if not exist, find the original file
-      fastest_file_from_paths(settings.resource_paths.concat(
-        [(robject.rpath?destination_plus_relative:null)]
-      ), //join the relative path.
-      robject.sname,
-      function(err,best_filepathname){
-        if(err)return next(err);
-
-        //4. generate thumbnail for the file
-        im.thumbnailify(best_filepathname,thumbnail_path)
-        .then(function(back){
-          //5. respond with love
-          res.setHeader('Content-disposition', 'inline; filename=' + robject.rid+'.jpg');
-          res.setHeader('Content-type', 'image/jpeg');
-
-          res.sendFile(thumbnail_path);
-          console.log(thumbnail_path.green);
-        })
-        .catch(next);
-      });
-    });
-  })
-  .catch(next)
-});
 
 api.get('/resources/mine',function(req,res,next){
   if(!req.user)return next('login please.')
@@ -310,39 +233,6 @@ api.get('/resources/mine',function(req,res,next){
   })
   .catch(next)
 
-});
-
-api.get('/resources/get/:rid',function(req,res,next){
-  var key = req.params.rid;
-  //load from db
-  apifunc.get_resources(key)
-  .then(function(robject){
-
-    var destination_path = settings.upload_path;
-    var destination_plus_relative = destination_path + '/'+robject.rpath+'/';
-
-    fastest_file_from_paths(settings.resource_paths.concat(
-      [(robject.rpath?destination_plus_relative:null)]
-    ), //join the relative path.
-    robject.sname,
-    function(err,best_filepathname)
-    {
-      if(err){
-        return next(err);
-      }
-
-      //if file exists finally
-      res.setHeader('Content-disposition', 'inline; filename=' + robject.oname);
-      res.setHeader('Content-type', robject.mime);
-
-      res.sendFile(best_filepathname);
-
-      //var filestream = fs.createReadStream(best_filepathname);
-      console.log(best_filepathname.green);
-      //filestream.pipe(res);
-    });
-  })
-  .catch(next)
 });
 
 module.exports = api;

@@ -74,7 +74,8 @@ settings.couchdb={
 };
 
 settings.static_settings = {
-  maxAge:1000*10, //cache everything for 30s
+  maxAge:1000*10, //cache everything for 10s
+  lastModified:true,
 };
 
 settings.urlrewrite = [ //happens before serve_static
@@ -102,7 +103,8 @@ settings.urlrewrite = [ //happens before serve_static
 
   {map:'/r/:rid',to:'/api/operation?&operation=getResource&rid=:rid'},
   //  {map:'/r/:rid',to:'/api/resources/get/:rid'},
-  {map:'/rt/:rid',to:'/api/resources/thumb/:rid'},
+  {map:'/rt/:rid',to:'/api/operation?&operation=getResourceThumbnail&rid=:rid'},
+
   {map:'/avatar/:uid',to:'/api/avatar/:uid.jpg'},
   {map:'/avatar_small/:uid',to:'/api/avatar_small/:uid.jpg'},
 ];
@@ -125,7 +127,6 @@ settings.root_serve_static =
   {to:'nkc_modules/'},
   {map:'/bootstrap',to:'bootstrap-3.3.6-dist'},
   //{map:'/avatar',to:'resources/avatar'},
-  {map:'/default',to:'resources/'},
   {map:'/api/avatar/',to:settings.avatar_path},
   {map:'/api/avatar_small/',to:settings.avatar_path_small},
 ];

@@ -176,7 +176,7 @@ function nkc_render(options){
       `
       <div class="PostResourceDownload">
       <a class="PostResourceDownloadLink" href="/r/${rid}" download>
-      <img class="PostResourceDownloadThumbnail" src="/rt/${rid}"/>${oname_safe}
+      <img class="PostResourceDownloadThumbnail" src="/default/default_thumbnail.png"/>${oname_safe}
       </a>
       <span class="PostResourceFileSize">${fileSizeString}</span>
       </div>
