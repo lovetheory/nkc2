@@ -45,10 +45,12 @@ var postToThread = function(post,tid,user){
     return queryfunc.doc_save(newpost,'posts')
   })
   .then(saveResult=>{
+    var pid = saveResult._key
     //update thread object to make sync
     return update_thread(tid)
     .then(r=>{
       saveResult.tid = tid;
+      saveResult.pid = pid
       saveResult.redirect = '/thread/' + tid.toString()
       return saveResult;
     })
@@ -128,6 +130,7 @@ var postToPost = function(post,pid,user){ //modification.
     //update thread as needed.
     return update_thread(tid)
     .then(updateresult=>{
+      result.pid = pid;
       result.tid = tid;
       result.redirect = '/thread/' + tid +'?post=' + result._key
       return result;
@@ -150,16 +153,29 @@ table.postTo = {
     var targetType = target[0]; var targetKey = target[1];
 
     //3. switch according to targetType
-    switch (targetType) {
-      case 'forum':
-      return postToForum(post,targetKey,user) //throws if notexist
-      case 'thread':
-      return postToThread(post,targetKey,user)
-      case 'post':
-      return postToPost(post,targetKey,user)
-      default:
-      throw 'target type not implemented'
-    }
+    return Promise.resolve()
+    .then(()=>{
+      switch (targetType) {
+        case 'forum':
+        return postToForum(post,targetKey,user) //throws if notexist
+        case 'thread':
+        return postToThread(post,targetKey,user)
+        case 'post':
+        return postToPost(post,targetKey,user)
+        default:
+        throw 'target type not implemented'
+      }
+    })
+    .then(result=>{
+      if(result.pid){
+        return updatePost(result.pid)
+        .then(()=>{
+          return result
+        })
+      }
+
+      return result
+    })
   },
   requiredParams:{
     target:String,
@@ -202,6 +218,30 @@ table.updateAllForums = {
   operation:function(params){
     return updateAllForums()
   }
+}
+
+function updatePost(pid){
+  return queryfunc.doc_load(pid,'posts')
+  .then(post=>{
+    var content = post.c
+    var resources_declared = content.match(/\{r=[0-9]{1,20}}/g) //extract resource identifier(s) from content
+    if(!resources_declared)return
+
+    for(i in resources_declared){ //extract resource key
+      resources_declared[i] = resources_declared[i].replace(/\{r=([0-9]{1,20})}/,'$1')
+    }
+
+    // update post object with resource keys
+    return AQL(`
+      let post = document(posts,@pid)
+      update post with {r:unique(@rd)} in posts
+      `,
+      {
+        pid,
+        rd:resources_declared,
+      }
+    )
+  })
 }
 
 function updateForum(fid){
@@ -258,8 +298,7 @@ function updateAllForums(){
 
 //在对thread或者post作操作之后，更新thread的部分属性以确保其反应真实情况。
 update_thread = (tid)=>{
-  var aqlobj={
-    query:`
+  return AQL(`
     FOR t IN threads
     FILTER t._key == @tid //specify a thread
 
@@ -292,11 +331,10 @@ update_thread = (tid)=>{
     UPDATE t WITH {toc:oc.toc,tlm:lm.toc,lm:lm._key,oc:oc._key,count,count_today} IN threads
     `
     ,
-    params:{
+    {
       tid,
-    },
-  };
-  return aqlall(aqlobj);
+    }
+  )
 };
 
 //!!!danger!!! will make the database very busy.

@@ -146,12 +146,20 @@ h4,h5,h6 {
 }
 
 .ForumThreadList{
-
+border-collapse: collapse;
+display: table;
 }
 .ForumThreadItem {
-  padding-bottom: 6px;
-  padding-left: 0px;
   position: relative;
+  display: table-row;
+}
+.ForumThreadItem>div {
+  padding-top: 3px;
+  padding-bottom: 3px;
+}
+.ForumThreadAvatar {
+border-radius: 10%;
+width: 45px;
 }
 .ForumThreadItemAvatar {
   vertical-align: middle;
@@ -160,18 +168,29 @@ h4,h5,h6 {
 }
 .ForumThreadItemContent {
   vertical-align: middle;
-  position: relative;
+  /* position: absolute; */
   padding: 0;
   padding-left: 10px;
   display: table-cell;
+  /* top: 0px; */
+  /* right: 140px; */
+  /* left: 45px; */
 }
 .ForumThreadItemReplyCount{
-  display: inline-block;  color: #D28A78;}
+  display: table-cell;
+  /* position: absolute; */
+  color: #D28A78;
+  width: 40px;
+  vertical-align: middle;
+  /* right: 100px; */
+  }
 
 .ForumThreadItemReplyInfo{
-  display: table-cell;
-  vertical-align: middle;
-  width: 100px;
+  display: table-cell;
+  /* position: absolute; */
+  vertical-align: middle;
+  width: 100px;
+  /* right: 0px; */
 }
 .ForumThreadItemUsername{
   display: inline-block;
@@ -184,6 +203,13 @@ h4,h5,h6 {
 
 .ThreadBox{
 
+}
+
+.ThreadTitleForumLink{
+  display: block;
+  margin-bottom: 5px;
+  color: #bbb;
+  font-size: 14pt;
 }
 .ThreadTitle {
   display: inline-block;
@@ -210,9 +236,49 @@ h4,h5,h6 {
   margin-bottom: 12px;
 }
 
-.post-body img {
-  max-width:100%;
-  //max-height:600px;
+.ThreadPostBody{
+  font-size: 12pt;
+  line-height: 1.6;
+}
+
+.ThreadPostBody img{
+  max-width: 100%;
+}
+
+.ThreadPostBody blockquote {
+  font-size: 10pt;
+}
+
+.PostContentImage{
+  max-width: 100%;
+}
+
+.PostResourceDownload{
+  display: inline-block;
+}
+.PostResourceDownloadLink{
+
+}
+.PostResourceDownloadThumbnail{
+  display: inline;
+}
+.PostResourceFileSize{
+  font-size: 10pt;
+  display: inline;
+  margin-left: 3px;
+  color: #d66;
+}
+.ResourceList{}
+.ResourceListItem{
+    display: block;
+    margin-bottom: 5px;
+}
+.ResourceListItemThumb{
+    display: inline-block;
+    margin-right: 10px;
+}
+.ResourceListItemText{
+    display: inline-block;
 }
 
 .padless{

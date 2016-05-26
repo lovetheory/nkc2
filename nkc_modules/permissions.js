@@ -16,6 +16,7 @@ var certificates={
     addThreadToCart:true,
     addPostToCart:true,
     removePost:true,
+    moveThread:true,
   },
 
   default:{ //by default given to every registered user
@@ -28,6 +29,10 @@ var certificates={
     getPost:true,
 
     viewExperimental:true,
+
+    getResourceThumbnail:true,
+    getResourceOfCurrentUser:true,
+    getResource:true,
   },
 
   specialist:{

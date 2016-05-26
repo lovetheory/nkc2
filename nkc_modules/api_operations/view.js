@@ -220,15 +220,28 @@ table.viewThread = {
 
         let user = document(users,p.uid)
 
-        let r = (
+        let resources_declared = (
+          filter is_array(p.r)
+          for r in p.r
+          let rd = document(resources,r)
+          filter rd!=null
+          return rd
+        )
+
+        let resources_assigned = (
           for r in resources
           filter r.pid == p._key
           return r
         )
 
-        return merge(p,{user,r})
+        return merge(p,{
+          user,
+          r:union_distinct(resources_declared,resources_assigned)
+        })
       )
-      return {thread,oc,forum,posts}
+      return {
+        thread,oc,forum,posts
+      }
       `,
       {
         tid,

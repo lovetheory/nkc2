@@ -1,21 +1,27 @@
 var nkc_editor = function(){
   var editor = {};
 
-  editor.submit = function(){
-    var body = {
+  editor.assemblePostObject = function(){
+    var post = {
       t:gv('title').trim(),
       c:gv('content').trim(),
       l:gv('lang').toLowerCase().trim(),
-    };
+    }
+
+    return post
+  }
+
+  editor.submit = function(){
+    var post = editor.assemblePostObject()
 
     var target = gv('target').trim();
 
-    if(body.c==''){alert('请填写内容。');return;}
+    if(post.c==''){alert('请填写内容。');return;}
     if(target==''){alert('请填写发表至的目标。');return;}
 
     return nkcAPI('postTo',{
       target,
-      post:body,
+      post,
     })
     .then(function(result){
       var redirectTarget = result.redirect;
@@ -29,21 +35,14 @@ var nkc_editor = function(){
     //console.log(debounce,e);
     if(!debounce)
     {
-      var title = gv('title');
+      var post = editor.assemblePostObject()
+      var title = post.t
       hset('parsedtitle',title); //XSS prone.
 
-      var content = gv('content');
+      var content = post.c
       var parsedcontent = '';
 
-      switch(gv('lang').toLowerCase()){
-        case 'markdown':
-        parsedcontent = render.commonmark_render(content);break;
-        case 'bbcode':
-        parsedcontent = render.bbcode_render(content);break;
-        case 'plain':
-        default:
-        parsedcontent = render.plain_render(content);break;
-      };
+      parsedcontent = render.experimental_render(post)
 
       hset('parsedcontent',parsedcontent); //XSS prone
 

@@ -29,13 +29,16 @@ block content
         p 列表包含所有当前用户上传的文件。
         br
         .panel.panel-default
-          .panel-body(id='list-container' datasource='/api/resources/mine')
-            include interface_attachment_list_display.jade
+          .panel-body(id='list-container')
+
             
   include debug_output.jade
 
 block scripts
+  script(src='/react.js')
+  script(src='/JSXTransformer.js')
+  
   script(src='/interface_common.js')
   script(src='/interface_attachment_uploader.js')
-  script(src='/interface_attachment_list_display.js')
+  script(type='text/jsx' src='/interface_attachment_list_display.js')
   

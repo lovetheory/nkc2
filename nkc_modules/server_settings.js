@@ -74,7 +74,7 @@ settings.couchdb={
 };
 
 settings.static_settings = {
-  maxAge:1000*10, //cache everything for 10s
+  maxAge:1000*86400, //cache everything for 1d
   lastModified:true,
 };
 
@@ -164,7 +164,7 @@ settings.attachment_image_width = 960;
 settings.attachment_image_height = 16384;
 
 //where is default watermark
-settings.default_watermark_path = __projectroot+'resources/default_watermark3.png';
+settings.default_watermark_path = __projectroot+'resources/default_things/default_watermark3.png';
 
 settings.size_largeimage = 1024*512; //500kb max
 
@@ -173,6 +173,8 @@ settings.thumbnails_path = __projectroot+'resources/thumbnails/';
 
 //where is default thumbnail; use an URL redirection to allow caching
 settings.default_thumbnail_url = '/default/default_thumbnail.png';
+
+settings.default_thumbnail_path =  __projectroot + '/resources/default_things/default_thumbnail.png';
 
 //---------------------------------------------
 

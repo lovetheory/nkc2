@@ -1,5 +1,7 @@
 //the epic conversion program
 
+//convert old KC MySQL database tables to ArangoDB
+
 var timestamp = Date.now()
 function stamp(str){
   str = str||''
@@ -22,28 +24,30 @@ var queryfunc = require('query_functions');
 var mysql = require('mysql')
 var AQL = queryfunc.AQL
 
-var connection = mysql.createConnection({
-  host:'127.0.0.1',
-  port:'3306',
-  user:'root',
-  password:'qaz123',
-  database:'test',
-})
-
-console.log('beginning sql connection...');
-connection.connect();
+var nkcfs = require('nkc_fs')
+var operations = require('api_operations')
 
 function sqlquery(qstring,placeholders){
   if(!placeholders)placeholders = []
-
   return new Promise(function(resolve,reject){
+    var connection = mysql.createConnection({
+      host:'127.0.0.1',
+      port:'3306',
+      user:'root',
+      password:'qaz123',
+      database:'test',
+    })
+    connection.connect();
+    stamp('query '+qstring+' start')
     connection.query(qstring,placeholders,function(err,rows,fields){
       if(err)return reject(err);
+      stamp('query '+qstring+' done')
       resolve({
         rows,
         fields,
       });
     })
+    connection.end();
   })
 }
 
@@ -66,9 +70,14 @@ function getTableLength(tablename){
   })
 }
 
+var usercounter = 0
+
 function importUsers(){
   stamp('start user import, sql start')
   return recreateCollection('users')
+  .then(()=>{
+    return recreateCollection('users_personal')
+  })
   .then(res=>{
 
     var obj1 ={}
@@ -96,7 +105,7 @@ function importUsers(){
     })
   })
   .then(obj1=>{
-    stamp('sql ended')
+    stamp('user sql ended')
 
     var rows = obj1.userbaseinfo.rows
     var scorearray = obj1.userscoreinfo.rows
@@ -105,7 +114,7 @@ function importUsers(){
     console.log(scorearray.length);
     console.log(bdayarray.length);
 
-    var newuserset = []
+    var newuserset = [],newuserset_personal=[]
     var prom = Promise.resolve()
 
     for(i in rows){
@@ -119,13 +128,6 @@ function importUsers(){
         _key:user.uid.toString(),
         toc:user.regdate * 1000,
         username:user.username,
-        email:user.email,
-        password:{
-          hash:user.password,
-          salt:user.salt,
-        },
-        hashtype:'pw9',
-        regip:user.regip||undefined,
 
         xsf:userscore.credit1||undefined,
         kcb:userscore.credit2,
@@ -135,6 +137,22 @@ function importUsers(){
         post_sign:userbday.bbs_sign||undefined,
       }
 
+      var newuser_personal = {
+        _key:user.uid.toString(),
+
+        email:user.email,
+        password:{
+          hash:user.password,
+          salt:user.salt,
+        },
+
+        hashtype:'pw9',
+        regip:user.regip||undefined,
+      }
+
+      usercounter = Math.max(usercounter,user.uid)
+
+      newuserset_personal.push(newuser_personal);
       newuserset.push(newuser);
       if(i%10000==0){
         console.log(i);
@@ -143,6 +161,10 @@ function importUsers(){
 
     stamp('user convert ended, now inserting arango')
     return queryfunc.importCollection(newuserset,'users')
+    .then(()=>{
+      return queryfunc.importCollection(newuserset_personal,'users_personal')
+    })
+
   })
   .then(res=>{
     console.log(res);
@@ -151,12 +173,14 @@ function importUsers(){
 }
 
 function importForums(){
-  stamp('start forum import')
+  stamp('start forum import sql')
   return recreateCollection('forums')
   .then(()=>{
     return sqlquery('SELECT * FROM test.pw_bbs_forum')
   })
   .then(res=>{
+
+    stamp('got forum tables')
     var bbsrows = res.rows
     var forums = []
 
@@ -182,27 +206,39 @@ function importForums(){
 }
 
 function importPostsAll(){
+
   return recreateCollection('posts')
-  .then(()=>{
-    return importPostsOneBatch(0)
+  .then(res=>{
+    return getTableLength('test.pw_bbs_posts')
+  })
+  .then(len=>{
+    var k = 200000
+    var batches = Math.floor(len/k)+1
+
+    var arr=[]
+    for(var i =0;i<batches;i++){
+      arr.push(importPostsOneBatch(i*k,k))
+    }
+    return Promise.all(arr)
+    //return importPostsOneBatch(0)
   })
 }
 
 var postcounter = 0
-function importPostsOneBatch(start){
-  stamp('sqlstart')
+function importPostsOneBatch(start,lofq){
   var length
-
-  return sqlquery('SELECT * FROM test.pw_bbs_posts limit ?,100000',[start])
+  stamp('starting from post '+start.toString())
+  return sqlquery('SELECT * FROM test.pw_bbs_posts limit ?,?',[start,lofq])
 
   .then(res=>{
-    stamp('sqlended')
+    stamp('sql for posts ended')
     var parr = res.rows
 
     var newposts = []
 
     for(i in parr){
       var post = parr[i]
+
       newposts.push({
         _key:post.pid.toString(),
         tid:post.tid.toString(),
@@ -219,6 +255,8 @@ function importPostsOneBatch(start){
 
         disabled:post.disabled?true:undefined,
       })
+
+      postcounter = Math.max(postcounter,post.pid)
     }
 
     stamp('end converting now inserting arango')
@@ -227,31 +265,222 @@ function importPostsOneBatch(start){
   })
   .then(res=>{
     stamp('arango insert ended')
-    console.log(length);
-
-    if(length<90000){
-      console.log('end of posts');
-      return
-    }
-    else {
-      postcounter+=length
-      console.log('pc',postcounter);
-      return importPostsOneBatch(postcounter)
-    }
+    stamp(length.toString()+ " posts inserted")
+    return
   })
 }
 
-Promise.resolve()
-.then(importUsers)
-.then(importForums)
-.then(importPostsAll)
+var threadcounter = 0
+function importThreads(){
+  return recreateCollection('threads')
+  .then(()=>{
+    stamp('start importing threads from sql')
+    return sqlquery(
+      `SELECT * FROM test.pw_bbs_threads join test.pw_bbs_threads_content
+      on test.pw_bbs_threads_content.tid=test.pw_bbs_threads.tid ;`
+    )
+  })
+  .then(res=>{
+    var threads = res.rows
+    stamp('got threads: '+threads.length)
+    var newthreads = []
+    var newposts = []
+
+    for(i in threads){
+      var t = threads[i]
+
+      newthreads.push({
+        _key:t.tid.toString(),
+        fid:t.fid.toString(),
+        category:t.topic_type.toString(),
+        count_hit:t.hits,
+        disabled:t.disabled?true:undefined,
+      })
+
+      threadcounter = Math.max(threadcounter,t.tid)
+
+      newposts.push({
+        _key:'t' + t.tid.toString(),
+        tid:t.tid.toString(),
+
+        uid:t.created_userid.toString(),
+        ipoc:t.created_ip||undefined,
+
+        toc:t.created_time*1000,
+        tlm:t.modified_time*1000||t.created_time*1000,
+
+        uidlm:t.modified_userid||undefined,
+        iplm:t.modified_ip||undefined,
+
+        t:t.subject,
+        c:t.content,
+        l:'pwbb',
+      })
+    }
+
+    stamp('threads: pushing to arango')
+    return AQL(`
+      for i in @newthreads
+      insert i in threads
+      `,{newthreads}
+    ).then(()=>{
+      return AQL(`
+        for i in @newposts
+        insert i in posts
+        `,{newposts}
+      )
+    })
+    .then(()=>{
+      stamp('threads done')
+    })
+  })
+}
+
+function insertAdmin(){
+  var adminuser = {
+    _key:'-1',
+    username:'nkc',
+    email:'nkc@kc.ac.cn',
+    certs:['dev'],
+    toc:Date.now(),
+  }
+
+  var adminuser_personal = {
+    _key:'-1',
+    password:'123456',
+  }
+
+  return AQL(`insert @adminuser in users`,{adminuser})
+  .then(()=>{
+    return AQL(`insert @adminuser_personal in users_personal`,{adminuser_personal})
+  })
+}
+
+function insertForums(){
+  var f = []
+  f.push({
+    _key:'recycle',
+    description:'发帖一时爽 全家火葬场',
+    display_name:'回收站',
+    order:99,
+    type:'forum',
+  })
+
+  f.push({
+    _key:'draft',
+    description:'未发布/撤回修改',
+    display_name:'草稿箱',
+    order:99,
+    type:'forum',
+  })
+
+  return AQL(`for k in @f insert k in forums`,{f})
+}
+
+function importQuestions(){
+  stamp('importing questions')
+  return recreateCollection('questions')
+  .then(()=>{
+    var exq = require(__projectroot +　'exampleQuestions.json')
+
+    return queryfunc.importCollection(exq,'questions')
+  })
+  .then(res=>{
+    console.log(res);
+    stamp('questions imported')
+  })
+}
+
+var resourcecounter = 0
+function importResources(){
+  return recreateCollection('resources')
+  .then(()=>{
+    return sqlquery('SELECT * FROM test.pw_attachs_thread')
+  })
+  .then(res=>{
+    var resources = res.rows
+    var newresources = []
+
+    for(i in resources){
+      var r = resources[i]
+
+      var filename = r.path.split('/').pop()
+      var extension = nkcfs.getExtensionFromFileName(filename)
+
+      newresources.push({
+        _key:r.aid.toString(),
+        pid:(r.pid!=0?r.pid.toString():'t' + r.tid.toString()),
+        oname:r.name,
+        path:r.path,
+        size:r.size*1024,
+        uid:r.created_userid.toString(),
+        toc:r.created_time*1000,
+        ext:extension,
+      })
+
+      resourcecounter = Math.max(resourcecounter,r.aid)
+    }
+
+    stamp('importing resources to arango...')
+    return queryfunc.importCollection(newresources,'resources')
+  })
+  .then(res=>{
+    console.log(res);
+    stamp('resources imported')
+  })
+}
+
+var updateCounters = ()=>{
+  return recreateCollection('counters')
+  .then(()=>{
+    stamp('counters coll created')
+    var counterdocs = [
+      {count:usercounter+100, _key:'users'},
+      {count:postcounter+100, _key:'posts'},
+      {count:threadcounter+100, _key:'threads'},
+      {count:resourcecounter+100, _key:'resources'},
+    ]
+
+    return AQL(`for i in @counterdocs insert i in counters return NEW`,{counterdocs})
+  })
+  .then(res=>{
+    console.log(res);
+    stamp('counters updated')
+  })
+}
+
+return Promise.all([
+  importPostsAll(),
+  importUsers().then(insertAdmin),
+  importForums().then(insertForums),
+
+  importQuestions(),
+  importThreads(),
+
+])
 .then(()=>{
-  stamp('all done')
+  return importResources()
+  .then(()=>{
+    return updateCounters()
+  })
+})
+.then(()=>{
+})
+.then(()=>{
+  stamp('import all done')
+  stamp('updating all threads...')
+  return operations.table.updateAllThreads.operation()
+})
+.then(()=>{
+  stamp('threads updated')
+  return operations.table.updateAllForums.operation()
+})
+.then(()=>{
+  stamp('forums updated')
 })
 .catch(err=>{
   console.log(err);
 })
 .then(()=>{
-  console.log('ending sql connection...');
-  connection.end()
+  stamp('everything ended')
 })

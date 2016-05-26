@@ -31,7 +31,6 @@ block content
                   option #{data.original_post.l}
                 else
                   option markdown
-                  option bbcode
                   option plain
             
               button#post.btn.btn-default(type='submit' style='float:right;') 发表
@@ -42,8 +41,7 @@ block content
               include interface_attachment_uploader_uploader.jade
               
           .panel.panel-default
-            .panel-body(id='list-container' datasource='/api/resources/mine')
-              include interface_attachment_list_display.jade
+            .panel-body(id='list-container')
                   
         .col-xs-12.col-sm-5.col-md-6
           h4 预览
@@ -61,12 +59,15 @@ block scripts
   script(src='/plain_escaper.js')
   script(src='/xbbcode.js')
   
+  script(src='/react.js')
+  script(src='/JSXTransformer.js')
+  
   script(src='/interface_common.js')
   script(src='/nkc_render.js')
   script(src='/interface_editor.js')
   
   script(src='/interface_attachment_uploader.js')
-  script(src='/interface_attachment_list_display.js')
+  script(type='text/jsx' src='/interface_attachment_list_display.js')
   
   if data.replytarget.indexOf('forum')>=0
     script.

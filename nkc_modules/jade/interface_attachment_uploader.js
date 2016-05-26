@@ -76,7 +76,7 @@ var attachment_uploader = function(options){
 
     for(i in items){
       console.log("Item: " + items[i].type);
-      if (items[i].type.indexOf('image')==0) //if is image
+      if (items[i].type) //if is valid type
       {
         var formData = new FormData();
         formData.append('file', items[i].getAsFile());

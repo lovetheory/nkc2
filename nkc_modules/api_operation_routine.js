@@ -27,8 +27,9 @@ function getPermissionList(user){
   if(!user)
   return permission.getPermissionsFromCerts(['visitor'])
 
-  if(!user.certs)
-  return permission.getPermissionsFromCerts(['visitor'])
+  if(!user.certs){
+    user.certs=[]
+  }
 
   user.certs.push('visitor');
   user.certs.push('default');
