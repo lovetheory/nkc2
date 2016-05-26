@@ -3,7 +3,7 @@ module.exports = table;
 
 module.paths.push(__projectroot + 'nkc_modules'); //enable require-ment for this path
 var moment = require('moment') //packages you may need
-var fs = require('fs-extra')
+var fs = require('nkc_fs')
 var settings = require('server_settings.js');
 var helper_mod = require('helper.js')();
 var queryfunc = require('query_functions')
@@ -20,12 +20,12 @@ table.getResource={
       var destination_path = settings.upload_path;
       var destFile = destination_path + '/' + robject.path
 
-      params._res.setHeader('Content-disposition', 'inline; filename=' + encodeURI(robject.oname));
-      //res.setHeader('Content-type', robject.mime);
+      params._res.sendFile(destFile, {
+        maxAge:1000*86400, //cache everything for 1d
+        lastModified:true,
+        headers:{'Content-Disposition':'inline; filename=' + encodeURI(robject.oname)},
+      })
 
-      params._res.sendFile(destFile,settings.static_settings)
-
-      //var filestream = fs.createReadStream(best_filepathname);
       report(destFile);
 
       return {responseSent:true}
@@ -44,15 +44,6 @@ function getThumbnailPathFor(robject){
   return createThumbnailGetPath(robject)
 }
 
-function ensureDir(thepath){
-  return new Promise((resolve,reject)=>{
-    fs.ensureDir(thepath,function(err){
-      if(err)return reject(err);
-      resolve()
-    })
-  })
-}
-
 function createThumbnailGetPath(robject){
   var destFile = settings.upload_path + '/' + robject.path
 
@@ -63,7 +54,7 @@ function createThumbnailGetPath(robject){
   var thumbnail_path_absolute = settings.thumbnails_path + thumbnail_path_relative;
   var thumbnail_path_absolute_with_filename = thumbnail_path_absolute + filename
 
-  return ensureDir(thumbnail_path_absolute)
+  return fs.ensureDir(thumbnail_path_absolute)
   .then(()=>{
     //4. generate thumbnail for the file
     return im.thumbnailify(destFile,thumbnail_path_absolute_with_filename)
@@ -84,7 +75,8 @@ table.getResourceThumbnail={
     return queryfunc.doc_load(rid,'resources')
     .then(robject=>{
       var destFile = settings.upload_path + '/' + robject.path
-      var extension = robject.oname.split('.').pop()
+
+      var extension = robject.ext
 
       switch (extension) {
         case 'jpg':
@@ -92,7 +84,7 @@ table.getResourceThumbnail={
         case 'gif':
         case 'png':
         case 'svg':
-        
+
         return getThumbnailPathFor(robject)
         .then(thumbnail_path_absolute=>{
           params._res.sendFile(thumbnail_path_absolute,{maxAge:86400000})
@@ -109,5 +101,24 @@ table.getResourceThumbnail={
   },
   requiredParams:{
     rid:String,
+  }
+}
+
+table.getResourceOfCurrentUser={
+  operation:function(params){
+    if(!params.user)throw 'must login'
+    var uid = params.user._key
+
+    return AQL(
+      `
+      for r in resources
+      filter r.uid == @uid && r.pid == null
+      sort r.toc desc
+      limit 20
+      return r
+      `,{
+        uid,
+      }
+    )
   }
 }
