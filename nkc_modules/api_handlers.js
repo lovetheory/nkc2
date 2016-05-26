@@ -68,7 +68,7 @@ api.use((err,req,res,next)=>{
   if(req.file)
   {
     //delete uploaded file when error happens
-    fs.unlink(req.file.filename,(err)=>{
+    fs.unlink(req.file.path,(err)=>{
       if(err)report('error unlinking file, but dont even care',err);
     });
   }
