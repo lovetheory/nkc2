@@ -117,15 +117,19 @@ settings.root_serve_static =
 [
   //clientside js file serving
   {to:'nkc_modules/chat'},
-  {to:'nkc_modules/jquery'},
-  {to:'nkc_modules/react'},
-  {to:'node_modules/marked/lib'},
+  {to:'external_pkgs/jquery'},
+  {to:'external_pkgs/xbbcode'},
+  {to:'external_pkgs/react'},
+  {to:'external_pkgs/Promise'},
+  {map:'/bootstrap',to:'external_pkgs/bootstrap-3.3.6-dist'},
+
   {to:'node_modules/commonmark/dist'},
-  {to:'nkc_modules/vue'},
+
   {to:'nkc_modules/jade'},
-  {to:'nkc_modules/xbbcode'},
+
+
   {to:'nkc_modules/'},
-  {map:'/bootstrap',to:'bootstrap-3.3.6-dist'},
+
   //{map:'/avatar',to:'resources/avatar'},
   {map:'/api/avatar/',to:settings.avatar_path},
   {map:'/api/avatar_small/',to:settings.avatar_path_small},

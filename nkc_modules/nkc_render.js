@@ -17,7 +17,7 @@ function nkc_render(options){
 
     var commonmark = require('commonmark');
     var plain_escape = require('jade/plain_escaper');
-    var XBBCODE = require('xbbcode/xbbcode');
+    var XBBCODE = require(__projectroot+'external_pkgs/xbbcode/xbbcode');
   }
 
 
