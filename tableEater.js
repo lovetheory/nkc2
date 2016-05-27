@@ -446,15 +446,16 @@ var updateCounters = ()=>{
   })
 }
 
-return Promise.all([
-  importPostsAll(),
-  importUsers().then(insertAdmin),
-  importForums().then(insertForums),
+importPostsAll()
+.then(()=>{
+  return Promise.all([
+    importUsers().then(insertAdmin),
+    importForums().then(insertForums),
 
-  importQuestions(),
-  importThreads(),
-
-])
+    importQuestions(),
+    importThreads(),
+  ])
+})
 .then(()=>{
   return importResources()
   .then(()=>{
