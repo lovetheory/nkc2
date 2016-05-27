@@ -6,55 +6,53 @@ const spawn = require('child_process').spawn; //introduce the spawn function
 var im = {};
 var settings = require('server_settings');
 
-function run_async_cb(pathname,options,callback){
-  var starttime = Date.now();
-
-  var child = spawn(pathname, options);
-  var errorstring = '';
-  var stdout_str = '';
-
-  child.stdout.on('data', (data) => {
-    stdout_str += `${data}\n`;
-  });
-
-  child.stderr.on('data', (data) => {
-    errorstring += `${data}\n`;
-  });
-
-  child.on('close', (code) => {
-
-    console.log(
-      `${pathname} exited with code ${code}`,
-      'in',
-      (Date.now()-starttime).toString().cyan,
-      'ms'
-    );
-
-    if(callback){
-      if(code!=0){ //if code not 0, indicating error
-        callback(errorstring);
-      }
-      else {
-        callback(null,stdout_str)
-      }
-    }
-  });
-};
-
 function run_async(pathname,options){
   return new Promise((resolve,reject)=>{
-    run_async_cb(pathname,options,(err,back)=>{
-      if(err)return reject(err);
-      resolve(back);
-    })
+    var starttime = Date.now();
+
+    var child = spawn(pathname, options);
+    var errorstring = '';
+    var stdout_str = '';
+
+    child.stdout.on('data', (data) => {
+      stdout_str += `${data}\n`;
+    });
+
+    child.stderr.on('data', (data) => {
+      errorstring += `${data}\n`;
+    });
+
+    child.on('error',(err)=>{
+      reject(err)
+    });
+
+    child.on('close', (code) => {
+
+      console.log(
+        `${pathname} exited with code ${code}`,
+        'in',
+        (Date.now()-starttime).toString().cyan,
+        'ms'
+      );
+
+      if(code!=0){ //if code not 0, indicating error
+        reject(errorstring);
+      }
+      else {
+        resolve(stdout_str)
+      }
+
+    });
+
   })
-}
+};
 
 //resize and crop to produce rectangular avatar.
 im.avatarify = function(path,callback){
   //avatar square width
   const size = settings.avatar_size||192;
-  return run_async('convert',[ //please make sure ImageMagick exists in PATH
+  return run_async('magick',[ //please make sure ImageMagick exists in PATH
+    'convert',
     path,
     '-colorspace',
     'RGB',
@@ -75,7 +73,8 @@ im.attachify = function(path,callback){
   const maxwidth = settings.attachment_image_width||1280;
   const maxheight = settings.attachment_image_height||16384;
 
-  return run_async('convert',[ //please make sure ImageMagick exists in PATH
+  return run_async('magick',[ //please make sure ImageMagick exists in PATH
+    'convert',
     path,
     //'-colorspace',
     //'RGB',
@@ -101,7 +100,8 @@ im.attachify = function(path,callback){
 //put watermark, only, no resize, please.
 im.watermarkify = function(path,callback){
   //overlaying watermark.
-  return run_async('composite',[ //please make sure ImageMagick exists in PATH
+  return run_async('magick',[ //please make sure ImageMagick exists in PATH
+    'composite',
     '-dissolve',
     '50',
     '-gravity',
@@ -113,13 +113,14 @@ im.watermarkify = function(path,callback){
 }
 
 im.info = function(path,callback){
-  return run_async('identify',[
+  return run_async('magick',[
+    'identify',
     '-format',
     '%wx%h',//print (width)x(height)
     path,
   ])
   .catch(err=>{
-    throw 'failed to identify. not even image'
+    throw err
   })
   .then(back=>{
     sizeinfo = back.trim().split(' ')[0]; //trim needed to remove \n
@@ -134,7 +135,8 @@ im.info = function(path,callback){
 }
 
 im.thumbnailify = function(path,dest,callback){
-  return run_async('convert',[
+  return run_async('magick',[
+    'convert',
     path,
     //'-colorspace',
     //'RGB',
