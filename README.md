@@ -4,7 +4,7 @@ The repository is currently in a volatile state(deadline approaching). Don't pul
 
 # nkc2
 
-![bannerlogo](/resources/kclogo_umaru1_nc.png)
+![bannerlogo](/resources/site_specific/kclogo_umaru1_nc.png)
 
 nkc community project, version 2.
 Currently under dev.
