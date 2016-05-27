@@ -1,7 +1,7 @@
 //refer to forum object as f, count as index..
 
 if index%6==0
-  .clearfix.visible-lg-block
+  //.clearfix.visible-lg-block
 if index%4==0
   .clearfix.visible-md-block
 if index%3==0
@@ -10,25 +10,26 @@ if index%2==0
   .clearfix.visible-xs-block
 //above are necessary when some columns are shorter than others
 
-.col-lg-2.col-md-3.col-xs-6.col-sm-4.HomeForumContainer
-  .HomeForumTitle
-    .HomeForumTitlePrimary
-      a.f16(href='/forum/#{f._key}') #{f.display_name}
-    .HomeForumTitleSecondary
-      if f.count_posts_today > 0
-        span.lighttext 今 #{f.count_posts_today||""}
-  hr.hrNarrowSpace
-  each thread,index in f.threads
-    .HomeThreadItem.f12
-      - var avatar = '/avatar_small/' + thread.oc.uid
-      .HomeThreadAvatarPosition
-        a(href='/thread/#{thread._key}')
-          img.avatar.HomeThreadAvatar(src='#{avatar}')
+.col-lg-2-disabled.col-md-3.col-xs-6.col-sm-4
+  .HomeForumContainer
+    .HomeForumTitle
+      a.HomeForumTitlePrimary(href='/forum/#{f._key}') #{f.display_name}
         
-      .HomeThreadText
-        a(href='/thread/#{thread._key}')
+      .HomeForumTitleSecondary
+        if f.count_posts_today > 0
+          span.lighttext 今 #{f.count_posts_today||""}
+    hr.hrNarrowSpace
+    each thread,index in f.threads
+      .HomeThreadItem.f12
+        - var avatar = '/avatar_small/' + thread.oc.uid
+        .HomeThreadAvatarPosition
+          a(href='/thread/#{thread._key}')
+            img.HomeThreadAvatar(src='#{avatar}')
+          
+        a.HomeThreadText(href='/thread/#{thread._key}' title="#{thread.oc.t}")
           span.HomeThreadTextInner #{thread.oc.t} 
-      .HomeThreadTextRightAlign
-        if thread.count>1
-          span.lighttext.reddish.f12 #{thread.count-1}
-        //span.lighttext.rightalign #{fromNow(thread.lm.toc)}
+          
+        .HomeThreadTextRightAlign
+          if thread.count>1
+            span.lighttext.reddish.f12 #{thread.count-1}
+          //span.lighttext.rightalign #{fromNow(thread.lm.toc)}

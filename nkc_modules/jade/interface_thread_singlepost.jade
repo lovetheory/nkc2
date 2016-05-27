@@ -5,16 +5,16 @@
 .parent.clearfix(id='p#{post._key}')
   .avatar-left
     a(href='#')
-      img.avatar(src='/avatar/#{post.uid}' style='width:64px;')
+      img.ThreadPostAvatar(src='/avatar/#{post.uid}')
   
   .content-right
     if(post.t&&post.t!=''&&index!=0)
-      h4.d-inline.dirt #{post.t}
-    p.d-inline.lighttext
+      span.dirt.ThreadPostTitle #{post.t}
+    .ThreadPostTitleMeta
       span #{post.user?post.user.username:''} - #{fromNow(post.toc)} - 
       a(href='/thread/#{data.thread._key}?post=#{post._key}').lighttext #{dateString(post.toc)} 
-      .ThreadTitleAuxillaryLink
-        a(href="javascript:cartPost('#{post._key}')") 加入管理车
+    .ThreadTitleAuxillaryLink
+      a(href="javascript:cartPost('#{post._key}')") 加入管理车
         
       if data.user
         if data.user._key == post.uid
