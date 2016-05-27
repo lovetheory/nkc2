@@ -10,6 +10,7 @@ function stamp(str){
 
 global.__projectroot = __dirname + '/';//create global variable for project root directory
 module.paths.push(__projectroot + 'nkc_modules'); //enable require-ment for this path
+module.paths.push(__projectroot ); //enable require-ment for this path
 
 //global.environment = process.env.NODE_ENV||'development';
 global.environment = 'development'
@@ -29,13 +30,7 @@ var nkcfs = require('nkc_fs')
 function sqlquery(qstring,placeholders){
   if(!placeholders)placeholders = []
   return new Promise(function(resolve,reject){
-    var connection = mysql.createConnection({
-      host:'127.0.0.1',
-      port:'3306',
-      user:'root',
-      password:'qaz123',
-      database:'test',
-    })
+    var connection = mysql.createConnection(require('tEaterSettings.js').sql)
     connection.connect();
     stamp('query '+qstring+' start')
     connection.query(qstring,placeholders,function(err,rows,fields){
