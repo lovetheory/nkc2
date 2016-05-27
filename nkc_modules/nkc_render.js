@@ -101,7 +101,7 @@ function nkc_render(options){
     })
   }
 
-  var bbcode_experimental = function(post){
+  var pwbb_experimental = function(post){
     var content = post.c||''
 
     var html =
@@ -113,7 +113,14 @@ function nkc_render(options){
     .replace(/&#93;/g,']')
     .replace(/\[[/]{0,1}backcolor[=#a-zA-Z0-9]{0,16}]/g,'')
 
-    html = html.replace(/\n/g,'<br>').replace(/\[attachment=([0-9]{1,16})\]/g,'{r=$1}')
+    // for history reasons...
+
+    .replace(/\n/g,'<br>')
+    .replace(/\[attachment=([0-9]{1,16})\]/g,'{r=$1}')
+    .replace(/\[\/?align=.*?]/g,'')
+    .replace(/\[flash=[0-9]{1,4},[0-9]{1,4}[0-9,]{0,3}](.+.*?)\[\/flash]/gi,
+    '<embed class="PostEmbedFlash" src="$1" allowFullScreen="true" quality="high" allowScriptAccess="always" type="application/x-shockwave-flash"></embed>')
+
     html = attachment_filter(html,post)
 
     return html
@@ -135,7 +142,7 @@ function nkc_render(options){
 
     switch (lang) {
       case 'pwbb':
-      renderedHTML = bbcode_experimental(post)
+      renderedHTML = pwbb_experimental(post)
       break;
       case 'markdown':
       renderedHTML = markdown_experimental(post)
