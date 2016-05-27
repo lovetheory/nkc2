@@ -17,7 +17,10 @@ if index%2==0
         
       .HomeForumTitleSecondary
         if f.count_posts_today > 0
-          span.lighttext 今 #{f.count_posts_today||""}
+          span.HomeForumTitlePostCountToday 今 #{f.count_posts_today||""}/ 
+          
+        span.HomeForumTitleThreadCount #{f.count_threads}/ 
+        span.HomeForumTitlePostCount #{f.count_posts}
     hr.hrNarrowSpace
     each thread,index in f.threads
       .HomeThreadItem.f12

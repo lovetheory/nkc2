@@ -50,11 +50,23 @@
   top: 0;
 }
 .HomeForumTitleSecondary{
+  font-size: 10pt;
   display: block;
   position: absolute;
   right: 0px;
   bottom: 0px;
 }
+
+.HomeForumTitlePostCountToday{
+    color: #E46C6C;
+}
+.HomeForumTitlePostCount{
+    color: #A2A2A2;
+}
+.HomeForumTitleThreadCount{
+    color: #D4BA8A;
+}
+
 .HomeThreadItem{
   margin-bottom: 3px;
   border-color: black;
