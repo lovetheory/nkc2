@@ -6,3 +6,5 @@ exports.sql = {
   password:'qaz123',
   database:'test',
 }
+
+exports.avatar_root = 'D:/kc2014/avatar/000'

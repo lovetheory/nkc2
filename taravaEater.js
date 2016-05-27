@@ -1,9 +1,11 @@
 global.__projectroot = __dirname + '/';//create global variable for project root directory
 module.paths.push(__projectroot + 'nkc_modules'); //enable require-ment for this path
+module.paths.push(__projectroot ); //enable require-ment for this path
+
 var fs = require('fs-extra')
 var dir = require('node-dir');
 
-var fpath = 'D:/kc2014/avatar/000'
+var fpath = require('tEaterSettings.js').avatar_root
 
 var dpath = __projectroot + 'resources/newavatar'
 var spath = __projectroot + 'resources/newavatar_small'
