@@ -15,6 +15,8 @@ module.exports = table;
 
 //post to a given thread.
 var postToThread = function(post,tid,user){
+  var tobject = null
+
   //check existence
   return queryfunc.doc_load(tid,'threads')
   .catch((err)=>{
@@ -22,7 +24,7 @@ var postToThread = function(post,tid,user){
   })
   .then((th)=>{
     //th is the thread object now
-
+    tobject = th
     //apply for a new pid
     return apifunc.get_new_pid();
   })
@@ -49,6 +51,10 @@ var postToThread = function(post,tid,user){
     //update thread object to make sync
     return update_thread(tid)
     .then(r=>{
+      return incrementForumOnNewPost(tid)
+    })
+    .then(r=>{
+      saveResult.fid = tobject.fid
       saveResult.tid = tid;
       saveResult.pid = pid
       saveResult.redirect = '/thread/' + tid.toString()
@@ -93,7 +99,10 @@ var postToForum = function(post,fid,user){
     return queryfunc.doc_save(newthread,'threads')
   })
   .then((result)=>{
-    return postToThread(post,result._key,user);
+    return incrementForumOnNewThread(newtid)
+  })
+  .then((result)=>{
+    return postToThread(post,newtid,user)
   })
 }
 
@@ -129,7 +138,8 @@ var postToPost = function(post,pid,user){ //modification.
   .then(result=>{
     //update thread as needed.
     return update_thread(tid)
-    .then(updateresult=>{
+    .then(updatedThread=>{
+      result.fid = updatedThread.fid
       result.pid = pid;
       result.tid = tid;
       result.redirect = '/thread/' + tid +'?post=' + result._key
@@ -139,6 +149,14 @@ var postToPost = function(post,pid,user){ //modification.
 }
 
 table.postTo = {
+  init:function(){
+    return queryfunc.createIndex('posts',{
+      fields:['tid','toc'],
+      type:'skiplist',
+      unique:'false',
+      sparse:'false',
+    })
+  },
   operation:function(params){
     //0. object extraction
     var user = params.user
@@ -167,14 +185,18 @@ table.postTo = {
       }
     })
     .then(result=>{
+      var parr=[]
       if(result.pid){
-        return updatePost(result.pid)
-        .then(()=>{
-          return result
-        })
+        parr.push(updatePost(result.pid))
       }
 
-      return result
+      if(result.fid){
+        //parr.push(updateForum(result.fid))
+      }
+
+      return Promise.all(parr).then(()=>{
+        return result
+      })
     })
   },
   requiredParams:{
@@ -188,7 +210,7 @@ table.postTo = {
 }
 
 table.getPost = {
-  operation:params=>{
+  operation:function(params){
     var pid = params.pid
 
     return AQL(`
@@ -209,12 +231,41 @@ table.getPost = {
 }
 
 table.updateAllThreads = {
+  init:function(){
+    queryfunc.createIndex('posts',{
+      fields:['tid','toc'],
+      type:'skiplist',
+      unique:'false',
+      sparse:'false',
+    })
+    queryfunc.createIndex('posts',{
+      fields:['tid','tlm'],
+      type:'skiplist',
+      unique:'false',
+      sparse:'false',
+    })
+  },
   operation:function(params){
     return update_all_threads()
   }
 }
 
 table.updateAllForums = {
+  init:function(){
+    queryfunc.createIndex('threads',{
+      fields:['fid','tlm','disabled'],
+      type:'skiplist',
+      unique:'false',
+      sparse:'false',
+    })
+
+    queryfunc.createIndex('threads',{
+      fields:['disabled'],
+      type:'hash',
+      unique:'false',
+      sparse:'false',
+    })
+  },
   operation:function(params){
     return updateAllForums()
   }
@@ -244,6 +295,49 @@ function updatePost(pid){
   })
 }
 
+function incrementForumOnNewThread(tid){
+  return AQL(`
+    let t = document(threads,@tid)
+    filter t.fid!=null
+    let f = document(forums,t.fid)
+
+    UPDATE f WITH {
+      count_threads:f.count_threads+1
+    } IN forums
+    RETURN NEW
+    `,
+    {
+      tid
+    }
+  )
+  .then(res=>{
+    report('incrementForumOnNewThread')
+    return res[0]
+  })
+}
+
+function incrementForumOnNewPost(tid){
+  return AQL(`
+    let t = document(threads,@tid)
+    filter t.fid!=null
+    let f = document(forums,t.fid)
+
+    UPDATE f WITH {
+      count_posts_today:f.count_posts_today+1,
+      count_posts:f.count_posts+1
+    } IN forums
+    RETURN NEW
+    `,
+    {
+      tid
+    }
+  )
+  .then(res=>{
+    report('incrementForumOnNewPost')
+    return res[0]
+  })
+}
+
 function updateForum(fid){
   return AQL(`
     let forum = document(forums,@fid)
@@ -270,23 +364,25 @@ function updateForum(fid){
       fid,
     }
   )
-  .then(result=>{return result[0]})
+  .then(result=>{
+    report('forum updated')
+    report(result[0])
+    return result[0]
+  })
 }
 
 function updateAllForums(){
   return AQL(`
     for t in threads
-    collect fid = t.fid into tgroup = t
+    filter t.disabled==null
+    collect fid = t.fid aggregate count_posts = sum(t.count), count_threads = length(t)
 
     let forum = document(forums,fid)
     filter forum!=null
 
-    let count_posts = sum(for t in tgroup return t.count)
-    let count_threads = length(tgroup)
-
     let count_posts_today = sum(
-      for t in tgroup
-      filter t.tlm > DATE_NOW()-86400*1000
+      for t in threads
+      filter t.fid==fid && t.tlm > DATE_NOW()-86400*1000
       return t.count_today
     )
 
@@ -299,8 +395,8 @@ function updateAllForums(){
 //在对thread或者post作操作之后，更新thread的部分属性以确保其反应真实情况。
 update_thread = (tid)=>{
   return AQL(`
-    FOR t IN threads
-    FILTER t._key == @tid //specify a thread
+    //specify a thread
+    let t = document(threads,@tid)
 
     let oc =(
       FOR p IN posts
@@ -329,29 +425,35 @@ update_thread = (tid)=>{
       return k
     )[0]
     UPDATE t WITH {toc:oc.toc,tlm:lm.toc,lm:lm._key,oc:oc._key,count,count_today} IN threads
+    return NEW
     `
     ,
     {
       tid,
     }
-  )
+  ).then(result=>{
+    report('thread updated')
+    report(result[0])
+    return result[0]
+  })
 };
 
 //!!!danger!!! will make the database very busy.
 update_all_threads = ()=>{
   return AQL(`
     for p in posts
-    collect tid = p.tid into postg = p
+    collect tid = p.tid with COUNT into pcount
 
     let thread = document(threads,tid)
     filter thread!=null
 
-    let oc = (for p in postg sort p.toc asc limit 1 return p)[0]
-    let lm = (for p in postg sort p.tlm desc limit 1 return p)[0]
-    let count = length(postg)
+    let oc = (for p in posts filter p.tid==tid sort p.toc asc limit 1 return p)[0]
+    let lm = (for p in posts filter p.tid==tid sort p.tlm desc limit 1 return p)[0]
+    let count = pcount
+
     let count_today = (
-      for p in postg
-      filter p.toc > DATE_NOW()-86400*1000
+      for p in posts
+      filter p.tid==tid && p.toc > DATE_NOW()-86400*1000
       COLLECT WITH COUNT INTO k
       return k
     )[0]
