@@ -57,7 +57,7 @@ if(use_https){
 }
 //-------------------------------
 
-nkc.use(require('serve-favicon')(__dirname+'/resources/favicon.ico'));
+nkc.use(require('serve-favicon')(__dirname+'/resources/site_specific/favicon.ico'));
 
 if(development)
 nkc.use((req,res,next)=>{
@@ -89,8 +89,8 @@ for(i in settings.root_serve_static)
 }
 
 //default avatar redirection
-nkc.use(rewrite('/api/avatar/*','/default/default_avatar.jpg')) //if avatar not served
-nkc.use(rewrite('/api/avatar_small/*','/default/default_avatar_small.jpg')) //if avatar not served
+nkc.use(rewrite('/api/avatar/*','/default/default_avatar.gif')) //if avatar not served
+nkc.use(rewrite('/api/avatar_small/*','/default/default_avatar_small.gif')) //if avatar not served
 
 nkc.use('/default/',express.static('resources/default_things/',settings.static_settings)) //staticify
 
