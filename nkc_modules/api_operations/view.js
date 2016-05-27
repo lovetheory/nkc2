@@ -78,7 +78,7 @@ function getForumList() {
 table.viewHome = {
   init:function(){
     return queryfunc.createIndex('threads',{
-      fields:['fid','toc'],
+      fields:['fid','disabled','tlm'],
       type:'skiplist',
       unique:'false',
       sparse:'false',
@@ -94,7 +94,7 @@ table.viewHome = {
       let threads =
       (
         for t in threads
-        filter t.fid == f._key && t.disabled!=true
+        filter t.fid == f._key && t.disabled==null
         sort t.tlm desc
 
         limit 0,6
