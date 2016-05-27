@@ -91,7 +91,7 @@ We are currently refactoring. To help, read the following carefully.
   ````
 
 ## To Get Started
-1. Install Node.js, ImageMagick for your system and make sure `npm` and `convert` is available as a command from CLI.
+1. Install Node.js, ImageMagick for your system and make sure `npm` and `magick` are available as commands from CLI.
 2. `git clone` this project, or extract from zip, to somewhere nice
 3. `npm update` there for the dependencies
 4. Make sure ArangoDB is listening on __localhost:8529__, then run __db_restore.command__ from Finder (OS X: may need `chmod +x` first) or `sh db_restore.command` (UNIX) to load the database from JSON files
