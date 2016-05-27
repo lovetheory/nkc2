@@ -276,12 +276,12 @@ function updateForum(fid){
 function updateAllForums(){
   return AQL(`
     for t in threads
-    collect fid = t.fid into tgroup = t.count
+    collect fid = t.fid into tgroup = t
 
     let forum = document(forums,fid)
     filter forum!=null
 
-    let count_posts = sum(tgroup)
+    let count_posts = sum(for t in tgroup return t.count)
     let count_threads = length(tgroup)
 
     let count_posts_today = sum(
