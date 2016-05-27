@@ -54,12 +54,12 @@ block content
   
   include debug_output.jade
 block scripts
-  //script(src='/marked.js')
+
   script(src='/commonmark.js')
   script(src='/plain_escaper.js')
   script(src='/xbbcode.js')
   
-  script(src='/react.js')
+  script(src='/react.min.js')
   script(src='/JSXTransformer.js')
   
   script(src='/interface_common.js')
@@ -67,7 +67,7 @@ block scripts
   script(src='/interface_editor.js')
   
   script(src='/interface_attachment_uploader.js')
-  script(type='text/jsx' src='/interface_attachment_list_display.js')
+  script(type='text/jsx;harmony=true' src='/interface_attachment_list_display.js')
   
   if data.replytarget.indexOf('forum')>=0
     script.

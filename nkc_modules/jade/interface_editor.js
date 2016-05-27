@@ -20,8 +20,8 @@ var nkc_editor = function(){
     if(target==''){alert('请填写发表至的目标。');return;}
 
     return nkcAPI('postTo',{
-      target,
-      post,
+      target:target,
+      post:post,
     })
     .then(function(result){
       var redirectTarget = result.redirect;

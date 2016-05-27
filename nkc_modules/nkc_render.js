@@ -52,7 +52,7 @@ function nkc_render(options){
       case 'svg':
 
       replaced =
-      `<a href="/r/${rid}" target="_blank" title="${oname_safe}"><img class="PostContentImage" alt="${rid}" src="/r/${rid}" /></a><br/>`
+      '<a href="/r/'+rid+'" target="_blank" title="'+oname_safe+'"><img class="PostContentImage" alt="'+rid+'" src="/r/'+rid+'" /></a><br/>'
 
       break;
       //audio section
@@ -61,7 +61,7 @@ function nkc_render(options){
       case 'wma':
       case 'ogg':
       replaced =
-      `<a href="/r/${rid}" download>${oname_safe}</a><br><audio src="/r/${rid}" controls preload="none">你的浏览器可能不支持audio标签播放音乐。升级吧。</audio>`
+      '<a href="/r/'+rid+'" download>'+oname_safe+'</a><br><audio src="/r/'+rid+'" controls preload="none">你的浏览器可能不支持audio标签播放音乐。升级吧。</audio>'
 
       break;
 
@@ -69,19 +69,16 @@ function nkc_render(options){
       case 'webm':
       case 'ogg':
       replaced =
-      `<a href="/r/${rid}" download>${oname_safe}</a><br><video src="/r/${rid}" controls preload="none">你的浏览器可能不支持video标签播放视频。升级吧。</video>`
+      '<a href="/r/'+rid+'" download>'+oname_safe+'</a><br><video src="/r/'+rid+'" controls preload="none">你的浏览器可能不支持video标签播放视频。升级吧。</video>'
 
       break;
 
       default: replaced =
-      `
-      <div class="PostResourceDownload">
-      <a class="PostResourceDownloadLink" href="/r/${rid}" download>
-      <img class="PostResourceDownloadThumbnail" src="/default/default_thumbnail.png"/>${oname_safe}
-      </a>
-      <span class="PostResourceFileSize">${fileSizeString}</span>
-      </div>
-      `
+      '<div class="PostResourceDownload">'
+      +'<a class="PostResourceDownloadLink" href="/r/'+rid+'" download>'
+      +'<img class="PostResourceDownloadThumbnail" src="/default/default_thumbnail.png"/>'+oname_safe+'</a>'
+      +'<span class="PostResourceFileSize">'+fileSizeString+'</span>'
+      +'</div>'
     }
 
     return replaced

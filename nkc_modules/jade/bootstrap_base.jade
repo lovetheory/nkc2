@@ -25,12 +25,12 @@ block body
   
   block footer
     include nkc_footer.jade
-  
-  block scripts 
-  //faster load of app-specific code
-  
+    
   script(src='/jquery-1.11.1.js')
   script(src='/bootstrap/js/bootstrap.min.js')
+  script(src='/promise.min.js')
+  
+  block scripts 
   
   script.
     console.log('(c)2016 科创研究院/广东爱理论科技有限公司')

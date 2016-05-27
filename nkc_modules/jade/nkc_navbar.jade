@@ -35,8 +35,7 @@ div
         .row.f12.text-center
           if data.user
             .col-xs-12(style='margin:13px 0;')
-              a(href='/me') #{data.user.username}
-              text &nbsp;&nbsp;
+              a(href='/me' style='margin-right:13px;') #{data.user.username}
               a(href='/logout') 别
           else
             .col-xs-12(style='margin:13px 0;')
