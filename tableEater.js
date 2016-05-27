@@ -25,7 +25,6 @@ var mysql = require('mysql')
 var AQL = queryfunc.AQL
 
 var nkcfs = require('nkc_fs')
-var operations = require('api_operations')
 
 function sqlquery(qstring,placeholders){
   if(!placeholders)placeholders = []
@@ -467,12 +466,22 @@ return Promise.all([
 .then(()=>{
 })
 .then(()=>{
-  stamp('import all done')
+  stamp('import all done. now create index')
+  var operations = require('api_operations')
+
+  //wait 10s to allow arango indexing
+  return new Promise(function(resolve,reject){
+    setTimeout(resolve,10000)
+  })
+})
+.then(()=>{
   stamp('updating all threads...')
+  var operations = require('api_operations')
   return operations.table.updateAllThreads.operation()
 })
 .then(()=>{
   stamp('threads updated')
+  var operations = require('api_operations')
   return operations.table.updateAllForums.operation()
 })
 .then(()=>{
