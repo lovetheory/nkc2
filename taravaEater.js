@@ -22,6 +22,8 @@ function success(){
 }
 
 dir.files(fpath,function(err,files){
+  if(err)return console.log(err);
+
   console.log('total:',files.length);
 
   for(f in files){
