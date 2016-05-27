@@ -29,6 +29,9 @@ var nkcfs = require('nkc_fs')
 
 function sqlquery(qstring,placeholders){
   if(!placeholders)placeholders = []
+
+  qstring = qstring.replace(/test/g,require('tEaterSettings.js').sql.database)
+
   return new Promise(function(resolve,reject){
     var connection = mysql.createConnection(require('tEaterSettings.js').sql)
     connection.connect();
