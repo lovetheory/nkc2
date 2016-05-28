@@ -22,28 +22,9 @@ function verifySubmittedParams(params){
   return true;
 }
 
-function getPermissionList(user){
-  //retain a list of permissions from user's certs property.
-  if(!user)
-  return permission.getPermissionsFromCerts(['visitor'])
-
-  if(!user.certs){
-    user.certs=[]
-  }
-
-  user.certs.push('visitor');
-  user.certs.push('default');
-
-  //var permissionList = ['moveThread','editPost','replyToThread','replyToThread'];
-  //permissionList = getPermissionFromCerts(user.certs)
-  var permissionList = permission.getPermissionsFromCerts(user.certs)
-
-  return permissionList;
-}
-
 function testPermission(params){
   // test if user is applicapable of executing operation specified by params.
-  var permissionList = getPermissionList(params.user);
+  var permissionList = permission.getPermissionListFromUser(params.user);
   report(permissionList);
 
   if(!permissionList[params.operation]){ //user does not have permission for this operation
@@ -67,7 +48,7 @@ function testPermission(params){
 function executeOperation(params)
 {
   if(!table[params.operation].operation)
-  throw 'operation function n/e, contact developer'
+  throw 'operation function n/a, contact developer'
   return table[params.operation].operation(params);
 }
 
@@ -80,6 +61,7 @@ function APIroutine(context){
 
   if(!context.body) throw 'submit with body, please'
   var params = context.body; //parameter object
+  if(!params.operation)throw 'please specify an operation in your request body object'
   report(params);
   verifySubmittedParams(params); //check whether all required parameters presents
 

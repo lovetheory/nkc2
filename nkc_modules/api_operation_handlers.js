@@ -20,11 +20,13 @@ api.all('/operation',function(req,res,next){
     user:req.user,
     body:req.body,
 
-    _req:req, //Use of these two are not encouraged. For special purpose APIs only.
+    _req:req, //Use of these are not encouraged. For special purpose APIs only.
     _res:res,
+    _next:next,
   })
   .then((result)=>{
-    res.obj = result;
+    res.obj = result||{};
+    return null
   })
   .then(next)
   .catch(next)
