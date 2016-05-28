@@ -1,10 +1,10 @@
 //do sth with the post variable here
 
-  
+- var uid = post.uid
 //post itself
 .parent.clearfix(id='p#{post._key}')
   .avatar-left
-    a(href='#')
+    a(href='/user_threads/#{uid}')
       img.ThreadPostAvatar(src='/avatar/#{post.uid}')
   
   .content-right

@@ -271,6 +271,36 @@ table.updateAllForums = {
   }
 }
 
+table.updateAllUsers = {
+  init:function(){
+    queryfunc.createIndex('posts',{
+      fields:['uid'],
+      type:'hash',
+      unique:'false',
+      sparse:'false',
+    })
+  },
+  operation:function(params){
+    return AQL(`
+      for p in posts
+      collect uid = p.uid with count into count_posts
+
+      let user = document(users,uid)
+      filter user!=null
+
+      let count_threads = (
+        for t in threads
+        filter t.uid == uid
+        collect with count into ct
+        return ct
+      )[0]
+
+      update user with {count_posts,count_threads} in users
+      `
+    )
+  }
+}
+
 function updatePost(pid){
   return queryfunc.doc_load(pid,'posts')
   .then(post=>{
@@ -424,7 +454,8 @@ update_thread = (tid)=>{
       COLLECT WITH COUNT INTO k
       return k
     )[0]
-    UPDATE t WITH {toc:oc.toc,tlm:lm.toc,lm:lm._key,oc:oc._key,count,count_today} IN threads
+
+    UPDATE t WITH {toc:oc.toc,tlm:lm.toc,lm:lm._key,oc:oc._key,uid:oc.uid,count,count_today} IN threads
     return NEW
     `
     ,
@@ -464,7 +495,8 @@ update_all_threads = ()=>{
       oc:oc._key,
       lm:lm._key,
       toc:oc.toc,
-      tlm:lm.toc
+      tlm:lm.toc,
+      uid:oc.uid
     } in threads
     `
   )

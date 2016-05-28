@@ -24,9 +24,10 @@ if index%2==0
     hr.hrNarrowSpace
     each thread,index in f.threads
       .HomeThreadItem.f12
-        - var avatar = '/avatar_small/' + thread.oc.uid
+        - var uid = thread.oc.uid
+        - var avatar = '/avatar_small/' + uid
         .HomeThreadAvatarPosition
-          a(href='/thread/#{thread._key}')
+          a(href='/user_threads/#{uid}')
             img.HomeThreadAvatar(src='#{avatar}')
           
         a.HomeThreadText(href='/thread/#{thread._key}' title="#{thread.oc.t}")

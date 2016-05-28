@@ -22,14 +22,16 @@ block content
             h1 #{data.forum.display_name}
         .row
           .col-xs-8
-            p.
-              #{data.forum.description}
-            a.btn.btn-default(href='/interface/editor?target=#{data.replytarget}') 撰
+            p #{data.forum.description}
+            if data.replytarget
+              a.btn.btn-default(href='/interface/editor?target=#{data.replytarget}') 撰
+            
           .col-xs-4
             p
               span 今 #{data.forum.count_posts_today} | 著 #{data.forum.count_threads} | 復 #{data.forum.count_posts}
-            span 督：
+  
             if data.forum.owners
+              span 督：
               for i,index in data.forum.owners
                 a.d-inline(href='#') #{index?', ':''}#{i.username}
             
@@ -68,10 +70,10 @@ block content
             include interface_forum_singlethread.jade
 
                         
-          
-          a.btn.btn-default(href='/interface/editor?target=#{data.replytarget}') 撰
+          if data.replytarget
+            a.btn.btn-default(href='/interface/editor?target=#{data.replytarget}') 撰
           
       .col-sm-3.col-md-2
         include interface_forums_list.jade
               
-  //include debug_output.jade
+  include debug_output.jade

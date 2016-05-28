@@ -264,6 +264,68 @@ table.viewThread = {
   }
 }
 
+table.viewUserThreads = {
+  requiredParams:{
+    uid:String,
+  },
+  init:function(){
+    queryfunc.createIndex('threads',{
+      fields:['uid','disabled','tlm'],
+      type:'skiplist',
+      unique:'false',
+      sparse:'false',
+    })
+  },
+  operation:function(params){
+    var data=defaultData(params)
+    data.template = jadeDir + 'interface_forum.jade'
+
+    var uid = params.uid
+
+    return queryfunc.doc_load(uid,'users')
+    .then(user=>{
+      data.forum = {
+        display_name:user.username,
+        description:user.intro_text||'',
+        count_threads:user.count_threads||null,
+        count_posts:user.count_posts||null,
+      }
+
+      var uid = user._key
+      return AQL(`
+
+        for t in threads
+        filter t.uid == @uid && t.disabled==null
+        sort t.tlm desc
+        limit @start,@count
+
+        let oc = document(posts,t.oc)
+        let lm = document(posts,t.lm)
+        let ocuser = document(users,oc.uid)
+        let lmuser = document(users,lm.uid)
+
+        return merge(t,{oc,ocuser,lmuser})
+        `,
+        {
+          uid,
+          start:0,
+          count:100,
+        }
+      )
+    })
+    .then(threads=>{
+      //if nothing went wrong
+      data.threads = threads
+      //return apifunc.get_all_forums()
+      return getForumList()
+    })
+    .then(forumlist=>{
+      data.forumlist = forumlist
+      return data
+    })
+  }
+}
+
 table.viewLogout = {
   operation:function(params){
     var data=defaultData(params)
