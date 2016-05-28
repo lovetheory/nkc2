@@ -78,6 +78,15 @@ settings.static_settings = {
   lastModified:true,
 };
 
+http://localhost:1086/api/operation?&operation=viewUserThreads&uid=5097
+
+function urlrewriteGen(pathname,opname){
+  return {
+    map: new RegExp(`^\\/${pathname}\\??(.*)`),
+    to: `/api/operation?&operation=${opname}&$1`
+  }
+}
+
 settings.urlrewrite = [ //happens before serve_static
   // {map:'/',to:'/api'},//到时要删掉。
   // {map:'/nkc/*',to:'/$1'}, //记得删掉
@@ -85,19 +94,29 @@ settings.urlrewrite = [ //happens before serve_static
 
   {map:'/',to:'/home'},
   {map:'/index',to:'/'},
-
   {map:'/me',to:'/interface/me'},
 
-  {map:/^\/exam\?{0,1}(.*)/,to:'/api/operation?&operation=viewExam&$1'},
-  {map:/^\/register\?{0,1}(.*)/,to:'/api/operation?&operation=viewRegister&$1'},
-  {map:/^\/home\?{0,1}(.*)/,to:'/api/operation?&operation=viewHome&$1'},
+  //{map:/^\/exam\?{0,1}(.*)/,to:'/api/operation?&operation=viewExam&$1'},
+  //{map:/^\/register\?{0,1}(.*)/,to:'/api/operation?&operation=viewRegister&$1'},
+  //{map:/^\/home\?{0,1}(.*)/,to:'/api/operation?&operation=viewHome&$1'},
 
-  {map:/^\/logout\?{0,1}(.*)/,to:'/api/operation?&operation=viewLogout&$1'},
-  {map:/^\/login\?{0,1}(.*)/,to:'/api/operation?&operation=viewLogin&$1'},
-  {map:/^\/experimental\?{0,1}(.*)/,to:'/api/operation?&operation=viewExperimental&$1'},
+  urlrewriteGen('home','viewHome'),
+  urlrewriteGen('register','viewRegister'),
+  urlrewriteGen('exam','viewExam'),
 
-  {map:/^\/forum\/([^\?]*)\?{0,1}(.*)/,to:'/api/operation?&operation=viewForum&fid=$1&$2'},
-  {map:/^\/thread\/([^\?]*)\?{0,1}(.*)/,to:'/api/operation?&operation=viewThread&tid=$1&$2'},
+  urlrewriteGen('logout','viewLogout'),
+  urlrewriteGen('login','viewLogin'),
+  urlrewriteGen('experimental','viewExperimental'),
+
+  // {map:/^\/logout\?{0,1}(.*)/,to:'/api/operation?&operation=viewLogout&$1'},
+  // {map:/^\/login\?{0,1}(.*)/,to:'/api/operation?&operation=viewLogin&$1'},
+  // {map:/^\/experimental\?{0,1}(.*)/,to:'/api/operation?&operation=viewExperimental&$1'},
+
+  {map:/^\/forum\/([^\?]*)\??(.*)/,to:'/api/operation?&operation=viewForum&fid=$1&$2'},
+  {map:/^\/thread\/([^\?]*)\??(.*)/,to:'/api/operation?&operation=viewThread&tid=$1&$2'},
+
+  {map:/^\/user_threads\/([^\?]*)\??(.*)/,
+    to:'/api/operation?&operation=viewUserThreads&uid=$1&$2'},
 
   {map:'/e*',to:'/interface/editor$1'},
 
