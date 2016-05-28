@@ -10,6 +10,19 @@ var queryfunc = require('query_functions')
 var im = require('im_functions')
 var AQL = queryfunc.AQL
 
+function sendFile(_res,destFile,opt){
+  return new Promise((resolve,reject)=>{
+    _res.sendFile(destFile,opt,err=>{
+      if(err)return reject(err)
+      resolve()
+    })
+  })
+  .then(()=>{
+    report(destFile);
+    _res.sent = true
+  })
+}
+
 table.getResource={
   operation:function(params){
 
@@ -20,15 +33,11 @@ table.getResource={
       var destination_path = settings.upload_path;
       var destFile = destination_path + '/' + robject.path
 
-      params._res.sendFile(destFile, {
+      return sendFile(params._res,destFile,{
         maxAge:1000*86400, //cache everything for 1d
         lastModified:true,
         headers:{'Content-Disposition':'inline; filename=' + encodeURI(robject.oname)},
       })
-
-      report(destFile);
-
-      return {responseSent:true}
     })
   },
   requiredParams:{
@@ -87,16 +96,13 @@ table.getResourceThumbnail={
 
         return getThumbnailPathFor(robject)
         .then(thumbnail_path_absolute=>{
-          params._res.sendFile(thumbnail_path_absolute,{maxAge:86400000})
-          return {responseSent:true}
+          return sendFile(params._res,thumbnail_path_absolute,{maxAge:86400000})
         })
         break;
 
         default:
-        params._res.sendFile(settings.default_thumbnail_path,{maxAge:86400000})
-        return {responseSent:true}
+        return sendFile(params._res,settings.default_thumbnail_path,{maxAge:86400000})
       }
-
     })
   },
   requiredParams:{

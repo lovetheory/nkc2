@@ -38,12 +38,8 @@ api.use(require('api_operation_handlers'));
 //send apidata back to client
 api.use((req,res,next)=>{
   var obj = res.obj
-  if(obj)
+  if(obj) //if not null
   {
-    if(obj.responseSent){
-      return
-    }
-
     if(!obj.template){
       return res.json(report(obj));
       //return without continue
@@ -53,6 +49,10 @@ api.use((req,res,next)=>{
     return res.send(k);
   }
 
+  if(res.sent){
+    return;
+  }
+  
   return next();
 });
 
@@ -78,6 +78,7 @@ api.use((err,req,res,next)=>{
       throw err //let server.js error handler catch.
     }
   }
+
   res.status(500).json(report('error within /api',err));
 });
 
