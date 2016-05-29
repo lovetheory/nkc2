@@ -298,7 +298,7 @@ table.viewUserThreads = {
     .then(user=>{
       data.forum = {
         display_name:user.username,
-        description:user.intro_text||'',
+        description:user.post_sign||'',
         count_threads:user.count_threads||null,
         count_posts:user.count_posts||null,
       }
