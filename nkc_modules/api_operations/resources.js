@@ -43,6 +43,27 @@ table.getResource={
   requiredParams:{
     rid:String,
   },
+  testPermission:function(params){
+   var po = params.permittedOperations
+   var cc = params.contentClasses
+
+   return queryfunc.doc_load(params.rid,'resources')
+   .then(function(robject){
+     if(['jpg','jpeg','gif','png','svg'].indexOf(robject.ext)>=0){
+       if(cc['images']){
+         return
+       }
+     } //if image
+     else{
+      //if non_image
+      if(cc['non_images']){
+        return
+      }
+     }
+
+     throw 401
+   })
+  }
 }
 
 function getThumbnailPathFor(robject){
