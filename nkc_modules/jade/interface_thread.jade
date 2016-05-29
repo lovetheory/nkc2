@@ -13,17 +13,19 @@ block content
           if data.posts.length == 0
             h2 您要找的帖子不存在。
           else
+            - var fid = data.thread.fid
             .ThreadTitle
               - var forumname = data.forum.display_name
-              a.ThreadTitleForumLink(href='/forum/#{data.thread.fid}') #{forumname} 
+              a.ThreadTitleForumLink(href='/forum/#{fid}') #{forumname} 
               
-              h2.d-inline #{data.oc.t}
+              a.ThreadTitleText(href='/thread/#{data.thread._key}') #{data.oc.t} 
+                
               .ThreadTitleAuxillary.d-inline.lighttext
-
                                 
                 .ThreadTitleAuxillaryLink
                   a(href="javascript:cartThread('#{data.thread._key}')") 加入管理车
-                  
+            
+            include interface_navigation_paging.jade      
             hr.ThreadTitleHr
             .ThreadPostList
               each post,index in data.posts
@@ -31,8 +33,11 @@ block content
                 
                 //horizontal line
                 hr.ThreadSinglePostHr
+
+            include interface_navigation_paging.jade
+            hr.ThreadSinglePostHr
+            a.btn.btn-default(href='/interface/editor?target=#{data.replytarget}') 回复
               
-              a.btn.btn-default(href='/interface/editor?target=#{data.replytarget}') 復
                 
       .col-sm-3.col-md-2
         include interface_forums_list.jade

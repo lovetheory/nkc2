@@ -1,17 +1,18 @@
 //do sth with the post variable here
 
 - var uid = post.uid
+- var user = post.user
 //post itself
 .parent.clearfix(id='p#{post._key}')
   .avatar-left
-    a(href='/user_threads/#{uid}')
+    a(href='/user_threads/#{uid}' title='#{user.username}')
       img.ThreadPostAvatar(src='/avatar/#{post.uid}')
   
   .content-right
     if(post.t&&post.t!=''&&index!=0)
       span.dirt.ThreadPostTitle #{post.t}
     .ThreadPostTitleMeta
-      span #{post.user?post.user.username:''} - #{fromNow(post.toc)} - 
+      span #{user?user.username:''} - #{fromNow(post.toc)} - 
       a(href='/thread/#{data.thread._key}?post=#{post._key}').lighttext #{dateString(post.toc)} 
     .ThreadTitleAuxillaryLink
       a(href="javascript:cartPost('#{post._key}')") 加入管理车

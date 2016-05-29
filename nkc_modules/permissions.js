@@ -18,7 +18,7 @@ var certificates={
     display_name:'编辑',
     inheritFrom:['moderator'],
 
-    content_class:{
+    contentClasses:{
       administrative:true,
     },
 
@@ -31,7 +31,7 @@ var certificates={
     display_name:'版主',
     inheritFrom:['scholar'],
 
-    content_class:{
+    contentClasses:{
       classified:true,
     },
 
@@ -48,7 +48,7 @@ var certificates={
     display_name:'学者',
     inheritFrom:['default'],
 
-    content_class:{
+    contentClasses:{
       sensitive:true,
     },
 
@@ -60,8 +60,10 @@ var certificates={
     display_name:'学生',
     inheritFrom:['visitor'],
 
-    content_class:{
+    contentClasses:{
       regular:true,
+      picture:true,
+      non_picture:true,
     },
     permittedOperations:{
       listCart:true,
@@ -71,15 +73,15 @@ var certificates={
 
       viewExperimental:true,
 
-      getResourceThumbnail:true,
-      getResourceOfCurrentUser:true,
-      getResource:true,
+
     },
   },
 
   visitor:{ //public
-    content_class:{
+    contentClasses:{
       null:true,
+      images:true,
+      non_images:false,
     },
     permittedOperations:{
       viewThread:true,
@@ -97,6 +99,10 @@ var certificates={
       userLogout:true,
       viewLogout:true,
       viewLogin:true,
+
+      getResourceThumbnail:true,
+      getResourceOfCurrentUser:true,
+      getResource:true,
     }
   },
 
@@ -113,7 +119,7 @@ var certificates={
 //certs is [] of certificate names
 var getPermissionsFromCerts = (certsArray)=>{
   var permittedOperations={};
-  var content_class={};
+  var contentClasses={};
 
   for(i in certsArray)
   {
@@ -127,15 +133,15 @@ var getPermissionsFromCerts = (certsArray)=>{
       var c = getPermissionsFromCerts(certificate.inheritFrom)
 
       Object.assign(permittedOperations,c.permittedOperations)
-      Object.assign(content_class,c.content_class)
+      Object.assign(contentClasses,c.contentClasses)
     }
 
     Object.assign(permittedOperations,certificate.permittedOperations)
-    Object.assign(content_class,certificate.content_class)
+    Object.assign(contentClasses,certificate.contentClasses)
   }
   return {
     permittedOperations,
-    content_class,
+    contentClasses,
   }
 };
 

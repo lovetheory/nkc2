@@ -20,7 +20,7 @@ function defaultData(params){ //default data obj for views
   return {
     site:settings.site,
     user,
-    content_class:params.content_class,
+    contentClasses:params.contentClasses,
   }
 }
 
@@ -89,14 +89,14 @@ table.viewHome = {
     var data = defaultData(params)
     data.template = jadeDir+ 'interface_home.jade'
 
-    var content_class = params.content_class
+    var contentClasses = params.contentClasses
 
     return AQL(`
       for f in forums
 
       let class = f.class
 
-      filter has(@content_class,TO_STRING(class)) /*content ctrl*/
+      filter has(@contentClasses,TO_STRING(class)) /*content ctrl*/
 
       filter f.type == 'forum' && f.parentid !=null
       let threads =
@@ -119,7 +119,7 @@ table.viewHome = {
       return group
       `,
       {
-        content_class,
+        contentClasses,
       }
     )
     .then(grouparray=>{
@@ -236,7 +236,7 @@ table.viewForum = {
 table.viewThread = {
   init:function(){
     return queryfunc.createIndex('posts',{
-      fields:['tid','disabled','toc'],
+      fields:['tid','toc'],
       type:'skiplist',
       unique:'false',
       sparse:'false',
@@ -250,10 +250,12 @@ table.viewThread = {
       })
     })
   },
-  operation:params=>{
-    var data=defaultData(params)
+  operation:function(params){
+    var data = defaultData(params)
     data.template = jadeDir + 'interface_thread.jade'
     var tid = params.tid
+
+    var paging = getPaging(params)
 
     return AQL(
       `
@@ -264,10 +266,10 @@ table.viewThread = {
 
       let posts = (
         for p in posts
-        sort p.tid asc, p.disabled asc, p.toc asc
-        filter p.tid == thread._key && p.disabled==null
+        sort p.tid asc, p.toc asc
+        filter p.tid == thread._key
 
-        limit 0,50
+        limit @start,@count
 
         let user = document(users,p.uid)
 
@@ -296,10 +298,18 @@ table.viewThread = {
       `,
       {
         tid,
+        start:paging.start,
+        count:paging.count,
       }
     )
     .then(result=>{
       Object.assign(data,result[0]);
+
+      var thread = data.thread
+
+      paging.pagecount = thread.count?Math.floor(thread.count / paging.perpage) + 1:null
+
+      data.paging = paging
     })
     .then(result=>{
       return getForumList()

@@ -19,12 +19,14 @@ block content
         .row
           .col-md-12
             //img(src='http://bbs.kechuang.org/themes/site/dingzhi/images/logo.png')
-            h1 #{data.forum.display_name}
+            h1.ForumName #{data.forum.display_name}
         .row
           .col-xs-8
             p #{data.forum.description}
+            
             if data.replytarget
-              a.btn.btn-default(href='/interface/editor?target=#{data.replytarget}') 撰
+              a.btn.btn-default(style="margin-bottom:10px" href='/interface/editor?target=#{data.replytarget}') 新
+            
             
           .col-xs-4
             p
@@ -33,38 +35,26 @@ block content
             if data.forum.owners
               span 督：
                 a.d-inline(href='#') #{index?', ':''}#{i.username}
-            
+
         .row
           .col-md-12
             nav
+              include interface_navigation_paging.jade
+              
               - var paging = data.paging
               - var digest = data.digest
-              
-              if paging
-                
-                - var start = Math.max(0,paging.page-3)
-                - var pagingarray = []
-                - for(i = start;i<start+7;i++){pagingarray.push(i)}
-                
-                ul.pagination.marginless
-                  each pagenum,index in pagingarray
-                    - var class_str = pagenum==paging.page?'active':''
-                    
-                    li(class='#{class_str}')
-                      a(href='#{toQueryString({page:pagenum,digest})}') #{pagenum}
-              
               - var class_str_all = digest?'':'active'
               - var class_str_digest = digest?'active':''
               
-              ul.pagination.marginless
+              ul.pagination.NavigationPaging
                 - var page = paging?paging.page:null
                 li(class="#{class_str_all}")
                   a(href='#{toQueryString({page})}') 俱
                   
                 li(class="#{class_str_digest}")
-                  a(href='#{toQueryString({page,digest:true})}') 高
+                  a(href='#{toQueryString({page,digest:true})}') 精
           
-              ul.pagination.marginless
+              ul.pagination.NavigationPaging
                 each val,index in ['復序','帖序']
                   if index==0
                     li.active
@@ -80,7 +70,7 @@ block content
 
                         
           if data.replytarget
-            a.btn.btn-default(href='/interface/editor?target=#{data.replytarget}') 撰
+            a.btn.btn-default(style="margin-top:10px" href='/interface/editor?target=#{data.replytarget}') 新
           
       .col-sm-3.col-md-2
         include interface_forums_list.jade

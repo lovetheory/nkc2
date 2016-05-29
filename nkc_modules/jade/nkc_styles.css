@@ -88,6 +88,9 @@
   border-radius: 10%;
 }
 
+.HomeThreadTextDigest{
+  color: #DE8C24;
+}
 .HomeThreadText{
   /* margin-left:3px; */
   /* display: inline-block; */
@@ -118,6 +121,10 @@
   /* font-size: 12pt; */
 }
 
+.ForumName{
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
 .ForumsListBody{
   display: inline-block;
   width: 110px;
@@ -127,6 +134,11 @@
 }
 .ForumsListForumItem{
   padding-left: 10px;
+}
+
+.NavigationPaging{
+  margin: 0;
+  margin-right: 7px;
 }
 
 .reddish {
@@ -235,13 +247,20 @@ h4,h5,h6 {
 
 .ThreadTitleForumLink{
   display: block;
-  margin-bottom: 5px;
+  margin-bottom: 0;
   color: #bbb;
   font-size: 14pt;
 }
 .ThreadTitle {
-  display: inline-block;
+  display: block;
   margin-bottom: 0;
+}
+
+.ThreadTitleText, .ThreadTitleText:visited{color: black;font-size: 22pt;margin-bottom: 5px;margin-top: 0;display: inline-block;}
+
+.ThreadTitleText:hover, .ThreadTitleText:focus{
+color: #6B6B6B;
+text-decoration: none;
 }
 .ThreadTitleAuxillary{
   display: inline-block;

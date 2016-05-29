@@ -32,6 +32,10 @@ function testPermission(params){
   }
 
   Object.assign(params,permissionList)
+  // {
+  //   permittedOperations:Object,
+  //   content_class:Object,
+  // }
 
   var operation = params.operation
 

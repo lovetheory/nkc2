@@ -17,7 +17,7 @@ if index%2==0
         
       .HomeForumTitleSecondary
         if f.count_posts_today > 0
-          span.HomeForumTitlePostCountToday 今 #{f.count_posts_today||""}/ 
+          span.HomeForumTitlePostCountToday #{f.count_posts_today||""}/ 
           
         span.HomeForumTitleThreadCount #{f.count_threads}/ 
         span.HomeForumTitlePostCount #{f.count_posts}
@@ -29,9 +29,13 @@ if index%2==0
         .HomeThreadAvatarPosition
           a(href='/user_threads/#{uid}')
             img.HomeThreadAvatar(src='#{avatar}')
-          
-        a.HomeThreadText(href='/thread/#{thread._key}' title="#{thread.oc.t}")
-          span.HomeThreadTextInner #{thread.oc.t} 
+        
+        if !thread.digest
+          a.HomeThreadText(href='/thread/#{thread._key}' title="#{thread.oc.t}")
+            span.HomeThreadTextInner #{thread.oc.t} 
+        else
+          a.HomeThreadText.HomeThreadTextDigest(href='/thread/#{thread._key}' title="#{thread.oc.t}")
+            span.HomeThreadTextInner #{thread.oc.t} 
           
         .HomeThreadTextRightAlign
           if thread.count>1

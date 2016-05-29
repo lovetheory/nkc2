@@ -1,0 +1,19 @@
+- var paging = data.paging
+- var digest = data.digest
+
+if paging
+  
+  - var start = Math.max(0,paging.page-3)
+  - var pagingarray = []
+  - var pagecount = paging.pagecount||100
+  - for(i = start;i<Math.min(start+7,pagecount);i++){pagingarray.push(i)}
+  
+  if pagecount==1
+    //ignore navigation, 1 page only
+  else
+    ul.pagination.NavigationPaging
+      each pagenum,index in pagingarray
+        - var class_str = pagenum==paging.page?'active':''
+        
+        li(class='#{class_str}')
+          a(href='#{toQueryString({page:pagenum,digest})}') #{pagenum}

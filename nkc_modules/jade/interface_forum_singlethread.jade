@@ -12,9 +12,10 @@
   .ForumThreadItemContent
     div
       if digest
-        span.f12.ForumThreadDigestText [高]
-      
-      a.f12(href="#{url}") #{oc.t} 
+        //span.f12.ForumThreadDigestText [精]
+        a.f12.ForumThreadDigestText(href="#{url}") #{oc.t} 
+      else
+        a.f12(href="#{url}") #{oc.t} 
       //帖子标题链接
     
     div
