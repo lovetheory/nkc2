@@ -24,14 +24,15 @@ function verifySubmittedParams(params){
 
 function testPermission(params){
   // test if user is applicapable of executing operation specified by params.
-  var permissionList = permission.getPermissionListFromUser(params.user);
+  var permissionList = permission.getPermissionsFromUser(params.user);
   report(permissionList);
 
-  if(!permissionList[params.operation]){ //user does not have permission for this operation
+  if(!permissionList.permittedOperations[params.operation]){ //user does not have permission for this operation
     throw 'permission denied.'
   }
 
-  params.permissionList = permissionList
+  Object.assign(params,permissionList)
+
   var operation = params.operation
 
   if(table[operation].testPermission){
