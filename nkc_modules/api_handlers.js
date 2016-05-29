@@ -52,7 +52,7 @@ api.use((req,res,next)=>{
   if(res.sent){
     return;
   }
-  
+
   return next();
 });
 
@@ -78,6 +78,8 @@ api.use((err,req,res,next)=>{
       throw err //let server.js error handler catch.
     }
   }
+
+  if(typeof err ==='number')return res.status(err).end()
 
   res.status(500).json(report('error within /api',err));
 });
