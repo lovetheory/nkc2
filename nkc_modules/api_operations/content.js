@@ -246,7 +246,35 @@ table.updateAllThreads = {
     })
   },
   operation:function(params){
-    return update_all_threads()
+    return AQL(`
+      for p in posts
+      collect tid = p.tid with COUNT into pcount
+
+      let thread = document(threads,tid)
+      filter thread!=null
+
+      let oc = (for p in posts filter p.tid==tid sort p.toc asc limit 1 return p)[0]
+      let lm = (for p in posts filter p.tid==tid sort p.tlm desc limit 1 return p)[0]
+      let count = pcount
+
+      let count_today = (
+        for p in posts
+        filter p.tid==tid && p.toc > DATE_NOW()-86400*1000
+        COLLECT WITH COUNT INTO k
+        return k
+      )[0]
+
+      update thread with {
+        count,
+        count_today,
+        oc:oc._key,
+        lm:lm._key,
+        toc:oc.toc,
+        tlm:lm.toc,
+        uid:oc.uid
+      } in threads
+      `
+    )
   }
 }
 
@@ -267,7 +295,23 @@ table.updateAllForums = {
     })
   },
   operation:function(params){
-    return updateAllForums()
+    return AQL(`
+      for t in threads
+      filter t.disabled==null
+      collect fid = t.fid aggregate count_posts = sum(t.count), count_threads = length(t)
+
+      let forum = document(forums,fid)
+      filter forum!=null
+
+      let count_posts_today = sum(
+        for t in threads
+        filter t.fid==fid && t.tlm > DATE_NOW()-86400*1000
+        return t.count_today
+      )
+
+      update forum with {count_posts,count_posts_today,count_threads} in forums
+      `
+    )
   }
 }
 
@@ -402,23 +446,7 @@ function updateForum(fid){
 }
 
 function updateAllForums(){
-  return AQL(`
-    for t in threads
-    filter t.disabled==null
-    collect fid = t.fid aggregate count_posts = sum(t.count), count_threads = length(t)
 
-    let forum = document(forums,fid)
-    filter forum!=null
-
-    let count_posts_today = sum(
-      for t in threads
-      filter t.fid==fid && t.tlm > DATE_NOW()-86400*1000
-      return t.count_today
-    )
-
-    update forum with {count_posts,count_posts_today,count_threads} in forums
-    `
-  )
 }
 
 
@@ -471,33 +499,5 @@ update_thread = (tid)=>{
 
 //!!!danger!!! will make the database very busy.
 update_all_threads = ()=>{
-  return AQL(`
-    for p in posts
-    collect tid = p.tid with COUNT into pcount
 
-    let thread = document(threads,tid)
-    filter thread!=null
-
-    let oc = (for p in posts filter p.tid==tid sort p.toc asc limit 1 return p)[0]
-    let lm = (for p in posts filter p.tid==tid sort p.tlm desc limit 1 return p)[0]
-    let count = pcount
-
-    let count_today = (
-      for p in posts
-      filter p.tid==tid && p.toc > DATE_NOW()-86400*1000
-      COLLECT WITH COUNT INTO k
-      return k
-    )[0]
-
-    update thread with {
-      count,
-      count_today,
-      oc:oc._key,
-      lm:lm._key,
-      toc:oc.toc,
-      tlm:lm.toc,
-      uid:oc.uid
-    } in threads
-    `
-  )
 };

@@ -20,6 +20,7 @@ function defaultData(params){ //default data obj for views
   return {
     site:settings.site,
     user,
+    content_class:params.content_class,
   }
 }
 
@@ -77,8 +78,8 @@ function getForumList() {
 
 table.viewHome = {
   init:function(){
-    return queryfunc.createIndex('threads',{
-      fields:['fid','disabled','tlm'],
+    queryfunc.createIndex('threads',{
+      fields:['fid','disabled'],
       type:'skiplist',
       unique:'false',
       sparse:'false',
@@ -88,15 +89,22 @@ table.viewHome = {
     var data = defaultData(params)
     data.template = jadeDir+ 'interface_home.jade'
 
+    var content_class = params.content_class
+
     return AQL(`
       for f in forums
+
+      let class = f.class
+
+      filter has(@content_class,TO_STRING(class)) /*content ctrl*/
+
       filter f.type == 'forum' && f.parentid !=null
       let threads =
       (
         for t in threads
-        filter t.fid == f._key && t.disabled==null
-        sort t.tlm desc
 
+        filter t.fid == f._key && t.disabled==null
+        sort t.fid desc,t.disabled desc, t.tlm desc
         limit 0,6
 
         let oc = document(posts,t.oc)
@@ -109,7 +117,10 @@ table.viewHome = {
       let group =  {parentforum,forumgroup}
       sort group.parentforum.order asc
       return group
-      `
+      `,
+      {
+        content_class,
+      }
     )
     .then(grouparray=>{
       data.grouparray = grouparray;
@@ -131,7 +142,7 @@ function get_all_forums(){
 table.viewForum = {
   init:function(){
     return queryfunc.createIndex('threads',{
-      fields:['fid','tlm'],
+      fields:['fid','disabled','tlm'],
       type:'skiplist',
       unique:'false',
       sparse:'false',
@@ -146,8 +157,8 @@ table.viewForum = {
       let forum = document(forums,@fid)
       let threads = (
         for t in threads
-        filter t.fid == forum._key && t.disabled!=true
-        sort t.tlm desc
+        filter t.fid == forum._key && t.disabled==null
+        sort t.fid desc, t.disabled desc, t.tlm desc
         limit @start,@count
 
         let oc = document(posts,t.oc)
@@ -186,7 +197,7 @@ table.viewForum = {
 table.viewThread = {
   init:function(){
     return queryfunc.createIndex('posts',{
-      fields:['tid','toc'],
+      fields:['tid','disabled','toc'],
       type:'skiplist',
       unique:'false',
       sparse:'false',
@@ -214,8 +225,9 @@ table.viewThread = {
 
       let posts = (
         for p in posts
-        filter p.tid == thread._key && p.disabled!=true
-        sort p.toc asc
+        sort p.tid asc, p.disabled asc, p.toc asc
+        filter p.tid == thread._key && p.disabled==null
+
         limit 0,50
 
         let user = document(users,p.uid)
@@ -293,10 +305,9 @@ table.viewUserThreads = {
 
       var uid = user._key
       return AQL(`
-
         for t in threads
+        sort t.uid desc,t.disabled desc,t.tlm desc
         filter t.uid == @uid && t.disabled==null
-        sort t.tlm desc
         limit @start,@count
 
         let oc = document(posts,t.oc)
