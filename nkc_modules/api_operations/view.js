@@ -139,6 +139,30 @@ function get_all_forums(){
   )
 }
 
+function getPaging(params){
+  var pagestr = params.page
+
+  if(pagestr){
+    var page = parseInt(pagestr)
+    if(page===NaN)page = 0
+  }else{
+    var page = 0
+  }
+
+  var perpage = 30
+  var start = page* perpage
+  var count = perpage
+
+  var paging = {
+    page,
+    perpage,
+    start,
+    count,
+  }
+
+  return paging
+}
+
 table.viewForum = {
   init:function(){
     return queryfunc.createIndex('threads',{
@@ -153,12 +177,27 @@ table.viewForum = {
     data.template = jadeDir+ 'interface_forum.jade'
     var fid = params.fid;
 
+    if(params.digest){
+      var filter = `
+      filter t.fid == forum._key && t.digest == true
+      sort t.fid desc, t.digest desc, t.tlm desc
+      `
+      data.digest = true
+    }else{
+      var filter = `
+      filter t.fid == forum._key && t.disabled==null
+      sort t.fid desc, t.disabled desc, t.tlm desc
+      `
+    }
+
+    var paging = getPaging(params)
+    data.paging = paging
+
     return AQL(`
       let forum = document(forums,@fid)
       let threads = (
         for t in threads
-        filter t.fid == forum._key && t.disabled==null
-        sort t.fid desc, t.disabled desc, t.tlm desc
+        ${filter}
         limit @start,@count
 
         let oc = document(posts,t.oc)
@@ -173,8 +212,8 @@ table.viewForum = {
       `,
       {
         fid,
-        start:0,
-        count:100,
+        start:paging.start,
+        count:paging.count,
       }
     )
     .then((result)=>{
@@ -303,11 +342,28 @@ table.viewUserThreads = {
         count_posts:user.count_posts||null,
       }
 
+      if(params.digest){
+        var filter = `
+        sort t.uid desc,t.disabled desc,t.tlm desc
+        filter t.uid == @uid && t.digest==true
+        `
+        data.digest = true
+      }else{
+        var filter = `
+        sort t.uid desc,t.disabled desc,t.tlm desc
+        filter t.uid == @uid && t.disabled==null
+        `
+      }
+
+      var paging = getPaging(params)
+      data.paging = paging
+
       var uid = user._key
       return AQL(`
         for t in threads
-        sort t.uid desc,t.disabled desc,t.tlm desc
-        filter t.uid == @uid && t.disabled==null
+
+        ${filter}
+
         limit @start,@count
 
         let oc = document(posts,t.oc)
@@ -319,8 +375,8 @@ table.viewUserThreads = {
         `,
         {
           uid,
-          start:0,
-          count:100,
+          start:paging.start,
+          count:paging.count,
         }
       )
     })

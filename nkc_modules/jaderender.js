@@ -27,6 +27,17 @@ var jadeoptions = {
   experimental_render:render.experimental_render,
   dateString:dateString,
   fromNow:fromNow,
+
+  toQueryString:function(object){
+    var qs = ''
+    for(key in object){
+      var value = object[key]
+      if(value){
+        qs+= '&'+key.toString()+'='+ value.toString()
+      }
+    }
+    return '?'+qs
+  },
 };
 
 Object.assign(jadeoptions,settings.jadeoptions); //apply settings from settings.js

@@ -292,6 +292,7 @@ function importThreads(){
         category:t.topic_type.toString(),
         count_hit:t.hits,
         disabled:t.disabled?true:undefined,
+        digest:t.digest?true:undefined,
       })
 
       threadcounter = Math.max(threadcounter,t.tid)
@@ -304,7 +305,7 @@ function importThreads(){
         ipoc:t.created_ip||undefined,
 
         toc:t.created_time*1000,
-        tlm:t.modified_time*1000||t.created_time*1000,
+        tlm:(t.modified_time||t.created_time)*1000,
 
         uidlm:t.modified_userid||undefined,
         iplm:t.modified_ip||undefined,
@@ -468,9 +469,9 @@ importPostsAll()
   stamp('import all done. now create index')
   var operations = require('api_operations')
 
-  //wait 10s to allow arango indexing
+  //wait 15s to allow arango indexing
   return new Promise(function(resolve,reject){
-    setTimeout(resolve,10000)
+    setTimeout(resolve,15000)
   })
 })
 .then(()=>{
@@ -492,5 +493,6 @@ importPostsAll()
   console.log(err);
 })
 .then(()=>{
+  stamp('user updated')
   stamp('everything ended')
 })

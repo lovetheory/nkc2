@@ -188,6 +188,12 @@ h4,h5,h6 {
   display: table-cell;
   width: 45px;
 }
+
+.ForumThreadDigestText{
+    color: orange;
+    margin-right: 6px;
+}
+
 .ForumThreadItemContent {
   vertical-align: middle;
   /* position: absolute; */
