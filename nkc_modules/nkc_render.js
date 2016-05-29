@@ -28,6 +28,13 @@ function nkc_render(options){
   });
 
   render.plain_render = plain_escape;
+  render.commonmark_render = function(md){
+    var parsed = commonreader.parse(md)
+    var rendered = commonwriter.render(parsed)
+
+    return rendered;
+  }
+
 
   var getHTMLForResource = function(r){
     var rid = r._key
