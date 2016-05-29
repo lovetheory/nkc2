@@ -1,30 +1,33 @@
 //do sth with the post variable here
 
-- var uid = post.uid
-- var user = post.user
-//post itself
-.parent.clearfix(id='p#{post._key}')
-  .avatar-left
-    a(href='/user_threads/#{uid}' title='#{user.username}')
-      img.ThreadPostAvatar(src='/avatar/#{post.uid}')
+if !post.disabled
+  - var uid = post.uid
+  - var user = post.user
+  //post itself
+  .parent.clearfix(id='p#{post._key}')
+    .avatar-left
+      a(href='/user_threads/#{uid}' title='#{user.username}')
+        img.ThreadPostAvatar(src='/avatar/#{post.uid}')
+    
+    .content-right
+      if(post.t&&post.t!=''&&index!=0)
+        span.dirt.ThreadPostTitle #{post.t}
+      .ThreadPostTitleMeta
+        span #{user?user.username:''} - #{fromNow(post.toc)} - 
+        a(href='/thread/#{data.thread._key}?post=#{post._key}').lighttext #{dateString(post.toc)} 
+      .ThreadTitleAuxillaryLink
+        a(href="javascript:cartPost('#{post._key}')") 加入管理车
+          
+        if data.user
+          if data.user._key == post.uid
+            text  - 
+            a(href='/e?target=post/#{post._key}') 编辑
+      div.ThreadPostBody!= experimental_render(post)
+
+
+      if post.toc!=post.tlm
+        p.lighttext [修改于 #{fromNow(post.tlm)} - #{dateString(post.tlm)}]
+      //span #{post.user?post.user.post_sign:''}
+else
   
-  .content-right
-    if(post.t&&post.t!=''&&index!=0)
-      span.dirt.ThreadPostTitle #{post.t}
-    .ThreadPostTitleMeta
-      span #{user?user.username:''} - #{fromNow(post.toc)} - 
-      a(href='/thread/#{data.thread._key}?post=#{post._key}').lighttext #{dateString(post.toc)} 
-    .ThreadTitleAuxillaryLink
-      a(href="javascript:cartPost('#{post._key}')") 加入管理车
-        
-      if data.user
-        if data.user._key == post.uid
-          text  - 
-          a(href='/e?target=post/#{post._key}') 编辑
-    div.ThreadPostBody!= experimental_render(post)
-
-
-    if post.toc!=post.tlm
-      p.lighttext [修改于 #{fromNow(post.tlm)} - #{dateString(post.tlm)}]
-    //span #{post.user?post.user.post_sign:''}
             
