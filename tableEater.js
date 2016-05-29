@@ -485,6 +485,8 @@ importPostsAll()
 })
 .then(()=>{
   stamp('forums updated')
+  var operations = require('api_operations')
+  return operations.table.updateAllUsers.operation()
 })
 .catch(err=>{
   console.log(err);
