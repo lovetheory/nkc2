@@ -37,6 +37,10 @@ api.use(require('api_operation_handlers'));
 
 //send apidata back to client
 api.use((req,res,next)=>{
+  if(res.sent){
+    return;
+  }
+
   var obj = res.obj
   if(obj) //if not null
   {
@@ -47,10 +51,6 @@ api.use((req,res,next)=>{
     //if template specified
     var k = jaderender(obj.template,obj)
     return res.send(k);
-  }
-
-  if(res.sent){
-    return;
   }
 
   return next();
