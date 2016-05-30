@@ -221,15 +221,16 @@ nkc.use((err,req,res,next)=>{
 });
 
 //server listening settings
+var listenaddr = '0.0.0.0'
 if(use_https){
   ///-----start https server-----
-  target_server.listen(settings.server.https_port,listenhandle);
+  target_server.listen(settings.server.https_port,listenaddr,listenhandle);
   //-----start http redirection server-----
-  redirection_server.listen(settings.server.port);
+  redirection_server.listen(settings.server.port,listenaddr);
 }
 else{
   //if not using https
-  target_server.listen(settings.server.port,listenhandle);
+  target_server.listen(settings.server.port,listenaddr,listenhandle);
 }
 
 function listenhandle(){
