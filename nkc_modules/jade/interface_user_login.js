@@ -5,9 +5,9 @@ function login_submit(){
   }
 
   if(userobj.username=='')
-  return alert('我在门口捡到了你的用户名，下次不要忘了');
+  return screenTopWarning('我在门口捡到了你的用户名，下次不要忘了');
   if(userobj.password=='')
-  return alert('我在门口捡到了你的密码，下次不要忘了');
+  return screenTopWarning('我在门口捡到了你的密码，下次不要忘了');
 
   nkcAPI('userLogin',userobj)
   .then(function(res){
@@ -26,6 +26,8 @@ function login_submit(){
     geid('error_info').innerHTML = JSON.stringify(err);
     display('error_info_panel')
     geid('password').focus();
+
+    screenTopWarning(JSON.stringify(err))
   })
 }
 

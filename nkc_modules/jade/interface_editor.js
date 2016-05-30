@@ -16,8 +16,8 @@ var nkc_editor = function(){
 
     var target = gv('target').trim();
 
-    if(post.c==''){alert('请填写内容。');return;}
-    if(target==''){alert('请填写发表至的目标。');return;}
+    if(post.c==''){screenTopWarning('请填写内容。');return;}
+    if(target==''){screenTopWarning('请填写发表至的目标。');return;}
 
     return nkcAPI('postTo',{
       target:target,
@@ -27,7 +27,7 @@ var nkc_editor = function(){
       var redirectTarget = result.redirect;
       redirect(redirectTarget?redirectTarget:'/'+target)
     })
-    .catch(jalert)
+    .catch(jwarning)
   }
 
   var debounce=false;

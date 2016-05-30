@@ -2,6 +2,8 @@ function error_report(str)
 {
   geid('error_info').innerHTML = JSON.stringify(str);
   display('error_info_panel')
+
+  screenTopWarning(JSON.stringify(str))
 }
 
 function register_submit(){

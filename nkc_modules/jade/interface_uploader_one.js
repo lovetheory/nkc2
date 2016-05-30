@@ -30,7 +30,7 @@ var upload_target = ga('select-file','target');
 
 //on click of the upload button
 function uploadfile_click(){
-  if(!geid('select-file').files[0])return alert('pick one, okay?');
+  if(!geid('select-file').files[0])return screenTopWarning('pick one, okay?');
 
   var formData = new FormData();
 
@@ -41,12 +41,15 @@ function uploadfile_click(){
 //after uploading of a file, back is response from server
 function upload_callback(err,back){
   if(err){
-    alert('not 200 failure: '+back);
+    screenTopWarning('failure: '+back);
   }else{
+    screenTopAlert('upload successful.')
     //do something important here!!
     upload_success();
   }
 }
+
+function upload_success(){}
 
 //When paste happens
 function paste_handler(e) {
@@ -58,7 +61,7 @@ function paste_handler(e) {
     formData.append('file', item.getAsFile());
     post_upload(upload_target, formData, upload_callback);
   } else {
-    console.log("Discarding image paste data");
+    console.log("Discarding paste data");
   }
 }
 

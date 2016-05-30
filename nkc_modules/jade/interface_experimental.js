@@ -84,7 +84,7 @@ function InitThreadControl(options){
   };
 
   function yell(err){
-    return alert(err.toString());
+    return screenTopWarning(err.toString());
   }
 
   var pc =

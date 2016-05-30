@@ -6,7 +6,21 @@ function hset(id,content){geid(id).innerHTML=content;}
 function display(id){geid(id).style = 'display:inherit;'}
 
 function jalert(obj){
-  alert(JSON.stringify(obj))
+  if(screenTopAlert){
+    screenTopAlert(JSON.stringify(obj))
+  }
+  else {
+    alert(JSON.stringify(obj))
+  }
+}
+
+function jwarning(obj){
+  if(screenTopWarning){
+    screenTopWarning(JSON.stringify(obj))
+  }
+  else {
+    alert(JSON.stringify(obj))
+  }
 }
 
 function post_api(target,body,callback)
@@ -103,25 +117,27 @@ function delete_api(target,callback)
   xhr.send();
 };
 
-var _alertcount = 0
 function screenTopAlert(text)
 {
+  return screenTopAlertOfStyle(text,'success')
+}
+
+function screenTopWarning(text)
+{
+  return screenTopAlertOfStyle(text,'warning')
+}
+
+var _alertcount = 0
+function screenTopAlertOfStyle(text,stylestring){
+  //rely on bootstrap styles
+
   var objtext = $('<div/>').text(text).html();
-
   _alertcount++;
-
-  if(_alertcount==1){
-    $("body").prepend(
-      '<div id="alertOverlay" style="z-index:9999; display:block; position:fixed; top:0; width:100%;">'
-      +'</div>'
-    );
-  }
-
   var itemID = 'alert' + _alertcount.toString()
 
   return new Promise(function(resolve,reject){
     $('#alertOverlay').append(
-      '<div class="alert alert-success" id="' + itemID +
+      '<div class="alert alert-'+ stylestring +'" id="' + itemID +
       '" role="alert" style="text-align:center;display:block; position:relative; top:0; width:100%; margin-bottom:3px">'
       + objtext +'</div>'
     );
@@ -136,6 +152,15 @@ function screenTopAlert(text)
     },300)
   })
 }
+
+function screenTopAlertInit(){
+  $("body").prepend(
+    '<div id="alertOverlay" style="z-index:9999; display:block; position:fixed; top:0; width:100%;">'
+    +'</div>'
+  );
+}
+
+screenTopAlertInit()
 
 function redirect(url){
   window.location=url;

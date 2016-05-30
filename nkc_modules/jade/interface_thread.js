@@ -1,9 +1,5 @@
 var replyTarget = ga('replytarget','value');
 
-function reply(){
-  alert(replyTarget);
-}
-
 var screenTopAlert = screenTopAlert
 
 function cartThread(tid){
@@ -11,7 +7,7 @@ function cartThread(tid){
   .then(function(){
     return screenTopAlert(tid + ' added to cart')
   })
-  .catch(jalert)
+  .catch(jwarning)
 }
 
 function cartPost(pid){
@@ -19,5 +15,5 @@ function cartPost(pid){
   .then(function(){
     return screenTopAlert(pid + ' added to cart')
   })
-  .catch(jalert)
+  .catch(jwarning)
 }
