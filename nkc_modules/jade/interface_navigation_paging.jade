@@ -2,11 +2,20 @@
 - var digest = data.digest
 
 if paging
-  
-  - var start = Math.max(0,paging.page-3)
+    
   - var pagingarray = []
   - var pagecount = paging.pagecount||100
-  - for(i = start;i<Math.min(start+7,pagecount);i++){pagingarray.push(i)}
+  - var page = paging.page
+  - var disp_length = 7, half_disp_length = 3,start=0,end=1
+  
+  - if(page<half_disp_length){start=0,end=Math.min(disp_length,pagecount)}
+  - else if(page>pagecount - half_disp_length - 1){end=pagecount,start = Math.max(0,pagecount-disp_length)}
+  - else {start = page-half_disp_length,end = page+half_disp_length+1} 
+  
+  //- var start = Math.min(0,page>half_disp_length?page-half_disp_length:0)
+  //- var end = Math.max(pagecount, page<pagecount-half_disp_length?page+half_disp_length:pagecount)
+  
+  - for(i = start; i < end ; i++){pagingarray.push(i)}
   
   if pagecount==1
     //ignore navigation, 1 page only
