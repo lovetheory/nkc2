@@ -67,6 +67,26 @@ im.avatarify = function(path,callback){
   ])
 };
 
+//resize and crop to produce rectangular avatar.
+im.avatarify_small = function(path,callback){
+  //avatar square width
+  const size = settings.avatar_size_small||40;
+  return run_async('magick',[ //please make sure ImageMagick exists in PATH
+    'convert',
+    path,
+    '-colorspace',
+    'RGB',
+    '-strip',
+    '-thumbnail',
+    `${size}x${size}^>`,
+    '-gravity',
+    'Center',
+    '-crop',
+    `${size}x${size}+0+0`,
+    path,
+  ])
+};
+
 //resize if image file too large, then watermark.
 im.attachify = function(path,callback){
 

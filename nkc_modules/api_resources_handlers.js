@@ -141,34 +141,27 @@ api.post('/avatar', avatar_upload.single('file'), function(req,res,next){
 
   //otherwise should we allow..
 
+  var upath = req.file.path
+
   //process the avatar image.
-  im.avatarify(req.file.path)
+  im.avatarify(upath) // avatarify in place
   .then((back)=>{
-    //if the uploaded file has problems (not an actural image?)
-    if(err)return next(err);
+    var destination_file_small = settings.avatar_path_small+req.user._key+'.jpg';
 
-    var destination_file = settings.avatar_path+req.user._key+'.jpg';
-    //delete before move
-    fs.unlink(destination_file,function(err){
-      if(err)report('avatar dest unlink err',err); //ignore
-
-      fs.move( //move to avatar path
-        req.file.path,
-        destination_file,
-        function(err){
-          if(err)
-          {
-            return next(err);
-          }
-
-          //finally here
-          res.obj = destination_file;
-          return next();
-        }
-      );
-    });
-
+    return nkcfs.copy(upath,destination_file_small,{clobber:true}) //make a copy
+    .then(()=>{
+      return im.avatarify_small(destination_file_small) //avatarify in place on the copy
+    })
+    .then(()=>{
+      var destination_file = settings.avatar_path+req.user._key+'.jpg';
+      return nkcfs.move(upath,destination_file,{clobber:true}) //move the original
+    })
   })
+  .then((back)=>{
+    res.obj = 'success'
+    return
+  })
+  .then(next)
   .catch(next)
 });
 

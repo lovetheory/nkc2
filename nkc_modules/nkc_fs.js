@@ -7,6 +7,8 @@ var Promisify = require('promisify')
 var nkc_fs = {}
 
 nkc_fs.ensureDir = Promisify(fs.ensureDir)
+nkc_fs.move = Promisify(fs.move)
+nkc_fs.copy = Promisify(fs.copy)
 
 nkc_fs.getExtensionFromFileName = function(originalName){
   if(!originalName)return null

@@ -202,6 +202,8 @@ settings.default_thumbnail_path =  __projectroot + '/resources/default_things/de
 //---------------------------------------------
 
 
+settings.avatar_size = 192
+settings.avatar_size_small = 40
 
 //where is default avatar.
 settings.default_avatar_path = __projectroot+'resources/default_avatar.jpg';
