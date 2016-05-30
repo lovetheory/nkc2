@@ -90,6 +90,7 @@ table.viewHome = {
     data.template = jadeDir+ 'interface_home.jade'
 
     var contentClasses = params.contentClasses
+    var threadPerForum = 5
 
     return AQL(`
       for f in forums
@@ -105,7 +106,7 @@ table.viewHome = {
 
         filter t.fid == f._key && t.disabled==null
         sort t.fid desc,t.disabled desc, t.tlm desc
-        limit 0,6
+        limit ${threadPerForum}
 
         let oc = document(posts,t.oc)
         return merge(t,{oc})
