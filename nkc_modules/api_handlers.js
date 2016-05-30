@@ -42,7 +42,7 @@ api.use((req,res,next)=>{
   }
 
   var obj = res.obj
-  if(obj) //if not null
+  if(obj!==undefined) //if not undefined
   {
     if(!obj.template){
       return res.json(report(obj));

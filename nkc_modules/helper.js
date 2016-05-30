@@ -35,7 +35,9 @@ module.exports = function(){
       console.log(err.toString().red);
       return({'error':description,'detail':err.toString()});
     }else{
-      console.log(dateString().yellow,description);
+      if(development){
+        console.log(dateString().yellow,description);
+      }
 
       if(typeof(description)!='object'){
         return {'message':description};
@@ -43,6 +45,7 @@ module.exports = function(){
       else {
         return description;
       }
+
     }
   };
 

@@ -24,6 +24,7 @@ api.all('/operation',function(req,res,next){
   })
   .then((result)=>{
     res.obj = result
+    return 
   })
   .then(next)
   .catch(next)
@@ -112,12 +113,7 @@ function APIroutine(context){
   })
   .then(()=>{
     //passed all test
-    var r =  executeOperation(params)
-    if(r){
-      return r;
-    }else{
-      return {};
-    }
+    return executeOperation(params)
   })
   .then(result=>{
     report('operation '+params.operation+' successfully executed')
