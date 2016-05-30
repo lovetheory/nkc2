@@ -59,12 +59,13 @@ if(use_https){
 
 nkc.use(require('serve-favicon')(__dirname+'/resources/site_specific/favicon.ico'));
 
-if(development)
-nkc.use((req,res,next)=>{
-  console.log("  -".yellow,req.url);
-  //log everything
-  next();
-});
+if(development){
+  nkc.use((req,res,next)=>{
+    console.log("  -".yellow,req.url);
+    //log everything
+    next();
+  })
+}
 
 //1. url rewrite
 for(i in settings.urlrewrite){
@@ -114,7 +115,9 @@ nkc.use((req,res,next)=>{
   req.iptrim = req.ip;
   req.iptrim = req.iptrim.trim().replace( /(:[0-9]{1,})$/ ,''); //kill colon-port
   //req.iptrim = req.ip
-  if(development)console.log(req.iptrim);
+  if(development){
+    console.log(req.iptrim)
+  }
   next();
 });
 
