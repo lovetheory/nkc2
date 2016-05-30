@@ -4,10 +4,12 @@ function reply(){
   alert(replyTarget);
 }
 
+var screenTopAlert = screenTopAlert
+
 function cartThread(tid){
   nkcAPI('addThreadToCart',{tid:tid})
   .then(function(){
-    alert('success '+tid)
+    return screenTopAlert(tid + ' added to cart')
   })
   .catch(jalert)
 }
@@ -15,7 +17,7 @@ function cartThread(tid){
 function cartPost(pid){
   nkcAPI('addPostToCart',{pid:pid})
   .then(function(){
-    alert('success '+pid)
+    return screenTopAlert(pid + ' added to cart')
   })
   .catch(jalert)
 }

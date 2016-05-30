@@ -103,6 +103,40 @@ function delete_api(target,callback)
   xhr.send();
 };
 
+var _alertcount = 0
+function screenTopAlert(text)
+{
+  var objtext = $('<div/>').text(text).html();
+
+  _alertcount++;
+
+  if(_alertcount==1){
+    $("body").prepend(
+      '<div id="alertOverlay" style="z-index:9999; display:block; position:fixed; top:0; width:100%;">'
+      +'</div>'
+    );
+  }
+
+  var itemID = 'alert' + _alertcount.toString()
+
+  return new Promise(function(resolve,reject){
+    $('#alertOverlay').append(
+      '<div class="alert alert-success" id="' + itemID +
+      '" role="alert" style="text-align:center;display:block; position:relative; top:0; width:100%; margin-bottom:3px">'
+      + objtext +'</div>'
+    );
+
+    var selector = '#'+itemID
+
+    setTimeout(function(){
+      $(selector).fadeOut('slow',function(){
+        $(selector).remove()
+        resolve(selector)
+      })
+    },300)
+  })
+}
+
 function redirect(url){
   window.location=url;
 }

@@ -136,7 +136,7 @@ function InitThreadControl(options){
       },
 
       clearCart:{
-        text:'清除服务器端',
+        text:'清除管理车',
         action:function(){
           nkcAPI('clearCart')
           .then(pc.actions.refresh)
