@@ -94,7 +94,7 @@ settings.urlrewrite = [ //happens before serve_static
 
   {map:'/',to:'/home'},
   {map:'/index',to:'/'},
-  {map:'/me',to:'/interface/me'},
+  //{map:'/me',to:'/interface/me'},
 
   //{map:/^\/exam\?{0,1}(.*)/,to:'/api/operation?&operation=viewExam&$1'},
   //{map:/^\/register\?{0,1}(.*)/,to:'/api/operation?&operation=viewRegister&$1'},
@@ -107,6 +107,7 @@ settings.urlrewrite = [ //happens before serve_static
   urlrewriteGen('logout','viewLogout'),
   urlrewriteGen('login','viewLogin'),
   urlrewriteGen('experimental','viewExperimental'),
+  urlrewriteGen('me','viewMe'),
 
   // {map:/^\/logout\?{0,1}(.*)/,to:'/api/operation?&operation=viewLogout&$1'},
   // {map:/^\/login\?{0,1}(.*)/,to:'/api/operation?&operation=viewLogin&$1'},

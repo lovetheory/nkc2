@@ -60,13 +60,6 @@ iface.get('/editor',(req,res,next)=>{
   next();
 });
 
-iface.get('/me',(req,res,next)=>{
-  if(!req.user)throw ('require login');
-  res.template = 'nkc_modules/jade/interface_user_profile.jade';
-  res.replytarget = 'me';
-  next();
-});
-
 iface.get('/uploader',(req,res,next)=>{
   if(!req.user)throw ('require login');
   res.data.navbar.highlight = 'uploader'; //navbar highlight

@@ -24,6 +24,18 @@ function defaultData(params){ //default data obj for views
   }
 }
 
+table.viewMe = {
+  operation:function(params){
+    var data = defaultData(params)
+    data.template = jadeDir+ 'interface_me.jade'
+
+    if(!params.user) throw 'must login to view this page'
+
+    data.replytarget = 'me'
+    return data
+  }
+}
+
 table.viewExam = {
   operation:function(params){
     var data = defaultData(params)
