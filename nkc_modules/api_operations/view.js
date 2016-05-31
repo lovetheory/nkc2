@@ -21,6 +21,7 @@ function defaultData(params){ //default data obj for views
     site:settings.site,
     user,
     contentClasses:params.contentClasses,
+    permittedOperations:params.permittedOperations,
   }
 }
 
@@ -31,6 +32,7 @@ table.viewMe = {
 
     if(!params.user) throw 'must login to view this page'
 
+    data.examinated = params.examinated
     data.replytarget = 'me'
     return data
   }
@@ -206,29 +208,37 @@ table.viewForum = {
     var paging = getPaging(params)
     data.paging = paging
 
-    return AQL(`
-      let forum = document(forums,@fid)
-      let threads = (
-        for t in threads
-        ${filter}
-        limit @start,@count
 
-        let oc = document(posts,t.oc)
-        let lm = document(posts,t.lm)
-        let ocuser = document(users,oc.uid)
-        let lmuser = document(users,lm.uid)
+    return AQL(`return document(forums,@fid)`,{fid})
+    .then(res=>{
+      var forum = res[0]
+      return testForumClass(params,forum)
+    })
+    .then(()=>{
+      return AQL(`
+        let forum = document(forums,@fid)
+        let threads = (
+          for t in threads
+          ${filter}
+          limit @start,@count
 
-        return merge(t,{oc,ocuser,lmuser})
+          let oc = document(posts,t.oc)
+          let lm = document(posts,t.lm)
+          let ocuser = document(users,oc.uid)
+          let lmuser = document(users,lm.uid)
+
+          return merge(t,{oc,ocuser,lmuser})
+        )
+        return {forum,threads}
+
+        `,
+        {
+          fid,
+          start:paging.start,
+          count:paging.count,
+        }
       )
-      return {forum,threads}
-
-      `,
-      {
-        fid,
-        start:paging.start,
-        count:paging.count,
-      }
-    )
+    })
     .then((result)=>{
       //if nothing went wrong
       Object.assign(data,result[0])
@@ -243,6 +253,15 @@ table.viewForum = {
   },
   requiredParams:{
     fid:String,
+  }
+}
+
+function testForumClass(params,forum){
+  if(!forum.class)return;
+  if(params.contentClasses[forum.class]){ // if user have enough class
+    return;
+  }else{
+    throw 'no enough permission. you need a content-class named ['+ forum.class +']'
   }
 }
 
@@ -270,51 +289,58 @@ table.viewThread = {
 
     var paging = getPaging(params)
 
-    return AQL(
-      `
-      let thread = document(threads,@tid)
+    return AQL(`return document(forums,document(threads,@tid).fid)`,{tid})
+    .then(res=>{
+      forum = res[0];
+      return testForumClass(params,forum)
+    })
+    .then(()=>{
+      return AQL(
+        `
+        let thread = document(threads,@tid)
 
-      let forum = document(forums,thread.fid)
-      let oc = document(posts,thread.oc)
+        let forum = document(forums,thread.fid)
+        let oc = document(posts,thread.oc)
 
-      let posts = (
-        for p in posts
-        sort p.tid asc, p.toc asc
-        filter p.tid == thread._key
+        let posts = (
+          for p in posts
+          sort p.tid asc, p.toc asc
+          filter p.tid == thread._key
 
-        limit @start,@count
+          limit @start,@count
 
-        let user = document(users,p.uid)
+          let user = document(users,p.uid)
 
-        let resources_declared = (
-          filter is_array(p.r)
-          for r in p.r
-          let rd = document(resources,r)
-          filter rd!=null
-          return rd
+          let resources_declared = (
+            filter is_array(p.r)
+            for r in p.r
+            let rd = document(resources,r)
+            filter rd!=null
+            return rd
+          )
+
+          let resources_assigned = (
+            for r in resources
+            filter r.pid == p._key
+            return r
+          )
+
+          return merge(p,{
+            user,
+            r:union_distinct(resources_declared,resources_assigned)
+          })
         )
-
-        let resources_assigned = (
-          for r in resources
-          filter r.pid == p._key
-          return r
-        )
-
-        return merge(p,{
-          user,
-          r:union_distinct(resources_declared,resources_assigned)
-        })
+        return {
+          thread,oc,forum,posts
+        }
+        `,
+        {
+          tid,
+          start:paging.start,
+          count:paging.count,
+        }
       )
-      return {
-        thread,oc,forum,posts
-      }
-      `,
-      {
-        tid,
-        start:paging.start,
-        count:paging.count,
-      }
-    )
+    })
     .then(result=>{
       Object.assign(data,result[0]);
 

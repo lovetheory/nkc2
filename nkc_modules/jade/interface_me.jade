@@ -1,18 +1,26 @@
 extends bootstrap_base.jade
 
 block title
-  title #{data.user.username} - 科创论坛
+  - var user = data.user
+  title #{user.username} - #{data.site.name}
   meta#replytarget(value='#{data.replytarget}')
 
 block content
   .container
+    if data.examinated
+      .row
+        .col-md-12
+          p.f12.reddish 如果没猜错的话，你刚刚通过了一次考试，并获得了证书。
+        
     .row
       .col-md-12
         .panel.panel-default
           .panel-body
-
-            h1 #{data.user.username}
-            img(src='/avatar/#{data.user._key}')
+            - var user = data.user
+            h1 #{user.username}
+            p #{user.post_sign}
+            
+            img(src='/avatar/#{user._key}')
             
             //upload section
             div
@@ -23,7 +31,34 @@ block content
               div#paste_target 黏贴上传测试中。
               
             hr
-            a.btn.btn-default(href='/interface/editor?target=#{data.replytarget}') 修改个人简介
+            
+            h4 权限信息
+            
+            - var user = data.user
+            p 用户拥有以下证书:
+              if user.certs
+                ul
+                  - for(i in user.certs)
+                    li #{user.certs[i]}
+            
+            if data.permittedOperations
+              - var po = data.permittedOperations
+              p 允许调用以下API: 
+              ul
+                - for(i in po)
+                  if po[i]
+                    li #{i}
+            
+            if data.contentClasses
+              - var cc = data.contentClasses
+              p 拥有以下内容查看权限:
+              ul
+                - for(i in cc)
+                  if cc[i]
+                    li #{i}
+                    
+                    
+            //a.btn.btn-default(href='/interface/editor?target=#{data.replytarget}') 修改个人简介
 
   include debug_output.jade
     

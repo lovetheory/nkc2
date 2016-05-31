@@ -29,7 +29,7 @@ var certificates={
 
   moderator:{
     display_name:'版主',
-    inheritFrom:['scholar'],
+    inheritFrom:['scholar','examinated'],
 
     contentClasses:{
       classified:true,
@@ -73,9 +73,9 @@ var certificates={
     inheritFrom:['visitor'],
 
     contentClasses:{
-      regular:true,
       images:true,
       non_images:true,
+      non_public:true,
     },
     permittedOperations:{
 
@@ -93,6 +93,8 @@ var certificates={
       userLogout:true,
       viewLogout:true,
 
+      userRegister:false,
+
       getResourceOfCurrentUser:true,
     },
   },
@@ -102,6 +104,7 @@ var certificates={
       null:true,
       images:true,
       non_images:false,
+      non_public:false,
     },
     permittedOperations:{
       viewThread:true,
