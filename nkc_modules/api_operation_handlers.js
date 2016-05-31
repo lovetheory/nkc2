@@ -190,7 +190,7 @@ function APIroutine(context){
     return result
   })
   .catch(err=>{
-    report('operation '+params.operation+' failed', err)
+    report('bad','operation '+params.operation+' failed')
 
     var endTimeStamp = Date.now()
     var duration = endTimeStamp - initTimeStamp
@@ -201,7 +201,7 @@ function APIroutine(context){
       uid:params.user?params.user._key:'visitor',
       t0:initTimeStamp,
       t1:duration,
-      failed:true,
+      error:err.toString(),
     },'logs')
 
     throw err
