@@ -149,7 +149,7 @@ function screenTopAlertOfStyle(text,stylestring){
         $(selector).remove()
         resolve(selector)
       })
-    },300)
+    },2000)
   })
 }
 
