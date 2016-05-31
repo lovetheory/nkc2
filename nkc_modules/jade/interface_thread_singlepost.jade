@@ -15,15 +15,20 @@ if !post.disabled
       .ThreadPostTitleMeta
         span #{user?user.username:''} - #{fromNow(post.toc)} - 
         a(href='/thread/#{data.thread._key}?post=#{post._key}').lighttext #{dateString(post.toc)} 
+        
       .ThreadTitleAuxillaryLink
-        a(href="javascript:cartPost('#{post._key}')") 加入管理车
+        - var po = data.permittedOperations
+        - if(po.addPostToCart)
+          a(href="javascript:cartPost('#{post._key}')") 加入管理车
           
         if data.user
-          if data.user._key == post.uid
-            text  - 
+          - var user = data.user
+          - var ownership = user._key===uid
+          - if(testModifyTimeLimit(data,ownership,post.toc))
+            span  - 
             a(href='/e?target=post/#{post._key}') 编辑
+            
       div.ThreadPostBody!= experimental_render(post)
-
 
       if post.toc!=post.tlm
         p.lighttext [修改于 #{fromNow(post.tlm)} - #{dateString(post.tlm)}]

@@ -5,11 +5,16 @@ var table = operations.table;
 
 var permissions = {};
 
+var timeHour = 3600*1000;
+var timeDay = timeHour*24;
+var timeMonth = timeDay*30;
+var timeYear = timeDay*365
+
 //证书，每张证书将包含不同的权限
 var certificates={
   dev:{
     display_name:'运维',
-    inheritFrom:['moderator'],
+    inheritFrom:['editor'],
 
     // see end of api_operations.js
   },
@@ -25,8 +30,8 @@ var certificates={
     permittedOperations:{
       viewQuestions:true,
 
-      elseModifyTimeLimit:86400000*365*20, //20y
-      selfModifyTimeLimit:86400000*365*20, //20y
+      elseModifyTimeLimit:timeYear*20, //20y
+      selfModifyTimeLimit:timeYear*20, //20y
     }
   },
 
@@ -41,8 +46,8 @@ var certificates={
     permittedOperations:{
       addThreadToCart:true,
       addPostToCart:true,
-      selfModifyTimeLimit:86400000*365*2, //3y
-      elseModifyTimeLimit:86400000*365, //1y
+      selfModifyTimeLimit:timeYear*3, //3y
+      elseModifyTimeLimit:timeYear*1, //1y
 
       removePost:true,
       moveThread:true,
@@ -58,7 +63,7 @@ var certificates={
     },
 
     permittedOperations:{
-      selfModifyTimeLimit:60000*60*24,//24h
+      selfModifyTimeLimit:timeHour*24,//24h
     }
   },
 
@@ -71,7 +76,7 @@ var certificates={
     permittedOperations:{
       postTo:true,
       testExaminated:true,
-      selfModifyTimeLimit:60*60000, //1h
+      selfModifyTimeLimit:timeHour*1, //1h
     }
   },
 
@@ -91,7 +96,7 @@ var certificates={
 
       postTo:true, //////////////////////////////////// may cancel in the future
       viewEditor:true,
-      selfModifyTimeLimit:30*60000, //30min
+      selfModifyTimeLimit:timeHour*0.5, //30min
 
       getPost:true,
 
@@ -190,19 +195,33 @@ permissions.listAllCertificates = ()=>{
 }
 
 permissions.testModifyTimeLimit = function(params,ownership,toc){
+
+  var smtl = params.permittedOperations.selfModifyTimeLimit
+  var emtl = params.permittedOperations.elseModifyTimeLimit
+  console.log(toc);
+  smtl = smtl||0
+  emtl = emtl||0
+
+  // if you can modify others in 1y,
+  // you should be able to do that to yourself,
+  // regardless of settings.
+  if(smtl<emtl){
+    smtl = emtl
+  }
+
   //--test ownership--
   if(ownership){
     // if he own the post
-    if(Date.now() < toc + params.permittedOperations.selfModifyTimeLimit||0){
+    if(Date.now() < toc + smtl){
       //not exceeding
     }else{
-      throw('You can only modify your post within '+ (params.permittedOperations.selfModifyTimeLimit/1000/60).toFixed(2) + ' hour(s)')
+      throw('You can only modify your post within '+ (smtl/1000/60).toFixed(2) + ' hour(s)')
     }
   }else{
-    if(Date.now() < toc + params.permittedOperations.elseModifyTimeLimit||0){
+    if(Date.now() < toc + emtl){
       //not exceeding
     }else{
-      throw('You can only modify others\' post within '+ (params.permittedOperations.elseModifyTimeLimit/1000/60).toFixed(2) + ' hour(s)')
+      throw('You can only modify others\' post within '+ (emtl/1000/60).toFixed(2) + ' hour(s)')
     }
   }
 }

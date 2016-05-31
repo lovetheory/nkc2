@@ -56,8 +56,10 @@ block content
               ul
                 - for(i in po)
                   if po[i]
-                    li #{i}
-            
+                    li
+                      span #{i} 
+                      span #{po[i]}
+                      
             if data.contentClasses
               - var cc = data.contentClasses
               p 拥有以下内容查看权限:

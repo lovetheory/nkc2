@@ -23,6 +23,8 @@ block content
               .ThreadTitleAuxillary.d-inline.lighttext
                                 
                 .ThreadTitleAuxillaryLink
+                - var po = data.permittedOperations
+                - if(po.addThreadToCart)
                   a(href="javascript:cartThread('#{data.thread._key}')") 加入管理车
             
             include interface_navigation_paging.jade      
@@ -36,7 +38,7 @@ block content
 
             include interface_navigation_paging.jade
             hr.ThreadSinglePostHr
-            a.btn.btn-default(href='/interface/editor?target=#{data.replytarget}') 回复
+            a.btn.btn-default(href='/e?target=#{data.replytarget}') 回复
               
                 
       .col-sm-3.col-md-2

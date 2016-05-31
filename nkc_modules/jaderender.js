@@ -38,6 +38,17 @@ var jadeoptions = {
     }
     return '?'+qs
   },
+
+  testModifyTimeLimit:function(params,ownership,toc){
+    try{
+      require('permissions').testModifyTimeLimit(params,ownership,toc)
+    }catch(err){
+      console.log(err);
+      return false
+    }
+    console.log(true);
+    return true
+  },
 };
 
 Object.assign(jadeoptions,settings.jadeoptions); //apply settings from settings.js
