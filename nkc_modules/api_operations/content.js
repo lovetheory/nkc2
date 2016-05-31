@@ -10,11 +10,14 @@ var validation = require('validation')
 var AQL = queryfunc.AQL
 var apifunc = require('api_functions')
 
+var permissions = require('permissions')
+
 var table = {};
 module.exports = table;
 
 //post to a given thread.
-var postToThread = function(post,tid,user){
+var postToThread = function(params,tid,user){
+  var post = params.post
   var tobject = null
 
   //check existence
@@ -64,7 +67,9 @@ var postToThread = function(post,tid,user){
   })
 };
 
-var postToForum = function(post,fid,user){
+var postToForum = function(params,fid,user){
+  var post = params.post
+
   post.t = post.t.trim();
   if(post.t.length<3)throw 'title too short. write something would you?'
 
@@ -102,11 +107,13 @@ var postToForum = function(post,fid,user){
     return incrementForumOnNewThread(newtid)
   })
   .then((result)=>{
-    return postToThread(post,newtid,user)
+    return postToThread(params,newtid,user)
   })
 }
 
-var postToPost = function(post,pid,user){ //modification.
+var postToPost = function(params,pid,user){ //modification.
+  var post = params.post
+
   var timestamp,newpost={},original_key,tid;
 
   return queryfunc.doc_load(pid,'posts')
@@ -116,6 +123,10 @@ var postToPost = function(post,pid,user){ //modification.
   .then(original_post=>{
     original_key = original_post._key
     tid = original_post.tid
+    author = original_post.uid
+    toc = original_post.toc
+
+    permissions.testModifyTimeLimit(params,author===user._key,toc)
 
     timestamp = Date.now();
 
@@ -175,11 +186,11 @@ table.postTo = {
     .then(()=>{
       switch (targetType) {
         case 'forum':
-        return postToForum(post,targetKey,user) //throws if notexist
+        return postToForum(params,targetKey,user) //throws if notexist
         case 'thread':
-        return postToThread(post,targetKey,user)
+        return postToThread(params,targetKey,user)
         case 'post':
-        return postToPost(post,targetKey,user)
+        return postToPost(params,targetKey,user)
         default:
         throw 'target type not implemented'
       }

@@ -11,7 +11,7 @@ var certificates={
     display_name:'运维',
     inheritFrom:['moderator'],
 
-    permittedOperations:operations.listAll(), //grandmaster
+    // see end of api_operations.js
   },
 
   editor:{
@@ -24,6 +24,9 @@ var certificates={
 
     permittedOperations:{
       viewQuestions:true,
+
+      elseModifyTimeLimit:86400000*365*20, //20y
+      selfModifyTimeLimit:86400000*365*20, //20y
     }
   },
 
@@ -38,6 +41,8 @@ var certificates={
     permittedOperations:{
       addThreadToCart:true,
       addPostToCart:true,
+      selfModifyTimeLimit:86400000*365*2, //3y
+      elseModifyTimeLimit:86400000*365, //1y
 
       removePost:true,
       moveThread:true,
@@ -46,13 +51,14 @@ var certificates={
 
   scholar:{ //学者，1学分为限。
     display_name:'学者',
-    inheritFrom:['default'],
+    inheritFrom:['examinated'],
 
     contentClasses:{
       sensitive:true,
     },
 
     permittedOperations:{
+      selfModifyTimeLimit:60000*60*24,//24h
     }
   },
 
@@ -65,6 +71,7 @@ var certificates={
     permittedOperations:{
       postTo:true,
       testExaminated:true,
+      selfModifyTimeLimit:60*60000, //1h
     }
   },
 
@@ -84,11 +91,11 @@ var certificates={
 
       postTo:true, //////////////////////////////////// may cancel in the future
       viewEditor:true,
+      selfModifyTimeLimit:30*60000, //30min
 
       getPost:true,
 
       viewExperimental:true,
-
       viewMe:true,
 
       userLogout:true,
@@ -182,4 +189,23 @@ permissions.listAllCertificates = ()=>{
   return all;
 }
 
+permissions.testModifyTimeLimit = function(params,ownership,toc){
+  //--test ownership--
+  if(ownership){
+    // if he own the post
+    if(Date.now() < toc + params.permittedOperations.selfModifyTimeLimit||0){
+      //not exceeding
+    }else{
+      throw('You can only modify your post within '+ (params.permittedOperations.selfModifyTimeLimit/1000/60).toFixed(2) + ' hour(s)')
+    }
+  }else{
+    if(Date.now() < toc + params.permittedOperations.elseModifyTimeLimit||0){
+      //not exceeding
+    }else{
+      throw('You can only modify others\' post within '+ (params.permittedOperations.elseModifyTimeLimit/1000/60).toFixed(2) + ' hour(s)')
+    }
+  }
+}
+
+permissions.certificates = certificates
 module.exports = permissions;

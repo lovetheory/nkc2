@@ -44,4 +44,7 @@ for(i in table){
 operations.listAll = function(){
   return ops;
 }
+
+require('permissions').certificates.dev.permittedOperations = operations.listAll(), //grandmaster
+
 module.exports = operations
