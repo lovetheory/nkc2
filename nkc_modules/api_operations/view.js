@@ -478,3 +478,31 @@ table.viewExperimental = {
     return data
   }
 }
+
+table.viewEditor = {
+  operation:params=>{
+    var data = defaultData(params)
+    data.template = jadeDir + 'interface_editor.jade'
+
+    var target = params.target||"";
+
+    data.replytarget = target;
+    data.navbar = {}
+    data.navbar.highlight = 'editor'; //navbar highlight
+
+    if(target.indexOf('post/')==0)
+    {
+      //if user appears trying to edit a post
+      var pid = target.slice(5);
+      report(pid);
+      //load from db
+      return apifunc.get_a_post(pid)
+      .then(function(back){
+        data.original_post = back;
+
+        return data
+      })
+    }
+    return data
+  }
+}

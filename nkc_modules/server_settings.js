@@ -108,6 +108,7 @@ settings.urlrewrite = [ //happens before serve_static
   urlrewriteGen('login','viewLogin'),
   urlrewriteGen('experimental','viewExperimental'),
   urlrewriteGen('me','viewMe'),
+  urlrewriteGen('e','viewEditor'),
 
   // {map:/^\/logout\?{0,1}(.*)/,to:'/api/operation?&operation=viewLogout&$1'},
   // {map:/^\/login\?{0,1}(.*)/,to:'/api/operation?&operation=viewLogin&$1'},
@@ -119,7 +120,7 @@ settings.urlrewrite = [ //happens before serve_static
   {map:/^\/user_threads\/([^\?]*)\??(.*)/,
     to:'/api/operation?&operation=viewUserThreads&uid=$1&$2'},
 
-  {map:'/e*',to:'/interface/editor$1'},
+  //{map:'/e*',to:'/interface/editor$1'},
 
   {map:'/r/:rid',to:'/api/operation?&operation=getResource&rid=:rid'},
   //  {map:'/r/:rid',to:'/api/resources/get/:rid'},

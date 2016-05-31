@@ -83,6 +83,7 @@ var certificates={
       clearCart:true,
 
       postTo:true, //////////////////////////////////// may cancel in the future
+      viewEditor:true,
 
       getPost:true,
 

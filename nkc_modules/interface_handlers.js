@@ -35,30 +35,6 @@ iface.use(function(req,res,next){
   next();
 });
 
-//get editor
-///--------------------
-iface.get('/editor',(req,res,next)=>{
-  var target = req.query.target||"";
-  res.data.replytarget = target;
-  res.data.navbar.highlight = 'editor'; //navbar highlight
-  res.template = 'nkc_modules/jade/interface_editor.jade'
-
-  if(target.indexOf('post/')==0)
-  {
-    //if user appears trying to edit a post
-    var pid = target.slice(5);
-    report(pid);
-    //load from db
-    apifunc.get_a_post(pid)
-    .then(function(back){
-      res.data.original_post = back;
-    })
-    .then(next).catch(next)
-
-    return;
-  }
-  next();
-});
 
 iface.get('/uploader',(req,res,next)=>{
   if(!req.user)throw ('require login');
