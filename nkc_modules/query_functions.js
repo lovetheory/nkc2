@@ -26,6 +26,7 @@ queryfunc.db_init = function(){
   'forums',
   'logs',
   'users',
+  'users_personal',
   'counters',
   'resources',
   'questions',
@@ -64,6 +65,19 @@ queryfunc.allNecessaryIndexes = ()=>{
     createIndex('posts',{fields:['tid'],type:'hash'}),
     //createIndex('posts',{fields:['tid']}),
   ])
+}
+
+queryfunc.addCertToUser = function(uid,cert){
+  return AQL(
+    `
+    let u = document(users,@uid)
+    update u with {certs:UNIQUE(PUSH(u.certs,@cert))}
+    in users
+    `,{
+      uid,
+      cert,
+    }
+  )
 }
 
 queryfunc.createCollection = collection_name=>{

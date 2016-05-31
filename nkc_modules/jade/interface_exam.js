@@ -19,6 +19,10 @@ function submit(){
   console.log(examobj);
   return nkcAPI('submitExam',examobj)
   .then(function(result){
+    if(result.taken_by_user){
+      window.location = '/me?examinated=true';
+      return
+    }
     window.location = '/exam?result=' + result.token
   })
   .catch(function(err){

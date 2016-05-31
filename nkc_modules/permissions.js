@@ -56,24 +56,44 @@ var certificates={
     }
   },
 
-  default:{
+  examinated:{
+    display_name:'状元',
+    inheritFrom:['default'],
+    contentClasses:{
+
+    },
+    permittedOperations:{
+      postTo:true,
+      testExaminated:true,
+    }
+  },
+
+  default:{ //default cert every user share
     display_name:'学生',
     inheritFrom:['visitor'],
 
     contentClasses:{
       regular:true,
-      picture:true,
-      non_picture:true,
+      images:true,
+      non_images:true,
     },
     permittedOperations:{
+
       listCart:true,
       clearCart:true,
-      postTo:true,
+
+      postTo:true, //////////////////////////////////// may cancel in the future
+
       getPost:true,
 
       viewExperimental:true,
 
+      viewMe:true,
 
+      userLogout:true,
+      viewLogout:true,
+
+      getResourceOfCurrentUser:true,
     },
   },
 
@@ -96,20 +116,17 @@ var certificates={
       userRegister:true,
 
       userLogin:true,
-      userLogout:true,
-      viewLogout:true,
       viewLogin:true,
 
       getResourceThumbnail:true,
-      getResourceOfCurrentUser:true,
       getResource:true,
     }
   },
 
   banned:{
     display_name:'封禁',
-
     inheritFrom:['visitor'],
+
     permittedOperations:{
       viewExam:false,
     },

@@ -20,7 +20,8 @@ table.submitExam = {
     exam:Object,
   },
   operation:function(params){
-    if(params.user)throw 'not logged out.'
+    //if(params.user)throw 'not logged out.'
+    // allow registered user to take exams.
 
     var exam = params.exam;
     if(!exam)throw 'fuck you, man'
@@ -95,7 +96,7 @@ table.submitExam = {
         if(Date.now() - back[0].tsm < settings.exam.succeed_interval)
         //if re-succeed an exam within given amount of time
         {
-          throw 'You succeeded too often. You don\'t really have to.'
+          throw 'You (or someone with the same IP address) succeeded too often. You don\'t really have to.'
         }
       }
 
@@ -111,6 +112,7 @@ table.submitExam = {
       token = buffer.toString('hex');
 
       var answersheet = {
+        uid:params.user?params.user._key:null,
         records:records,
         ip:params._req.iptrim,
         score:score,
@@ -119,11 +121,16 @@ table.submitExam = {
         _key:token,
       }
 
+      if(params.user){
+        queryfunc.addCertToUser(params.user._key,'examinated')
+      }
+
       return queryfunc.doc_save(answersheet,'answersheets')
     })
     .then(back=>{
       return {
         token:token,
+        taken_by_user:params.user?true:false,
       }
     })
     //ends here

@@ -30,7 +30,7 @@ table.viewExam = {
 
     data.template = 'nkc_modules/jade/interface_exam.jade' //will render if property 'template' exists
 
-    if(params.user) throw ('to take exams, you must logout first.')
+    //if(params.user) throw ('to take exams, you must logout first.')
 
     if(params.result){
       data.detail = params.detail
@@ -38,7 +38,7 @@ table.viewExam = {
       return data;
     }
 
-    return apifunc.exam_gen({ip:params._req.ip})
+    return apifunc.exam_gen({ip:params._req.iptrim})
     .then(function(back){
       data.exam = back;
       return data;

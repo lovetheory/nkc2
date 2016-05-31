@@ -232,10 +232,10 @@ settings.upload_options_avatar = {
 };
 
 settings.exam = {
-  refresh_period:(900*1000), //15min
+  refresh_period:(1000*60*15), //15 min
   //change questions every
 
-  time_limit:(1800*1000*2),
+  time_limit:(60*1000*45), //45 min
   //should finish within
 
   succeed_interval:3600*1000*12, //12h
