@@ -67,14 +67,25 @@ api.use((err,req,res,next)=>{
 
   if(res.obj){
     if(res.obj.template){ //if html output is chosen
-      throw err //let server.js error handler catch.
+      var data = {};
+      data.url = req.originalUrl;
+      data.err = err.stack?err.stack:JSON.stringify(err);
+      res.status(500).send(
+        jaderender('nkc_modules/jade/500.jade',data)
+      );
     }
   }
 
   if(typeof err ==='number')return res.status(err).end()
-
   res.status(500).json(report('error within /api/operation',err));
+
+  //all errors should be handled here.
 });
+
+api.use((err,req,res,next)=>{
+  //error happened during transmission of response
+  report('/api/operation: possible transmission err',err)
+})
 
 module.exports = api;
 
