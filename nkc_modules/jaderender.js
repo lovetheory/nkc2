@@ -43,10 +43,8 @@ var jadeoptions = {
     try{
       require('permissions').testModifyTimeLimit(params,ownership,toc)
     }catch(err){
-      console.log(err);
       return false
     }
-    console.log(true);
     return true
   },
 };

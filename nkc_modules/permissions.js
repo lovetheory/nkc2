@@ -182,7 +182,12 @@ permissions.getPermissionsFromCerts = getPermissionsFromCerts
 
 permissions.getPermissionsFromUser = function(user){
   if(!user)return getPermissionsFromCerts(['visitor'])
-  if(!user.certs)return getPermissionsFromCerts(['default'])
+
+  if(!user.certs){
+    user.certs =  ['default']
+  }
+
+  user.certs = calculateThenConcatCerts(user)
   return getPermissionsFromCerts(user.certs)
 }
 
@@ -225,6 +230,19 @@ permissions.testModifyTimeLimit = function(params,ownership,toc){
     }
   }
 }
+
+var calculateThenConcatCerts = function(userobj){
+  var u = userobj
+  var certs = u.certs||['default']
+
+  if(u.xsf > 0){
+    certs.push('scholar')
+  }
+
+  return certs
+}
+
+permissions.calculateThenConcatCerts = calculateThenConcatCerts
 
 permissions.certificates = certificates
 module.exports = permissions;
