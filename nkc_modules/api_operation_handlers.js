@@ -2,7 +2,11 @@
 module.paths.push(__projectroot + 'nkc_modules'); //enable require-ment for this path
 
 var express = require('express');
+var jaderender = require('jaderender')
 var api = express.Router();
+var helper_mod = require('helper')()
+
+var queryfunc = require('query_functions')
 
 api.use('/operation', (req,res,next)=>{
   if(req.method=='POST')return next()
@@ -24,11 +28,53 @@ api.all('/operation',function(req,res,next){
   })
   .then((result)=>{
     res.obj = result
-    return 
+    return
   })
   .then(next)
   .catch(next)
 })
+
+//send apidata back to client
+api.use((req,res,next)=>{
+  if(res.sent){
+    return;
+  }
+
+  var obj = res.obj
+  if(obj!==undefined) //if not undefined
+  {
+    if(!obj.template){
+      return res.json(report(obj));
+      //return without continue
+    }
+    //if template specified
+    var k = jaderender(obj.template,obj)
+    return res.send(k);
+  }
+
+  return next();
+});
+
+//unhandled error handler
+api.use((err,req,res,next)=>{
+  if(req.file)
+  {
+    //delete uploaded file when error happens
+    fs.unlink(req.file.path,(err)=>{
+      if(err)report('error unlinking file, but dont even care',err);
+    });
+  }
+
+  if(res.obj){
+    if(res.obj.template){ //if html output is chosen
+      throw err //let server.js error handler catch.
+    }
+  }
+
+  if(typeof err ==='number')return res.status(err).end()
+
+  res.status(500).json(report('error within /api/operation',err));
+});
 
 module.exports = api;
 
@@ -96,6 +142,7 @@ function executeOperation(params)
 //returns:
 //  Promise
 function APIroutine(context){
+  var initTimeStamp = Date.now()
 
   if(!context.body) throw 'submit with body, please'
   var params = context.body; //parameter object
@@ -117,6 +164,35 @@ function APIroutine(context){
   })
   .then(result=>{
     report('operation '+params.operation+' successfully executed')
+
+    var endTimeStamp = Date.now()
+    var duration = endTimeStamp - initTimeStamp
+
+    queryfunc.doc_save({
+      ip:params._req.iptrim,
+      op:params.operation,
+      uid:params.user?params.user._key:'visitor',
+      t0:initTimeStamp,
+      t1:duration,
+    },'logs')
+
     return result
+  })
+  .catch(err=>{
+    report('operation '+params.operation+' failed', err)
+
+    var endTimeStamp = Date.now()
+    var duration = endTimeStamp - initTimeStamp
+
+    queryfunc.doc_save({
+      ip:params._req.iptrim,
+      op:params.operation,
+      uid:params.user?params.user._key:'visitor',
+      t0:initTimeStamp,
+      t1:duration,
+      failed:true,
+    },'logs')
+
+    throw err
   })
 }
