@@ -22,7 +22,12 @@ block content
           .panel-body
             - var user = data.user
             h1 #{user.username}
-            p #{user.post_sign}
+            p.f12 #{user.post_sign}
+            
+            p.f12
+              a(href='/user_threads/#{user._key}') 查看本人的帖子
+            
+            hr
             
             img(src='/avatar/#{user._key}')
             
