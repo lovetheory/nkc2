@@ -17,10 +17,13 @@ function login_submit(){
     if(
       document.referrer.toString().indexOf('register')>=0 ||
       document.referrer.toString().indexOf('logout')>=0
+      document.referrer.toString().indexOf('login')>=0
     )
-    location.href = '/'; //dont go back to register form
-    else
-    location.href = document.referrer; //go back in history
+    {
+      location.href = '/'; //dont go back to register form
+    }else{
+      location.href = document.referrer; //go back in history
+    }
   })
   .catch(function(err){
     geid('error_info').innerHTML = JSON.stringify(err);
