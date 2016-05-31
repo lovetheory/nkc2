@@ -242,6 +242,10 @@ table.viewForum = {
     .then((result)=>{
       //if nothing went wrong
       Object.assign(data,result[0])
+
+      if(data.paging){
+        data.paging.pagecount = data.forum.count_threads
+      }
       //return apifunc.get_all_forums()
       return getForumList()
     })
