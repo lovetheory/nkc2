@@ -44,6 +44,7 @@ var postToThread = function(params,tid,user){
       l:post.l,
       uid:user._key,
       username:user.username,
+      ipoc:params._req.iptrim,
     };
 
     //insert the new post into posts collection
@@ -134,6 +135,11 @@ var postToPost = function(params,pid,user){ //modification.
     newpost.c = post.c
     newpost.t = post.t
     newpost.l = post.l
+
+    newpost.uidlm = params.user._key
+    newpost.iplm = params._req.iptrim
+
+    //update only the necessary ones
 
     //modification to the original
     original_post.pid = original_key;
