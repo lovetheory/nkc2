@@ -42,7 +42,7 @@ var create_user = function(user){
       _key:newuid,
       email:user.email,
       password:user.password,
-      regcode:params.regcode,
+      regcode:user.regcode,
     }
 
     return queryfunc.doc_save(newuser,'users')
