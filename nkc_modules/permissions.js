@@ -109,6 +109,15 @@ var certificates={
       userRegister:false,
 
       getResourceOfCurrentUser:true,
+
+      viewThread:true,
+      viewForum:true,
+      viewHome:true,
+      viewUserThreads:true, ////////////////these are for test purpose only
+      //move to visitor afterwards
+
+
+
     },
   },
 
@@ -120,10 +129,7 @@ var certificates={
       non_public:false,
     },
     permittedOperations:{
-      viewThread:true,
-      viewForum:true,
-      viewHome:true,
-      viewUserThreads:true,
+
 
       viewExam:true,
       submitExam:true,
