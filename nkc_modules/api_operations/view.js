@@ -405,6 +405,7 @@ table.viewUserThreads = {
       }
 
       var paging = getPaging(params)
+      paging.pagecount = data.forum.count_threads/paging.perpage
       data.paging = paging
 
       var uid = user._key

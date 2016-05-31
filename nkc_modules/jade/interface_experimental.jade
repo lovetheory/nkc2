@@ -27,9 +27,10 @@ block content
       .col-xs-6
         .panel.panel-default
           .panel-body
-            h4 特殊操作
-            button.btn.btn-default(onclick="nkcAPI('updateAllThreads').then(jalert)") 更新全部帖子数据
-            button.btn.btn-default(onclick="nkcAPI('updateAllForums').then(jalert)") 更新全部板块数据
+            h4 特殊操作[危险]
+            button.btn.btn-default(onclick="nkcAPI('updateAllThreads').then(jalert).catch(jalert)") 更新全部帖子数据
+            button.btn.btn-default(onclick="nkcAPI('updateAllForums').then(jalert).catch(jalert)") 更新全部板块数据
+            button.btn.btn-default(onclick="nkcAPI('updateAllUsers').then(jalert).catch(jalert)") 更新全部用户数据
                 
 block scripts
   script(src='/react.js')

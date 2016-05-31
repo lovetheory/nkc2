@@ -68,9 +68,13 @@ block content
           each thread,index in data.threads
             include interface_forum_singlethread.jade
 
-                        
-          if data.replytarget
-            a.btn.btn-default(style="margin-top:10px" href='/e?target=#{data.replytarget}') 新
+        .row
+          .col-md-12
+            nav
+              include interface_navigation_paging.jade
+          
+            if data.replytarget
+              a.btn.btn-default(style="margin-top:10px" href='/e?target=#{data.replytarget}') 新
           
       .col-sm-3.col-md-2
         include interface_forums_list.jade

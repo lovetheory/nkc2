@@ -181,6 +181,7 @@ h4,h5,h6 {
 .ForumThreadList{
   border-collapse: collapse;
   display: table;
+  margin-bottom: 10px;
 }
 .ForumThreadItem {
   position: relative;
