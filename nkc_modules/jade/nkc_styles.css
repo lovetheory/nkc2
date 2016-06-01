@@ -127,12 +127,19 @@
 .ForumsListBody{
   display: inline-block;
   width: 110px;
+  position: relative;
 }
 .ForumsListGroupItem{
   color: #ccc;
 }
 .ForumsListForumItem{
   padding-left: 10px;
+}
+
+.ForumsListCountNumber{
+  display: inline-block;
+  position: absolute;
+  right: 0;
 }
 
 .NavigationPaging{

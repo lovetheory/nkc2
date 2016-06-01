@@ -25,7 +25,7 @@
               span.reddish #{f.display_name} 
             else
               span #{f.display_name} 
-            span(style='color:brown;') #{f.count_posts_today||""}
+          .ForumsListCountNumber(style='color:brown;') #{f.count_posts_today||""}
         
       - cindex += group.forumgroup.length
   
