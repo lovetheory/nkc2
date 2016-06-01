@@ -104,3 +104,13 @@ table.clearCart={
     return queryfunc.doc_update(uid,'users',{cart:[]})
   }
 }
+
+table.setDigest={
+  operation:function(params){
+    var tid = params.tid
+    return queryfunc.doc_update(tid,'threads',{digest:true})
+  },
+  requiredParams:{
+    tid:String,
+  }
+}

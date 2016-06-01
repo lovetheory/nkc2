@@ -108,7 +108,7 @@
   left: 31px;
   right: 27px;
   /* width: 200px; */
-  /* height: 30px; */
+  font-size: 11pt;
   overflow: hidden !important;
 }
 .HomeThreadText:visited{
@@ -293,15 +293,24 @@ h4,h5,h6 {
 .ThreadTitleAuxillary{
   display: inline-block;
   margin-left: 10px;
-  margin-top: 8px;
+  /* margin-top: 8px; */
 }
 
 .ThreadTitleAuxillaryLink{
   display: inline-block;
-  margin-left: 10px;
+  /* margin-left: 10px; */
   /* position: absolute; */
   /* top: 5px; */
 }
+
+.ThreadTitleAuxillaryLink a{
+  display: inline-block;
+  margin-right: 9px;
+  color: #CBDCEA;
+  /* position: absolute; */
+  /* top: 5px; */
+}
+
 .ThreadTitleHr {
   margin-top: 10px;
   margin-bottom: 13px;
@@ -337,10 +346,16 @@ h4,h5,h6 {
 }
 .ThreadPostTitleMeta{
   display: inline-block;
-  color: #9C9C9C;
+  /* color: #9C9C9C; */
   margin: 0px;
+  margin-right: 5px;
 }
 
+.ThreadPostTitleUsername{
+  display: inline;
+  margin-right: 8px;
+  color: #8295A7;
+}
 .PostContentImage{
   max-width: 100%;
 }

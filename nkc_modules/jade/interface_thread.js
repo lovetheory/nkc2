@@ -17,3 +17,10 @@ function cartPost(pid){
   })
   .catch(jwarning)
 }
+
+function setDigest(tid){
+  nkcAPI('setDigest',{tid:tid})
+  .then(function(){
+    return screenTopAlert(tid+' 设为精华')
+  })
+}

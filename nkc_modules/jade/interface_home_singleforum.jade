@@ -24,7 +24,7 @@ if 0
         span.HomeForumTitlePostCount #{f.count_posts}
     hr.hrNarrowSpace
     each thread,index in f.threads
-      .HomeThreadItem.f12
+      .HomeThreadItem
         - var uid = thread.oc.uid
         - var avatar = '/avatar_small/' + uid
         .HomeThreadAvatarPosition
@@ -38,5 +38,5 @@ if 0
           
         .HomeThreadTextRightAlign
           if thread.count>1
-            span.lighttext.reddish.f12 #{thread.count-1}
+            span #{thread.count-1}
           //span.lighttext.rightalign #{fromNow(thread.lm.toc)}

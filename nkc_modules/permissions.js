@@ -46,6 +46,8 @@ var certificates={
     permittedOperations:{
       addThreadToCart:true,
       addPostToCart:true,
+      setDigest:true,
+
       selfModifyTimeLimit:timeYear*3, //3y
       elseModifyTimeLimit:timeYear*1, //1y
 

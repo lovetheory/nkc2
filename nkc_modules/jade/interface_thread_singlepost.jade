@@ -16,8 +16,9 @@ if !post.disabled
       if(post.t&&post.t!=''&&index!=0)
         span.dirt.ThreadPostTitle #{post.t}
       .ThreadPostTitleMeta
-        span #{user?user.username:''} - #{fromNow(post.toc)} - 
-        a(href='/thread/#{data.thread._key}?post=#{post._key}').lighttext #{dateString(post.toc)} 
+        .ThreadPostTitleUsername #{user?user.username:''}
+        span.lighttext #{fromNow(post.toc)} - 
+        a(href='/thread/#{data.thread._key}?post=#{post._key}').lighttext #{dateTimeString(post.toc)} 
         
       .ThreadTitleAuxillaryLink
         - var po = data.permittedOperations
@@ -28,7 +29,6 @@ if !post.disabled
           - var user = data.user
           - var ownership = user._key===uid
           - if(testModifyTimeLimit(data,ownership,post.toc))
-            span  - 
             a(href='/e?target=post/#{post._key}') 编辑
             
       div.ThreadPostBody!= experimental_render(post)
