@@ -19,6 +19,16 @@
   color:#611;
 }
 
+.xbbcode-code {
+  display: block;
+  background-color: #ECECEC;
+  border-radius: 10px;
+  padding: 10px;
+  color: #007084;
+  font-family: monospace;
+  font-size: 10pt;
+}
+
 .hrNarrowSpace{
   margin-top: 10px;
   margin-bottom: 9px;
@@ -211,8 +221,8 @@ h4,h5,h6 {
 }
 
 .ForumThreadCreatorInfo{
-  display: inline-block;
-  /* width: 50%; */
+display: inline-block;
+/* width: 50%; */
 }
 
 .ForumThreadDigestText{
