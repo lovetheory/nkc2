@@ -36,7 +36,7 @@ function nkc_render(options){
   }
 
 
-  var getHTMLForResource = function(r){
+  var getHTMLForResource = function(r,allthumbnail){
     var rid = r._key
     var oname_safe = plain_escape(r.oname)
     var filesize = r.size
@@ -58,8 +58,17 @@ function nkc_render(options){
       case 'png':
       case 'svg':
 
-      replaced =
+      if(!allthumbnail)replaced =
       '<a href="/r/'+rid+'" target="_blank" title="'+oname_safe+'"><img class="PostContentImage" alt="'+rid+'" src="/r/'+rid+'" /></a><br/>'
+
+      if(allthumbnail){
+        replaced =
+        '<div class="PostResourceDownload">'
+        +'<a class="PostResourceDownloadLink" href="/r/'+rid+'" download>'
+        +'<img class="PostResourceDownloadThumbnail" src="/rt/'+rid+'"/>'+oname_safe+'</a>'
+        +'<span class="PostResourceFileSize">'+fileSizeString+'</span>'
+        +'</div>'
+      }
 
       break;
       //audio section
@@ -98,6 +107,7 @@ function nkc_render(options){
       for(i in post.r){
         var r = post.r[i]
         if(r._key==rid){
+          r._used = true;
           return getHTMLForResource(r)
         }
       }
@@ -126,6 +136,16 @@ function nkc_render(options){
     '<embed class="PostEmbedFlash" src="$1" allowFullScreen="true" quality="high" allowScriptAccess="always" type="application/x-shockwave-flash"></embed>')
 
     html = attachment_filter(html,post)
+    // now post.r are marked with _used:true
+
+    // fix for older posts where they forgot to inject attachments.
+    for(i in post.r){
+      var r = post.r[i]
+      if(!r._used){
+        var allthumbnail = true
+        html+=getHTMLForResource(r,allthumbnail)
+      }
+    }
 
     return html
   }
