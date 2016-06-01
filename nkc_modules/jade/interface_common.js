@@ -174,6 +174,39 @@ function nkcAPI(operationName,remainingParams){
   return nkcOperationAPI(remainingParams)
 }
 
+var NavBarSearch = {
+  box:geid('SearchBox'),
+  btn:geid('SearchButton'),
+
+  init:function(){
+    console.log('NavBarSearch init...');
+    NavBarSearch.btn.addEventListener('click',NavBarSearch.search);
+
+    NavBarSearch.box.addEventListener('keypress', NavBarSearch.onkeypress);
+
+  },
+
+  onkeypress:function(){
+    e = event ? event :(window.event ? window.event : null);
+    if(e.keyCode===13||e.which===13)
+
+    NavBarSearch.search()
+  },
+
+  search:function(){
+    var searchstr = NavBarSearch.box.value.trim()
+//    https://www.google.com.hk/search?newwindow=1&safe=strict&source=hp&q=zvs+site%3Abbs.kechuang.org
+    window.location =
+    'https://www.google.com.hk/search?newwindow=1&safe=strict&source=hp&q='
+    +encodeURI(searchstr)
+    +'+site%3Abbs.kechuang.org'
+  },
+};
+
+NavBarSearch.init()
+
+
+
 //in memory of alex king
 // JS QuickTags version 1.3.1
 //
