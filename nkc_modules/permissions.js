@@ -130,6 +130,7 @@ var certificates={
     },
     permittedOperations:{
 
+      useSearch:true,
 
       viewExam:true,
       submitExam:true,
@@ -209,7 +210,7 @@ permissions.testModifyTimeLimit = function(params,ownership,toc){
 
   var smtl = params.permittedOperations.selfModifyTimeLimit
   var emtl = params.permittedOperations.elseModifyTimeLimit
-  
+
   smtl = smtl||0
   emtl = emtl||0
 

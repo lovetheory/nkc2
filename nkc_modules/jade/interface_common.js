@@ -195,6 +195,8 @@ var NavBarSearch = {
 
   search:function(){
     var searchstr = NavBarSearch.box.value.trim()
+    nkcAPI('useSearch',{searchstring:searchstr});
+
 //    https://www.google.com.hk/search?newwindow=1&safe=strict&source=hp&q=zvs+site%3Abbs.kechuang.org
     window.location =
     'https://www.google.com.hk/search?newwindow=1&safe=strict&source=hp&q='
