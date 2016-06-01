@@ -99,7 +99,7 @@ var certificates={
       clearCart:true,
 
       postTo:true, //////////////////////////////////// may cancel in the future
-      viewEditor:true,
+
       selfModifyTimeLimit:timeHour*0.5, //30min
 
       getPost:true,
@@ -113,6 +113,7 @@ var certificates={
 
       getResourceOfCurrentUser:true,
 
+      viewEditor:true,
       viewThread:true,
       viewForum:true,
       viewHome:true,

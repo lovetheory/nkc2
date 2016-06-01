@@ -27,10 +27,13 @@ block content
       .col-xs-6
         .panel.panel-default
           .panel-body
-            h4 特殊操作[危险]
+            h4 特殊操作 [ 请没事不要点击 ]
             button.btn.btn-default(onclick="nkcAPI('updateAllThreads').then(jalert).catch(jalert)") 更新全部帖子数据
             button.btn.btn-default(onclick="nkcAPI('updateAllForums').then(jalert).catch(jalert)") 更新全部板块数据
             button.btn.btn-default(onclick="nkcAPI('updateAllUsers').then(jalert).catch(jalert)") 更新全部用户数据
+            hr
+            
+            a.btn.btn-default(href="/danger") 危险
                 
 block scripts
   script(src='/react.js')
