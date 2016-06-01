@@ -156,6 +156,10 @@ queryfunc.doc_update = (doc_key,collection_name,props)=>{
   return db.collection(collection_name).update(doc_key,props)
 };
 
+queryfunc.doc_replace = (doc,coll_name)=>{
+  return db.collection(coll_name).replace(doc,doc);
+}
+
 queryfunc.doc_kill = (doc_key,collection_name)=>{
   return db.collection(collection_name).remove(doc_key)
 };
