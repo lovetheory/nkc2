@@ -327,6 +327,7 @@ h4,h5,h6 {
 .ThreadPostAvatar{
   border-radius: 10%;
   width: 52px;
+  height: 52px;
 }
 
 .ThreadPostTitle{
