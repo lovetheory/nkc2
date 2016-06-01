@@ -1,0 +1,44 @@
+extends bootstrap_base.jade
+
+block title
+  title 科创维修
+  
+block content
+  .container
+    .row
+      .col-md-12
+        .f12
+          :markdown
+            # Danger
+            
+            欢迎来到危险页面。正常浏览此页面说明您拥有 viewDanger 权限。您需要 dev 证书以获得此权限。
+            
+            本页面非常危险，鲁莽的操作将可能导致数据丢失、服务中断。
+            
+            ### 操作说明
+          
+            1. 在 **_id** 框输入所需文档的 **_id** 值，然后点击 **“拉取”** ，即可从数据库载入该文档。
+            2. 随后您可以在编辑框中修改该文档。请参考JSON语法资料。
+            3. 点击 **“提交”** 即可用目前文档 **替换** 服务器上的对应文档。
+            
+            ### 注意事项
+            
+            1. 在编辑期间，原文档可能发生了更改，导致提交失败。如拉取后长时间未操作，应重新拉取。
+            2. 编辑后若不符合JSON语法规范，将导致提交失败，此时应检查语法。
+            3. 本功能不会限制对文档的修改，故请事先确认您的操作意图。
+        
+
+        
+        .form-group
+          input#DocID.form-control(type='text' placeholder='_id' value='#{data.doc?data.doc._id:""}')
+        .form-group
+          button#LoadDocAsUsername.btn.btn-default(type='submit') 作为用户名拉取
+          button#LoadDoc.btn.btn-default(type='submit') 拉取
+          button#SaveDoc.btn.btn-default(type='submit') 提交
+        
+        .form-group
+          textarea#DocJSON.form-control(rows='22' placeholder='内容' style='resize:none;') #{data.doc?JSON.stringify(data.doc,null,2):''}
+
+block scripts
+  script(src='/interface_common.js')
+  script(src='/interface_danger.js')

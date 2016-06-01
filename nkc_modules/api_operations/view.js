@@ -352,7 +352,7 @@ table.viewThread = {
       if(!data.thread)throw 'thread not exist'
 
       var thread = data.thread
-        paging.pagecount = thread.count?Math.floor(thread.count / paging.perpage) + 1:null
+      paging.pagecount = thread.count?Math.floor(thread.count / paging.perpage) + 1:null
 
       data.paging = paging
     })
@@ -511,5 +511,56 @@ table.viewEditor = {
       })
     }
     return data
+  }
+}
+
+table.viewDanger = {
+  operation:params=>{
+    var data = defaultData(params)
+    data.template = jadeDir + 'interface_danger.jade'
+
+    var doc_id = params.id
+    var username = params.username
+
+    if(doc_id){
+      var p = doc_id.split('/')
+      var collname = p[0]
+      var doc_key = p[1]
+
+      return queryfunc.doc_load(doc_key,collname)
+      .then(res=>{
+        data.doc = res
+      })
+      .catch(err=>{
+        //ignore
+        report('no doc to load/bad id')
+      })
+      .then(()=>{
+        return data
+      })
+    }
+
+    if(username){
+      return apifunc.get_user_by_name(username)
+      .then(reslist=>{
+        if(reslist[0])
+
+        data.doc = reslist[0]
+
+        return data
+      })
+    }
+    
+    return data
+  }
+}
+
+table.dangerouslyReplaceDoc = {
+  operation:params=>{
+    var doc = params.doc
+    return queryfunc.doc_replace(doc,doc)
+  },
+  requiredParams:{
+    doc:Object,
   }
 }

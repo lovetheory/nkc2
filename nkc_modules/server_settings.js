@@ -109,6 +109,7 @@ settings.urlrewrite = [ //happens before serve_static
   urlrewriteGen('experimental','viewExperimental'),
   urlrewriteGen('me','viewMe'),
   urlrewriteGen('e','viewEditor'),
+  urlrewriteGen('danger','viewDanger'),
 
   // {map:/^\/logout\?{0,1}(.*)/,to:'/api/operation?&operation=viewLogout&$1'},
   // {map:/^\/login\?{0,1}(.*)/,to:'/api/operation?&operation=viewLogin&$1'},
