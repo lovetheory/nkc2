@@ -20,12 +20,17 @@ function fromNow(time){
   return moment(time).fromNow();
 }
 
+function dateTimeString(t){
+  return moment(t).format('YYYY-MM-DD hh:mm')
+}
+
 var jadeoptions = {
   markdown:render.commonmark_render,
   bbcode:render.bbcode_render,
   plain:render.plain_render,
   experimental_render:render.experimental_render,
   dateString:dateString,
+  dateTimeString,
   fromNow:fromNow,
 
   toQueryString:function(object){

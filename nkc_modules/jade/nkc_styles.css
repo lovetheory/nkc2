@@ -138,9 +138,9 @@
 }
 
 .ForumsListCountNumber{
-  display: inline-block;
-  position: absolute;
-  right: 0;
+display: inline-block;
+position: absolute;
+right: 0;
 }
 
 .NavigationPaging{
@@ -190,6 +190,7 @@ h4,h5,h6 {
   border-collapse: collapse;
   display: table;
   margin-bottom: 10px;
+  width: 100%;
 }
 .ForumThreadItem {
   position: relative;
@@ -209,6 +210,11 @@ h4,h5,h6 {
   width: 45px;
 }
 
+.ForumThreadCreatorInfo{
+  display: inline-block;
+  /* width: 50%; */
+}
+
 .ForumThreadDigestText{
   color: orange;
   margin-right: 6px;
@@ -220,24 +226,26 @@ h4,h5,h6 {
   padding: 0;
   padding-left: 10px;
   display: table-cell;
-  /* top: 0px; */
+  /* min-width: 400px; */
   /* right: 140px; */
   /* left: 45px; */
 }
 .ForumThreadItemReplyCount{
-  display: table-cell;
+  display: inline-block;
+  margin-right: 5px;
+  font-size: 8pt;
   /* position: absolute; */
   color: #D28A78;
-  width: 25px;
-  vertical-align: middle;
+  /* width: 25px; */
+  /* vertical-align: middle; */
   /* right: 100px; */
 }
 
 .ForumThreadItemReplyInfo{
-  display: table-cell;
+  display: inline-block;
   /* position: absolute; */
-  vertical-align: middle;
-  width: 100px;
+  /* vertical-align: middle; */
+  /* width: 25%; */
   /* right: 0px; */
 }
 .ForumThreadItemUsername{
