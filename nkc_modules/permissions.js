@@ -164,6 +164,8 @@ var certificates={
       postTo:false,
       viewExam:false,
       submitExam:false,
+      viewMe:true,
+      viewForum:true,
     },
   },
 };
