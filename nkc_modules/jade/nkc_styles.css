@@ -228,7 +228,7 @@ h4,h5,h6 {
   display: table-cell;
   /* position: absolute; */
   color: #D28A78;
-  width: 40px;
+  width: 25px;
   vertical-align: middle;
   /* right: 100px; */
 }
@@ -379,7 +379,7 @@ h4,h5,h6 {
   margin-top: 10px;
   margin-bottom: 10px;
   width: calc(100% - 63px);
-  min-width: 410px;
+  /* min-width: 410px; */
   float: right;
 }
 
