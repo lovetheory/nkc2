@@ -37,7 +37,7 @@ var certificates={
 
   moderator:{
     display_name:'版主',
-    inheritFrom:['scholar','examinated'],
+    inheritFrom:['scholar'],
 
     contentClasses:{
       classified:true,
@@ -175,9 +175,17 @@ var getPermissionsFromCerts = (certsArray)=>{
   var permittedOperations={};
   var contentClasses={};
 
+  if(certsArray.indexOf('banned')>=0){
+    certsArray = ['banned'];
+  }
+
   for(i in certsArray)
   {
     var certName = certsArray[i]
+    //local ver of permittedOperations and contentClasses
+    var lpo = {}
+    var lcc = {}
+
     var certificate = certificates[certName];
 
     if(!certificate)continue; //ignore undefined certificates
@@ -186,13 +194,30 @@ var getPermissionsFromCerts = (certsArray)=>{
     if(certificate.inheritFrom){
       var c = getPermissionsFromCerts(certificate.inheritFrom)
 
-      Object.assign(permittedOperations,c.permittedOperations)
-      Object.assign(contentClasses,c.contentClasses)
+      Object.assign(lpo,c.permittedOperations)
+      Object.assign(lcc,c.contentClasses)
     }
 
-    Object.assign(permittedOperations,certificate.permittedOperations)
-    Object.assign(contentClasses,certificate.contentClasses)
+    Object.assign(lpo,certificate.permittedOperations)
+    Object.assign(lcc,certificate.contentClasses)
+
+    //obj assign equivalent
+    for(name in lpo){
+      if((typeof permittedOperations[name]) == 'number'){
+
+        permittedOperations[name] =
+        Math.max(permittedOperations[name] ,lpo[name])
+
+        //obtain max of numbers, if is number.
+      }
+      else{
+        permittedOperations[name] = lpo[name]
+      }
+    }
+
+    Object.assign(contentClasses,lcc)
   }
+
   return {
     permittedOperations,
     contentClasses,
@@ -257,8 +282,7 @@ var calculateThenConcatCerts = function(userobj){
   var certs = u.certs||['default']
 
   if(u.xsf > 0){
-    certs = ['scholar'].concat(certs)
-    //so that assigned certs can override calculated certs.
+    certs.push('scholar')
   }
 
   return certs
