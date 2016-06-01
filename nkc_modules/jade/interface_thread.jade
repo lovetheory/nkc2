@@ -28,14 +28,12 @@ block content
                   a(href="javascript:cartThread('#{data.thread._key}')") 加入管理车
             
             include interface_navigation_paging.jade      
-            hr.ThreadTitleHr
+            //hr.ThreadTitleHr
             .ThreadPostList
               each post,index in data.posts
                 include interface_thread_singlepost.jade
-                
-                //horizontal line
-                hr.ThreadSinglePostHr
-
+              
+            br
             include interface_navigation_paging.jade
             hr.ThreadSinglePostHr
             a.btn.btn-default(href='/e?target=#{data.replytarget}') 回复
