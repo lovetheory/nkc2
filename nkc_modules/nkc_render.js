@@ -139,10 +139,16 @@ function nkc_render(options){
     // now post.r are marked with _used:true
 
     // fix for older posts where they forgot to inject attachments.
+
+    var count = 0
     for(i in post.r){
       var r = post.r[i]
       if(!r._used){
         var allthumbnail = true
+        if(count==0){
+          html+='<hr class="HrPostContentUnusedAttachment"/>'
+          count++;
+        }
         html+=getHTMLForResource(r,allthumbnail)
       }
     }
