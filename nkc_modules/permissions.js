@@ -51,6 +51,8 @@ var certificates={
       selfModifyTimeLimit:timeYear*3, //3y
       elseModifyTimeLimit:timeYear*1, //1y
 
+      viewExperimental:true,
+
       removePost:true,
       moveThread:true,
     }
@@ -102,7 +104,6 @@ var certificates={
 
       getPost:true,
 
-      viewExperimental:true,
       viewMe:true,
 
       userLogout:true,

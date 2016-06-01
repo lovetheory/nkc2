@@ -34,9 +34,13 @@ div
       .col-xs-4.col-sm-2
         .row.f12.text-center
           if data.user
+            - var user = data.user
             .col-xs-12(style='margin:13px 0;')
-              a(href='/me' style='margin-right:13px;') #{data.user.username}
+              a(href='/me' style='margin-right:13px;') #{user.username}
               a(href='/logout') 退
+              if data.permittedOperations.viewExperimental
+                a(href='/experimental' style='margin-left:13px;') 管
+              
           else
             .col-xs-12(style='margin:13px 0;')
               a(href='/login') 登
