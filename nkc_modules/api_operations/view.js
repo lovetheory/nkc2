@@ -261,6 +261,7 @@ table.viewForum = {
 }
 
 function testForumClass(params,forum){
+  if(!forum)return;
   if(!forum.class)return;
   if(params.contentClasses[forum.class]){ // if user have enough class
     return;
@@ -348,9 +349,10 @@ table.viewThread = {
     .then(result=>{
       Object.assign(data,result[0]);
 
-      var thread = data.thread
+      if(!data.thread)throw 'thread not exist'
 
-      paging.pagecount = thread.count?Math.floor(thread.count / paging.perpage) + 1:null
+      var thread = data.thread
+        paging.pagecount = thread.count?Math.floor(thread.count / paging.perpage) + 1:null
 
       data.paging = paging
     })
