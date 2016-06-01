@@ -64,7 +64,7 @@ function nkc_render(options){
       if(allthumbnail){
         replaced =
         '<div class="PostResourceDownload">'
-        +'<a class="PostResourceDownloadLink" href="/r/'+rid+'" download>'
+        +'<a class="PostResourceDownloadLink" href="/r/'+rid+'" >'
         +'<img class="PostResourceDownloadThumbnail" src="/rt/'+rid+'"/>'+oname_safe+'</a>'
         +'<span class="PostResourceFileSize">'+fileSizeString+'</span>'
         +'</div>'
