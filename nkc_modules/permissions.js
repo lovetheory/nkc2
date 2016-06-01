@@ -154,8 +154,16 @@ var certificates={
     display_name:'封禁',
     inheritFrom:['visitor'],
 
+    contentClasses:{
+      non_public:false,
+      non_images:false,
+      non_public:false,
+    },
+
     permittedOperations:{
+      postTo:false,
       viewExam:false,
+      submitExam:false,
     },
   },
 };
@@ -247,7 +255,8 @@ var calculateThenConcatCerts = function(userobj){
   var certs = u.certs||['default']
 
   if(u.xsf > 0){
-    certs.push('scholar')
+    certs = ['scholar'].concat(certs)
+    //so that assigned certs can override calculated certs.
   }
 
   return certs
