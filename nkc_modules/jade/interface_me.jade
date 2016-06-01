@@ -45,10 +45,17 @@ block content
             
             - var user = data.user
             p 用户拥有以下证书:
-              if user.certs
-                ul
-                  - for(i in user.certs)
-                    li #{user.certs[i]}
+            if user.certs
+              ul
+                - for(i in user.certs)
+                  li #{user.certs[i]}
+            
+            if data.allCertificates
+              p 系统中所有可选证书:
+              ul
+                each i in data.allCertificates
+                  li #{i}
+            
             
             if data.permittedOperations
               - var po = data.permittedOperations
@@ -68,6 +75,10 @@ block content
                   if cc[i]
                     li #{i}
                     
+            if data.certificateDefinitions
+              p 系统权限总表:
+              - var k = data.certificateDefinitions
+              div(style="font-family: consolas; padding: 10px;color:white;background-color:gray;")!= plain(JSON.stringify(k,null,4))
                     
             //a.btn.btn-default(href='/interface/editor?target=#{data.replytarget}') 修改个人简介
 

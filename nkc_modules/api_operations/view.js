@@ -32,6 +32,10 @@ table.viewMe = {
 
     if(!params.user) throw 'must login to view this page'
 
+    data.allCertificates =  require('permissions').listAllCertificates()
+
+    data.certificateDefinitions = require('permissions').certificates
+
     data.examinated = params.examinated
     data.replytarget = 'me'
     return data
@@ -550,7 +554,7 @@ table.viewDanger = {
         return data
       })
     }
-    
+
     return data
   }
 }
