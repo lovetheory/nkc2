@@ -319,7 +319,7 @@ h4,h5,h6 {
 .ThreadPostBody img{
   max-width: 100%;
   border-radius: 5px;
-  margin-right: 10px;
+  margin-right: 5px;
 }
 
 .ThreadPostBody blockquote {
@@ -351,7 +351,7 @@ h4,h5,h6 {
 }
 
 .PostResourceDownload{
-  margin-right: 5px;
+  margin-right: 8px;
   display: inline-block;
   margin-bottom: 5px;
 }
