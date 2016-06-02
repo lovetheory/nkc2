@@ -172,7 +172,21 @@ var postToPost = function(params,pid,user){ //modification.
       result.fid = updatedThread.fid
       result.pid = pid;
       result.tid = tid;
-      result.redirect = '/thread/' + tid +'?post=' + result._key
+      result.redirect = '/thread/' + tid
+
+      //
+
+      if(updatedThread.count){
+        var total = updatedThread.count
+        var page = Math.floor(total/30)
+        if(page){
+          result.redirect += '?page=' + page.toString()
+        }
+      }
+      result.redirect+= '#' + pid
+
+      //
+      
       return result;
     })
   })
