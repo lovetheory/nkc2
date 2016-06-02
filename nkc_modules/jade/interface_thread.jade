@@ -16,9 +16,9 @@ block content
             - var fid = data.thread.fid
             .ThreadTitle
               - var forumname = data.forum.display_name
-              a.ThreadTitleForumLink(href='/forum/#{fid}') #{forumname} 
+              a.ThreadTitleForumLink(href='/f/#{fid}') #{forumname} 
               
-              a.ThreadTitleText(href='/thread/#{data.thread._key}') #{data.oc.t} 
+              a.ThreadTitleText(href='/t/#{data.thread._key}') #{data.oc.t} 
                 
               .ThreadTitleAuxillary.d-inline.lighttext
                                 

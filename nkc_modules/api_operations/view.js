@@ -135,7 +135,7 @@ table.viewHome = {
       let parentforum = document(forums,parent)
 
       let class = parentforum.class
-      
+
       filter has(@contentClasses,TO_STRING(class)) /*content ctrl*/
 
       let group =  {parentforum,forumgroup}
@@ -260,7 +260,7 @@ table.viewForum = {
     })
     .then(forumlist=>{
       data.forumlist = forumlist
-      data.replytarget = 'forum/' + fid;
+      data.replytarget = 'f/' + fid;
       return data
     })
   },
@@ -370,7 +370,7 @@ table.viewThread = {
     })
     .then(forumlist=>{
       data.forumlist = forumlist
-      data.replytarget = 'thread/' + tid
+      data.replytarget = 't/' + tid
       return data
     })
   },

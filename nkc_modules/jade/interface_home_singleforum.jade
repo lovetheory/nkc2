@@ -14,7 +14,7 @@ if 0
 .col-lg-3.col-md-4.col-xs-12.col-sm-6
   .HomeForumContainer
     .HomeForumTitle
-      a.HomeForumTitlePrimary(href='/forum/#{f._key}') #{f.display_name}
+      a.HomeForumTitlePrimary(href='/f/#{f._key}') #{f.display_name}
         
       .HomeForumTitleSecondary
         if f.count_posts_today > 0
@@ -32,9 +32,9 @@ if 0
             img.HomeThreadAvatar(src='#{avatar}')
         
         if !thread.digest
-          a.HomeThreadText(href='/thread/#{thread._key}' title="#{thread.oc.t}") #{thread.oc.t}        
+          a.HomeThreadText(href='/t/#{thread._key}' title="#{thread.oc.t}") #{thread.oc.t}        
         else
-          a.HomeThreadTextDigest.HomeThreadText(href='/thread/#{thread._key}' title="#{thread.oc.t}") #{thread.oc.t}
+          a.HomeThreadTextDigest.HomeThreadText(href='/t/#{thread._key}' title="#{thread.oc.t}") #{thread.oc.t}
           
         .HomeThreadTextRightAlign
           if thread.count>1

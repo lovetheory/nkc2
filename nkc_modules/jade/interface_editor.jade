@@ -75,7 +75,7 @@ block scripts
   script(src='/interface_attachment_uploader.js')
   script(type='text/jsx;harmony=true' src='/interface_attachment_list_display.js')
   
-  if data.replytarget.indexOf('forum')>=0
+  if data.replytarget.indexOf('f/')>=0
     script.
       geid('title').focus();
   else

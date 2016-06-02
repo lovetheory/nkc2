@@ -64,7 +64,7 @@ var postToThread = function(params,tid,user){
       saveResult.fid = tobject.fid
       saveResult.tid = tid;
       saveResult.pid = pid
-      saveResult.redirect = '/thread/' + tid
+      saveResult.redirect = '/t/' + tid
 
       if(updatedThread.count){
         var total = updatedThread.count
@@ -172,7 +172,7 @@ var postToPost = function(params,pid,user){ //modification.
       result.fid = updatedThread.fid
       result.pid = pid;
       result.tid = tid;
-      result.redirect = '/thread/' + tid
+      result.redirect = '/t/' + tid
 
       //
 
@@ -186,7 +186,7 @@ var postToPost = function(params,pid,user){ //modification.
       result.redirect+= '#' + pid
 
       //
-      
+
       return result;
     })
   })
@@ -218,9 +218,9 @@ table.postTo = {
     return Promise.resolve()
     .then(()=>{
       switch (targetType) {
-        case 'forum':
+        case 'f':
         return postToForum(params,targetKey,user) //throws if notexist
-        case 'thread':
+        case 't':
         return postToThread(params,targetKey,user)
         case 'post':
         return postToPost(params,targetKey,user)
