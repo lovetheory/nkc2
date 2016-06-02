@@ -79,6 +79,7 @@ var certificates={
     },
     permittedOperations:{
       postTo:true,
+      getPostContent:true,
       testExaminated:true,
       selfModifyTimeLimit:timeHour*1, //1h
     }
@@ -99,6 +100,7 @@ var certificates={
       clearCart:true,
 
       postTo:true, //////////////////////////////////// may cancel in the future
+      getPostContent:true,/////////////////////////////
 
       selfModifyTimeLimit:timeHour*0.5, //30min
 

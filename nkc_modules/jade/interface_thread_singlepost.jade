@@ -2,7 +2,7 @@
 
 if !post.disabled
   //horizontal line
-  hr.ThreadSinglePostHr
+  hr(id='#{post._key}').ThreadSinglePostHr
   
   - var uid = post.uid
   - var user = post.user
@@ -23,6 +23,9 @@ if !post.disabled
         
       .ThreadTitleAuxillaryLink
         - var po = data.permittedOperations
+        - if(po.postTo)
+          a(href="javascript:quotePost('#{post._key}')") 引用
+          
         - if(po.addPostToCart)
           a(href="javascript:cartPost('#{post._key}')") 加入管理车
           

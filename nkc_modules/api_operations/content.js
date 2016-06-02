@@ -53,15 +53,28 @@ var postToThread = function(params,tid,user){
   .then(saveResult=>{
     var pid = saveResult._key
     //update thread object to make sync
+    var updatedThread = null
+
     return update_thread(tid)
-    .then(r=>{
+    .then(t=>{
+      updatedThread = t
       return incrementForumOnNewPost(tid)
     })
     .then(r=>{
       saveResult.fid = tobject.fid
       saveResult.tid = tid;
       saveResult.pid = pid
-      saveResult.redirect = '/thread/' + tid.toString()
+      saveResult.redirect = '/thread/' + tid
+
+      if(updatedThread.count){
+        var total = updatedThread.count
+        var page = Math.floor(total/30)
+        if(page){
+          saveResult.redirect += '?page=' + page.toString()
+        }
+      }
+      saveResult.redirect+= '#' + pid
+
       return saveResult;
     })
     //okay to respond the user

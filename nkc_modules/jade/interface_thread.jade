@@ -37,9 +37,19 @@ block content
               
             br
             include interface_navigation_paging.jade
-            hr.ThreadSinglePostHr
-            a.btn.btn-default(href='/e?target=#{data.replytarget}') 回复
-              
+            hr
+            
+            if data.permittedOperations
+              if data.permittedOperations.postTo
+                .form-group
+                  a.f12(href='/e?target=#{data.replytarget}') 回复（去编辑器）
+
+                .form-group
+                  textarea#ReplyContent.form-control(rows='4' placeholder='快速回复 （默认markdown语法）' style='resize:none;')
+                
+                .form-group
+                  button#ButtonReply.btn.btn-default(onclick='submit()') 快速回复
+                
                 
       .col-sm-3.col-md-2
         include interface_forums_list.jade
