@@ -12,7 +12,7 @@ var DangerEditor = {
     DangerEditor.btnLoadFromUsername.addEventListener('click',DangerEditor.loadFromUsername);
 
     DangerEditor.btnsubmit.addEventListener('click',DangerEditor.submit);
-    DangerEditor.inputid.addEventListener('keypress', DangerEditor.onkeypress);
+    DangerEditor.inputid.addEventListener('keypress', DangerEditor.onkeypressID);
   },
 
   load:function(){
@@ -36,11 +36,11 @@ var DangerEditor = {
     .catch(screenTopWarning)
   },
 
-  onkeypress:function(){
+  onkeypressID:function(){
     e = event ? event :(window.event ? window.event : null);
     if(e.keyCode===13||e.which===13)
 
-    DangerEditor.submit()
+    DangerEditor.load()
   },
 }
 
