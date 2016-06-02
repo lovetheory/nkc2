@@ -139,6 +139,7 @@ settings.root_serve_static =
 [
   //clientside js file serving
   {to:'nkc_modules/chat'},
+  {map:'/resources/default_things',to:'resources/default_things/'},
   {to:'external_pkgs/jquery'},
   {to:'external_pkgs/xbbcode'},
   {to:'external_pkgs/react'},

@@ -24,8 +24,12 @@ block body
         //include as markdown
         include:markdown ../../README.md
       br
-      div.intpad.zipline
-        include:markdown ../../doc/API_design.md
+      if 1
+        div.intpad.zipline
+          h1 Schema.js
+          pre
+            code
+              include:plain ../../doc/Schema.js
 
     div.halfpane.intpad
       div.intpad.zipline
