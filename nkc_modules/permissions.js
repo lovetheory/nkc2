@@ -120,8 +120,6 @@ var certificates={
       viewUserThreads:true, ////////////////these are for test purpose only
       //move to visitor afterwards
 
-
-
     },
   },
 
@@ -166,7 +164,6 @@ var certificates={
       viewExam:false,
       submitExam:false,
       viewMe:true,
-      viewForum:true,
     },
   },
 };

@@ -71,18 +71,20 @@ var usercounter = 0
 
 function importUsers(){
   stamp('start user import, sql start')
+
+  var obj1={}
   return recreateCollection('users')
   .then(()=>{
     return recreateCollection('users_personal')
   })
   .then(res=>{
 
-    var obj1 ={}
     //get user
     return getTableLength('test.pw_windid_user')
     .then(length=>{
       console.log(length);
-      return sqlquery('SELECT * FROM test.pw_windid_user')
+      return sqlquery(`SELECT * FROM test.pw_windid_user`
+      )
     })
     .then(res=>{
       obj1.userbaseinfo = res;
@@ -98,6 +100,7 @@ function importUsers(){
     })
     .then(res=>{
       obj1.userbdayinfo = res;
+
       return obj1
     })
   })
@@ -107,6 +110,7 @@ function importUsers(){
     var rows = obj1.userbaseinfo.rows
     var scorearray = obj1.userscoreinfo.rows
     var bdayarray = obj1.userbdayinfo.rows
+
 
     console.log(scorearray.length);
     console.log(bdayarray.length);
@@ -118,6 +122,10 @@ function importUsers(){
       var user = rows[i]
       var userscore = scorearray[i]
       var userbday = bdayarray[i]
+
+      var pw_windid_user_data = userscore
+      var pw_windid_user = user
+      var pw_user = user
 
       var bdaynumber = userbday.byear>0?userbday.byear*10000 + userbday.bmonth*100 +userbday.bday:undefined;
 
@@ -132,6 +140,7 @@ function importUsers(){
 
         intro_text:userbday.profile||undefined,
         post_sign:userbday.bbs_sign||undefined,
+
       }
 
       var newuser_personal = {
@@ -169,6 +178,33 @@ function importUsers(){
   })
 }
 
+function updateBanned(){
+  stamp('lets ban sum bad guyz')
+  return sqlquery(`SELECT * FROM test.pw_user where groupid=6`
+  ).then(res=>{
+    console.log(res.rows[0]);
+
+    stamp(res.rows.length)
+
+    var arr = []
+    for(i in res.rows){
+      var doc = res.rows[i]
+
+      arr.push({uid:doc.uid.toString(),certs:['banned']})
+    }
+
+    return AQL(
+      `for u in @arr let user = document(users,u.uid)
+      update user with {certs:u.certs} in users
+      `,{arr}
+    )
+
+  })
+  .then(res=>{
+    stamp('banned success');
+  })
+}
+
 function importForums(){
   stamp('start forum import sql')
   return recreateCollection('forums')
@@ -183,6 +219,10 @@ function importForums(){
 
     for(i in bbsrows){
       var forum = bbsrows[i]
+
+      if(forum.type=='sub'){
+        forum.type=='forum'
+      }
 
       forums.push({
         _key:forum.fid.toString(),
@@ -450,7 +490,7 @@ var updateCounters = ()=>{
 importPostsAll()
 .then(()=>{
   return Promise.all([
-    importUsers().then(insertAdmin),
+    importUsers().then(insertAdmin).then(updateBanned),
     importForums().then(insertForums),
 
     importQuestions(),
