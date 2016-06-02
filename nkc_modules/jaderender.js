@@ -29,7 +29,6 @@ function getCertsInText(user){
   var perm = require('permissions')
 
   var certs =  perm.calculateThenConcatCerts(user)
-  console.log(user.username,certs);
 
   var s = ''
   for(i in certs){
@@ -54,7 +53,7 @@ var jadeoptions = {
   dateString:dateString,
   dateTimeString,
   fromNow:fromNow,
-  
+
   getDisplayNameOfCert:function(cert){
     var perm = require('permissions')
     return perm.getDisplayNameOfCert(cert)

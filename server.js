@@ -108,16 +108,15 @@ nkc.use((req,res,next)=>{
 
   var d=new Date();
   dash();
-  console.log(dateString(d).cyan,
-  req.ip, req.method, req.originalUrl.cyan);
 
   //reformat ipaddr, kill portnames suffix
   req.iptrim = req.ip;
   req.iptrim = req.iptrim.trim().replace( /(:[0-9]{1,})$/ ,''); //kill colon-port
   //req.iptrim = req.ip
-  if(development){
-    console.log(req.iptrim)
-  }
+
+  console.log(dateString(d).cyan,
+  req.iptrim, req.method, req.originalUrl.cyan);
+
   next();
 });
 
@@ -170,12 +169,12 @@ nkc.use('/interface',interface_handlers.route_handler);
 var chat_handlers = require('chat_handlers.js');
 nkc.use('/chat',chat_handlers.route_handler);//routing
 
-//chatroom socket
-var io = require('socket.io')(target_server);
-//this function must be called after the definition of target_server object.
-
-var chat_io = io.of('/chat');// socket.io namespacing
-chat_handlers.socket_handler(chat_io);//pass namespaced socket object into processing function
+// //chatroom socket
+// var io = require('socket.io')(target_server);
+// //this function must be called after the definition of target_server object.
+//
+// var chat_io = io.of('/chat');// socket.io namespacing
+// chat_handlers.socket_handler(chat_io);//pass namespaced socket object into processing function
 
 //root serving
 nkc.get('/',(req,res)=>{
