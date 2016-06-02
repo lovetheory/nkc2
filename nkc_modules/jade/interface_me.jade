@@ -22,6 +22,9 @@ block content
           .panel-body
             - var user = data.user
             h1 #{user.username}
+            
+            div.f12!= plain(getUserDescription(user))
+            
             p.f12 #{user.post_sign}
             
             p.f12
