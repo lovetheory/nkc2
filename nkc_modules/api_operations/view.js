@@ -133,6 +133,11 @@ table.viewHome = {
 
       collect parent = nf.parentid into forumgroup = nf
       let parentforum = document(forums,parent)
+
+      let class = parentforum.class
+      
+      filter has(@contentClasses,TO_STRING(class)) /*content ctrl*/
+
       let group =  {parentforum,forumgroup}
       sort group.parentforum.order asc
       return group
