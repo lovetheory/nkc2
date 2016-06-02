@@ -174,6 +174,21 @@ function InitThreadControl(options){
           .catch(logme)
         }
       },
+
+      draftifySelectedThread:{
+        text:'将选中帖子撤到草稿版',
+        action:function(){
+          return moveSelectedThread('draft')
+          .then(function(count){
+            if(count!=0){
+              logme(count.toString()+' executed')
+              pc.actions.refresh()
+            }
+          })
+          .catch(logme)
+        }
+      },
+
     },
 
     list:[
