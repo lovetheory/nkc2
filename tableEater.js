@@ -221,7 +221,7 @@ function importForums(){
       var forum = bbsrows[i]
 
       if(forum.type=='sub'){
-        forum.type=='forum'
+        forum.type='forum'
       }
 
       forums.push({
