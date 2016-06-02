@@ -8,6 +8,8 @@ var nkc_editor = function(){
       l:gv('lang').toLowerCase().trim(),
     }
 
+    if(post.t=='')post.t=undefined
+
     return post
   }
 
@@ -36,7 +38,7 @@ var nkc_editor = function(){
     if(!debounce)
     {
       var post = editor.assemblePostObject()
-      var title = post.t
+      var title = post.t||""
       hset('parsedtitle',title); //XSS prone.
 
       var content = post.c

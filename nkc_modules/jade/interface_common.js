@@ -163,7 +163,15 @@ function screenTopAlertInit(){
 screenTopAlertInit()
 
 function redirect(url){
-  window.location=url;
+  var urlnow = window.location.pathname
+  var urlwithouthash = url.slice(0,url.indexOf('#'))
+
+  if(urlnow==urlwithouthash){
+    window.location.href = url
+    window.location.reload()
+  }else{
+    window.location.href = url
+  }
 }
 
 function nkcAPI(operationName,remainingParams){

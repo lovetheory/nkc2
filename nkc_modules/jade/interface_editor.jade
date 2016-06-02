@@ -23,7 +23,7 @@ block content
         .col-xs-12.col-sm-7.col-md-6
           h4 编辑内容
           .form-group
-            input#title.form-control(type='text' placeholder='标题' value="#{data.original_post?data.original_post.t:''}")
+            input#title.form-control(type='text' placeholder='标题' value="#{data.original_post?data.original_post.t||'':''}")
             
           .form-group
             textarea#content.form-control(rows='12' placeholder='内容' style='resize:none;') #{data.original_post?data.original_post.c:''}
