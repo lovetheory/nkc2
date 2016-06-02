@@ -48,13 +48,13 @@ block content
             if user.certs
               ul
                 - for(i in user.certs)
-                  li #{user.certs[i]}
+                  li #{user.certs[i]} - #{getDisplayNameOfCert(user.certs[i])}
             
             if data.allCertificates
               p 系统中所有可选证书:
               ul
                 each i in data.allCertificates
-                  li #{i}
+                  li #{i} - #{getDisplayNameOfCert(i)}
             
             
             if data.permittedOperations
@@ -63,6 +63,14 @@ block content
               ul
                 - for(i in po)
                   if po[i]
+                    li
+                      span #{i} 
+                      span #{po[i]}
+                      
+              p 显式禁止以下API: 
+              ul
+                - for(i in po)
+                  if po[i]==false
                     li
                       span #{i} 
                       span #{po[i]}

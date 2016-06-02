@@ -85,7 +85,7 @@ var certificates={
   },
 
   default:{ //default cert every user share
-    display_name:'学生',
+    display_name:'会员',
     inheritFrom:['visitor'],
 
     contentClasses:{
@@ -126,6 +126,7 @@ var certificates={
   },
 
   visitor:{ //public
+    display_name:'游客',
     contentClasses:{
       null:true,
       images:true,
@@ -169,6 +170,11 @@ var certificates={
     },
   },
 };
+
+function getDisplayNameOfCert(cert){
+  return (certificates[cert]?certificates[cert].display_name:'')
+}
+permissions.getDisplayNameOfCert = getDisplayNameOfCert
 
 //certs is [] of certificate names
 var getPermissionsFromCerts = (certsArray)=>{
@@ -227,14 +233,8 @@ var getPermissionsFromCerts = (certsArray)=>{
 permissions.getPermissionsFromCerts = getPermissionsFromCerts
 
 permissions.getPermissionsFromUser = function(user){
-  if(!user)return getPermissionsFromCerts(['visitor'])
-
-  if(!user.certs){
-    user.certs =  ['default']
-  }
-
-  user.certs = calculateThenConcatCerts(user)
-  return getPermissionsFromCerts(user.certs)
+  var certs = calculateThenConcatCerts(user)
+  return getPermissionsFromCerts(certs)
 }
 
 permissions.listAllCertificates = ()=>{
@@ -277,11 +277,16 @@ permissions.testModifyTimeLimit = function(params,ownership,toc){
   }
 }
 
-var calculateThenConcatCerts = function(userobj){
-  var u = userobj
-  var certs = u.certs||['default']
+var calculateThenConcatCerts = function(user){
+  if(!user)return ['visitor']
 
-  if(u.xsf > 0){
+  if(!user.certs){
+    user.certs =  ['default']
+  }
+
+  var certs = [].concat(user.certs)
+  //-----------------------below are calculated permissions
+  if(user.xsf > 0){
     certs.push('scholar')
   }
 

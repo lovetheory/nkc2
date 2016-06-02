@@ -9,7 +9,8 @@ if !post.disabled
   //post itself
   .parent.clearfix(id='p#{post._key}')
     .avatar-left
-      a(href='/user_threads/#{uid}' title='#{user.username}')
+      - var title = getUserDescription(user)
+      a(href='/user_threads/#{uid}' title='#{title}')
         img.ThreadPostAvatar(src='/avatar/#{post.uid}')
     
     .content-right
