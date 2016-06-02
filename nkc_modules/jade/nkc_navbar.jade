@@ -38,8 +38,9 @@ div
             .col-xs-12(style='margin:13px 0;')
               a(href='/me' style='margin-right:13px;') #{user.username}
               a(href='/logout') 退
-              if data.permittedOperations.viewExperimental
-                a(href='/experimental' style='margin-left:13px;') 管
+              if data.permittedOperations
+                if data.permittedOperations.viewExperimental
+                  a(href='/experimental' style='margin-left:13px;') 管
               
           else
             .col-xs-12(style='margin:13px 0;')
