@@ -10,14 +10,26 @@
     a(href='#{url}')
       img.ForumThreadAvatar(src='#{avatar}')
   .ForumThreadItemContent
-    div
+    .ForumThreadTitle
+      - var brief = oc.c.replace(/\[.*?]/g,'').trim().slice(0,100)
       if digest
         //span.f12.ForumThreadDigestText [精]
-        a.f12.ForumThreadDigestText(href="#{url}") #{oc.t} 
+        a.ForumThreadDigestText(href="#{url}" title="#{brief}") #{oc.t} 
       else
-        a.f12(href="#{url}") #{oc.t} 
+        a(href="#{url}" title="#{brief}") #{oc.t} 
       //帖子标题链接
       .ForumThreadItemReplyCount #{thread.count-1?(thread.count-1) + ' 回复':''}
+      
+    .ForumThreadItemReplyInfo
+      //.ForumThreadItemReplyCount #{thread.count-1?(thread.count-1) + ' 回复':''}
+    
+      if Date.now()-thread.tlm<86400000
+        span.lighttext.reddish #{fromNow(thread.tlm)} 
+      else
+        span.lighttext #{fromNow(thread.tlm)} 
+        //帖子最后回复时间和回复者
+
+      span.lighttext(href='/user_threads/#{lmuser.uid}') #{lmuser.username}
     
     .ForumThreadCreatorInfo
 
@@ -28,13 +40,3 @@
   
   
       //楼数
-    .ForumThreadItemReplyInfo
-      //.ForumThreadItemReplyCount #{thread.count-1?(thread.count-1) + ' 回复':''}
-    
-      if Date.now()-thread.tlm<86400000
-        span.lighttext.reddish #{fromNow(thread.tlm)} 
-      else
-        span.lighttext #{fromNow(thread.tlm)} 
-        //帖子最后回复时间和回复者
-
-      span.lighttext #{lmuser.username}

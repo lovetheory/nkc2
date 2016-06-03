@@ -1,4 +1,5 @@
 
+
 .rightalign {
   text-align:right;
 }
@@ -211,10 +212,18 @@ h4,h5,h6 {
 .ForumThreadItem {
   position: relative;
   display: table-row;
+  border-bottom-style: solid;
+  border-bottom-color: #E4E4E4;
+  border-width: 1px;
+}
+.ForumThreadTitle{
+  font-size: 18px;
+  display: inline-block;
+  /* vertical-align: middle; */
 }
 .ForumThreadItem>div {
-  padding-top: 3px;
-  padding-bottom: 3px;
+  padding-top: 7px;
+  padding-bottom: 7px;
 }
 .ForumThreadAvatar {
   border-radius: 10%;
@@ -227,7 +236,7 @@ h4,h5,h6 {
 }
 
 .ForumThreadCreatorInfo{
-display: inline-block;
+display: block;
 /* width: 50%; */
 }
 
@@ -249,7 +258,7 @@ h4,h5,h6 {
 .ForumThreadItemReplyCount{
   display: inline-block;
   margin-right: 5px;
-  font-size: 8pt;
+  font-size: 14px;
   /* position: absolute; */
   color: #D28A78;
   /* width: 25px; */
@@ -259,6 +268,8 @@ h4,h5,h6 {
 
 .ForumThreadItemReplyInfo{
   display: inline-block;
+  font-size: 10px;
+  /* vertical-align: bottom; */
 }
 
 .ForumThreadItemUsername{

@@ -30,11 +30,13 @@ if 0
         .HomeThreadAvatarPosition
           a(href='/user_threads/#{uid}')
             img.HomeThreadAvatar(src='#{avatar}')
+        - var oc = thread.oc
+        - var brief = oc.c.replace(/\[.*?]/g,'').trim().slice(0,100)
         
         if !thread.digest
-          a.HomeThreadText(href='/t/#{thread._key}' title="#{thread.oc.t}") #{thread.oc.t}   
+          a.HomeThreadText(href='/t/#{thread._key}' title="#{brief}") #{thread.oc.t}   
         else
-          a.HomeThreadTextDigest.HomeThreadText(href='/t/#{thread._key}' title="#{thread.oc.t}") #{thread.oc.t}
+          a.HomeThreadTextDigest.HomeThreadText(href='/t/#{thread._key}' title="#{brief}") #{thread.oc.t}
           
         .HomeThreadTextRightAlign
           if Date.now()-thread.tlm<86400000
