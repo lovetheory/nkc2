@@ -119,7 +119,8 @@ settings.urlrewrite = [ //happens before serve_static
   {map:/^\/t\/([^\?]*)\??(.*)/,to:'/api/operation?&operation=viewThread&tid=$1&$2'},
 
   {map:/^\/user_threads\/([^\?]*)\??(.*)/,
-    to:'/api/operation?&operation=viewUserThreads&uid=$1&$2'},
+    to:'/api/operation?&operation=viewUserThreads&uid=$1&$2'
+  },
 
   //{map:'/e*',to:'/interface/editor$1'},
 
@@ -148,7 +149,12 @@ settings.root_serve_static =
 
   {to:'node_modules/commonmark/dist'},
 
-  {to:'nkc_modules/jade'},
+  {to:'nkc_modules/jade',
+  st:
+  {
+    maxAge:1000*30, //browser should cache everything for 30s; lotta changes happening these days
+    lastModified:true,
+  }},
 
 
   {to:'nkc_modules/'},
