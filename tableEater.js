@@ -468,6 +468,41 @@ function importResources(){
   })
 }
 
+function importCreditLog(){
+  return recreateCollection('creditlogs')
+  .then(()=>{
+    return sqlquery('SELECT * FROM test.pw_app_mark_record')
+  })
+  .then(res=>{
+    var clogs = res.rows
+    var newclog = []
+
+    for(i in clogs){
+      var c = clogs[i]
+
+      newclog.push({
+        toc:c.created_time*1000,
+
+        uid:c.created_userid.toString(),
+        username:c.created_username,
+
+        pid:c.pid?c.pid.toString():'t'+c.tid.toString(),
+        reason:c.reason,
+
+        type:c.ctype==1?'xsf':'kcb',
+        q:parseInt(c.cnum),
+      })
+    }
+    stamp('importing clogs to arango...')
+    return queryfunc.importCollection(newclog,'creditlogs')
+  })
+  .then(res=>{
+    console.log(res);
+    stamp('clogs imported')
+  })
+}
+
+
 var updateCounters = ()=>{
   return recreateCollection('counters')
   .then(()=>{
@@ -504,6 +539,7 @@ importPostsAll()
   })
 })
 .then(()=>{
+  return importCreditLog()
 })
 .then(()=>{
   stamp('import all done. now create index')
@@ -529,10 +565,15 @@ importPostsAll()
   var operations = require('api_operations')
   return operations.table.updateAllUsers.operation()
 })
+.then(()=>{
+  stamp('users updated')
+  var operations = require('api_operations')
+  return operations.table.updateAllPostsFromCreditLog.operation()
+})
 .catch(err=>{
   console.log(err);
 })
 .then(()=>{
-  stamp('user updated')
+  stamp('credit updated')
   stamp('everything ended')
 })
