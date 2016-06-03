@@ -32,11 +32,15 @@ if 0
             img.HomeThreadAvatar(src='#{avatar}')
         
         if !thread.digest
-          a.HomeThreadText(href='/t/#{thread._key}' title="#{thread.oc.t}") #{thread.oc.t}        
+          a.HomeThreadText(href='/t/#{thread._key}' title="#{thread.oc.t}") #{thread.oc.t}   
         else
           a.HomeThreadTextDigest.HomeThreadText(href='/t/#{thread._key}' title="#{thread.oc.t}") #{thread.oc.t}
           
         .HomeThreadTextRightAlign
+          if Date.now()-thread.tlm<86400000
+            span.reddish #{fromNowAbbr(thread.tlm)} 
+          else
+
           if thread.count>1
-            span #{thread.count-1}
+            span.lighttext #{thread.count-1}
           //span.lighttext.rightalign #{fromNow(thread.lm.toc)}

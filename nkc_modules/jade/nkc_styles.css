@@ -162,6 +162,10 @@
   color:#e99;
 }
 
+.blueish{
+color: #7676D0;
+}
+
 .avatar {
   border-radius: 10%;
 }
@@ -253,11 +257,8 @@ h4,h5,h6 {
 
 .ForumThreadItemReplyInfo{
   display: inline-block;
-  /* position: absolute; */
-  /* vertical-align: middle; */
-  /* width: 25%; */
-  /* right: 0px; */
 }
+
 .ForumThreadItemUsername{
   display: inline-block;
   color: #9E9E9E;
@@ -474,5 +475,5 @@ h4,h5,h6 {
 color: #C5C5C5;
 }
 .DigestThreadMeta>span{
-  margin-right: 10px;
+margin-right: 10px;
 }

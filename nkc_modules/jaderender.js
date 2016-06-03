@@ -53,6 +53,15 @@ var jadeoptions = {
   dateString:dateString,
   dateTimeString,
   fromNow:fromNow,
+  fromNowAbbr:function(t){
+    return fromNow(t)
+    .replace(/ 秒前/,'s')
+    .replace(/ 小时前/,'h')
+    .replace(/ 天前/,'d')
+    .replace(/ 分钟前/,'m')
+    .replace(/ 个月前/,'mo')
+    .replace(/ 年前/,'y')
+  },
 
   getDisplayNameOfCert:function(cert){
     var perm = require('permissions')
