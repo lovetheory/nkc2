@@ -53,6 +53,14 @@ var create_user = function(user){
 }
 
 table.userRegister = {
+  init:function(){
+    queryfunc.createIndex('users',{
+      fields:['username'],
+      type:'hash',
+      unique:'true',
+      sparse:'true',
+    })
+  },
   operation:function(params){
     var userobj = {
       username:params.username,
