@@ -127,6 +127,8 @@
   position: absolute;
   right: 0px;
   top: 0px;
+  background: white;
+  padding-left: 3px;
   /* font-size: 12pt; */
 }
 
