@@ -105,9 +105,10 @@ function verifySubmittedParams(params){
 
   if(operation.requiredParams){
     for(i in operation.requiredParams){
-      if(params[i]===undefined||params[i]===null) throw 'missing parameter: '+i
+      if(!params[i]) throw 'missing parameter: '+i
     }
   }
+
   return true;
 }
 
@@ -156,11 +157,6 @@ function APIroutine(context){
 
   if(!context.body) throw 'submit with body, please'
   var params = context.body; //parameter object
-
-  var _copy = Object.assign({},context.body) //made a copy
-  _copy.operation = undefined
-  params._copy = _copy
-
   if(!params.operation)throw 'please specify an operation in your request body object'
   report(params);
   verifySubmittedParams(params); //check whether all required parameters presents
@@ -189,7 +185,6 @@ function APIroutine(context){
       uid:params.user?params.user._key:'visitor',
       t0:initTimeStamp,
       t1:duration,
-      params:params._copy,
     },'logs')
 
     return result
@@ -206,7 +201,6 @@ function APIroutine(context){
       uid:params.user?params.user._key:'visitor',
       t0:initTimeStamp,
       t1:duration,
-      params:params._copy,
       error:err.toString(),
     },'logs')
 
