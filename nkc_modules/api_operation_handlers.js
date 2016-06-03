@@ -147,6 +147,14 @@ function executeOperation(params)
   return table[params.operation].operation(params);
 }
 
+function isEmpty(obj) {
+    for(var prop in obj) {
+        if(obj.hasOwnProperty(prop)&&obj[prop]!==null&&obj[prop]!==undefined)
+          return false;
+    }
+    return true && JSON.stringify(obj) === JSON.stringify({});
+}
+
 //requires:
 //  req.body
 //  req.user
@@ -158,12 +166,15 @@ function APIroutine(context){
   if(!context.body) throw 'submit with body, please'
   var params = context.body; //parameter object
 
-  var _copy = Object.assign({},context.body) //made a copy
-  _copy.operation = undefined
-  params._copy = _copy
-
   if(!params.operation)throw 'please specify an operation in your request body object'
   report(params);
+
+  var _copy = Object.assign({},context.body) //made a copy
+  _copy.operation = undefined
+  _copy[''] = undefined
+
+  params._copy = isEmpty(_copy)?undefined:_copy;
+
   verifySubmittedParams(params); //check whether all required parameters presents
 
   params.user = context.user
