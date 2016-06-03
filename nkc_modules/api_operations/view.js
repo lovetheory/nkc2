@@ -417,12 +417,28 @@ table.viewThread = {
     .then(forumlist=>{
       data.forumlist = forumlist
       data.replytarget = 't/' + tid
+
+      accumulateCountHit(tid)
+
       return data
     })
   },
   requiredParams:{
     tid:String,
   }
+}
+
+function accumulateCountHit(tid){
+  return AQL(`
+    let t = document(threads,@tid)
+    update t with {count_hit:t.count_hit+1} in threads
+    return NEW
+    `,{tid}
+  )
+  .then(res=>{
+    report('count_hit +1 = ' + res[0].toString())
+    return res[0]
+  })
 }
 
 table.viewUserThreads = {
