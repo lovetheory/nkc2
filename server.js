@@ -82,13 +82,14 @@ for(i in settings.urlrewrite){
 for(i in settings.root_serve_static)
 {
   var to = settings.root_serve_static[i].to
+  var st = settings.root_serve_static[i].st||settings.static_settings
 
   if(settings.root_serve_static[i].map){
     var map = settings.root_serve_static[i].map
 
-    nkc.use(map,express.static(to,settings.static_settings))
+    nkc.use(map,express.static(to,st))
   } else {
-    nkc.use(express.static(to,settings.static_settings));
+    nkc.use(express.static(to,st));
   }
 }
 
