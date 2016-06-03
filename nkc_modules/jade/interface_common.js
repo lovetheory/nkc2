@@ -163,8 +163,13 @@ function screenTopAlertInit(){
 screenTopAlertInit()
 
 function redirect(url){
-  var urlnow = window.location.pathname
+  var urlnowpath = window.location.pathname
+  var urlnowsearch = window.location.search
+  var urlnowhash = window.location.hash
+
   var urlwithouthash = url.slice(0,url.indexOf('#'))
+
+  var urlnow = urlnowpath+urlnowsearch
 
   if(urlnow==urlwithouthash){
     window.location.href = url
