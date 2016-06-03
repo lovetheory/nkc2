@@ -106,6 +106,7 @@ nkc.use('/static',serveIndex('static/',{view:'details'}))
 nkc.use('/static',express.static('static/'))
 
 
+var requestID = 0
 //4. log request, if not static resources
 nkc.use((req,res,next)=>{
   //if(req.url.indexOf('/avatar/')>=0&&req.method=='GET')return next();
@@ -113,6 +114,7 @@ nkc.use((req,res,next)=>{
 
   var d=new Date();
   dash();
+requestID++;
 
   //reformat ipaddr, kill portnames suffix
   req.iptrim = req.ip;
@@ -120,7 +122,7 @@ nkc.use((req,res,next)=>{
   //req.iptrim = req.ip
 
   console.log(dateString(d).cyan,
-  req.iptrim, req.method, req.originalUrl.cyan);
+  req.iptrim, req.method, req.originalUrl.cyan,requestID.toString().yellow);
 
   next();
 });
