@@ -94,6 +94,52 @@ function getForumList() {
   )
 }
 
+table.viewPanorama = {
+  init:function(){
+    queryfunc.createIndex('threads',{
+      fields:['digest','tlm'],
+      type:'skiplist',
+      unique:'false',
+      sparse:'true',
+    })
+  },
+  operation:params=>{
+    var data= defaultData(params)
+    data.template = jadeDir + 'interface_view_panorama.jade'
+    data.navbar={highlight:'pano'}
+    return AQL(`
+      for t in threads
+      filter t.digest==true
+      collect with count into k
+      return k
+      `
+    )
+    .then(count_digests=>{
+      count_digests = count_digests[0]
+      var count = 15
+      var start = Math.floor(Math.random()*count_digests)-count-1
+
+      return AQL(`
+        for t in threads
+        sort t.digest desc, t.tlm desc
+        limit @start,@count
+
+        let p = document(posts,t.oc)
+        let u = document(users,p.uid)
+
+        return merge(t,{oc:p,ocuser:u})
+        `,{
+          start,count
+        }
+      )
+    })
+    .then(res=>{
+      data.digestThreads = res
+      return data
+    })
+  }
+}
+
 table.viewHome = {
   init:function(){
     queryfunc.createIndex('threads',{

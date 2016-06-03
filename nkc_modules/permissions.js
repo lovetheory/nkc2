@@ -146,6 +146,8 @@ var certificates={
       userLogin:true,
       viewLogin:true,
 
+      viewPanorama:true,
+
       getResourceThumbnail:true,
       getResource:true,
     }

@@ -352,9 +352,9 @@ h4,h5,h6 {
 }
 
 .ThreadPostTitleUsername{
-  display: inline;
-  margin-right: 8px;
-  color: #8295A7;
+display: inline;
+margin-right: 8px;
+color: #8295A7;
 }
 .PostContentImage{
   max-width: 100%;
@@ -425,4 +425,53 @@ h4,h5,h6 {
   content: "";
   display: table;
   clear: both;
+}
+
+.DigestThreadList{
+position: relative;
+}
+.DigestThreadListItem{
+position: relative;
+border-style: solid;
+border-width: 1px;
+border-left-width: 5px;
+border-color: #E8E8E8;
+/* background: #FBFBFB; */
+/* border-radius: 4px; */
+padding: 10px;
+margin-bottom: 12px;
+}
+.DigestThreadTitle{
+font-size: 18pt;
+color: #828282;
+}
+.DigestThreadAvatar{
+width: 52px;
+height: 52px;
+border-radius: 5px;
+}
+.DigestThreadAvatarPlace{
+display: inline-block;
+vertical-align: top;
+width: 52px;
+height: 52px;
+}
+.DigestThreadBody{
+display: inline-block;
+position: relative;
+width: calc(100% - 72px);
+margin-left: 12px;
+}
+.DigestThreadContent{
+/* margin-left: 10px; */
+font-size: 11pt;
+color: #708CCE;
+overflow: hidden;
+}
+.DigestThreadMeta{
+/* margin-left: 10px; */
+color: #C5C5C5;
+}
+.DigestThreadMeta>span{
+  margin-right: 10px;
 }
