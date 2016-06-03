@@ -11,7 +11,7 @@ block content
       .col-sm-9.col-md-10
         .ThreadBox
           if data.posts.length == 0
-            h2 您要找的帖子不存在。
+            h2 您要找的帖子可能不存在 / 翻页过度，请后退
           else
             - var fid = data.thread.fid
             .ThreadTitle

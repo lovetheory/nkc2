@@ -217,9 +217,9 @@ h4,h5,h6 {
   border-width: 1px;
 }
 .ForumThreadTitle{
-  font-size: 18px;
-  display: inline-block;
-  /* vertical-align: middle; */
+font-size: 18px;
+display: inline-block;
+/* vertical-align: middle; */
 }
 .ForumThreadItem>div {
   padding-top: 7px;
@@ -409,6 +409,38 @@ h4,h5,h6 {
 }
 .ResourceListItemText{
   display: inline-block;
+}
+
+.ThreadPostCredits{
+  display: table;
+  width: 100%;
+  padding: 10px;
+  margin-top: 15px;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #D8D8D8;
+  /* background-color: #FFFFFF; */
+  border-radius: 5px;
+}
+.ThreadPostCreditItem{
+display: table-row;
+font-size: 14px;
+}
+.ThreadPostCreditItem>div{
+display: table-cell;
+padding: 3px;
+}
+.TPCQ ,.TPCType{
+font-size: 16px;
+}
+.TPCQ{
+color: #CC0000;
+/* font-weight: bold; */
+}
+.TPCIAI{
+  width: 24px;
+  height: 24px;
+  border-radius: 3px;
 }
 
 .padless{

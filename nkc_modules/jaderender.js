@@ -62,6 +62,18 @@ var jadeoptions = {
     .replace(/ 个月前/,'mo')
     .replace(/ 年前/,'y')
   },
+  creditString:function(t){
+    switch (t) {
+      case 'xsf':
+      return '学术分'
+      break;
+      case 'kcb':
+      return '科创币'
+      break;
+      default:
+      return '[未定义积分]'
+    }
+  },
 
   getDisplayNameOfCert:function(cert){
     var perm = require('permissions')
