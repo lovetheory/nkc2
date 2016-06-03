@@ -432,7 +432,7 @@ function accumulateCountHit(tid){
   return AQL(`
     let t = document(threads,@tid)
     update t with {count_hit:t.count_hit+1} in threads
-    return NEW
+    return NEW.count_hit
     `,{tid}
   )
   .then(res=>{
