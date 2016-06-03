@@ -48,7 +48,7 @@
   position: relative;
 }
 .HomeForumTitlePrimary{
-  color: #989898;
+  color: #868686;
   font-size: 16pt;
   display: inline-block;
   position: absolute;
@@ -443,7 +443,7 @@ h4,h5,h6 {
 }
 .DigestThreadTitle{
 font-size: 18px;
-color: #828282;
+color: #6F6F6F;
 font-family: initial;
 }
 .DigestThreadAvatar{
