@@ -97,8 +97,8 @@ function getForumList() {
 table.viewPanorama = {
   init:function(){
     queryfunc.createIndex('threads',{
-      fields:['digest','tlm'],
-      type:'skiplist',
+      fields:['digest'],
+      type:'hash',
       unique:'false',
       sparse:'true',
     })
@@ -117,21 +117,38 @@ table.viewPanorama = {
     .then(count_digests=>{
       count_digests = count_digests[0]
       var count = 15
-      var start = Math.floor(Math.random()*count_digests)-count-1
 
-      return AQL(`
-        for t in threads
-        sort t.digest desc, t.tlm desc
-        limit @start,@count
+      var randomarray=[]
+      for(i=0;i<count;i++){
+        randomarray.push(
+          Math.floor(Math.random()*count_digests-0.0001)
+        )
+      }
 
-        let p = document(posts,t.oc)
-        let u = document(users,p.uid)
+      var promarr = []
+      var tharr = []
+      for(i in randomarray){
+        promarr.push(AQL(`
+          for t in threads
+          filter t.digest == true
+          limit @i,1
 
-        return merge(t,{oc:p,ocuser:u})
-        `,{
-          start,count
-        }
-      )
+          let p = document(posts,t.oc)
+          let u = document(users,p.uid)
+
+          return merge(t,{oc:p,ocuser:u})
+          `,{
+            i:randomarray[i],
+          }
+        ).then(res=>{
+          tharr.push(res[0])
+        }))
+      }
+
+      return Promise.all(promarr)
+      .then(()=>{
+        return tharr
+      })
     })
     .then(res=>{
       data.digestThreads = res
