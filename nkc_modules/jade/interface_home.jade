@@ -8,8 +8,8 @@ block content
     .row
       - var cindex = 0
       each group,gindex in data.grouparray
-        - var groupcolor = Math.floor(Math.random()*16777216).toString('16')
-        each f,findex in group.forumgroup 
+        - var parent = group.parentforum
+        each forum,findex in group.forumgroup 
           - var index = cindex + findex
           include interface_home_singleforum.jade
           
