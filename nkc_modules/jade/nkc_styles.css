@@ -50,12 +50,12 @@
 }
 
 .HomeForumTitleCircle{
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  display: inline-block;
-  vertical-align: middle;
-  margin-right: 7px;
+width: 24px;
+height: 24px;
+border-radius: 50%;
+display: inline-block;
+vertical-align: middle;
+margin-right: 7px;
 }
 
 .HomeForumTitlePrimary{
@@ -152,7 +152,7 @@
 .ForumsListBody{
   margin-right: 20px;
   display: inline-block;
-  width: 110px;
+  width: 130px;
   position: relative;
 }
 .ForumsListGroupItem{
