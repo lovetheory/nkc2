@@ -274,6 +274,36 @@ table.getPost = {
   }
 }
 
+table.updateAllPostsFromCreditLog = {
+  init:function(){
+    queryfunc.createIndex('creditlogs',{
+      fields:['pid'],
+      type:'skiplist',
+      unique:'false',
+      sparse:'false',
+    })
+  },
+
+  operation:function(params){
+    return AQL(`
+      for c in creditlogs
+      collect pid = c.pid into g = c
+
+      let p = document(posts,pid)
+      filter p!=null
+
+      let sorted = (
+          for c in g
+          sort g.toc asc
+          return c
+      )
+
+      update p with {credits:sorted} in posts
+      `
+    )
+  }
+}
+
 table.updateAllThreads = {
   init:function(){
     queryfunc.createIndex('posts',{
