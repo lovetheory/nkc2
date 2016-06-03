@@ -21,6 +21,7 @@ var jaderender = require('jaderender');
 var compression = require('compression');
 var express = require('express');
 var rewrite = require('express-urlrewrite');
+var serveIndex = require('serve-index');
 
 var cookieparser = require('cookie-parser');
 
@@ -56,6 +57,8 @@ if(use_https){
   var target_server = require('http').Server(nkc);
 }
 //-------------------------------
+//3. gzip
+nkc.use(compression());//enable compression
 
 nkc.use(require('serve-favicon')(__dirname+'/resources/site_specific/favicon.ico'));
 
@@ -98,8 +101,10 @@ nkc.use('/default/',express.static('resources/default_things/',settings.static_s
 //ikc statics serving
 nkc.use('/recruit',express.static('../ikc')); //serve company pages
 
-//3. gzip
-nkc.use(compression({level:settings.compression_level}));//enable compression
+//toolz statics
+nkc.use('/static',serveIndex('static/',{view:'details'}))
+nkc.use('/static',express.static('static/'))
+
 
 //4. log request, if not static resources
 nkc.use((req,res,next)=>{
