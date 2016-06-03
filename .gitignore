@@ -16,5 +16,4 @@ favicon.psd
 /.vscode
 exampleQuestions.json
 tEaterSettings.js
-/static/tools/*/
-static/tools.zip
+/static/tools*
