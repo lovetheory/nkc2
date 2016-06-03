@@ -442,8 +442,9 @@ h4,h5,h6 {
 margin-bottom: 12px;
 }
 .DigestThreadTitle{
-font-size: 18pt;
+font-size: 18px;
 color: #828282;
+font-family: initial;
 }
 .DigestThreadAvatar{
 width: 52px;
