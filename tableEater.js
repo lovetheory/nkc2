@@ -451,6 +451,9 @@ function importResources(){
         oname:r.name,
         path:r.path,
         size:r.size*1024,
+
+        hits:r.hits,
+
         uid:r.created_userid.toString(),
         toc:r.created_time*1000,
         ext:extension,
