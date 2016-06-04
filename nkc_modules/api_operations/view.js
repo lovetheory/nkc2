@@ -301,11 +301,23 @@ table.viewForum = {
     var paging = getPaging(params)
     data.paging = paging
 
-
     return AQL(`return document(forums,@fid)`,{fid})
     .then(res=>{
       var forum = res[0]
-      return testForumClass(params,forum)
+      testForumClass(params,forum)
+
+      if(forum.parentid){
+        return AQL(`return document(forums,@fid)`,{fid:forum.parentid})
+        .catch(err=>{
+
+        })
+        .then(res=>{
+          if(res){
+            testForumClass(params,res[0])
+          }
+        })
+      }
+
     })
     .then(()=>{
       return AQL(`
