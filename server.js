@@ -93,6 +93,13 @@ for(i in settings.root_serve_static)
   }
 }
 
+nkc.use('/redirect_f/:fid',function(req,res){
+  res.redirect(301,'/f/'+req.params.fid)
+})
+nkc.use('/redirect_t/:tid',function(req,res){
+  res.redirect(301,'/t/'+req.params.tid)
+})
+
 //default avatar redirection
 nkc.use(rewrite('/api/avatar/*','/default/default_avatar.gif')) //if avatar not served
 nkc.use(rewrite('/api/avatar_small/*','/default/default_avatar_small.gif')) //if avatar not served
