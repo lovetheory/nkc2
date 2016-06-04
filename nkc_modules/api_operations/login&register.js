@@ -124,23 +124,48 @@ table.userLogin = {
     })
     .then(user_personal=>{
 
-      switch (user_personal.hashtype) {
-        case 'pw9':
-        var pass = params.password
-        var hash = user_personal.password.hash
-        var salt = user_personal.password.salt
+      var tries = user_personal.tries||1
+      var lasttry = user_personal.lasttry||Date.now()
 
-        var hashed = md5(md5(pass)+salt)
-        if(hashed!==hash){
-          throw('password unmatch')
-        }
-        break;
+      if(tries>5 && Date.now() - user_personal.lasttry < 3600*1000)throw 'too many tries, again in 1h.'
 
-        default:
-        if(user_personal.password !== params.password){ //fallback to plain
-          throw ('password unmatch')
+      try{
+        switch (user_personal.hashtype) {
+          case 'pw9':
+          var pass = params.password
+          var hash = user_personal.password.hash
+          var salt = user_personal.password.salt
+
+          var hashed = md5(md5(pass)+salt)
+          if(hashed!==hash){
+            throw('password unmatch')
+          }
+          break;
+
+          default:
+          if(user_personal.password !== params.password){ //fallback to plain
+            throw ('password unmatch')
+          }
         }
       }
+      catch(err){
+        var tries = user_personal.tries||1
+        var lasttry = Date.now()
+
+        var nup={tries:tries+1,lasttry:lasttry}
+
+        queryfunc.doc_update(user_personal._key,'users_personal',nup)
+        .then(()=>{
+          report('shit','sum one failed on his password'+nup.tries.toString())
+        })
+
+        throw err
+      }
+
+      queryfunc.doc_update(user_personal._key,'users_personal',{tries:0})
+      .then(()=>{
+        report('yo','sum one succeeded on his password'+user_personal.tries.toString())
+      })
 
       //if user exists
       var cookieobj = {
