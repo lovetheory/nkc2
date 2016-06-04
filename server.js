@@ -104,7 +104,6 @@ nkc.use('/recruit',express.static('../ikc')); //serve company pages
 
 //toolz statics
 nkc.use('/static',serveIndex('static/',{view:'details'}))
-nkc.use('/static',express.static('static/'))
 
 
 var requestID = 0

@@ -140,23 +140,22 @@ settings.avatar_path_small = __projectroot+'resources/newavatar_small/';
 settings.root_serve_static =
 [
   //clientside js file serving
-  {to:'nkc_modules/chat'},
+  {map:'/static',to:'static/'},
   {map:'/resources/default_things',to:'resources/default_things/'},
-  {to:'external_pkgs/jquery'},
-  {to:'external_pkgs/xbbcode'},
+  {map:'/MathJax-2.6-latest',to:'external_pkgs/MathJax-2.6-latest'},
+  {map:'/jquery',to:'external_pkgs/jquery'},
+  {map:'/xbbcode',to:'external_pkgs/xbbcode'},
+
   {to:'external_pkgs/react'},
-  {to:'external_pkgs/Promise'},
+
+  {map:'/promise',to:'external_pkgs/Promise'},
   {map:'/bootstrap',to:'external_pkgs/bootstrap-3.3.6-dist'},
 
-  {to:'node_modules/commonmark/dist'},
-
-  {to:'nkc_modules/jade',
-  st:
-  {
+  {map:'/commonmark',to:'node_modules/commonmark/dist'},
+  {to:'nkc_modules/jade',st:{
     maxAge:1000*30, //browser should cache everything for 30s; lotta changes happening these days
     lastModified:true,
   }},
-
 
   {to:'nkc_modules/'},
 

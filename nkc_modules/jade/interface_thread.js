@@ -58,7 +58,7 @@ function submit(){
 function quotePost(pid){
   nkcAPI('getPostContent',{pid:pid})
   .then(function(pc){
-    length_limit = 50
+    length_limit = 100
 
     var str = pc.c.slice(0,length_limit)
     if(str.length==length_limit)str+='……'

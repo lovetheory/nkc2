@@ -47,6 +47,7 @@ block content
               include interface_attachment_uploader_uploader.jade
               
           .panel.panel-default
+            .panel-heading.f12 点击插入附件
             .panel-body(id='list-container')
                   
         .col-xs-12.col-sm-5.col-md-6
@@ -61,9 +62,9 @@ block content
   include debug_output.jade
 block scripts
 
-  script(src='/commonmark.js')
+  script(src='/commonmark/commonmark.js')
   script(src='/plain_escaper.js')
-  script(src='/xbbcode.js')
+  script(src='/xbbcode/xbbcode.js')
   
   script(src='/react.min.js')
   script(src='/JSXTransformer.js')
