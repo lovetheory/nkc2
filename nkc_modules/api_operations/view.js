@@ -171,6 +171,11 @@ table.viewHome = {
     data.template = jadeDir+ 'interface_home.jade'
 
     var contentClasses = params.contentClasses
+    for(c in contentClasses){
+      if(!contentClasses[c]){
+        contentClasses[c]=undefined;
+      }
+    }
     var threadPerForum = 3
 
     return AQL(`
