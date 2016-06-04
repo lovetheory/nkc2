@@ -79,18 +79,34 @@ table.viewRegister = {
   }
 }
 
-function getForumList() {
+function getForumList(params) {
+  var contentClasses = params.contentClasses
+  for(c in contentClasses){
+    if(!contentClasses[c]){
+      contentClasses[c]=undefined;
+    }
+  }
+
   return AQL(`
     for f in forums
     filter f.type == 'forum' && f.parentid !=null
+
+    let class = f.class
+    filter has(@contentClasses,TO_STRING(class)) /*content ctrl*/
+
     let nf = f
 
     collect parent = nf.parentid into forumgroup = nf
     let parentforum = document(forums,parent)
+
+    let class = parentforum.class
+
+    filter has(@contentClasses,TO_STRING(class)) /*content ctrl*/
+
     let group =  {parentforum,forumgroup}
     sort group.parentforum.order asc
     return group
-    `
+    `,{contentClasses:params.contentClasses}
   )
 }
 
@@ -324,7 +340,7 @@ table.viewForum = {
         data.paging.pagecount = data.forum.count_threads?Math.floor(data.forum.count_threads / paging.perpage) + 1:null
       }
       //return apifunc.get_all_forums()
-      return getForumList()
+      return getForumList(params)
     })
     .then(forumlist=>{
       data.forumlist = forumlist
@@ -434,7 +450,7 @@ table.viewThread = {
       data.paging = paging
     })
     .then(result=>{
-      return getForumList()
+      return getForumList(params)
     })
     .then(forumlist=>{
       data.forumlist = forumlist
