@@ -21,3 +21,5 @@ static/tools/*
 !static/tools/*.htm
 !static/tools/*.css
 static/tools.zip
+
+external_pkgs/MathJax-2.6-latest
