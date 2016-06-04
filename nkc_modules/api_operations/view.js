@@ -549,7 +549,7 @@ table.viewUserThreads = {
       //if nothing went wrong
       data.threads = threads
       //return apifunc.get_all_forums()
-      return getForumList()
+      return getForumList(params)
     })
     .then(forumlist=>{
       data.forumlist = forumlist
