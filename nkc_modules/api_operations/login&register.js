@@ -36,6 +36,7 @@ var create_user = function(user){
       username:user.username,
       toc:timestamp,
       tlv:timestamp,
+      certs:['examinated'],
     }
 
     var newuser_personal = {

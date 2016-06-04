@@ -64,6 +64,10 @@ block content
                 
                 .form-group
                   button#ButtonReply.btn.btn-default(onclick='submit()') 快速回复
+              
+            if data.user
+              if !data.permittedOperations.postTo
+                p.f12.reddish 根据系统记录，你貌似没有发布内容的权限。也许是因为你还没有参加#[a(href='/exam') 考试]，又或者被管理员封号了。
                 
                 
       .col-sm-3.col-md-2

@@ -81,7 +81,7 @@ var certificates={
       postTo:true,
       getPostContent:true,
       testExaminated:true,
-      selfModifyTimeLimit:timeHour*1, //1h
+      selfModifyTimeLimit:timeHour*3, //1h
     }
   },
 
@@ -99,8 +99,8 @@ var certificates={
       listCart:true,
       clearCart:true,
 
-      postTo:true, //////////////////////////////////// may cancel in the future
-      getPostContent:true,/////////////////////////////
+      //postTo:true, //////////////////////////////////// may cancel in the future
+      //getPostContent:true,/////////////////////////////
 
       selfModifyTimeLimit:timeHour*0.5, //30min
 
@@ -114,19 +114,11 @@ var certificates={
       userRegister:false,
 
       getResourceOfCurrentUser:true,
-
-      viewEditor:true,
-      viewThread:true,
-      viewForum:true,
-      viewHome:true,
-      viewUserThreads:true, ////////////////these are for test purpose only
-      //move to visitor afterwards
-
     },
   },
 
   visitor:{ //public
-    display_name:'游客',
+    display_name:'陆游',
     contentClasses:{
       null:true,
       images:true,
@@ -134,6 +126,12 @@ var certificates={
       non_public:false,
     },
     permittedOperations:{
+      viewEditor:true,
+      viewThread:true,
+      viewForum:true,
+      viewHome:true,
+      viewUserThreads:true, ////////////////these are for test purpose only
+      //move to visitor afterwards
 
       useSearch:true,
 
@@ -154,7 +152,7 @@ var certificates={
   },
 
   banned:{
-    display_name:'封禁',
+    display_name:'作死',
     inheritFrom:['visitor'],
 
     contentClasses:{
