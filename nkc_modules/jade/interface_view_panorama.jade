@@ -38,7 +38,7 @@ block content
                       .DigestThreadMeta
                         span #{user.username}
                         //span #{fromNow(t.toc)} - #{dateTimeString(t.toc)}
-                        span #{t.count_hit} 点击 #{t.count} 回复
+                        span #{t.hits} 点击 #{t.count} 回复
                         
                       .DigestThreadContent #{t.oc.c.replace(/\[.*?]/g,'').trim().slice(0,100)}
             

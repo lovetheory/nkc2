@@ -435,7 +435,7 @@ table.viewThread = {
       data.forumlist = forumlist
       data.replytarget = 't/' + tid
 
-      accumulateCountHit(tid)
+      accumulateCountHit(tid,'threads')
 
       return data
     })
@@ -445,15 +445,15 @@ table.viewThread = {
   }
 }
 
-function accumulateCountHit(tid){
+function accumulateCountHit(id,collname){
   return AQL(`
-    let t = document(threads,@tid)
-    update t with {count_hit:t.count_hit+1} in threads
-    return NEW.count_hit
-    `,{tid}
+    let t = document(${collname},@id)
+    update t with {hits:t.hits+1} in threads
+    return NEW.hits
+    `,{id}
   )
   .then(res=>{
-    report('count_hit +1 = ' + res[0].toString())
+    report('hits +1 = ' + res[0].toString())
     return res[0]
   })
 }

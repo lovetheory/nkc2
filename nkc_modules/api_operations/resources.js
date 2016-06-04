@@ -23,6 +23,19 @@ function sendFile(_res,destFile,opt){
   })
 }
 
+function accumulateCountHit(id,collname){
+  return AQL(`
+    let t = document(${collname},@id)
+    update t with {hits:t.hits+1} in threads
+    return NEW.hits
+    `,{id}
+  )
+  .then(res=>{
+    report('hits +1 = ' + res[0].toString())
+    return res[0]
+  })
+}
+
 table.getResource={
   operation:function(params){
 
@@ -37,6 +50,11 @@ table.getResource={
         maxAge:1000*86400, //cache everything for 1d
         lastModified:true,
         headers:{'Content-Disposition':'inline; filename=' + encodeURI(robject.oname)},
+      })
+      .then(res=>{
+        accumulateCountHit(rid,'resources')
+
+        return res
       })
     })
   },

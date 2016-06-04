@@ -330,7 +330,7 @@ function importThreads(){
         _key:t.tid.toString(),
         fid:t.fid.toString(),
         category:t.topic_type.toString(),
-        count_hit:t.hits,
+        hits:t.hits,
         disabled:t.disabled?true:undefined,
         digest:t.digest?true:undefined,
       })

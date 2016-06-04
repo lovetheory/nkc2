@@ -70,7 +70,7 @@ var thread= //thread表示帖
 
   digest:Boolean,
 
-  count_hit:48,
+  hits:48,
   count:1,
   count_today:0,
 
