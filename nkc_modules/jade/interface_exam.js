@@ -12,8 +12,8 @@ function submit(){
   var exam = JSON.parse(decodeURI(ga('exam','exam-object')));
 
   var examobj={
-    exam,
-    sheet,
+    exam:exam,
+    sheet:sheet,
   }
 
   console.log(examobj);
