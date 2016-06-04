@@ -67,6 +67,6 @@ list.refresh();
 
 function content_insert_resource(event)
 {
-  edInsertContent('content','{r=' + event.rid + '}\n');
+  edInsertContent('content','#{r=' + event.rid + '}\n');
   editor.update();
 }

@@ -102,7 +102,7 @@ function nkc_render(options){
 
   //replace attachment tags in text to their appropriate HTML representation
   var attachment_filter = function(stringToFilter,post){
-    return stringToFilter.replace(/\{r=([0-9a-z]{1,16})\}/g,function(match,p1,offset,string){
+    return stringToFilter.replace(/\#\{r=([0-9a-z]{1,16})\}/g,function(match,p1,offset,string){
       var rid = p1
       for(i in post.r){
         var r = post.r[i]
@@ -130,7 +130,7 @@ function nkc_render(options){
     // for history reasons...
 
     .replace(/\n/g,'<br>')
-    .replace(/\[attachment=([0-9]{1,16})\]/g,'{r=$1}')
+    .replace(/\[attachment=([0-9]{1,16})\]/g,'#{r=$1}')
     .replace(/\[\/?align=.*?]/g,'')
     .replace(/\[flash=[0-9]{1,4},[0-9]{1,4}[0-9,]{0,3}](.+.*?)\[\/flash]/gi,
     '<embed class="PostEmbedFlash" src="$1" allowFullScreen="true" quality="high" allowScriptAccess="always" type="application/x-shockwave-flash"></embed>')
@@ -149,6 +149,9 @@ function nkc_render(options){
           html+='<hr class="HrPostContentUnusedAttachment"/>'
           count++;
         }
+
+        if(count>=50)throw '[nkc_render]too much attachment included! refuse to process.'
+
         html+=getHTMLForResource(r,allthumbnail)
       }
     }

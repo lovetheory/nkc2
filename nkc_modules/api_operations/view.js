@@ -171,7 +171,7 @@ table.viewHome = {
     data.template = jadeDir+ 'interface_home.jade'
 
     var contentClasses = params.contentClasses
-    var threadPerForum = 5
+    var threadPerForum = 3
 
     return AQL(`
       for f in forums

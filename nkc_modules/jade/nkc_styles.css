@@ -37,7 +37,7 @@
 .HomeForumContainer{
   margin-bottom: 15px;
   /* padding: 12px; */
-  height: 185px;
+  height: 135px;
   /* overflow-y: hidden; */
   /* border: #E2E2E2; */
   /* border-width: 1px; */
@@ -224,7 +224,7 @@ h4,h5,h6 {
 .ForumThreadItem {
   position: relative;
   display: table-row;
-  border-bottom-style: solid;
+  border-bottom-style: dashed;
   border-bottom-color: #E4E4E4;
   border-width: 1px;
 }
