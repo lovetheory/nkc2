@@ -135,6 +135,8 @@ function nkc_render(options){
     .replace(/\[flash=[0-9]{1,4},[0-9]{1,4}[0-9,]{0,3}](.+.*?)\[\/flash]/gi,
     '<embed class="PostEmbedFlash" src="$1" allowFullScreen="true" quality="high" allowScriptAccess="always" type="application/x-shockwave-flash"></embed>')
 
+    .replace(/\[\/?strike]/g,'<s>')
+
     html = attachment_filter(html,post)
     // now post.r are marked with _used:true
 
