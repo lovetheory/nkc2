@@ -54,6 +54,7 @@ var certificates={
       viewExperimental:true,
 
       disablePost:true,
+      enablePost:true,
       moveThread:true,
     }
   },

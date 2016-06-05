@@ -59,5 +59,8 @@ if !post.disabled
               .TPCReason #{c.reason}                
   
 else
+  - var po = data.permittedOperations
+  - if(po.enablePost)
+    a(href="javascript:enablePost('#{post._key}')") [此楼已屏蔽，点击解除]
   
             

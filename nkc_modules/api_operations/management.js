@@ -44,6 +44,18 @@ table.disablePost = {
   },
 }
 
+table.enablePost = {
+  operation:function(params){
+    return queryfunc.doc_update(params.pid,'posts',{disabled:null})
+  },
+  requiredParams:{
+    pid:String,
+  },
+  testPermission:function(params){
+    return 0;
+  },
+}
+
 table.addThreadToCart={
   operation:function(params){
     var uid = params.user._key

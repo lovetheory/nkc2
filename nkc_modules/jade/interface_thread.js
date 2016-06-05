@@ -38,12 +38,17 @@ function assemblePostObject(){
 function disablePost(pid){
   nkcAPI('disablePost',{pid:pid})
   .then(function(res){
-    return screenTopAlert('屏蔽成功。')
-    .then(function(){
-      location.reload()
-    })
-
+    location.reload()
   })
+  .catch(jwarning)
+}
+
+function enablePost(pid){
+  nkcAPI('enablePost',{pid:pid})
+  .then(function(res){
+    location.reload()
+  })
+  .catch(jwarning)
 }
 
 function submit(){
