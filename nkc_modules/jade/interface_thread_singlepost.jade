@@ -29,6 +29,9 @@ if !post.disabled
         - if(po.addPostToCart)
           a(href="javascript:cartPost('#{post._key}')") 加入管理车
           
+        - if(po.disablePost)
+          a(href="javascript:disablePost('#{post._key}')") 屏蔽
+          
         if data.user
           - var user = data.user
           - var ownership = user._key===uid

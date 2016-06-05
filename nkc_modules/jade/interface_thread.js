@@ -32,8 +32,18 @@ function assemblePostObject(){
     c:gv('ReplyContent').trim(),
     l:"markdown",
   }
-
   return post
+}
+
+function disablePost(pid){
+  nkcAPI('disablePost',{pid:pid})
+  .then(function(res){
+    return screenTopAlert('屏蔽成功。')
+    .then(function(){
+      location.reload()
+    })
+
+  })
 }
 
 function submit(){
