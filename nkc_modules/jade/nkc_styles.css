@@ -490,13 +490,13 @@ h4,h5,h6 {
 }
 .DigestThreadListItem{
 position: relative;
-border-style: solid;
-border-width: 1px;
-border-left-width: 5px;
-border-color: #E8E8E8;
+/* border-style: solid; */
+/* border-width: 1px; */
+/* border-left-width: 5px; */
+/* border-color: #E8E8E8; */
 /* background: #FBFBFB; */
 /* border-radius: 4px; */
-padding: 10px;
+/* padding: 10px; */
 margin-bottom: 12px;
 }
 .DigestThreadTitle{
