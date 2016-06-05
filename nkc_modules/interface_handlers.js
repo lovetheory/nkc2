@@ -45,24 +45,7 @@ iface.get('/uploader',(req,res,next)=>{
   next();
 });
 
-iface.get('/questions',(req,res,next)=>{
-  if(req.user){
-    apifunc.get_questions(null)
-    .then(function(back){
-      res.data.questions_all = back;
-      return apifunc.get_questions(req.user._key)
-    })
-    .then(function(back){
-      res.data.questions = back;
-      res.template = 'nkc_modules/jade/questions_edit.jade';
-    })
-    .then(next).catch(next)
 
-  }else{
-    res.template = 'nkc_modules/jade/questions_edit.jade';
-    next();
-  }
-});
 
 //render phase: if template jade file exists
 iface.use((req,res,next)=>{

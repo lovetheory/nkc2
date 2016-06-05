@@ -685,3 +685,20 @@ table.dangerouslyReplaceDoc = {
     doc:Object,
   }
 }
+
+table.viewQuestions={
+  operation:params=>{
+    var data = defaultData(params)
+    data.template = jadeDir + 'questions_edit.jade'
+
+    return apifunc.get_questions(null)
+    .then(function(back){
+      data.questions_all = back;
+      return apifunc.get_questions(params.user._key)
+    })
+    .then(function(back){
+      data.questions = back;
+      return data
+    })
+  }
+}
