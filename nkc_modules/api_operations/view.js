@@ -233,6 +233,15 @@ table.viewHome = {
     .then(grouparray=>{
       data.grouparray = grouparray;
       //data.forums = forums;
+      return AQL(`
+        for a in answersheets collect with count into k return k
+        `
+      )
+    })
+    .then(karr=>{
+      var na = karr[0]
+      data.answersheet_count = na;
+      //data.forums = forums;
       return data;
     })
   }
