@@ -76,7 +76,7 @@ var certificates={
     display_name:'状元',
     inheritFrom:['default'],
     contentClasses:{
-
+      sensitive:true,
     },
     permittedOperations:{
       postTo:true,
