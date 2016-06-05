@@ -144,6 +144,7 @@ settings.avatar_path_small = __projectroot+'resources/newavatar_small/';
 settings.root_serve_static =
 [
   //clientside js file serving
+  {map:'/attachment',to:'resources/upload'},
   {map:'/static',to:'static/'},
   {map:'/resources/default_things',to:'resources/default_things/'},
   {map:'/MathJax-2.6-latest',to:'external_pkgs/MathJax-2.6-latest'},
