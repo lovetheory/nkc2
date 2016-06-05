@@ -35,6 +35,7 @@ block content
           button#LoadDocAsUsername.btn.btn-default(type='submit') 作为用户名拉取
           button#LoadDoc.btn.btn-default(type='submit') 拉取
           button#SaveDoc.btn.btn-default(type='submit') 提交
+          button#BanThisUser.btn.btn-default(type='submit') （封禁当前载入的用户）
         
         .form-group
           textarea#DocJSON.form-control(rows='22' placeholder='内容' style='resize:none;') #{data.doc?JSON.stringify(data.doc,null,2):''}

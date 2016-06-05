@@ -6,6 +6,8 @@ var DangerEditor = {
   btnsubmit:geid('SaveDoc'),
   btnLoadFromUsername:geid('LoadDocAsUsername'),
 
+  btnban:geid('BanThisUser'),
+
   init:function(){
     console.log('Danger init...');
     DangerEditor.btnload.addEventListener('click',DangerEditor.load);
@@ -13,6 +15,8 @@ var DangerEditor = {
 
     DangerEditor.btnsubmit.addEventListener('click',DangerEditor.submit);
     DangerEditor.inputid.addEventListener('keypress', DangerEditor.onkeypressID);
+
+    DangerEditor.btnban.addEventListener('click',DangerEditor.BanThisUser);
   },
 
   load:function(){
@@ -30,6 +34,21 @@ var DangerEditor = {
       screenTopWarning(e.toString())
       return
     }
+
+    nkcAPI('dangerouslyReplaceDoc',{doc:doc})
+    .then(jalert)
+    .catch(screenTopWarning)
+  },
+
+  BanThisUser:function(){
+    try{
+      var doc = JSON.parse(DangerEditor.inputcontent.value)
+    }catch(e){
+      screenTopWarning(e.toString())
+      return
+    }
+
+    doc.certs=['banned'];
 
     nkcAPI('dangerouslyReplaceDoc',{doc:doc})
     .then(jalert)
