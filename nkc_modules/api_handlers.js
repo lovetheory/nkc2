@@ -29,9 +29,6 @@ api.use(function(req,res,next){
   next();
 });
 
-//
-api.use(require('api_question_handlers'))
-
 //new API
 api.use(require('api_operation_handlers'));
 
