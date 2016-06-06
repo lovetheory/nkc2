@@ -390,7 +390,7 @@ table.viewForum = {
       Object.assign(data,result[0])
 
       if(data.paging){
-        data.paging.pagecount = data.forum.count_threads?Math.floor(data.forum.count_threads / paging.perpage) + 1:null
+        data.paging.pagecount = data.forum.count_threads?Math.floor((data.forum.count_threads-1) / paging.perpage) + 1:null
       }
       //return apifunc.get_all_forums()
       return getForumList(params)
@@ -498,7 +498,7 @@ table.viewThread = {
       if(!data.thread)throw 'thread not exist'
 
       var thread = data.thread
-      paging.pagecount = thread.count?Math.floor(thread.count / paging.perpage) + 1:null
+      paging.pagecount = thread.count?Math.floor((thread.count-1) / paging.perpage) + 1:null
 
       data.paging = paging
     })
