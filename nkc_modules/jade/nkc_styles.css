@@ -34,6 +34,111 @@
   margin-top: 10px;
   margin-bottom: 9px;
 }
+
+
+.HomeLatestThreadCont{
+
+}
+.HomeLatestThreadItem{margin-bottom: 18px;/* padding-bottom: 10px; *//* border-bottom-style: solid; *//* border-bottom-color: #DEDEDE; *//* border-width: 1px; */}
+.HLToc{
+margin-bottom: 3px;
+position: relative;
+}
+.HLTavatar{
+display: none;
+vertical-align: middle;
+}
+.HLTavatar img{
+width: 24px;
+height: 24px;
+border-radius: 15%;
+}
+.HLTtitle{
+display: inline-block;
+/* margin-left: 10px; */
+width: calc(100% - 36px);
+float: right;
+overflow: hidden;
+color: #2563A2;
+vertical-align: middle;
+}
+.HLTtitletext{
+overflow: hidden;
+/* white-space: pre-wrap; */
+/* height: 23px; */
+display: inline;
+color: #2563A2;
+}
+.HLM{
+position: relative;
+}
+.HLMavatar{
+display: inline;
+vertical-align: middle;
+}
+.HLMavatar img{
+width: 24px;
+height: 24px;
+border-radius: 15%;
+/* opacity: 0.5; */
+}
+
+.HLMtext{
+display: inline-block;
+vertical-align: middle;
+/* white-space: pre; */
+height: 23px;
+width: calc(100% - 30px);
+float: right;
+overflow: hidden;
+color: #969696;
+}
+.HLMtext a{
+white-space: pre;
+/* color: aliceblue; */
+}
+.HLMlink{
+  color: #929292;
+}
+
+.HLMstat{
+    position: relative;
+    display: inline;
+    margin-right: 6px;
+    /* width: 25px; */
+    top: 1px;
+    background-color: #EFA6A6;
+    color: white;
+    padding: 3px;
+    border-radius: 3px;
+}
+.HLTstat{
+    /* position: relative; */
+    /* display: inline; */
+    /* font-size: 14px; */
+    /* text-align: center; */
+    /* width: 28px; */
+    /* right: 0; */
+    /* top: 2px; */
+    background: #7EB4DC;
+    /* height: 25px; */
+    /* overflow: hidden; */
+    /* border-radius: 4px; */
+    /* padding: 1px; */
+    /* color: #FFFFFF; */
+    margin-right: 4px;
+    /* vertical-align: middle; */
+}
+.HomeFriendlyLink{
+
+}
+.HomeFriendlyLink>li{
+display: inline-block;
+margin-right: 20px;
+}
+
+
+
 .HomeForumContainer{
   margin-bottom: 15px;
   /* padding: 12px; */
@@ -50,12 +155,12 @@
 }
 
 .HomeForumTitleCircle{
-width: 24px;
-height: 24px;
-border-radius: 50%;
-display: inline-block;
-vertical-align: middle;
-margin-right: 7px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 7px;
 }
 
 .HomeForumTitlePrimary{
@@ -125,7 +230,7 @@
   overflow: hidden !important;
 }
 .HomeThreadText:visited{
-color: #7A95B5;
+  color: #7A95B5;
 }
 
 .HomeThreadTextDigest{
@@ -163,9 +268,9 @@
 }
 
 .ForumsListCountNumber{
-display: inline-block;
-position: absolute;
-right: 0;
+  display: inline-block;
+  position: absolute;
+  right: 0;
 }
 
 .NavigationPaging{
@@ -174,11 +279,11 @@
 }
 
 .reddish {
-  color:#e99;
+  color: #e99;
 }
 
 .blueish{
-color: #7676D0;
+  color: #7676D0;
 }
 
 .avatar {
@@ -229,9 +334,9 @@ h4,h5,h6 {
   border-width: 1px;
 }
 .ForumThreadTitle{
-font-size: 18px;
-display: inline-block;
-/* vertical-align: middle; */
+  font-size: 18px;
+  display: inline-block;
+  /* vertical-align: middle; */
 }
 .ForumThreadItem>div {
   padding-top: 7px;
@@ -248,8 +353,8 @@ h4,h5,h6 {
 }
 
 .ForumThreadCreatorInfo{
-display: block;
-/* width: 50%; */
+  display: block;
+  /* width: 50%; */
 }
 
 .ForumThreadDigestText{
@@ -378,9 +483,9 @@ h4,h5,h6 {
 }
 
 .ThreadPostTitleUsername{
-display: inline;
-margin-right: 8px;
-color: #8295A7;
+  display: inline;
+  margin-right: 8px;
+  color: #8295A7;
 }
 .PostContentImage{
   max-width: 100%;
@@ -435,24 +540,24 @@ h4,h5,h6 {
   border-radius: 5px;
 }
 .ThreadPostCreditItem{
-display: table-row;
-font-size: 14px;
+  display: table-row;
+  font-size: 14px;
 }
 .ThreadPostCreditItem>div{
-display: table-cell;
-padding: 3px;
+  display: table-cell;
+  padding: 3px;
 }
 .TPCQ ,.TPCType{
-font-size: 16px;
+  font-size: 16px;
 }
 .TPCQ{
-color: #CC0000;
-/* font-weight: bold; */
+  color: #CC0000;
+  /* font-weight: bold; */
 }
 .TPCIAI{
-width: 24px;
-height: 24px;
-border-radius: 3px;
+  width: 24px;
+  height: 24px;
+  border-radius: 3px;
 }
 
 .padless{
@@ -486,51 +591,51 @@ h4,h5,h6 {
 }
 
 .DigestThreadList{
-position: relative;
+  position: relative;
 }
 .DigestThreadListItem{
-position: relative;
-/* border-style: solid; */
-/* border-width: 1px; */
-/* border-left-width: 5px; */
-/* border-color: #E8E8E8; */
-/* background: #FBFBFB; */
-/* border-radius: 4px; */
-/* padding: 10px; */
-margin-bottom: 12px;
+  position: relative;
+  /* border-style: solid; */
+  /* border-width: 1px; */
+  /* border-left-width: 5px; */
+  /* border-color: #E8E8E8; */
+  /* background: #FBFBFB; */
+  /* border-radius: 4px; */
+  /* padding: 10px; */
+  margin-bottom: 12px;
 }
 .DigestThreadTitle{
-font-size: 18px;
-color: #6F6F6F;
-font-family: initial;
+  font-size: 18px;
+  color: #6F6F6F;
+  font-family: initial;
 }
 .DigestThreadAvatar{
-width: 52px;
-height: 52px;
-border-radius: 5px;
+  width: 52px;
+  height: 52px;
+  border-radius: 5px;
 }
 .DigestThreadAvatarPlace{
-display: inline-block;
-vertical-align: top;
-width: 52px;
-height: 52px;
+  display: inline-block;
+  vertical-align: top;
+  width: 52px;
+  height: 52px;
 }
 .DigestThreadBody{
-display: inline-block;
-position: relative;
-width: calc(100% - 72px);
-margin-left: 12px;
+  display: inline-block;
+  position: relative;
+  width: calc(100% - 72px);
+  margin-left: 12px;
 }
 .DigestThreadContent{
-/* margin-left: 10px; */
-font-size: 11pt;
-color: #708CCE;
-overflow: hidden;
+  /* margin-left: 10px; */
+  font-size: 11pt;
+  color: #708CCE;
+  overflow: hidden;
 }
 .DigestThreadMeta{
-/* margin-left: 10px; */
-color: #C5C5C5;
+  /* margin-left: 10px; */
+  color: #C5C5C5;
 }
 .DigestThreadMeta>span{
-margin-right: 10px;
-} 
+  margin-right: 10px;
+}  

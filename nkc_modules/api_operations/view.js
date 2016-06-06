@@ -181,6 +181,13 @@ table.viewHome = {
       unique:'false',
       sparse:'false',
     })
+
+    queryfunc.createIndex('threads',{
+      fields:['disabled','tlm'],
+      type:'skiplist',
+      unique:'false',
+      sparse:'false',
+    })
   },
   operation:params=>{
     var data = defaultData(params)
@@ -242,7 +249,30 @@ table.viewHome = {
       var na = karr[0]
       data.answersheet_count = na;
       //data.forums = forums;
-      return data;
+
+      return AQL(`
+        for t in threads
+        sort t.disabled desc, t.tlm desc
+        filter t.disabled==null
+        limit 60
+
+        let parentforum = document(forums,t.fid)
+        let class = parentforum.class
+
+        filter has(@contentClasses,TO_STRING(class)) /*content ctrl*/
+
+        let oc = document(posts,t.oc)
+        let lm = document(posts,t.lm)
+
+        limit 12
+        return merge(t,{oc:oc,lm:lm})
+        `,{contentClasses:params.contentClasses}
+      )
+    })
+    .then(res=>{
+      data.latestThreads = res
+
+      return data
     })
   }
 }

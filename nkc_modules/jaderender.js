@@ -13,7 +13,7 @@ var render = require('nkc_render');
 jade.filters.markdown = render.commonmark_render;
 //jade.filters.bbcode = render.bbcode_render;
 jade.filters.plain = render.plain_render;
-
+jade.filters.thru = function(k){return k}
 jade.filters.experimental = render.experimental_render
 
 function fromNow(time){
