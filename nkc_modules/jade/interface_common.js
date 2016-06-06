@@ -221,6 +221,15 @@ var NavBarSearch = {
 
 NavBarSearch.init()
 
+function ReHighlightEverything(){
+  //hljs.configure({useBR:true})
+  $('span.xbbcode-code').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+  $('pre code').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+}
 
 
 //in memory of alex king

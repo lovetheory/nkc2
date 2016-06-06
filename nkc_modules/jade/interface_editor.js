@@ -48,6 +48,8 @@ var nkc_editor = function(){
 
       hset('parsedcontent',parsedcontent); //XSS prone
 
+      ReHighlightEverything() //interface_common code highlight
+
       if(e==='reenter'){
         //enough!
         debounce=false;
