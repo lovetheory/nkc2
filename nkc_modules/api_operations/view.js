@@ -250,6 +250,8 @@ table.viewHome = {
       data.answersheet_count = na;
       //data.forums = forums;
 
+      return {} //ignore following
+
       return AQL(`
         for t in threads
         sort t.disabled desc, t.tlm desc
