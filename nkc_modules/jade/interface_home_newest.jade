@@ -13,7 +13,7 @@
           .HLMtext
             .HLMstat.HLTstat #{thread.count}
             - var titletext = thread.oc.t
-            a.HLTtitletext(href='/t/thread._key') #{titletext}
+            a.HLTtitletext(href='/t/#{thread._key}') #{titletext}
             
           
             
@@ -27,7 +27,7 @@
           
           .HLMtext
             .HLMstat #{fromNowAbbr(thread.lm.toc)}
-            - var response = thread.lm.c.slice(0,50).replace(/\[.*?]/g,'').replace(/ /g,'').trim()
-              a.HLMlink(href='/t/thread._key') #{response}
+            - var response = thread.lm.c.slice(0,80).replace(/\[.*?]/g,'').replace(/ /g,'').replace(/#{r=.*?}/g,'').trim()
+              a.HLMlink(href='/t/#{thread._key}') #{response}
 
           
