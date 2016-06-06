@@ -20,16 +20,6 @@
   color:#611;
 }
 
-.xbbcode-code {
-  display: block;
-  background-color: #ECECEC;
-  border-radius: 10px;
-  padding: 10px;
-  color: #007084;
-  font-family: monospace;
-  font-size: 10pt;
-}
-
 .hrNarrowSpace{
   margin-top: 10px;
   margin-bottom: 9px;
@@ -98,7 +88,7 @@
 /* color: aliceblue; */
 }
 .HLMlink{
-  color: #929292;
+color: #929292;
 }
 
 .HLMstat{
@@ -464,6 +454,12 @@ h4,h5,h6 {
 
 .ThreadPostBody blockquote {
   font-size: 10pt;
+}
+
+.ThreadPostBody pre{
+  padding: 0;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 
 .ThreadPostAvatar{
