@@ -212,7 +212,8 @@ var NavBarSearch = {
 
 //    https://www.google.com.hk/search?newwindow=1&safe=strict&source=hp&q=zvs+site%3Abbs.kechuang.org
     window.location =
-    'https://www.google.com.hk/search?newwindow=1&safe=strict&source=hp&q='
+    //'https://www.google.com.hk/search?newwindow=1&safe=strict&source=hp&q='
+    'http://cn.bing.com/search?q='
     +encodeURI(searchstr)
     +'+site%3Abbs.kechuang.org'
   },
