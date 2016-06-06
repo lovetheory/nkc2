@@ -27,3 +27,17 @@
 - 科创招募的志愿者、版主、管理员、编辑发表的观点，除非科创授权，亦仅代表其个人的观点。
 - 但是，用户可就有关工作人员在其职责范围内发表的与科创公共事务有关的观点询问科创的官方立场。
 - 科创不保证所提供的网络服务一定能满足用户的要求，也不保证网络服务不会中断，并且没有义务保证用户发表内容的完整性、持久性。
+
+
+### 备注
+
+- 科创使用SHA256-HMAC计算及存储用户密码的哈希值。
+
+  ```javascript
+    function sha256HMAC(password,salt){
+      const crypto = require('crypto')
+      var hmac = crypto.createHmac('sha256',salt)
+      hmac.update(password)
+      return hmac.digest('hex')
+    }
+  ```

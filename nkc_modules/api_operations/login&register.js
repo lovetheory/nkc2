@@ -39,10 +39,20 @@ var create_user = function(user){
       certs:['examinated'],
     }
 
+    var salt = Math.floor((Math.random()*65536)).toString(16)
+    var hash = sha256HMAC(user.password,salt)
+
     var newuser_personal = {
       _key:newuid,
       email:user.email,
-      password:user.password,
+
+      hashtype:'sha256HMAC',
+
+      password:{
+        hash:hash,
+        salt:salt,
+      },
+
       regcode:user.regcode,
     }
 
@@ -51,6 +61,13 @@ var create_user = function(user){
       return queryfunc.doc_save(newuser_personal,'users_personal')
     })
   })
+}
+
+function sha256HMAC(password,salt){
+  const crypto = require('crypto')
+  var hmac = crypto.createHmac('sha256',salt)
+  hmac.update(password)
+  return hmac.digest('hex')
 }
 
 table.userRegister = {
@@ -137,6 +154,17 @@ table.userLogin = {
           var salt = user_personal.password.salt
 
           var hashed = md5(md5(pass)+salt)
+          if(hashed!==hash){
+            throw('password unmatch')
+          }
+          break;
+
+          case 'sha256HMAC':
+          var pass = params.password
+          var hash = user_personal.password.hash
+          var salt = user_personal.password.salt
+
+          var hashed = sha256HMAC(pass,salt)
           if(hashed!==hash){
             throw('password unmatch')
           }
