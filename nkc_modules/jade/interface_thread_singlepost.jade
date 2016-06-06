@@ -1,6 +1,7 @@
 //do sth with the post variable here
-
-if !post.disabled
+- var po = data.permittedOperations
+    
+if !post.disabled || (post.disabled && po.enablePost)
   //horizontal line
   hr(id='#{post._key}').ThreadSinglePostHr
   
@@ -58,9 +59,9 @@ if !post.disabled
               .TPCDate #{dateTimeString(c.toc).split(' ')[0]}
               .TPCReason #{c.reason}                
   
-else
-  - var po = data.permittedOperations
+- var po = data.permittedOperations
+if post.disabled
+  
   - if(po.enablePost)
     a(href="javascript:enablePost('#{post._key}')") [此楼已屏蔽，点击解除]
-  
             
