@@ -29,7 +29,12 @@ var certificates={
 
     permittedOperations:{
       viewQuestions:true,
+      
+      addQuestion:true,
+      deleteQuestion:true,
+
       deleteElseQuestions:true,
+
       elseModifyTimeLimit:timeYear*20, //20y
       selfModifyTimeLimit:timeYear*20, //20y
     }

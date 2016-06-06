@@ -136,3 +136,48 @@ table.submitExam = {
     //ends here
   },
 }
+
+
+table.deleteQuestion = {
+  operation:function(params){
+    var qid = params.qid
+
+    return queryfunc.doc_load(qid,'questions')
+    .then(back=>{
+      if(back.uid!==params.user._key&&!params.permittedOperations.deleteElseQuestions)//if not owning the question
+      throw 'not owning';
+
+      return queryfunc.doc_kill(qid,'questions')
+    })
+  },
+  requiredParams:{
+    qid:String,
+  }
+}
+
+table.addQuestion = {
+  operation:function(params){
+
+    var question = {
+      question:params.question,
+      answer:params.answer,
+      type:params.type,
+
+      uid:params.user._key,
+      toc:Date.now(),
+    }
+
+    return apifunc.post_questions(question)
+  },
+  requiredParams:{
+    question:String,
+    answer:String,
+    type:String,
+  }
+}
+
+table.listAllQuestions = {
+  operation:function(params){
+    return apifunc.get_questions(null)
+  }
+}

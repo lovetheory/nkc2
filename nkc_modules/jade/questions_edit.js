@@ -43,11 +43,11 @@ function validate_and_submit(){
 
   if(question_object)//if not null
   {
-    post_api('questions',question_object,function(err,back){
-      if(err)return alert(err.toString());
-      //alert(back.toString());
-      location.reload();
+    nkcAPI('addQuestion',question_object)
+    .then(res=>{
+      location.reload()
     })
+    .catch(jwarning)
   }
 }
 
@@ -62,11 +62,11 @@ geid('post').addEventListener('click', validate_and_submit);
 geid('content').addEventListener('keyup', content_keypress);
 
 function remove_question(qid){
-  delete_api('/api/questions/'+qid.toString(),function(err,back){
-    if(err)return alert(err.toString());
-    //alert(back.toString());
-    location.reload();
+  nkcAPI('deleteQuestion',{qid:qid})
+  .then(function(){
+    location.reload()
   })
+  .catch(jwarning)
 }
 
 function load_question(qstr){
