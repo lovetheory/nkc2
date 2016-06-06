@@ -23,7 +23,7 @@ case q.type
           text &nbsp;
           text #{index+1}. #{a} 
           
-if q.uid == data.user._key
+if q.uid == data.user._key || data.permittedOperations.deleteElseQuestions
   button.btn.btn-default(onclick="remove_question('#{q._key}')") 删掉
 - var qstr = q.question;
 - if(q.type=='ch4')for(i in q.answer){qstr+='\n$'+q.answer[i]};
