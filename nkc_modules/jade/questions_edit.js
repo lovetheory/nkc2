@@ -69,6 +69,21 @@ function remove_question(qid){
   .catch(jwarning)
 }
 
-function load_question(qstr){
-  box.value=qstr;
+function load_question(qid){
+  nkcAPI('getQuestion',{qid:qid})
+  .then(function(q){
+    var k = q.question
+    if(q.type=='ch4')
+    {
+      for(i in q.answer){
+        k+='\n$'+q.answer[i]
+      }
+    }
+    if(q.type=='ans'){
+      k+='\n$'+q.answer
+    }
+
+    box.value= k
+  })
+  .catch(jwarning)
 }

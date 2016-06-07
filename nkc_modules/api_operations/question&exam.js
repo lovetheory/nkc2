@@ -176,6 +176,16 @@ table.addQuestion = {
   }
 }
 
+table.getQuestion = {
+  operation:function(params){
+    var qid = params.qid
+    return queryfunc.doc_load(qid,'questions')
+  },
+  requiredParams:{
+    qid:String,
+  }
+}
+
 table.listAllQuestions = {
   operation:function(params){
     return apifunc.get_questions(null)

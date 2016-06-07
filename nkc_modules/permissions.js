@@ -16,6 +16,9 @@ var certificates={
     display_name:'运维',
     inheritFrom:['editor'],
 
+    permittedOperations:{
+      deleteElseQuestions:true,
+    },
     // see end of api_operations.js
   },
 
@@ -28,12 +31,11 @@ var certificates={
     },
 
     permittedOperations:{
+
       viewQuestions:true,
-      
       addQuestion:true,
       deleteQuestion:true,
-
-      deleteElseQuestions:true,
+      getQuestion:true,
 
       elseModifyTimeLimit:timeYear*20, //20y
       selfModifyTimeLimit:timeYear*20, //20y
