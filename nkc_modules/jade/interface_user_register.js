@@ -68,7 +68,7 @@ function password2_keypress(){
 
 if(gv('regcode')!='')
 {
-  //geid('username').focus() don't
+    geid('regcode').focus()
 }else{
-  geid('regcode').focus()
+
 }
