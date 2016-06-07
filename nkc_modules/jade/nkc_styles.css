@@ -456,7 +456,7 @@ h4,h5,h6 {
   font-size: 10pt;
 }
 
-.ThreadPostBody span.xbbcode-code, .ThreadPostBody pre code{
+.ThreadPostBody span.xbbcode-code, pre code{
 font-size: 14px;
 font-family: consolas;
 line-height: 1.4;
@@ -467,6 +467,7 @@ h4,h5,h6 {
   margin-top: 5px;
   margin-bottom: 5px;
 }
+
 .ThreadPostBody span.xbbcode-code{
 margin-top: 5px;
 margin-bottom: 5px;
