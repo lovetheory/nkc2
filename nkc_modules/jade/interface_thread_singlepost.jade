@@ -32,6 +32,7 @@ if !post.disabled || (post.disabled && po.enablePost)
           
         - if(po.disablePost)
           a(href="javascript:disablePost('#{post._key}')") 屏蔽
+
           
         if data.user
           - var user = data.user
@@ -39,6 +40,11 @@ if !post.disabled || (post.disabled && po.enablePost)
           - if(testModifyTimeLimit(data,ownership,post.toc))
             a(href='/e?target=post/#{post._key}') 编辑
             
+          - var cc = data.contentClasses
+          - if(cc.classified)
+            - var queryforip = 'http://ip138.com/ips138.asp?ip='+post.ipoc.toString()+'&action=2'
+            a.lighttext(href='#{queryforip}') #{post.ipoc}
+        
       div.ThreadPostBody!= experimental_render(post)
 
       if post.toc!=post.tlm
