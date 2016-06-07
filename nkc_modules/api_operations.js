@@ -45,6 +45,9 @@ operations.listAll = function(){
   return ops;
 }
 
-require('permissions').certificates.dev.permittedOperations = operations.listAll(), //grandmaster
+require('permissions').certificates.dev.permittedOperations = Object.assign(
+  require('permissions').certificates.dev.permittedOperations,
+  operations.listAll()
+) //grandmaster
 
 module.exports = operations
