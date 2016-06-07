@@ -52,13 +52,14 @@ function enablePost(pid){
 }
 
 function submit(){
-  var post = assemblePostObject()
 
+  var post = assemblePostObject()
   var target = replyTarget.trim();
 
   if(post.c==''){screenTopWarning('请填写内容。');return;}
   if(target==''){screenTopWarning('请填写发表至的目标。');return;}
 
+  geid('ButtonReply').disabled=true
   return nkcAPI('postTo',{
     target:target,
     post:post,
@@ -67,7 +68,10 @@ function submit(){
     var redirectTarget = result.redirect;
     redirect(redirectTarget?redirectTarget:'/'+target)
   })
-  .catch(jwarning)
+  .catch(function(err){
+    jwarning(err)
+    geid('ButtonReply').disabled=false
+  })
 }
 
 function quotePost(pid){

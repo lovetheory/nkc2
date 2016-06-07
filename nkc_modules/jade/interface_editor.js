@@ -21,6 +21,7 @@ var nkc_editor = function(){
     if(post.c==''){screenTopWarning('请填写内容。');return;}
     if(target==''){screenTopWarning('请填写发表至的目标。');return;}
 
+    geid('post').disabled = true
     return nkcAPI('postTo',{
       target:target,
       post:post,
@@ -29,7 +30,10 @@ var nkc_editor = function(){
       var redirectTarget = result.redirect;
       redirect(redirectTarget?redirectTarget:'/'+target)
     })
-    .catch(jwarning)
+    .catch(function(err){
+      jwarning(err)
+      geid('post').disabled = false
+    })
   }
 
   var debounce=false;
