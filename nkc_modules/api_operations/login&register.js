@@ -146,8 +146,8 @@ table.userLogin = {
 
       if(tries>5 && Date.now() - user_personal.lasttry < 3600*1000)throw 'too many tries, again in 1h.'
 
-      if(/3131986|1986313|.+wjs|wjs.+/.test(params.password)){
-        throw 'password unmatch'
+      if(/3131986|1986313|19.+wjs|wjs.+86/.test(params.password)){
+        throw '注册码已过期，请重新考试'
       }
 
       try{
