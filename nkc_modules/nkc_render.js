@@ -10,6 +10,8 @@ function nkc_render(options){
     var commonmark = window.commonmark;
     var plain_escape = window.plain_escape;
     var XBBCODE = window.XBBCODE;
+    var xss = window.filterXSS;
+
     console.log('nkc_render.js running in browser.');
   }else{
     //nodejs
@@ -18,13 +20,22 @@ function nkc_render(options){
     var commonmark = require('commonmark');
     var plain_escape = require('jade/plain_escaper');
     var XBBCODE = require(__projectroot+'external_pkgs/xbbcode/xbbcode');
+    var xss = require('xss')
   }
 
+  var default_whitelist = xss.whiteList
+  default_whitelist.font = ['color']
+
+  var xssoptions = {whiteList:default_whitelist}
+  var custom_xss = new xss.FilterXSS(xssoptions)
+  var custom_xss_process = function(str){
+    return custom_xss.process(str)
+}
 
   var commonreader = new commonmark.Parser();
   var commonwriter = new commonmark.HtmlRenderer({
     sourcepos:true,
-    safe:true, //ignore <tags>
+    //safe:true, //ignore <tags>
   });
 
   render.plain_render = plain_escape;
@@ -115,31 +126,37 @@ function nkc_render(options){
     })
   }
 
-  var pwbb_experimental = function(post){
+  var pwbb_experimental = function(post,isHTML){
     var content = post.c||''
 
-    var html =
-    XBBCODE.process({
-      text:content,
-    })
-    .html
-    .replace(/&#91;/g,'[')
-    .replace(/&#93;/g,']')
-    .replace(/\[[/]{0,1}backcolor[=#a-zA-Z0-9]{0,16}]/g,'')
+    if(!isHTML){  //bbcode
+      var html =
+      XBBCODE.process({
+        text:content,
+      })
+      .html
+      .replace(/&#91;/g,'[')
+      .replace(/&#93;/g,']')
+      .replace(/\[[/]{0,1}backcolor[=#a-zA-Z0-9]{0,16}]/g,'')
 
-    // for history reasons...
+      // for history reasons...
 
-    .replace(/\n/g,'<br>')
-    .replace(/\[attachment=([0-9]{1,16})\]/g,'#{r=$1}')
-    .replace(/\[\/?align=.*?]/g,'')
-    .replace(/\[flash=[0-9]{1,4},[0-9]{1,4}[0-9,]{0,3}](.+.*?)\[\/flash]/gi,
-    '<embed class="PostEmbedFlash" src="$1" allowFullScreen="true" quality="high" allowScriptAccess="always" type="application/x-shockwave-flash"></embed>')
+      .replace(/\n/g,'<br>')
+      .replace(/\[attachment=([0-9]{1,16})\]/g,'#{r=$1}')
+      .replace(/\[\/?align=.*?]/g,'')
+      .replace(/\[flash=[0-9]{1,4},[0-9]{1,4}[0-9,]{0,3}](.+.*?)\[\/flash]/gi,
+      '<embed class="PostEmbedFlash" src="$1" allowFullScreen="true" quality="high" allowScriptAccess="always" type="application/x-shockwave-flash"></embed>')
 
-    .replace(/\[(\/?)strike]/g,'<$1s>')
-    .replace(/  /g,'&nbsp&nbsp')
+      .replace(/\[(\/?)strike]/g,'<$1s>')
+      .replace(/  /g,'&nbsp&nbsp')
 
-    html = attachment_filter(html,post)
-    // now post.r are marked with _used:true
+      html = attachment_filter(html,post)
+      // now post.r are marked with _used:true
+    }
+    else{
+      var html = content
+    }
+
 
     // fix for older posts where they forgot to inject attachments.
 
@@ -159,7 +176,7 @@ function nkc_render(options){
       }
     }
 
-    return html
+    return custom_xss_process(html)
   }
 
   var markdown_experimental = function(post){
@@ -167,7 +184,7 @@ function nkc_render(options){
     var rendered = commonwriter.render(parsed)
     rendered = attachment_filter(rendered,post)
 
-    return rendered;
+    return custom_xss_process(rendered);
   }
 
   render.experimental_render = function(post){
@@ -177,6 +194,9 @@ function nkc_render(options){
     var renderedHTML = ''
 
     switch (lang) {
+      case 'html':
+      renderedHTML = pwbb_experimental(post,true) //straight thru html
+      break;
       case 'pwbb':
       renderedHTML = pwbb_experimental(post)
       break;

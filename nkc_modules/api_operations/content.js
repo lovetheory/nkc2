@@ -84,6 +84,8 @@ var postToThread = function(params,tid,user){
 var postToForum = function(params,fid,user){
   var post = params.post
 
+  if(typeof post.t !=='string')throw '标题炸了'
+
   post.t = post.t.trim();
   if(post.t.length<3)throw 'title too short. write something would you?'
 
