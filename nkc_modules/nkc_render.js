@@ -20,17 +20,19 @@ function nkc_render(options){
     var commonmark = require('commonmark');
     var plain_escape = require('jade/plain_escaper');
     var XBBCODE = require(__projectroot+'external_pkgs/xbbcode/xbbcode');
+
     var xss = require('xss')
   }
 
   var default_whitelist = xss.whiteList
+  //console.log(default_whitelist);
   default_whitelist.font = ['color']
 
   var xssoptions = {whiteList:default_whitelist}
   var custom_xss = new xss.FilterXSS(xssoptions)
   var custom_xss_process = function(str){
     return custom_xss.process(str)
-}
+  }
 
   var commonreader = new commonmark.Parser();
   var commonwriter = new commonmark.HtmlRenderer({
@@ -129,8 +131,10 @@ function nkc_render(options){
   var pwbb_experimental = function(post,isHTML){
     var content = post.c||''
 
+    var html = ''
+
     if(!isHTML){  //bbcode
-      var html =
+      html =
       XBBCODE.process({
         text:content,
       })
@@ -154,12 +158,11 @@ function nkc_render(options){
       // now post.r are marked with _used:true
     }
     else{
-      var html = content
+      html = custom_xss_process(content)
     }
 
 
     // fix for older posts where they forgot to inject attachments.
-
     var count = 0
     for(i in post.r){
       var r = post.r[i]
@@ -176,7 +179,7 @@ function nkc_render(options){
       }
     }
 
-    return custom_xss_process(html)
+    return html
   }
 
   var markdown_experimental = function(post){
@@ -197,12 +200,15 @@ function nkc_render(options){
       case 'html':
       renderedHTML = pwbb_experimental(post,true) //straight thru html
       break;
+
       case 'pwbb':
-      renderedHTML = pwbb_experimental(post)
+      renderedHTML = pwbb_experimental(post,false)
       break;
+
       case 'markdown':
       renderedHTML = markdown_experimental(post)
       break;
+
       default:
       renderedHTML = plain_escape(content)
     }
