@@ -41,6 +41,8 @@ var certificates={
       selfModifyTimeLimit:timeYear*20, //20y
 
       moveAllThreads:true,
+      toggleAllPosts:true,
+      toggleDigestAllThreads:true,
     }
   },
 
@@ -64,6 +66,10 @@ var certificates={
 
       disablePost:true,
       enablePost:true,
+
+      toggleOwnedPosts:true,
+      toggleDigestOwnedThreads:true,
+
       moveThread:true,
       moveOwnedThreads:true,
     }

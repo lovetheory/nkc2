@@ -69,22 +69,6 @@ var layer = (function(){
     }
   }
 
-  class Post extends BaseDao{
-    constructor(key){
-      super('posts',key)
-    }
-
-    mergeUsername(){
-      var u = new User(this.model.uid)
-      return u.load()
-      .then(user=>{
-        var p = Object.assign({},this.model)
-        p.username = user.username
-        return p
-      })
-    }
-  }
-
   class Forum extends BaseDao{
     constructor(key){
       super('forums',key)
@@ -134,6 +118,16 @@ var layer = (function(){
 
         return this
       })
+    }
+
+    testModerator(username){
+      var forum = this.model
+      if(!forum.moderators) throw 'no moderator specified for this forum yet'
+      if(forum.moderators.indexOf(username)>=0){
+        //if user exists as moderator for the forum
+        return true
+      }
+      throw 'forum not owning by you.'
     }
 
     testView(contentClasses){
@@ -320,6 +314,36 @@ var layer = (function(){
     accumulateCountHit(){
       return this.incrementProperty('hits')
     }
+  }
+
+  class Post extends BaseDao{
+    constructor(key){
+      super('posts',key)
+    }
+
+    mergeUsername(){
+      var u = new User(this.model.uid)
+      return u.load()
+      .then(user=>{
+        var p = Object.assign({},this.model)
+        p.username = user.username
+        return p
+      })
+    }
+
+    loadThread(){
+      var p = this.model
+      var t = new Thread(p.tid)
+      return t.load()
+    }
+
+    loadForum(){
+      return this.loadThread()
+      .then(thread=>{
+        return thread.loadForum()
+      })
+    }
+
   }
 
 

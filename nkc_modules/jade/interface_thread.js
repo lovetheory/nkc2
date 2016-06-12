@@ -23,6 +23,7 @@ function setDigest(tid){
   .then(function(){
     return screenTopAlert(tid+' 设为精华')
   })
+  .catch(jwarning)
 }
 
 function assemblePostObject(){
