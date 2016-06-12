@@ -444,6 +444,7 @@ table.viewUserThreads = {
         description:user.post_sign||'',
         count_threads:user.count_threads||null,
         count_posts:user.count_posts||null,
+        color:user.color||'#bbb'
       }
 
       if(params.digest){
