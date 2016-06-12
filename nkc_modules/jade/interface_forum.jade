@@ -19,7 +19,10 @@ block content
         .row
           .col-md-12
             //img(src='http://bbs.kechuang.org/themes/site/dingzhi/images/logo.png')
-            h1.ForumName #{data.forum.display_name}
+            
+            -var forum = data.forum
+            .ForumTitleCircle(style='background-color:#{forum.color}')
+            .ForumName #{forum.display_name}
         .row
           .col-xs-8
             p #{data.forum.description}

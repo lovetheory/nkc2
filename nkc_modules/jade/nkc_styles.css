@@ -240,9 +240,20 @@
   /* font-size: 12pt; */
 }
 
+.ForumTitleCircle{
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 5px;
+  vertical-align: middle;
+}
 .ForumName{
   margin-top: 10px;
   margin-bottom: 10px;
+  font-size: 32px;
+  display: inline-block;
+  vertical-align: middle;
 }
 .ForumsListBody{
   margin-right: 20px;
@@ -469,7 +480,7 @@ h4,h5,h6 {
 }
 
 .ThreadPostBody em{
-  
+
 }
 
 .ThreadPostBody span.xbbcode-code{
