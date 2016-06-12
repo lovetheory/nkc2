@@ -101,35 +101,39 @@ var layer = (function(){
 
     inheritPropertyFromParent(){
       var p = this.model
-      if(p.parentid&&p.parentid!=='0'){
-        var parent = new Forum(p.parentid)
-        return parent.load()
-        .then(res=>{
-          return parent.inheritPropertyFromParent() //recursive inheritance
-        })
-        .then(res=>{
-          p.class = p.class||parent.model.class
-          p.color = p.color||parent.model.color
-          return this
-        })
-        .catch(err=>{
-          if(development){
-            report('parent load failed on '+parent.key,err)
-          }
-          //if parent not found
-          p.class = p.class||null
-          p.color = p.color||'#bbb'
-          return this
-        })
+      var parent
 
-      }
-      else{
-        //if no parent
+      return Promise.resolve()
+      .then(()=>{
+        if(!p.parentid||p.parentid=='0') throw 'parent not exist'
+
+        parent = new Forum(p.parentid)
+        return parent.load()
+      })
+      .then(parent=>{
+        return parent.inheritPropertyFromParent() //recursive inheritance
+      })
+      .then(parent=>{
+        var parent = parent.model
+        p.class = p.class||parent.class
+        p.color = p.color||parent.color
+        p.moderators = parent.moderators.concat(p.moderators||[])
+        return this
+      })
+      .catch(err=>{
+        if(development){
+          if(err!=='parent not exist'){
+            report('parent load failed on '+p.parentid,err)
+          }
+        }
+
+        //if no parent or parent not found
         p.class = p.class||null
         p.color = p.color||'#bbb'
+        p.moderators = p.moderators||[]
 
         return this
-      }
+      })
     }
 
     testView(contentClasses){
