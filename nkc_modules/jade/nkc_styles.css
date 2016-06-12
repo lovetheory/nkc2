@@ -241,12 +241,12 @@
 }
 
 .ForumTitleCircle{
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  display: inline-block;
-  margin-right: 5px;
-  vertical-align: middle;
+width: 32px;
+height: 32px;
+border-radius: 50%;
+display: inline-block;
+margin-right: 5px;
+vertical-align: middle;
 }
 .ForumName{
   margin-top: 10px;
@@ -469,7 +469,7 @@ h4,h5,h6 {
 
 .ThreadPostBody span.xbbcode-code, pre code{
 font-size: 14px;
-font-family: consolas;
+font-family: consolas,Monospace,monospace;
 line-height: 1.4;
 }
 
