@@ -1,4 +1,6 @@
-
+.margin-right{
+  margin-right: 5px;
+}
 
 .rightalign {
   text-align:right;
@@ -307,19 +309,6 @@ blockquote {
   margin:10px 0px;
 }
 
-//font override
-body {
-  //font-family:"Helvetica Neue",Helvetica,Arial,"STXihei","Microsoft YaHei","微软雅黑",sans-serif;
-  font-size:12pt;
-}
-
-h1,h2,h3 {
-  //font-family: "Helvetica Neue",Helvetica,Arial,"STXihei",SimHei,"Microsoft YaHei","微软雅黑",sans-serif;
-}
-
-h4,h5,h6 {
-  font-family: "Helvetica Neue",Helvetica,Arial,"Microsoft YaHei","微软雅黑",sans-serif;
-}
 
 .ForumThreadList{
   border-collapse: collapse;
@@ -660,4 +649,4 @@ h4,h5,h6 {
 }
 .DigestThreadMeta>span{
   margin-right: 10px;
-}  
+} h1,h2,h3 {  font-family:Arial, "Helvetica Neue",Helvetica,"STXihei",SimHei,"Microsoft YaHei","微软雅黑",sans-serif;}h4,h5,h6 {  font-family:Arial, "Helvetica Neue",Helvetica,"Microsoft YaHei","微软雅黑",sans-serif;}
