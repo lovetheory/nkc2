@@ -468,7 +468,7 @@ h4,h5,h6 {
 }
 
 .ThreadPostBody span.xbbcode-code, pre code{
-font-size: 14px;
+font-size: 12px;
 font-family: consolas,Monospace,monospace;
 line-height: 1.4;
 }
