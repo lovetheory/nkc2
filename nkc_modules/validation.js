@@ -12,7 +12,7 @@ exports.validatePost = function(p){
 
   if(p.t!==null && p.t!==undefined){
     if((typeof p.t)!== 'string') throw 'title wrong type'
-    if(p.t.length>30) throw 'title too long'
+    if(p.t.length>60) throw 'title too long'
   }
 
   if(p.l!==null && p.l!==undefined){
