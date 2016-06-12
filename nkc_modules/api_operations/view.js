@@ -10,6 +10,8 @@ var validation = require('validation')
 var AQL = queryfunc.AQL
 var apifunc = require('api_functions')
 
+var layer = require('layer')
+
 var jadeDir = __projectroot + 'nkc_modules/jade/'
 
 var table = {};
@@ -314,85 +316,34 @@ function getPaging(params){
 
 table.viewForum = {
   init:function(){
-    return queryfunc.createIndex('threads',{
-      fields:['fid','disabled','tlm'],
-      type:'skiplist',
-      unique:'false',
-      sparse:'false',
-    })
+    return layer.Forum.buildIndex()
   },
   operation:params=>{
     var data = defaultData(params)
     data.template = jadeDir+ 'interface_forum.jade'
-    var fid = params.fid;
-
     if(params.digest){
-      var filter = `
-      filter t.fid == forum._key && t.digest == true
-      sort t.fid desc, t.digest desc, t.tlm desc
-      `
       data.digest = true
-    }else{
-      var filter = `
-      filter t.fid == forum._key && t.disabled==null
-      sort t.fid desc, t.disabled desc, t.tlm desc
-      `
     }
 
-    var paging = getPaging(params)
-    data.paging = paging
+    var fid = params.fid;
+    var forum = new layer.Forum(fid)
 
-    return AQL(`return document(forums,@fid)`,{fid})
-    .then(res=>{
-      var forum = res[0]
-      testForumClass(params,forum)
-
-      if(forum.parentid){
-        return AQL(`return document(forums,@fid)`,{fid:forum.parentid})
-        .catch(err=>{
-
-        })
-        .then(res=>{
-          if(res){
-            testForumClass(params,res[0])
-          }
-        })
-      }
-
+    return forum.load()
+    .then(forum=>{
+      return forum.inheritPropertyFromParent()
+      .then(res=>{
+        return forum.testView(params.contentClasses)
+      })
     })
     .then(()=>{
-      return AQL(`
-        let forum = document(forums,@fid)
-        let threads = (
-          for t in threads
-          ${filter}
-          limit @start,@count
-
-          let oc = document(posts,t.oc)
-          let lm = document(posts,t.lm)
-          let ocuser = document(users,oc.uid)
-          let lmuser = document(users,lm.uid)
-
-          return merge(t,{oc,ocuser,lmuser})
-        )
-        return {forum,threads}
-
-        `,
-        {
-          fid,
-          start:paging.start,
-          count:paging.count,
-        }
-      )
+      data.forum = forum.model
+      data.paging = forum.getPagingParams(params.page)
+      return forum.listThreadsOfPage(params)
     })
-    .then((result)=>{
+    .then(result=>{
       //if nothing went wrong
-      Object.assign(data,result[0])
+      data.threads = result
 
-      if(data.paging){
-        data.paging.pagecount = data.forum.count_threads?Math.floor((data.forum.count_threads-1) / paging.perpage) + 1:null
-      }
-      //return apifunc.get_all_forums()
       return getForumList(params)
     })
     .then(forumlist=>{
@@ -418,118 +369,51 @@ function testForumClass(params,forum){
 
 table.viewThread = {
   init:function(){
-    return queryfunc.createIndex('posts',{
-      fields:['tid','toc'],
-      type:'skiplist',
-      unique:'false',
-      sparse:'false',
-    })
-    .then(()=>{
-      return queryfunc.createIndex('resources',{
-        fields:['pid'],
-        type:'hash',
-        unique:'false',
-        sparse:'false',
-      })
-    })
+    return layer.Thread.buildIndex()
   },
   operation:function(params){
     var data = defaultData(params)
     data.template = jadeDir + 'interface_thread.jade'
     var tid = params.tid
 
-    var paging = getPaging(params)
-
-    return AQL(`return document(forums,document(threads,@tid).fid)`,{tid})
+    var thread = new layer.Thread(tid)
+    return thread.load()
     .then(res=>{
-      forum = res[0];
-      return testForumClass(params,forum)
+      return thread.loadForum()
     })
-    .then(()=>{
-      return AQL(
-        `
-        let thread = document(threads,@tid)
-
-        let forum = document(forums,thread.fid)
-        let oc = document(posts,thread.oc)
-
-        let posts = (
-          for p in posts
-          sort p.tid asc, p.toc asc
-          filter p.tid == thread._key
-
-          limit @start,@count
-
-          let user = document(users,p.uid)
-
-          let resources_declared = (
-            filter is_array(p.r)
-            for r in p.r
-            let rd = document(resources,r)
-            filter rd!=null
-            return rd
-          )
-
-          let resources_assigned = (
-            for r in resources
-            filter r.pid == p._key
-            return r
-          )
-
-          return merge(p,{
-            user,
-            r:union_distinct(resources_declared,resources_assigned)
-          })
-        )
-        return {
-          thread,oc,forum,posts
-        }
-        `,
-        {
-          tid,
-          start:paging.start,
-          count:paging.count,
-        }
-      )
+    .then(forum=>{
+      return forum.testView(params.contentClasses)// test if have permission to view.
     })
-    .then(result=>{
-      Object.assign(data,result[0]);
+    .then(forum=>{
+      data.forum = forum.model
 
-      if(!data.thread)throw 'thread not exist'
-
-      var thread = data.thread
-      paging.pagecount = thread.count?Math.floor((thread.count-1) / paging.perpage) + 1:null
-
-      data.paging = paging
+      return thread.mergeOc()
+      .then(res=>{
+        data.paging = thread.getPagingParams(params.page)
+        return thread.listPostsOfPage(params.page)
+      })
+    })
+    .then(posts=>{
+      data.posts = posts
+      data.thread = thread.model
     })
     .then(result=>{
       return getForumList(params)
     })
     .then(forumlist=>{
+
       data.forumlist = forumlist
       data.replytarget = 't/' + tid
 
-      accumulateCountHit(tid,'threads')
-
-      return data
+      return thread.accumulateCountHit()
+      .then(res=>{
+        return data
+      })
     })
   },
   requiredParams:{
     tid:String,
   }
-}
-
-function accumulateCountHit(id,collname){
-  return AQL(`
-    let t = document(${collname},@id)
-    update t with {hits:t.hits+1} in threads
-    return NEW.hits
-    `,{id}
-  )
-  .then(res=>{
-    report('hits +1 = ' + res[0].toString())
-    return res[0]
-  })
 }
 
 table.viewUserThreads = {
@@ -550,8 +434,11 @@ table.viewUserThreads = {
 
     var uid = params.uid
 
-    return queryfunc.doc_load(uid,'users')
-    .then(user=>{
+    var user = new layer.User(uid)
+    return user.load()
+    .then(u=>{
+      var user = u.model
+
       data.forum = {
         display_name:user.username,
         description:user.post_sign||'',
@@ -573,7 +460,7 @@ table.viewUserThreads = {
       }
 
       var paging = getPaging(params)
-      paging.pagecount = data.forum.count_threads/paging.perpage
+      paging.pagecount = Math.floor(( data.forum.count_threads-0.1)/paging.perpage )
       data.paging = paging
 
       var uid = user._key
@@ -689,9 +576,11 @@ table.viewDanger = {
       var collname = p[0]
       var doc_key = p[1]
 
-      return queryfunc.doc_load(doc_key,collname)
-      .then(res=>{
-        data.doc = res
+      var doc = new layer.BaseDao(collname,doc_key)
+
+      return doc.load()
+      .then(m=>{
+        data.doc = doc.model
       })
       .catch(err=>{
         //ignore
@@ -703,12 +592,13 @@ table.viewDanger = {
     }
 
     if(username){
-      return apifunc.get_user_by_name(username)
-      .then(reslist=>{
-        if(reslist[0])
-
-        data.doc = reslist[0]
-
+      var user = new layer.User()
+      return user.loadByName(username)
+      .then(u=>{
+        data.doc = u.model
+        return data
+      })
+      .catch(err=>{
         return data
       })
     }
@@ -727,7 +617,7 @@ table.dangerouslyReplaceDoc = {
   }
 }
 
-table.viewQuestions={
+table.viewQuestions = {
   operation:params=>{
     var data = defaultData(params)
     data.template = jadeDir + 'questions_edit.jade'

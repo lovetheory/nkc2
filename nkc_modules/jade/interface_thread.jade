@@ -1,7 +1,8 @@
 extends bootstrap_base.jade
 
 block title
-  title #{data.oc.t} - 科创论坛
+  - var thread = data.thread
+  title #{thread.oc.t} - 科创论坛
   meta#replytarget(value='#{data.replytarget}')
   
   include MathJax.jade
@@ -15,12 +16,13 @@ block content
           if data.posts.length == 0
             h2 您要找的帖子可能不存在 / 翻页过度，请后退
           else
-            - var fid = data.thread.fid
+            - var thread = data.thread
+            - var fid = thread.fid
             .ThreadTitle
               - var forumname = data.forum.display_name
               a.ThreadTitleForumLink(href='/f/#{fid}') #{forumname} 
               
-              a.ThreadTitleText(href='/t/#{data.thread._key}') #{data.oc.t} 
+              a.ThreadTitleText(href='/t/#{data.thread._key}') #{thread.oc.t}
                 
               .ThreadTitleAuxillary.d-inline.lighttext
                                 
