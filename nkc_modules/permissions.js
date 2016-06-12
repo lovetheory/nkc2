@@ -39,6 +39,8 @@ var certificates={
 
       elseModifyTimeLimit:timeYear*20, //20y
       selfModifyTimeLimit:timeYear*20, //20y
+
+      moveAllThreads:true,
     }
   },
 
@@ -63,6 +65,7 @@ var certificates={
       disablePost:true,
       enablePost:true,
       moveThread:true,
+      moveOwnedThreads:true,
     }
   },
 
