@@ -43,8 +43,9 @@ if !post.disabled || (post.disabled && po.enablePost)
           - var cc = data.contentClasses
           - if(cc.classified)
             - var ipoc = post.ipoc||post.ip||post.ocip||null
-            - var queryforip = 'http://ip138.com/ips138.asp?ip='+ipoc.toString()+'&action=2'
+          
             if ipoc 
+              - var queryforip = 'http://ip138.com/ips138.asp?ip='+ipoc.toString()+'&action=2'
               a.lighttext(href='#{queryforip}') #{ipoc}
         
       div.ThreadPostBody!= experimental_render(post)
