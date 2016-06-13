@@ -143,7 +143,8 @@ settings.seo_rewrite_mapping = {
 
   '/electronic':{to:'/f/37',display_name:'EE'},
   '/hv':{to:'/f/139',display_name:'高压'},
-  '/accelerator':{to:'/f/54',display_name:'电磁加速'},
+  '/accelerator':{to:'/f/367',display_name:'电磁加速'},
+  '/edge':{to:'/f/54',display_name:'极客科技'},
 
   '/diy':{to:'/f/164',display_name:'DIY'},
   '/invention':{to:'/f/32',display_name:'创意发明'},
@@ -156,7 +157,7 @@ settings.seo_rewrite_mapping = {
 
   '/rocketry':  {to:'/f/89',display_name:'火箭技术'},
     '/fuel':  {to:'/f/368',display_name:'燃料'},
-    
+
   '/aviation':{to:'/f/165',display_name:'航空'},
   '/space':{to:'/f/366',display_name:'空间技术'},
 
