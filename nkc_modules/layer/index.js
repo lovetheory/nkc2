@@ -326,7 +326,7 @@ var layer = (function(){
       return u.load()
       .then(user=>{
         var p = Object.assign({},this.model)
-        p.username = user.username
+        p.username = user.model.username
         return p
       })
     }
