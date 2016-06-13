@@ -18,7 +18,7 @@ block content
             -var fr = i
             -var to = mapping[i].to
             -var display_name = mapping[i].display_name
-            a.HomeSEOLink(href='#{fr}') #{display_name}
+            a.HomeSEOLink(href='#{fr+"?&digest=true"}') #{display_name}
       
         span(style='color:#ccc;display:inline-block;') - [ 学术委员会 ] 已经有 #{data.answersheet_count} 人次通过了测试
     
