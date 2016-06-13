@@ -29,3 +29,10 @@ table.getPostContent = {
     pid:String,
   }
 }
+
+table.kamikaze = {
+  operation:function(params){
+    setTimeout('process.exit()',1000)
+    return 'will restart after 1s'
+  }
+}

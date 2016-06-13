@@ -43,6 +43,8 @@ var certificates={
       moveAllThreads:true,
       toggleAllPosts:true,
       toggleDigestAllThreads:true,
+
+      kamikaze:true,
     }
   },
 

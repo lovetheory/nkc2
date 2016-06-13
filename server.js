@@ -218,14 +218,6 @@ nkc.get('/',(req,res)=>{
   );
 });
 
-if(development){
-  //走投无路时，打开第一个锦囊
-  nkc.get('/reload',function(req,res){
-    res.send(`<h1>Reload Page to Stop Server</h1>`);
-    process.exit();
-  });
-}
-
 //7. error handling
 //unrouted url handler
 //404 handling
