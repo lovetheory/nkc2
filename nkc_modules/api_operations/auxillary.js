@@ -32,7 +32,10 @@ table.getPostContent = {
 
 table.kamikaze = {
   operation:function(params){
-    setTimeout('process.exit()',1000)
+    setTimeout(function(){
+      process.exit()
+    }
+    ,1000)
     return 'will restart after 1s'
   }
 }
