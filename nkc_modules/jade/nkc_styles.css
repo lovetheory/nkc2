@@ -27,6 +27,14 @@
   margin-bottom: 9px;
 }
 
+.HomeSEOLink{
+font-size: 10px;
+background-color: #FBFBFB;
+margin-right: 10px;
+padding: 3px;
+border-radius: 4px;
+color: #D1DDE4;
+}
 
 .HomeLatestThreadCont{
 
@@ -122,7 +130,7 @@
     /* vertical-align: middle; */
 }
 .HomeFriendlyLink{
-
+padding-left: 0;
 }
 .HomeFriendlyLink>li{
 display: inline-block;
@@ -179,6 +187,9 @@
 
 .HomeForumTitlePostCountToday{
   color: #E25252;
+  background-color: #FFF8F6;
+  padding: 2px;
+  border-radius: 5px;
 }
 .HomeForumTitlePostCount{
   color: #A2A2A2;

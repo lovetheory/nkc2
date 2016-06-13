@@ -276,6 +276,7 @@ table.viewHome = {
     .then(res=>{
       data.latestThreads = res
 
+      data.seo_arr = settings.seo_rewrite_mapping
       return data
     })
   }

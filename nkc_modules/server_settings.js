@@ -138,8 +138,32 @@ settings.urlrewrite = [ //happens before serve_static
 ];
 
 settings.seo_rewrite_mapping = {
-  '/rocketry':{to:'/f/89',display_name:'火箭技术'},
-  '/hv':{to:'/f/139',display_name:'特斯拉'},
+  '/natrual':{to:'/f/96',display_name:'自然'},
+  '/culture':{to:'/f/109',display_name:'人文'},
+
+  '/electronic':{to:'/f/37',display_name:'EE'},
+  '/hv':{to:'/f/139',display_name:'高压'},
+  '/accelerator':{to:'/f/54',display_name:'电磁加速'},
+
+  '/diy':{to:'/f/164',display_name:'DIY'},
+  '/invention':{to:'/f/32',display_name:'创意发明'},
+  '/instrument':{to:'/f/175',display_name:'仪器仪表'},
+
+  '/software':{to:'/f/134',display_name:'CS/SE'},
+
+  '/chemistry': {to:'/f/83',display_name:'化学化工'},
+  '/hedc':      {to:'/f/13',display_name:'HEDC'},
+
+  '/rocketry':  {to:'/f/89',display_name:'火箭技术'},
+    '/fuel':  {to:'/f/368',display_name:'燃料'},
+    
+  '/aviation':{to:'/f/165',display_name:'航空'},
+  '/space':{to:'/f/366',display_name:'空间技术'},
+
+  '/science':{to:'/f/106',display_name:'科学技术学'},
+  '/kcfund':{to:'/f/166',display_name:'科创基金'},
+
+  '/marketplace':{to:'/f/97',display_name:'自由市场'},
 }
 
 

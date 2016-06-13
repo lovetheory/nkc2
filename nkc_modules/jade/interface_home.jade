@@ -10,8 +10,17 @@ block content
     //include interface_home_newest.jade
     
     .row
-      .col-md-12
-        h5(style='color:#ccc;') [ 学术委员会 ] 已经有 #{data.answersheet_count} 人次通过了测试
+      .col-md-12(style='margin-bottom:10px;')
+      
+        -var mapping = data.seo_arr
+        if mapping
+          -for(i in mapping)
+            -var fr = i
+            -var to = mapping[i].to
+            -var display_name = mapping[i].display_name
+            a.HomeSEOLink(href='#{fr}') #{display_name}
+      
+        span(style='color:#ccc;display:inline-block;') - [ 学术委员会 ] 已经有 #{data.answersheet_count} 人次通过了测试
     
     .row
       - var cindex = 0
