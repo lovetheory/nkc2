@@ -28,4 +28,4 @@ if paging
           a(href='#{toQueryString({page:pagenum,digest})}') #{pagenum}
       if end<pagecount
         li()
-          a(href='#{toQueryString({page:pagecount,digest})}') 末
+          a(href='#{toQueryString({page:pagecount-1,digest})}') 末
