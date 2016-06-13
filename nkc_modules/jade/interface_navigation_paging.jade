@@ -26,3 +26,6 @@ if paging
         
         li(class='#{class_str}')
           a(href='#{toQueryString({page:pagenum,digest})}') #{pagenum}
+      if end<pagecount
+        li()
+          a(href='#{toQueryString({page:pagecount,digest})}') 末
