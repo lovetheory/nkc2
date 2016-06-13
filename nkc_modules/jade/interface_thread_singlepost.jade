@@ -17,10 +17,16 @@ if !post.disabled || (post.disabled && po.enablePost)
     .content-right
       if(post.t&&post.t!=''&&index!=0)
         span.dirt.ThreadPostTitle #{post.t}
+        
       .ThreadPostTitleMeta
         .ThreadPostTitleUsername #{user?user.username:''}
+        
         span.lighttext #{fromNow(post.toc)} - 
         a(href='/t/#{data.thread._key}?post=#{post._key}').lighttext #{dateTimeString(post.toc)} 
+        
+        if data.paging
+          -var floornumber = data.paging.start+index
+          span.lighttext /#{floornumber}
         
       .ThreadTitleAuxillaryLink
         - var po = data.permittedOperations
