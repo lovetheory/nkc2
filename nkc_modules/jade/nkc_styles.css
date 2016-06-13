@@ -331,17 +331,17 @@ blockquote {
   position: relative;
   display: table-row;
   border-bottom-style: dashed;
-  border-bottom-color: #E4E4E4;
+  border-bottom-color: #EAEAEA;
   border-width: 1px;
 }
 .ForumThreadTitle{
-  font-size: 18px;
+  font-size: 16px;
   display: inline-block;
   /* vertical-align: middle; */
 }
 .ForumThreadItem>div {
-  padding-top: 7px;
-  padding-bottom: 7px;
+  padding-top: 5px;
+  padding-bottom: 5px;
 }
 .ForumThreadAvatar {
   border-radius: 10%;
