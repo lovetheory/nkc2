@@ -60,6 +60,38 @@ block content
               div
                 h4#parsedtitle
               div#parsedcontent.ThreadPostBody
+          
+          .form-group
+            button#mathfresh.btn.btn-default(onclick='mathfresh()') 渲染公式
+          .form-group
+            .ThreadPostBody.lighttext
+              :markdown
+                Markdown语法小课堂：
+                  1. \*\***强调（加粗）**\*\*
+                  2. \**特别（斜体）*\*
+                  3. ### \#\#\# 标题(记得中间有空格)
+                  4. > \> 引用(接着下面要换两行)
+                  5. [\[科创论坛\]](//bbs.kechuang.org)(//bbs.kechuang.org)  （站外链接即便不加http://也要加双斜线哟！！！）
+                  
+                  ```c
+                    // 6. 
+                    
+                    `int i = 0; //用backtick包含一行代码`
+                  ```
+                  
+                  ```c
+                    // 7. 
+                    
+                    ```c
+                    int i = 0; //用三个backtick包含一段代码
+                    ```
+                  ```
+                  
+                如果想用bbcode：
+                  1. 选择语言为pwbb
+                  2. <font color=green>[color=green]这样指定颜色[/color]</font>
+                
+                TeX：在Markdown语法下，请用`\\(`和`\\)`包含inline公式，用`$$`和`$$`包含display公式。
       
   
   include debug_output.jade

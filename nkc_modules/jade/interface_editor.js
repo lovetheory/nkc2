@@ -79,6 +79,11 @@ var nkc_editor = function(){
   return editor;
 }
 
-var editor = nkc_editor();
+function mathfresh(){
+  if(MathJax){
+    MathJax.Hub.PreProcess(geid('parsedcontent'),function(){MathJax.Hub.Process(geid('parsedcontent'))})
+  }
+}
 
+var editor = nkc_editor();
 editor.update();
