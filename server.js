@@ -70,6 +70,22 @@ if(development){
   })
 }
 
+nkc.use((req,res,next)=>{
+  //custom rewrite: for SEO purposes
+  var origurl = req.url
+  var mapping = settings.seo_rewrite_mapping
+
+  for(i in mapping){
+    var fr = i
+    var to = mapping[i].to
+
+    origurl = origurl.replace(new RegExp('^'+fr+'(.*)'),to+'$1')
+  }
+
+  req.url = origurl
+  next()
+})
+
 //1. url rewrite
 for(i in settings.urlrewrite){
   nkc.use(rewrite(
@@ -121,7 +137,7 @@ nkc.use((req,res,next)=>{
 
   var d=new Date();
   dash();
-requestID++;
+  requestID++;
 
   //reformat ipaddr, kill portnames suffix
   req.iptrim = req.ip;

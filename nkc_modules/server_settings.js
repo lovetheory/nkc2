@@ -137,6 +137,12 @@ settings.urlrewrite = [ //happens before serve_static
   {map:'/avatar_small/:uid',to:'/api/avatar_small/:uid.jpg'},
 ];
 
+settings.seo_rewrite_mapping = {
+  '/rocketry':{to:'/f/89',display_name:'火箭技术'},
+  '/hv':{to:'/f/139',display_name:'特斯拉'},
+}
+
+
 //where to save avatars.
 settings.avatar_path = __projectroot+'resources/newavatar/';
 settings.avatar_path_small = __projectroot+'resources/newavatar_small/';
