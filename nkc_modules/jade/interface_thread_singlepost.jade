@@ -22,11 +22,11 @@ if !post.disabled || (post.disabled && po.enablePost)
         .ThreadPostTitleUsername #{user?user.username:''}
         
         span.lighttext #{fromNow(post.toc)} - 
-        a(href='/t/#{data.thread._key}?post=#{post._key}').lighttext #{dateTimeString(post.toc)} 
+        span.lighttext #{dateTimeString(post.toc)} 
         
         if data.paging
           -var floornumber = data.paging.start+index
-          span.lighttext /#{floornumber}
+          a(href='/t/#{data.thread._key}#{page?"?&page="+data.paging.page.toString():""}##{post._key}').lighttext /#{floornumber}
         
       .ThreadTitleAuxillaryLink
         - var po = data.permittedOperations
