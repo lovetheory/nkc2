@@ -357,16 +357,6 @@ table.viewForum = {
   }
 }
 
-function testForumClass(params,forum){
-  if(!forum)return;
-  if(!forum.class)return;
-  if(params.contentClasses[forum.class]){ // if user have enough class
-    return;
-  }else{
-    throw 'no enough permission. you need a content-class named ['+ forum.class +']'
-  }
-}
-
 table.viewThread = {
   init:function(){
     return layer.Thread.buildIndex()
@@ -434,8 +424,8 @@ table.viewUserThreads = {
 
     var uid = params.uid
 
-    var user = new layer.User(uid)
-    return user.load()
+    var userclass = new layer.User(uid)
+    return userclass.load()
     .then(u=>{
       var user = u.model
 
