@@ -187,9 +187,10 @@
 }
 
 .HomeForumTitlePostCountToday{
-  color: #E25252;
-  background-color: #FFF8F6;
+  color: #FFFFFF;
+  background-color: #FFC6C6;
   padding: 2px;
+  margin-right: 2px;
   border-radius: 5px;
 }
 .HomeForumTitlePostCount{
