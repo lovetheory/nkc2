@@ -115,6 +115,7 @@ settings.urlrewrite = [ //happens before serve_static
   urlrewriteGen('e','viewEditor'),
   urlrewriteGen('danger','viewDanger'),
   urlrewriteGen('pano','viewPanorama'),
+  urlrewriteGen('sms','viewSMS'),
 
   // {map:/^\/logout\?{0,1}(.*)/,to:'/api/operation?&operation=viewLogout&$1'},
   // {map:/^\/login\?{0,1}(.*)/,to:'/api/operation?&operation=viewLogin&$1'},

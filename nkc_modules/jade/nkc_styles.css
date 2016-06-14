@@ -660,4 +660,9 @@ blockquote {
     background-color: #E5F1FF;
 }.SMSSentByMe{color: #0D7107;}.SMSSentByOthers{
     color: #3088D6;
+}.NavBarLinkArea{
+    margin-top: 10px;
+}.NavBarLinkArea a{
+    margin-left: 5px;
+    margin-right: 5px;
 }
