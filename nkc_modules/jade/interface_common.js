@@ -221,7 +221,7 @@ var NavBarSearch = {
 
 NavBarSearch.init()
 
-function ReHighlightEverything(){
+window.ReHighlightEverything = function(){
   //hljs.configure({useBR:true})
   $('span.xbbcode-code').each(function(i, block) {
     hljs.highlightBlock(block);

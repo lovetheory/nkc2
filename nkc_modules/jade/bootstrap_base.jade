@@ -53,10 +53,10 @@ block body
   block scripts 
   
   :thru
-    <link rel="stylesheet" href="//cdn.jsdelivr.net/highlight.js/9.4.0/styles/tomorrow.min.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/highlight.js/9.4.0/styles/github.min.css">
     <script src="//cdn.jsdelivr.net/highlight.js/9.4.0/highlight.min.js"></script>
   script.
-    ReHighlightEverything()
+    if(window.ReHighlightEverything){window.ReHighlightEverything()}
   
   script.
     console.log('(c)2016 成都科创科学文化研究院/广东爱理论科技有限公司')
