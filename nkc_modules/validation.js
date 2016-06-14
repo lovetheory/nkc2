@@ -21,3 +21,16 @@ exports.validatePost = function(p){
 
   return true;
 };
+
+exports.validateSMS = function(p){
+  if(!p.c)throw 'content not exist';
+
+  p.c = p.c.trim().replace(/\n|\r/g,'  ')
+
+  if((typeof p.c)!== 'string') throw 'wrong content type, accept string'
+  if(p.c.length<1)throw 'content too short, 1 char min';
+
+  if(p.c.length>2000)throw 'content too long.'
+
+  return true
+}

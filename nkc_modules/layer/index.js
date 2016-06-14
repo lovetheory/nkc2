@@ -21,6 +21,25 @@ var layer = (function(){
 
   var BaseDao = require('./BaseDao')
 
+  class ShortMessage extends BaseDao{
+    constructor(key){
+      super('sms',key)
+    }
+
+    send(msgbody){
+      var msg = {
+        s:msgbody.sender,
+        r:msgbody.receiver,
+        c:msgbody.content,
+        ip:msgbody.ip,
+
+        toc:Date.now(),
+      }
+
+      return this.save(msg)
+    }
+  }
+
   class User extends BaseDao{
     constructor(key){
       super('users',key)
@@ -354,6 +373,7 @@ var layer = (function(){
   layer.Forum=Forum
   layer.Thread = Thread
   layer.BaseDao = BaseDao
+  layer.ShortMessage = ShortMessage
 
   return layer
 })()

@@ -1,0 +1,58 @@
+extends bootstrap_base.jade
+
+block title
+  title 短消息
+  meta#replytarget(value='#{data.replytarget}')
+
+block content
+  .container
+    .row
+      .col-md-12
+        
+        .row
+          .form-group.col-sm-3
+            input#username.form-control(type='text' placeholder='收信人用户名')
+        
+          .form-group.col-sm-7
+            input#content.form-control(type='text' placeholder='消息内容')
+            
+          .form-group.col-sm-2
+            button#send.btn.btn-default() 发送
+            
+
+        -var smslist = data.smslist
+        table.SMSTable
+          tr(style='font-size: 18px;')
+            td 时间
+            td 发送
+            td 接收
+            td 内容
+            td 邮戳
+            
+          each s,index in smslist
+            -var sender = s.us
+            -var receiver = s.ur
+            -var senderid = s.s
+            -var receiverid = s.r
+            -var content = s.c
+            tr
+              td #{fromNow(s.toc)}
+              if sender.username == data.user.username
+                td.SMSBGSelf #{sender.username}
+              else
+                td.SMSBGOther(onclick="setReceiver('#{sender.username}')") #{sender.username}
+                
+              if receiver.username == data.user.username
+                td.SMSBGSelf #{receiver.username} 
+              else
+                td.SMSBGOther(onclick="setReceiver('#{receiver.username}')") #{receiver.username} 
+                
+              td!=plain(content)
+              
+              td #{dateTimeString(s.toc)}
+        
+  include debug_output.jade
+
+block scripts
+  script(src='/interface_common.js')
+  script(src='/interface_messages.js')

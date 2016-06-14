@@ -32,6 +32,7 @@ queryfunc.db_init = function(){
   'questions',
   'answersheets',
   'histories',
+  'sms',
 ].map(function(collection_name){db.collection(collection_name).create()});
 //create every collection, if not existent
 }

@@ -216,7 +216,8 @@ table.viewPanorama = {
         limit 10
         return merge(t,{oc:oc,lm:lm})
 
-        `,{contentClasses:params.contentClasses})
+        `,{contentClasses:params.contentClasses}
+      )
     })
     .then(res=>{
       data.newestThreads = res
@@ -656,3 +657,56 @@ table.viewQuestions = {
     })
   }
 }
+
+table.viewSMS = {
+  init:function(){
+    queryfunc.createIndex('sms',{
+      fields:['uid','disabled','tlm'],
+      type:'skiplist',
+      unique:'false',
+      sparse:'false',
+    })
+  },
+  operation:params=>{
+    var data = defaultData(params)
+    data.template = jadeDir + 'interface_messages.jade'
+
+    var uid = params.user._key
+
+    return AQL(`
+      let s1=(
+        for s in sms
+        filter s.s == @uid
+        sort s.s desc, s.toc desc
+        limit 100
+        return s
+      )
+
+      let s2=(
+        for s in sms
+        filter s.r == @uid
+        sort s.r desc, s.toc desc
+        limit 100
+        return s
+      )
+
+      let s3 = union(s1,s2)
+
+      for s in s3
+      sort s.toc desc
+
+      limit 100
+
+      let us = document(users,s.s)
+      let ur = document(users,s.r)
+
+      return merge(s,{us,ur})
+
+      `,{uid})
+      .then(sarr=>{
+        data.smslist = sarr
+        return data
+      })
+
+    }
+  }
