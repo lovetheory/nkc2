@@ -426,7 +426,7 @@ function updatePost(pid){
   .then(post=>{
     var content = post.c
     var resources_declared = content.match(/\{r=[0-9]{1,20}}/g) //extract resource identifier(s) from content
-    if(!resources_declared)return
+    if(!resources_declared)resources_declared=[]
 
     for(i in resources_declared){ //extract resource key
       resources_declared[i] = resources_declared[i].replace(/\{r=([0-9]{1,20})}/,'$1')
