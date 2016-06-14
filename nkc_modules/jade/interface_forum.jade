@@ -36,7 +36,7 @@ block content
               span 今 #{data.forum.count_posts_today} | 著 #{data.forum.count_threads} | 復 #{data.forum.count_posts}
   
             if data.forum.moderators
-              span 督：
+              span 版主：
                 - var moderators = data.forum.moderators
                 each k in moderators
                   a.d-inline.margin-right(href='/user/byname/#{k}') #{k}
