@@ -661,7 +661,13 @@ table.viewQuestions = {
 table.viewSMS = {
   init:function(){
     queryfunc.createIndex('sms',{
-      fields:['uid','disabled','tlm'],
+      fields:['s','toc'],
+      type:'skiplist',
+      unique:'false',
+      sparse:'false',
+    })
+    queryfunc.createIndex('sms',{
+      fields:['r','toc'],
       type:'skiplist',
       unique:'false',
       sparse:'false',
