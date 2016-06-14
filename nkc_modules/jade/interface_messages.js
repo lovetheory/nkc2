@@ -12,11 +12,15 @@ var shortMessage = (function(){
     var content = me.boxcontent.value.trim()
     if(content=='')return screenTopWarning('请输入消息内容')
 
+    me.btnsend.disabled = true;
     return nkcAPI('sendShortMessageByUsername',{username:username,c:content})
     .then(function(res){
       location.reload()
     })
-    .catch(jwarning)
+    .catch(function(err){
+      jwarning(err);
+      me.btnsend.disabled = false;
+    })
   }
 
   me.init = function(){
