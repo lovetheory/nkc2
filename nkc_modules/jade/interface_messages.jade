@@ -24,8 +24,8 @@ block content
         table.SMSTable
           tr(style='font-size: 18px;')
             td 时间
-            td 发送
-            td 接收
+            td 自
+            td 至
             td 内容
             td 邮戳
             
@@ -47,7 +47,12 @@ block content
               else
                 td.SMSBGOther(onclick="setReceiver('#{receiver.username}')") #{receiver.username} 
                 
-              td!=plain(content)
+              if sender.username == data.user.username
+                td.SMSSentByMe
+                  div!=plain(content)
+              else
+                td.SMSSentByOthers
+                  div!=plain(content)
               
               td #{dateTimeString(s.toc)}
         
