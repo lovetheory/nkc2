@@ -120,6 +120,12 @@ table.viewPanorama = {
       unique:'false',
       sparse:'true',
     })
+    queryfunc.createIndex('threads',{
+      fields:['disabled','toc'],
+      type:'skiplist',
+      unique:'false',
+      sparse:'false',
+    })
   },
   operation:params=>{
     var data= defaultData(params)
@@ -170,6 +176,50 @@ table.viewPanorama = {
     })
     .then(res=>{
       data.digestThreads = res
+
+      //latestThreads
+      return AQL(`
+        for t in threads
+        sort t.disabled desc, t.tlm desc
+        filter t.disabled==null
+        limit 60
+
+        let parentforum = document(forums,t.fid)
+        let class = parentforum.class
+
+        filter has(@contentClasses,TO_STRING(class)) /*content ctrl*/
+
+        let oc = document(posts,t.oc)
+        let lm = document(posts,t.lm)
+
+        limit 10
+        return merge(t,{oc:oc,lm:lm})
+        `,{contentClasses:params.contentClasses}
+      )
+    })
+    .then(res=>{
+      data.latestThreads = res
+      return AQL(`
+        for t in threads
+        sort t.disabled desc, t.toc desc
+        filter t.disabled==null
+        limit 60
+
+        let parentforum = document(forums,t.fid)
+        let class = parentforum.class
+
+        filter has(@contentClasses,TO_STRING(class)) /*content ctrl*/
+
+        let oc = document(posts,t.oc)
+        let lm = document(posts,t.lm)
+
+        limit 10
+        return merge(t,{oc:oc,lm:lm})
+
+        `,{contentClasses:params.contentClasses})
+    })
+    .then(res=>{
+      data.newestThreads = res
       return data
     })
   }
@@ -253,25 +303,6 @@ table.viewHome = {
       //data.forums = forums;
 
       return {} //ignore following
-
-      return AQL(`
-        for t in threads
-        sort t.disabled desc, t.tlm desc
-        filter t.disabled==null
-        limit 60
-
-        let parentforum = document(forums,t.fid)
-        let class = parentforum.class
-
-        filter has(@contentClasses,TO_STRING(class)) /*content ctrl*/
-
-        let oc = document(posts,t.oc)
-        let lm = document(posts,t.lm)
-
-        limit 12
-        return merge(t,{oc:oc,lm:lm})
-        `,{contentClasses:params.contentClasses}
-      )
     })
     .then(res=>{
       data.latestThreads = res

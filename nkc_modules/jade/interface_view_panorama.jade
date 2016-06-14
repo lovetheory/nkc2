@@ -6,6 +6,19 @@ block title
 block content
   .container
     .row
+      -var threadlist = data.latestThreads
+      -var listtitle = '最新回复'
+      include interface_home_newest.jade
+      
+      -var threadlist = data.newestThreads
+      -var listtitle = '全站新帖'
+      include interface_home_newest.jade
+  
+    br
+    
+    H4 全站精华
+    hr.hrNarrowSpace
+    .row
       .col-lg-12
         //digest part
         - var digestThreads = data.digestThreads
@@ -24,7 +37,7 @@ block content
                   //.clearfix.visible-xs-block
               .col-lg-4.col-md-6.col-sm-6
                 - var url = '/t/' + t._key
-                - var avatar = '/avatar/' + t.oc.uid
+                - var avatar = '/avatar_small/' + t.oc.uid
                 - var oc = t.oc
                 - var user = t.ocuser
                 

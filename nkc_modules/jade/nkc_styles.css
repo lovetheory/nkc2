@@ -40,7 +40,7 @@
 .HomeLatestThreadCont{
 
 }
-.HomeLatestThreadItem{margin-bottom: 18px;/* padding-bottom: 10px; *//* border-bottom-style: solid; *//* border-bottom-color: #DEDEDE; *//* border-width: 1px; */}
+.HomeLatestThreadItem{/* margin-bottom: 18px; *//* padding-bottom: 10px; *//* border-bottom-style: solid; *//* border-bottom-color: #DEDEDE; *//* border-width: 1px; */}
 .HLToc{
 margin-bottom: 3px;
 position: relative;
@@ -68,7 +68,7 @@
 /* white-space: pre-wrap; */
 /* height: 23px; */
 display: inline;
-color: #2563A2;
+/* color: #1259A2; */
 }
 .HLM{
 position: relative;
@@ -89,13 +89,13 @@
 vertical-align: middle;
 /* white-space: pre; */
 height: 23px;
-width: calc(100% - 30px);
-float: right;
+width: 100%;
+/* float: right; */
 overflow: hidden;
 color: #969696;
 }
 .HLMtext a{
-white-space: pre;
+/* white-space: pre; */
 /* color: aliceblue; */
 }
 .HLMlink{
@@ -105,30 +105,17 @@
 .HLMstat{
     position: relative;
     display: inline;
-    margin-right: 6px;
-    /* width: 25px; */
+    margin: 0;
+    margin-right: 2px;
+    width: 30px;
     top: 1px;
-    background-color: #EFA6A6;
-    color: white;
+    background-color: #F7EAEB;
+    color: #D67272;
     padding: 3px;
     border-radius: 3px;
 }
 .HLTstat{
-    /* position: relative; */
-    /* display: inline; */
-    /* font-size: 14px; */
-    /* text-align: center; */
-    /* width: 28px; */
-    /* right: 0; */
-    /* top: 2px; */
     background: #7EB4DC;
-    /* height: 25px; */
-    /* overflow: hidden; */
-    /* border-radius: 4px; */
-    /* padding: 1px; */
-    /* color: #FFFFFF; */
-    margin-right: 4px;
-    /* vertical-align: middle; */
 }
 .HomeFriendlyLink{
 padding-left: 0;
@@ -630,30 +617,30 @@ blockquote {
 }
 .DigestThreadTitle{
   font-size: 18px;
-  color: #6F6F6F;
-  font-family: initial;
+  color: #E69F19;
+  /* font-family: initial; */
 }
 .DigestThreadAvatar{
-  width: 52px;
-  height: 52px;
-  border-radius: 5px;
+  width: 32px;
+  height: 32px;
+  border-radius: 15%;
 }
 .DigestThreadAvatarPlace{
   display: inline-block;
   vertical-align: top;
-  width: 52px;
-  height: 52px;
+  width: 32px;
+  height: 32px;
 }
 .DigestThreadBody{
   display: inline-block;
   position: relative;
-  width: calc(100% - 72px);
-  margin-left: 12px;
+  width: calc(100% - 42px);
+  padding-left: 6px;
 }
 .DigestThreadContent{
   /* margin-left: 10px; */
-  font-size: 11pt;
-  color: #708CCE;
+  font-size: 13px;
+  color: #696969;
   overflow: hidden;
 }
 .DigestThreadMeta{

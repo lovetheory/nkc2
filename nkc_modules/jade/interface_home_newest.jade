@@ -1,33 +1,16 @@
-- var lts = data.latestThreads
-.row
-  each thread,index in lts
-    .col-lg-3.col-md-4.col-sm-6.col-xs-12
+- var threadlist = threadlist
+  .col-lg-3.col-md-4.col-sm-6.col-xs-12
+    H4 #{listtitle}
+    hr.hrNarrowSpace
+    each thread,index in threadlist
+      
       .HomeLatestThreadItem
-        .HLToc  
-          .HLMavatar
-            - var uid = thread.oc.uid
-            - var avatar = '/avatar_small/' + uid
-            img(src='#{avatar}')
-        
-          
+        .HLToc            
           .HLMtext
-            .HLMstat.HLTstat #{thread.count}
+            .HLMstat #{fromNowAbbr(thread.lm.toc)}
+            
+            //.HLMstat.HLTstat #{thread.count}
+            
             - var titletext = thread.oc.t
             a.HLTtitletext(href='/t/#{thread._key}') #{titletext}
             
-          
-            
-        .HLM
-          .HLMavatar
-            - var uid = thread.lm.uid
-            - var tlm = thread.lm.tlm
-            - var avatar = '/avatar_small/' + uid
-            img(src='#{avatar}')
-          
-          
-          .HLMtext
-            .HLMstat #{fromNowAbbr(thread.lm.toc)}
-            - var response = thread.lm.c.slice(0,80).replace(/\[.*?]/g,'').replace(/ /g,'').replace(/#{r=.*?}/g,'').trim()
-              a.HLMlink(href='/t/#{thread._key}') #{response}
-
-          
