@@ -9,7 +9,7 @@
       - var parent = group.parentforum
       .ForumsListBody.ForumsListGroupItem
         
-        span #{parent?parent.display_name:''}
+        a.lighttext(href='/f/#{parent._key}') #{parent?parent.display_name:''}
       
       each f,findex in group.forumgroup 
         - var index = cindex + findex
