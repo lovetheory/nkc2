@@ -126,6 +126,13 @@ table.viewPanorama = {
       unique:'false',
       sparse:'false',
     })
+
+    queryfunc.createIndex('threads',{
+      fields:['digest','toc'],
+      type:'skiplist',
+      unique:'false',
+      sparse:'false',
+    })
   },
   operation:params=>{
     var data= defaultData(params)
@@ -210,10 +217,10 @@ table.viewPanorama = {
 
         filter has(@contentClasses,TO_STRING(class)) /*content ctrl*/
 
+        limit 10
         let oc = document(posts,t.oc)
         let lm = document(posts,t.lm)
 
-        limit 10
         return merge(t,{oc:oc,lm:lm})
 
         `,{contentClasses:params.contentClasses}
@@ -221,6 +228,23 @@ table.viewPanorama = {
     })
     .then(res=>{
       data.newestThreads = res
+
+      return AQL(`
+        for t in threads
+        filter t.digest == true
+        sort t.digest desc, t.toc desc
+
+        limit 10
+        let oc = document(posts,t.oc)
+        let lm = document(posts,t.lm)
+
+        return merge(t,{oc:oc,lm:lm})
+        `
+      )
+    })
+    .then(res=>{
+      data.newestDigestThreads = res
+
       return data
     })
   }

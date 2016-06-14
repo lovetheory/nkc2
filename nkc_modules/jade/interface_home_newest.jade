@@ -7,9 +7,19 @@
       .HomeLatestThreadItem
         .HLToc            
           .HLMtext
-            .HLMstat #{fromNowAbbr(thread.lm.toc)}
             
-            //.HLMstat.HLTstat #{thread.count}
+            if threadlist == data.latestThreads
+              .HLMstat #{fromNowAbbr(thread.tlm)}
+              
+              
+            if threadlist == data.newestDigestThreads
+              .HLMstat #{fromNowAbbr(thread.toc)}
+              .HLMstat.HLTstat #{thread.count}
+              
+            if threadlist == data.newestThreads
+              .HLMstat #{fromNowAbbr(thread.toc)}
+              
+            
             
             - var titletext = thread.oc.t
             a.HLTtitletext(href='/t/#{thread._key}') #{titletext}
