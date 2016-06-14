@@ -124,6 +124,9 @@ var certificates={
     },
     permittedOperations:{
 
+      viewSMS:true,
+      sendShortMessageByUsername:true,
+
       listCart:true,
       clearCart:true,
 
