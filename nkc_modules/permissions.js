@@ -24,7 +24,7 @@ var certificates={
 
   editor:{
     display_name:'编辑',
-    inheritFrom:['moderator'],
+    inheritFrom:['senior_moderator'],
 
     contentClasses:{
       administrative:true,
@@ -40,11 +40,20 @@ var certificates={
       elseModifyTimeLimit:timeYear*20, //20y
       selfModifyTimeLimit:timeYear*20, //20y
 
-      moveAllThreads:true,
-      toggleAllPosts:true,
+
       toggleDigestAllThreads:true,
 
       kamikaze:true,
+    }
+  },
+
+  senior_moderator:{
+    display_name:'责任版主',
+    inheritFrom:['moderator'],
+
+    permittedOperations:{
+      moveAllThreads:true,
+      toggleAllPosts:true,
     }
   },
 
