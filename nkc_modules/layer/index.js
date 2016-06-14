@@ -9,11 +9,13 @@ var apifunc = require('api_functions')
 var validation = require('validation')
 var AQL = queryfunc.AQL
 
+var db = require('arangojs')(settings.arango.address);
+db.useDatabase(settings.server.database_name);
+
+var permission = require('permissions')
+
 var layer = (function(){
   'use strict';
-
-  var db = require('arangojs')(settings.arango.address);
-  db.useDatabase(settings.server.database_name);
 
   var layer = {}
 
@@ -35,7 +37,7 @@ var layer = (function(){
 
     getPermissions(){
       if(!this.permissions){
-        var permission = require('permissions')
+
         this.permissions = permission.getPermissionsFromUser(this.model)
       }
       return this.permissions

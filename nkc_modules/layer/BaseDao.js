@@ -5,14 +5,12 @@ module.paths.push('./nkc_modules'); //enable require-ment for this path
 var settings = require('server_settings.js');
 var helper_mod = require('helper.js')();
 var queryfunc = require('query_functions')
-
+var db = require('arangojs')(settings.arango.address);
+db.useDatabase(settings.server.database_name);
 var AQL = queryfunc.AQL
 
 module.exports = (function(){
   'use strict';
-
-  var db = require('arangojs')(settings.arango.address);
-  db.useDatabase(settings.server.database_name);
 
   class BaseDao{
     constructor(collection,key){
