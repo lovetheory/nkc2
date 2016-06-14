@@ -23,11 +23,11 @@ block content
         -var smslist = data.smslist
         table.SMSTable
           tr(style='font-size: 18px;')
-            td 时间
+            td 于
             td 自
             td 至
-            td 内容
-            td 邮戳
+            td 正文
+            td 时间
             
           each s,index in smslist
             -var sender = s.us
@@ -54,7 +54,7 @@ block content
                 td.SMSSentByOthers
                   div!=plain(content)
               
-              td #{dateTimeString(s.toc)}
+              td.lighttext #{dateTimeString(s.toc)}
         
   include debug_output.jade
 
