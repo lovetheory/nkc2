@@ -1,8 +1,3 @@
-style.
-  .navbar {
-    margin-bottom:15px;
-  }
-
 //nav.navbar.navbar-default
 div
   - var navbar = data.navbar || {}
@@ -39,7 +34,7 @@ div
             
             if data.permittedOperations.viewSMS
               a(href='/sms')
-                |信
+                span 信
               
                 if data.user.new_message
                   -var new_message = data.user.new_message||0
