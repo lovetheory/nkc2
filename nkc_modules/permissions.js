@@ -179,6 +179,8 @@ var certificates={
 
       getResourceThumbnail:true,
       getResource:true,
+
+      exampleOperation:true,
     }
   },
 
