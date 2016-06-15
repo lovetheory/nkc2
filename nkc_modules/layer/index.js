@@ -40,6 +40,13 @@ var layer = (function(){
     }
   }
 
+
+  class Personal extends BaseDao{
+    constructor(key){
+      super('users_personal',key)
+    }
+  }
+
   class User extends BaseDao{
     constructor(key){
       super('users',key)
@@ -370,6 +377,7 @@ var layer = (function(){
 
   layer.Post = Post
   layer.User = User
+  layer.Personal = Personal
   layer.Forum=Forum
   layer.Thread = Thread
   layer.BaseDao = BaseDao

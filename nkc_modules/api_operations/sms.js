@@ -35,7 +35,15 @@ table.sendShortMessageByUsername = {
       })
     })
     .then(s=>{
-      return s.model
+
+      var psnl = new layer.Personal(u.model._key)
+      return psnl.load()
+      .then(psnl=>{
+        return psnl.update({new_message:(psnl.model.new_message||0)+1})
+        .then(psnl=>{
+          return s.model
+        })
+      })
     })
   },
   requiredParams:{

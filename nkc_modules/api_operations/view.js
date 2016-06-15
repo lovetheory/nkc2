@@ -735,8 +735,12 @@ table.viewSMS = {
       `,{uid})
       .then(sarr=>{
         data.smslist = sarr
-        return data
-      })
 
+        var psnl = new layer.Personal(uid)
+        return psnl.update({new_message:0})
+        .then(psnl=>{
+          return data
+        })
+      })
     }
   }

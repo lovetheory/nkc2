@@ -178,6 +178,15 @@ nkc.use((req,res,next)=>{
       req.user = back;
     }
   })
+  .then(()=>{
+    var layer = require('layer')
+    var psnl = new layer.Personal(req.user._key)
+    return psnl.load()
+    .then(psnl=>{
+      var p = psnl.model
+      req.user.new_message = p.new_message
+    })
+  })
   .then(next)
   .catch((err)=>{
     report('error requesting for user',err)
