@@ -58,7 +58,7 @@ if(use_https){
 }
 //-------------------------------
 //3. gzip
-nkc.use(compression());//enable compression
+nkc.use(compression({level:9}));//enable compression
 
 nkc.use(require('serve-favicon')(__dirname+'/resources/site_specific/favicon.ico'));
 
