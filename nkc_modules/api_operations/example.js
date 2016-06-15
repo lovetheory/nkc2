@@ -22,7 +22,7 @@ table.exampleOperation={
   testPermission:function(params){ //optional method for extra permission tests. executed before operation
     var user = params.user //might be undefined, if accessible by visitors
     var someParameter = params.someParameter
-    if(user._key.length>3)throw 'user id too long' //rejection
+    if(user._key.length>7)throw 'user id too long' //rejection
     return //return anything = acceptance
     //you may return immediate value or Promise here.
   }
