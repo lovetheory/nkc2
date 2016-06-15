@@ -179,6 +179,7 @@ settings.root_serve_static =
   {map:'/attachment',to:'resources/upload'},
   {map:'/static',to:'static/'},
   {map:'/resources/default_things',to:'resources/default_things/'},
+  {map:'/resources/site_specific',to:'resources/site_specific/'},
   {map:'/MathJax-2.6-latest',to:'external_pkgs/MathJax-2.6-latest'},
   {map:'/jquery',to:'external_pkgs/jquery'},
   {map:'/xbbcode',to:'external_pkgs/xbbcode'},
