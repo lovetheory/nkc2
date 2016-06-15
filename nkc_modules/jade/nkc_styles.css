@@ -28,13 +28,20 @@
 }
 
 .HomeSEOLink{
-font-size: 10px;
-background-color: #FBFBFB;
-margin-right: 10px;
-padding: 3px;
-border-radius: 4px;
-display: inline-block;
-color: #D1DDE4;
+
+font-size: 10px;
+
+background-color: #FBFBFB;
+
+margin-right: 10px;
+
+padding: 3px;
+
+border-radius: 4px;
+
+display: inline-block;
+
+color: #D1DDE4;
 }
 
 .HomeLatestThreadCont{
@@ -42,64 +49,101 @@
 }
 .HomeLatestThreadItem{/* margin-bottom: 18px; *//* padding-bottom: 10px; *//* border-bottom-style: solid; *//* border-bottom-color: #DEDEDE; *//* border-width: 1px; */}
 .HLToc{
-margin-bottom: 3px;
-position: relative;
+
+margin-bottom: 3px;
+
+position: relative;
 }
 .HLTavatar{
-display: none;
-vertical-align: middle;
+
+display: none;
+
+vertical-align: middle;
 }
 .HLTavatar img{
-width: 24px;
-height: 24px;
-border-radius: 15%;
+
+width: 24px;
+
+height: 24px;
+
+border-radius: 15%;
 }
 .HLTtitle{
-display: inline-block;
-/* margin-left: 10px; */
-width: calc(100% - 36px);
-float: right;
-overflow: hidden;
-color: #2563A2;
-vertical-align: middle;
+
+display: inline-block;
+
+/* margin-left: 10px; */
+
+width: calc(100% - 36px);
+
+float: right;
+
+overflow: hidden;
+
+color: #2563A2;
+
+vertical-align: middle;
 }
 .HLTtitletext{
-overflow: hidden;
-/* white-space: pre-wrap; */
-/* height: 23px; */
-display: inline;
-/* color: #1259A2; */
+
+overflow: hidden;
+
+/* white-space: pre-wrap; */
+
+/* height: 23px; */
+
+display: inline;
+
+/* color: #1259A2; */
 }
 .HLM{
-position: relative;
+
+position: relative;
 }
 .HLMavatar{
-display: inline;
-vertical-align: middle;
+
+display: inline;
+
+vertical-align: middle;
 }
 .HLMavatar img{
-width: 24px;
-height: 24px;
-border-radius: 15%;
-/* opacity: 0.5; */
+
+width: 24px;
+
+height: 24px;
+
+border-radius: 15%;
+
+/* opacity: 0.5; */
 }
 
 .HLMtext{
-display: inline-block;
-vertical-align: middle;
-/* white-space: pre; */
-height: 23px;
-width: 100%;
-/* float: right; */
-overflow: hidden;
-color: #969696;
+
+display: inline-block;
+
+vertical-align: middle;
+
+/* white-space: pre; */
+
+height: 23px;
+
+width: 100%;
+
+/* float: right; */
+
+overflow: hidden;
+
+color: #969696;
 }
 .HLMtext a{
-/* white-space: pre; */
-/* color: aliceblue; */
+
+/* white-space: pre; */
+
+/* color: aliceblue; */
 }
 .HLMlink{
-color: #929292;
+
+color: #929292;
 }
 
 .HLMstat{
@@ -119,37 +163,56 @@
     color: #2F68BF;
 }
 .HomeFriendlyLink{
-padding-left: 0;
+
+padding-left: 0;
 }
 .HomeFriendlyLink>li{
-display: inline-block;
-margin-right: 20px;
+
+display: inline-block;
+
+margin-right: 20px;
 }
 
 
 
 .HomeForumContainer{
-  margin-bottom: 15px;
-  /* padding: 12px; */
-  height: 135px;
-  /* overflow-y: hidden; */
-  /* border: #E2E2E2; */
-  /* border-width: 1px; */
-  /* border-style: solid; */
-  /* border-radius: 10px; */
+
+  margin-bottom: 15px;
+
+  /* padding: 12px; */
+
+  height: 135px;
+
+  /* overflow-y: hidden; */
+
+  /* border: #E2E2E2; */
+
+  /* border-width: 1px; */
+
+  /* border-style: solid; */
+
+  /* border-radius: 10px; */
 }
 .HomeForumTitle{
-  height: 26px;
-  position: relative;
+
+  height: 26px;
+
+  position: relative;
 }
 
 .HomeForumTitleCircle{
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  display: inline-block;
-  vertical-align: middle;
-  margin-right: 7px;
+
+  width: 24px;
+
+  height: 24px;
+
+  border-radius: 50%;
+
+  display: inline-block;
+
+  vertical-align: middle;
+
+  margin-right: 7px;
 }
 
 .HomeForumTitlePrimary{
@@ -223,7 +286,8 @@
   overflow: hidden !important;
 }
 .HomeThreadText:visited{
-  color: #7A95B5;
+
+  color: #7A95B5;
 }
 
 .HomeThreadTextDigest{
@@ -244,12 +308,18 @@
 }
 
 .ForumTitleCircle{
-width: 32px;
-height: 32px;
-border-radius: 50%;
-display: inline-block;
-margin-right: 5px;
-vertical-align: middle;
+
+width: 32px;
+
+height: 32px;
+
+border-radius: 50%;
+
+display: inline-block;
+
+margin-right: 5px;
+
+vertical-align: middle;
 }
 .ForumName{
   margin-top: 10px;
@@ -265,21 +335,28 @@
   position: relative;
 }
 .ForumsListGroupItem{
-  color: #ccc;
+
+  color: #ccc;
 }
 .ForumsListForumItem{
-  padding-left: 10px;
+
+  padding-left: 10px;
 }
 
 .ForumsListCountNumber{
-  display: inline-block;
-  position: absolute;
-  right: 0;
+
+  display: inline-block;
+
+  position: absolute;
+
+  right: 0;
 }
 
 .NavigationPaging{
-  margin: 0;
-  margin-right: 7px;
+
+  margin: 0;
+
+  margin-right: 7px;
 }
 
 .reddish {
@@ -287,7 +364,8 @@
 }
 
 .blueish{
-  color: #7676D0;
+
+  color: #7676D0;
 }
 
 .avatar {
@@ -312,10 +390,14 @@ blockquote {
 
 
 .ForumThreadList{
-  border-collapse: collapse;
-  display: table;
-  margin-bottom: 10px;
-  width: 100%;
+
+  border-collapse: collapse;
+
+  display: table;
+
+  margin-bottom: 10px;
+
+  width: 100%;
 }
 .ForumThreadItem {
   position: relative;
@@ -325,17 +407,22 @@ blockquote {
   border-width: 1px;
 }
 .ForumThreadTitle{
-  font-size: 16px;
-  display: inline-block;
-  /* vertical-align: middle; */
+
+  font-size: 16px;
+
+  display: inline-block;
+
+  /* vertical-align: middle; */
 }
 .ForumThreadItem>div {
   padding-top: 5px;
   padding-bottom: 5px;
 }
 .ForumThreadAvatar {
-  border-radius: 10%;
-  width: 40px;
+
+  border-radius: 10%;
+
+  width: 40px;
 }
 .ForumThreadItemAvatar {
   vertical-align: middle;
@@ -344,8 +431,10 @@ blockquote {
 }
 
 .ForumThreadCreatorInfo{
-  display: block;
-  /* width: 50%; */
+
+  display: block;
+
+  /* width: 50%; */
 }
 
 .ForumThreadDigestText{
@@ -375,18 +464,25 @@ blockquote {
 }
 
 .ForumThreadItemReplyInfo{
-  display: inline-block;
-  font-size: 10px;
-  /* vertical-align: bottom; */
+
+  display: inline-block;
+
+  font-size: 10px;
+
+  /* vertical-align: bottom; */
 }
 
 .ForumThreadItemUsername{
-  display: inline-block;
-  color: #9E9E9E;
+
+  display: inline-block;
+
+  color: #9E9E9E;
 }
 .ForumThreadItemCreationTime{
-  display: inline-block;
-  margin-right: 10px;
+
+  display: inline-block;
+
+  margin-right: 10px;
 }
 
 .ThreadBox{
@@ -394,10 +490,14 @@ blockquote {
 }
 
 .ThreadTitleForumLink{
-  display: block;
-  margin-bottom: 0;
-  color: #bbb;
-  font-size: 14pt;
+
+  display: block;
+
+  margin-bottom: 0;
+
+  color: #bbb;
+
+  font-size: 14pt;
 }
 .ThreadTitle {
   display: block;
@@ -409,8 +509,10 @@ blockquote {
 }
 
 .ThreadTitleText:hover, .ThreadTitleText:focus{
-  color: #6B6B6B;
-  text-decoration: none;
+
+  color: #6B6B6B;
+
+  text-decoration: none;
 }
 .ThreadTitleAuxillary{
   display: inline-block;
@@ -458,9 +560,12 @@ blockquote {
 }
 
 .ThreadPostBody span.xbbcode-code, pre code{
-font-size: 12px;
-font-family: consolas,Monospace,monospace;
-line-height: 1.4;
+
+font-size: 12px;
+
+font-family: consolas,Monospace,monospace;
+
+line-height: 1.4;
 }
 
 .ThreadPostBody pre{
@@ -474,14 +579,19 @@ blockquote {
 }
 
 .ThreadPostBody span.xbbcode-code{
-margin-top: 5px;
-margin-bottom: 5px;
+
+margin-top: 5px;
+
+margin-bottom: 5px;
 }
 
 .ThreadPostAvatar{
-  border-radius: 10%;
-  width: 52px;
-  height: 52px;
+
+  border-radius: 10%;
+
+  width: 52px;
+
+  height: 52px;
 }
 
 .ThreadPostTitle{
@@ -495,35 +605,49 @@ blockquote {
 }
 
 .ThreadPostTitleUsername{
-  display: inline;
-  margin-right: 8px;
-  color: #8295A7;
+
+  display: inline;
+
+  margin-right: 8px;
+
+  color: #8295A7;
 }
 .PostContentImage{
   max-width: 100%;
 }
 .PostEmbedFlash{
-  width: 480px;
-  max-width: 100%;
-  height: 300px;
+
+  width: 480px;
+
+  max-width: 100%;
+
+  height: 300px;
 }
 
 .PostResourceDownload{
-  margin-right: 8px;
-  display: inline-block;
-  margin-bottom: 5px;
+
+  margin-right: 8px;
+
+  display: inline-block;
+
+  margin-bottom: 5px;
 }
 .PostResourceDownloadLink{
 
 }
 .PostResourceDownloadThumbnail{
-  display: inline;
+
+  display: inline;
 }
 .PostResourceFileSize{
-  font-size: 10pt;
-  display: inline;
-  margin-left: 3px;
-  color: #d66;
+
+  font-size: 10pt;
+
+  display: inline;
+
+  margin-left: 3px;
+
+  color: #d66;
 }
 .ResourceList{
 
@@ -552,24 +676,34 @@ blockquote {
   border-radius: 5px;
 }
 .ThreadPostCreditItem{
-  display: table-row;
-  font-size: 14px;
+
+  display: table-row;
+
+  font-size: 14px;
 }
 .ThreadPostCreditItem>div{
-  display: table-cell;
-  padding: 3px;
+
+  display: table-cell;
+
+  padding: 3px;
 }
 .TPCQ ,.TPCType{
-  font-size: 16px;
+
+  font-size: 16px;
 }
 .TPCQ{
-  color: #CC0000;
-  /* font-weight: bold; */
+
+  color: #CC0000;
+
+  /* font-weight: bold; */
 }
 .TPCIAI{
-  width: 24px;
-  height: 24px;
-  border-radius: 3px;
+
+  width: 24px;
+
+  height: 24px;
+
+  border-radius: 3px;
 }
 
 .padless{
@@ -603,67 +737,121 @@ blockquote {
 }
 
 .DigestThreadList{
-  position: relative;
+
+  position: relative;
 }
 .DigestThreadListItem{
-  position: relative;
-  /* border-style: solid; */
-  /* border-width: 1px; */
-  /* border-left-width: 5px; */
-  /* border-color: #E8E8E8; */
-  /* background: #FBFBFB; */
-  /* border-radius: 4px; */
-  /* padding: 10px; */
-  margin-bottom: 12px;
+
+  position: relative;
+
+  /* border-style: solid; */
+
+  /* border-width: 1px; */
+
+  /* border-left-width: 5px; */
+
+  /* border-color: #E8E8E8; */
+
+  /* background: #FBFBFB; */
+
+  /* border-radius: 4px; */
+
+  /* padding: 10px; */
+
+  margin-bottom: 12px;
 }
 .DigestThreadTitle{
-  font-size: 18px;
-  color: #E69F19;
-  /* font-family: initial; */
+
+  font-size: 18px;
+
+  color: #E69F19;
+
+  /* font-family: initial; */
 }
 .DigestThreadAvatar{
-  width: 32px;
-  height: 32px;
-  border-radius: 15%;
+
+  width: 32px;
+
+  height: 32px;
+
+  border-radius: 15%;
 }
 .DigestThreadAvatarPlace{
-  display: inline-block;
-  vertical-align: top;
-  width: 32px;
-  height: 32px;
+
+  display: inline-block;
+
+  vertical-align: top;
+
+  width: 32px;
+
+  height: 32px;
 }
 .DigestThreadBody{
-  display: inline-block;
-  position: relative;
-  width: calc(100% - 42px);
-  padding-left: 6px;
+
+  display: inline-block;
+
+  position: relative;
+
+  width: calc(100% - 42px);
+
+  padding-left: 6px;
 }
 .DigestThreadContent{
-  /* margin-left: 10px; */
-  font-size: 13px;
-  color: #696969;
-  overflow: hidden;
+
+  /* margin-left: 10px; */
+
+  font-size: 13px;
+
+  color: #696969;
+
+  overflow: hidden;
 }
 .DigestThreadMeta{
-  /* margin-left: 10px; */
-  color: #C5C5C5;
+
+  /* margin-left: 10px; */
+
+  color: #C5C5C5;
 }
 .DigestThreadMeta>span{
-  margin-right: 10px;
-} h1,h2,h3 {  font-family:Arial, "Helvetica Neue",Helvetica,"STXihei",SimHei,"Microsoft YaHei","微软雅黑",sans-serif;}h4,h5,h6 {  font-family:Arial, "Helvetica Neue",Helvetica,"Microsoft YaHei","微软雅黑",sans-serif;}.SMSTable{
+
+  margin-right: 10px;
+}
+
+
+h1,h2,h3 {
+  font-family:Arial, "Helvetica Neue",Helvetica,"STXihei",SimHei,"Microsoft YaHei","微软雅黑",sans-serif;
+}
+
+h4,h5,h6 {
+  font-family:Arial, "Helvetica Neue",Helvetica,"Microsoft YaHei","微软雅黑",sans-serif;
+}
+
+.SMSTable{
     border-collapse: separate;
     border-spacing: 5px;
     padding-left: 0;
     margin: 0;
-}.SMSTable td{padding: 3px;padding-left: 5px;padding-right: 5px;border-radius: 3px;/* background-color: #FFFFFF; */}.SMSTable tr{}.SMSBGSelf{
+}
+.SMSTable td{padding: 3px;padding-left: 5px;padding-right: 5px;border-radius: 3px;/* background-color: #FFFFFF; */}
+.SMSTable tr{
+
+}
+
+.SMSBGSelf{
     background-color: #D1F1D1;
-}.SMSBGOther{
+}
+.SMSBGOther{
     background-color: #E5F1FF;
-}.SMSSentByMe{color: #0D7107;}.SMSSentByOthers{
+}
+.SMSSentByMe{color: #0D7107;}
+.SMSSentByOthers{
     color: #3088D6;
-}.NavBarLinkArea{
+}
+
+.NavBarLinkArea{
     margin-top: 10px;
-}.NavBarLinkArea a{
+}
+.NavBarLinkArea a{
     margin-left: 5px;
     margin-right: 5px;
-}
+}
