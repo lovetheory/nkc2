@@ -442,6 +442,20 @@ function updatePost(pid){
         rd:resources_declared,
       }
     )
+    .then(()=>{
+      return AQL(`
+        let p = document(posts,@pid)
+        let sorted = (
+          for c in creditlogs
+          filter c.pid == @pid
+          sort c.toc asc
+          return c
+        )
+
+        update p with {credits:sorted} in posts
+        `,{pid}
+      )
+    })
   })
 }
 
