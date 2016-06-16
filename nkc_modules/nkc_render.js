@@ -24,6 +24,8 @@ function nkc_render(options){
     var xss = require('xss')
   }
 
+  //xss-----------------
+
   var default_whitelist = xss.whiteList
   //console.log(default_whitelist);
   default_whitelist.font = ['color']
@@ -38,19 +40,36 @@ function nkc_render(options){
     return custom_xss.process(str)
   }
 
+  //markdown--------------------
+
   var commonreader = new commonmark.Parser();
   var commonwriter = new commonmark.HtmlRenderer({
     sourcepos:true,
     //safe:true, //ignore <tags>
   });
 
-  render.plain_render = plain_escape;
   render.commonmark_render = function(md){
     var parsed = commonreader.parse(md)
     var rendered = commonwriter.render(parsed)
 
     return rendered;
   }
+
+  //xbbcode------------------------
+
+  XBBCODE.addTags({
+    align:{
+      openTag:function(params,content){
+        var alignment = params.slice(1)
+        return '<div style="display:block;text-align:'+alignment+';">'
+      },
+      closeTag:function(params,content){
+        return '</div>'
+      },
+    }
+  })
+
+  render.plain_render = plain_escape;
 
 
   var getHTMLForResource = function(r,allthumbnail){
