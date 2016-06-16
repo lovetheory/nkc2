@@ -28,6 +28,10 @@ function nkc_render(options){
   //console.log(default_whitelist);
   default_whitelist.font = ['color']
 
+  if(!in_browser){
+    default_whitelist.iframe = ['height','width','src','frameborder','allowfullscreen']
+  }
+
   var xssoptions = {whiteList:default_whitelist}
   var custom_xss = new xss.FilterXSS(xssoptions)
   var custom_xss_process = function(str){
