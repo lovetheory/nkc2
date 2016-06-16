@@ -666,7 +666,7 @@ margin-bottom: 5px;
 
 .ThreadPostCredits{
   display: table;
-  width: 100%;
+  /* width: 100%; */
   padding: 10px;
   margin-top: 15px;
   border-style: solid;
@@ -682,10 +682,9 @@ margin-bottom: 5px;
   font-size: 14px;
 }
 .ThreadPostCreditItem>div{
-
-  display: table-cell;
-
-  padding: 3px;
+display: table-cell;
+padding: 3px;
+padding-right: 6px;
 }
 .TPCQ ,.TPCType{
 
