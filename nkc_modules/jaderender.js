@@ -21,7 +21,7 @@ function fromNow(time){
 }
 
 function dateTimeString(t){
-  return moment(t).format('YYYY-MM-DD hh:mm')
+  return moment(t).format('YYYY-MM-DD HH:mm')
 }
 
 
