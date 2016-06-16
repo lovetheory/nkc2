@@ -182,7 +182,7 @@ settings.root_serve_static =
   {map:'/resources/site_specific',to:'resources/site_specific/'},
   {map:'/MathJax-2.6-latest',to:'external_pkgs/MathJax-2.6-latest'},
   {map:'/jquery',to:'external_pkgs/jquery'},
-  {map:'/xbbcode',to:'external_pkgs/xbbcode'},
+  {map:'/xbbcode',to:'node_modules/xbbcode-parser/'},
   {map:'/xss',to:'node_modules/xss/dist'},
 
   {to:'external_pkgs/react'},
