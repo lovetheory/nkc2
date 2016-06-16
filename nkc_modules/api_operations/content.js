@@ -452,7 +452,7 @@ function updatePost(pid){
           return c
         )
 
-        update p with {credits:sorted} in posts
+        update p with {credits:length(sorted)?sorted:null} in posts
         `,{pid}
       )
     })
