@@ -27,7 +27,8 @@ block content
             -var display_name = mapping[i].display_name
             a.HomeSEOLink(href='#{fr+"?&digest=true"}') #{display_name}
       
-        span(style='color:#ccc;display:inline-block;') - [ 学术委员会 ] 已经有 #{data.answersheet_count} 人次通过了测试
+        if data.answersheet_count
+          span(style='color:#ccc;display:inline-block;') - [ 学术委员会 ] 已经有 #{'0x'+data.answersheet_count.toString(16).toUpperCase()} 人次通过了测试
     
     .row
       - var cindex = 0
