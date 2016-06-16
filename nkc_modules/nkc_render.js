@@ -66,7 +66,17 @@ function nkc_render(options){
       closeTag:function(params,content){
         return '</div>'
       },
+    },
+
+    strike:{
+      openTag:function(params,content){
+        return '<s>'
+      },
+      closeTag:function(params,content){
+        return '</s>'
+      },
     }
+
   })
 
   render.plain_render = plain_escape;
@@ -170,7 +180,6 @@ function nkc_render(options){
 
       .replace(/\n/g,'<br>')
       .replace(/\[attachment=([0-9]{1,16})\]/g,'#{r=$1}')
-      .replace(/\[\/?align=.*?]/g,'')
       .replace(/\[flash=[0-9]{1,4},[0-9]{1,4}[0-9,]{0,3}](.+.*?)\[\/flash]/gi,
       '<embed class="PostEmbedFlash" src="$1" allowFullScreen="true" quality="high" allowScriptAccess="always" type="application/x-shockwave-flash"></embed>')
 
