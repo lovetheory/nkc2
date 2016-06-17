@@ -21,13 +21,7 @@ block content
             
 
         -var smslist = data.smslist
-        table.SMSTable
-          tr
-            td 于
-            td 自
-            td 至
-            td 正文
-            td 时间
+        .SMSTable
             
           each s,index in smslist
             -var sender = s.us
@@ -35,32 +29,34 @@ block content
             -var senderid = s.s
             -var receiverid = s.r
             -var content = s.c
-            tr
-              td #{fromNow(s.toc)}
-              
-              td
-                - var uid = sender._key
-                - var avatar = '/avatar_small/' + uid
-                  a(href='/user_profile/#{uid}')
-                    img.HomeThreadAvatar(src='#{avatar}')
-                    
-                if sender.username == data.user.username
-                  .SMSBGSelf #{sender.username}
-                else
-                  .SMSBGOther(onclick="setReceiver('#{sender.username}')") #{sender.username}
+            .SMSTableItem
+              .SMSFirstRow
+                span.reddish #{dateTimeString(s.toc)}
+                span 于
+                span #{fromNow(s.toc)}
+                span 自
                 
+                span
+                  - var uid = sender._key
+                  - var avatar = '/avatar_small/' + uid
+                    a(href='/user_profile/#{uid}')
+                      img.HomeThreadAvatar(src='#{avatar}')
 
-              td
-                - var uid = receiver._key
-                - var avatar = '/avatar_small/' + uid
-                  a(href='/user_profile/#{uid}')
-                    img.HomeThreadAvatar(src='#{avatar}')
-                if receiver.username == data.user.username
-                  .SMSBGSelf #{receiver.username} 
-                else
-                  .SMSBGOther(onclick="setReceiver('#{receiver.username}')") #{receiver.username} 
+                span(onclick="setReceiver('#{sender.username}')") #{sender.username}
+                  
+                span 至
+                span
+                  - var uid = receiver._key
+                  - var avatar = '/avatar_small/' + uid
+                    a(href='/user_profile/#{uid}')
+                      img.HomeThreadAvatar(src='#{avatar}')
+                    
+                span(onclick="setReceiver('#{receiver.username}')") #{receiver.username} 
                 
-              td
+                
+                
+                
+              .SMSSecondRow
                 if sender.username == data.user.username
                   .SMSSentByMe
                     div!=plain(content)
@@ -68,7 +64,7 @@ block content
                   .SMSSentByOthers
                     div!=plain(content)
               
-              td.lighttext #{dateTimeString(s.toc)}
+              
         
   include debug_output.jade
 

@@ -832,11 +832,34 @@ h4,h5,h6 {
     padding-left: 0;
     margin: 0;
 }
-.SMSTable td{padding: 3px;padding-left: 5px;padding-right: 5px;/* border-radius: 3px; */border-left-style: solid;border-width: 1px;/* background-color: #FFFFFF; */border-color: #ccc;}
-.SMSTable tr{
-
+.SMSTableItem{
+border-style: solid;
+border-width: 1px;
+border-radius: 6px;
+border-color: #dadada;
+/* background-color: #f9f9f9; */
+padding: 4px;
+margin: 4px;
 }
-
+.SMSFirstRow{
+    display: inline-block;
+    margin: inherit;
+    padding: inherit;
+}
+.SMSFirstRow span{
+    margin-right: 6px;
+}
+.SMSSecondRow{
+    display: inline-block;
+    font-size: 12pt;
+    /* border-style: inherit; */
+    /* border-width: inherit; */
+    /* border-radius: 4px; */
+    /* border-color: #ece8e8; */
+    /* background-color: white; */
+    padding: 6px;
+    margin: inherit;
+}
 .SMSBGSelf{
     display: inline-block;
     background-color: #D1F1D1;
