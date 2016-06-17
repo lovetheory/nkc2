@@ -860,3 +860,7 @@ h4,h5,h6 {
   width: 400px;
   height: 100px;
 }
+
+pre {
+  padding:0;
+}
