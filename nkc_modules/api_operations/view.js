@@ -724,6 +724,8 @@ table.viewSMS = {
 
     var uid = params.user._key
 
+    data.receiver = params.receiver //optional param
+
     return AQL(`
       let s1=(
         for s in sms

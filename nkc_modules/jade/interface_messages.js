@@ -38,3 +38,7 @@ function setReceiver(name){
   shortMessage.boxuser.value=name;
   shortMessage.boxcontent.focus();
 }
+
+if(shortMessage.boxuser.value!=''){
+  shortMessage.boxcontent.focus();
+}

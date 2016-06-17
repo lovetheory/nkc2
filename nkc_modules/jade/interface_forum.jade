@@ -40,7 +40,7 @@ block content
               span 版主：
                 - var moderators = data.forum.moderators
                 each k in moderators
-                  a.d-inline.margin-right(href='/user/byname/#{k}') #{k}
+                  a.d-inline.margin-right(href='/user_profile_byname/#{k}') #{k}
 
         .row
           .col-md-12

@@ -903,7 +903,7 @@ pre {
     border-style: solid;
     border-color: #8c8c8c;
     overflow: hidden;
-    border-width: 2px;
+    border-width: 1px;
     text-align: center;
     margin-bottom: 30px;
     height: 120px;
@@ -918,5 +918,5 @@ pre {
     color: white;
     display: block;
     font-size: 18px;
-    padding: 5px;
+    padding: 3px;
 }

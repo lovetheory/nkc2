@@ -128,6 +128,14 @@ settings.urlrewrite = [ //happens before serve_static
     to:'/api/operation?&operation=viewUserThreads&uid=$1&$2'
   },
 
+  {map:/^\/user_profile\/([^\?]*)\??(.*)/,
+    to:'/api/operation?&operation=viewUser&uid=$1&$2'
+  },
+
+  {map:/^\/user_profile_byname\/([^\?]*)\??(.*)/,
+    to:'/api/operation?&operation=viewUser&username=$1&$2'
+  },
+
   //{map:'/e*',to:'/interface/editor$1'},
 
   {map:'/r/:rid',to:'/api/operation?&operation=getResource&rid=:rid'},

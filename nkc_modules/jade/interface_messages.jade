@@ -11,7 +11,7 @@ block content
         
         .row
           .form-group.col-sm-3
-            input#username.form-control(type='text' placeholder='收信人用户名')
+            input#username.form-control(type='text' placeholder='收信人用户名' value="#{data.receiver||''}")
         
           .form-group.col-sm-7
             input#content.form-control(type='text' placeholder='消息内容')
