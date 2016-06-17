@@ -181,10 +181,13 @@ nkc.use((req,res,next)=>{
   .then(()=>{
     var layer = require('layer')
     var psnl = new layer.Personal(req.user._key)
+    var u = new layer.User(req.user._key)
     return psnl.load()
     .then(psnl=>{
       var p = psnl.model
       req.user.new_message = p.new_message
+
+      u.update({tlv:Date.now()});
     })
   })
   .then(next)
