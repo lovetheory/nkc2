@@ -228,7 +228,7 @@ function nkc_render(options){
 
       .replace(/\n/g,'<br>')
       .replace(/\[attachment=([0-9]{1,16})\]/g,'#{r=$1}')
-      .replace(/\[flash=[0-9]{1,4},[0-9]{1,4}[0-9,]{0,3}](.+.*?)\[\/flash]/gi,
+      .replace(/\[flash=.*?](.+.*?)\[\/flash]/gi,
       '<embed class="PostEmbedFlash" src="$1" allowFullScreen="true" quality="high" allowScriptAccess="always" type="application/x-shockwave-flash"></embed>')
 
       .replace(/\[(\/?)strike]/g,'<$1s>')
