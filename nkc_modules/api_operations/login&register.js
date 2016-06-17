@@ -297,3 +297,28 @@ table.changePassword = {
     newpassword2:String,
   }
 }
+
+table.submitPersonalSetting = {
+  operation:function(params){
+    var post_sign = params.post_sign.toString().trim()
+    var description = params.description.toString().trim()
+    var color = params.color.toString().trim()
+
+    if(post_sign.length>100||description.length>200||color.length>10) throw 'section too long.'
+
+    var user = new layer.User(params.user._key)
+    return user.update({
+      post_sign,
+      description,
+      color,
+    })
+    .then(u=>{
+      return 'successfully updated personal settings'
+    })
+  },
+  requiredParams:{
+    post_sign:String,
+    description:String,
+    color:String,
+  }
+}

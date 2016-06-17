@@ -148,6 +148,8 @@ var certificates={
 
       changePassword:true,
       viewPersonal:true,
+
+      submitPersonalSetting:true,
     },
   },
 
@@ -196,7 +198,7 @@ var certificates={
       non_images:false,
       non_public:false,
     },
-
+    submitPersonalSetting:false,
     permittedOperations:{
       postTo:false,
       viewExam:false,

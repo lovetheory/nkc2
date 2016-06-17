@@ -8,13 +8,37 @@ block content
   .container
     .row
       .col-xs-12
-        .PersonalSettingZone
+        .PasswordSettingZone
           h4 修改密码
           
           input#oldpassword(type='password' placeholder='旧密码')
           input#newpassword(type='password' placeholder='新密码，至少6位' )
           input#newpassword2(type='password' placeholder='重复一次')
-          button#submitnewpassword(onclick='submitnewpassword()') 修改密码
+          br
+          br
+          button.btn.btn-default#submitnewpassword(onclick='submitnewpassword()') 修改密码
+          hr
+    .row
+      .col-xs-12
+        .PersonalSettingZone
+          h4 修改个人资料
+          
+          :markdown
+            关于帖子签名：新KC取消了帖子签名在帖子中的显示，但保留了数据。
+            
+            个人简介显示于个人帖子列表处，支持markdown语法。
+            
+          -var user = data.user
+          textarea#post_sign(placeholder='帖子签名') #{user.post_sign}
+          br
+          
+          textarea#description(placeholder='个人简介') #{user.description}
+          br
+          
+          input#color(placeholder='colorcode' value='#{user.color}') 
+          br
+          br
+          button.btn.btn-default#submitpersonalsetting(onclick='submitpersonalsetting()') 提交个人设定
           
   include debug_output.jade
 block scripts
@@ -22,11 +46,31 @@ block scripts
   script(src='/interface_common.js')
   script.
     function submitnewpassword(){
+      geid('submitnewpassword').disabled = true
+      
       nkcAPI('changePassword',{
         oldpassword:geid('oldpassword').value,
         newpassword:geid('newpassword').value,
         newpassword2:geid('newpassword2').value,
       })
       .then(jalert)
-      .catch(jwarning)
+      .catch(err=>{
+        jwarning(err)
+        
+        geid('submitnewpassword').disabled = false
+      })
+    }
+    
+    function submitpersonalsetting(){
+      geid('submitpersonalsetting').disabled = true
+      nkcAPI('submitPersonalSetting',{
+        post_sign:geid('post_sign').value,
+        description:geid('description').value,
+        color:geid('color').value,
+      })
+      .then(jalert)
+      .catch(err=>{
+        jwarning(err)
+              geid('submitpersonalsetting').disabled = false
+      })
     }

@@ -53,6 +53,11 @@ function nkc_render(options){
     var rendered = commonwriter.render(parsed)
 
     return rendered;
+    //return custom_xss_process(rendered);
+  }
+
+  render.commonmark_safe = function(md){
+    return custom_xss_process(render.commonmark_render(md))
   }
 
   //xbbcode------------------------
