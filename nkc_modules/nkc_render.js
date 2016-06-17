@@ -114,6 +114,22 @@ function nkc_render(options){
   render.plain_render = plain_escape;
 
 
+  render.hiddenReplaceHTML = function(text){
+    return text.replace(/\[hide=([0-9]{1,3}).*?]([^]*?)\[\/hide]/gm, //multiline match
+    function(match,p1,p2,offset,string){
+      var specified_xsf = parseInt(p1)
+      var hidden_content = p2
+
+      //return '[hide='+specified_xsf+']'+hidden_content+'[/hide]'
+
+      return '<div class="nkcHiddenBox">'
+      +'<div class="nkcHiddenNotes">'+'浏览这段内容需要'+specified_xsf.toString()+'学术分'+'</div>'
+      +'<div class="nkcHiddenContent">'+hidden_content+'</div>'
+      +'</div>'
+    })
+  }
+
+
   var getHTMLForResource = function(r,allthumbnail){
     var rid = r._key
     var oname_safe = plain_escape(r.oname)
@@ -225,6 +241,7 @@ function nkc_render(options){
       html = custom_xss_process(content)
     }
 
+    html = render.hiddenReplaceHTML(html)
 
     // fix for older posts where they forgot to inject attachments.
     var count = 0
@@ -250,6 +267,8 @@ function nkc_render(options){
     var parsed = commonreader.parse(post.c);
     var rendered = commonwriter.render(parsed)
     rendered = attachment_filter(rendered,post)
+
+    rendered = render.hiddenReplaceHTML(rendered)
 
     return custom_xss_process(rendered);
   }
