@@ -9,6 +9,7 @@ var queryfunc = require('query_functions')
 var validation = require('validation')
 var AQL = queryfunc.AQL
 var apifunc = require('api_functions')
+var layer = require('../layer')
 
 var table = {};
 module.exports = table;
@@ -126,6 +127,39 @@ function md5(str){
   return md5.digest('hex')
 }
 
+function testPassword(input,hashtype,storedPassword){
+  switch (hashtype) {
+    case 'pw9':
+    var pass = input
+    var hash = storedPassword.hash
+    var salt = storedPassword.salt
+
+    var hashed = md5(md5(pass)+salt)
+    if(hashed!==hash){
+      throw('password unmatch')
+    }
+    break;
+
+    case 'sha256HMAC':
+    var pass = input
+    var hash = storedPassword.hash
+    var salt = storedPassword.salt
+
+    var hashed = sha256HMAC(pass,salt)
+    if(hashed!==hash){
+      throw('password unmatch')
+    }
+    break;
+
+    default:
+    if(input !== storedPassword){ //fallback to plain
+      throw ('password unmatch')
+    }
+  }
+  return true
+}
+
+
 table.userLogin = {
   operation:function(params){
     var user = {}
@@ -151,34 +185,7 @@ table.userLogin = {
       }
 
       try{
-        switch (user_personal.hashtype) {
-          case 'pw9':
-          var pass = params.password
-          var hash = user_personal.password.hash
-          var salt = user_personal.password.salt
-
-          var hashed = md5(md5(pass)+salt)
-          if(hashed!==hash){
-            throw('password unmatch')
-          }
-          break;
-
-          case 'sha256HMAC':
-          var pass = params.password
-          var hash = user_personal.password.hash
-          var salt = user_personal.password.salt
-
-          var hashed = sha256HMAC(pass,salt)
-          if(hashed!==hash){
-            throw('password unmatch')
-          }
-          break;
-
-          default:
-          if(user_personal.password !== params.password){ //fallback to plain
-            throw ('password unmatch')
-          }
-        }
+        testPassword(params.password,user_personal.hashtype,user_personal.password)
       }
       catch(err){
         var tries = user_personal.tries||1
@@ -244,4 +251,49 @@ table.userLogout = {
 
     return data;
   },
+}
+
+function newPasswordObject(plain){
+  var salt = Math.floor((Math.random()*65536)).toString(16)
+  var hash = sha256HMAC(plain,salt)
+
+  var pwobj = {
+    hashtype:'sha256HMAC',
+
+    password:{
+      hash:hash,
+      salt:salt,
+    },
+  }
+
+  return pwobj
+}
+
+table.changePassword = {
+  operation:function(params){
+    regex_validation.validate({
+      password:params.newpassword
+    })
+
+    if(params.newpassword!==params.newpassword2)throw '两次密码不一致'
+
+    var psnl = new layer.Personal(params.user._key)
+    return psnl.load()
+    .then(psnl=>{
+      testPassword(params.oldpassword,psnl.model.hashtype,psnl.model.password)
+
+      var pwobj = newPasswordObject(params.newpassword)
+
+      return psnl.update(pwobj)
+      .then(psnl=>{
+        return 'done'
+      })
+    })
+
+  },
+  requiredParams:{
+    oldpassword:String,
+    newpassword:String,
+    newpassword2:String,
+  }
 }

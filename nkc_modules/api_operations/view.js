@@ -744,3 +744,16 @@ table.viewSMS = {
       })
     }
   }
+
+  table.viewPersonal = {
+    operation:function(params){
+      var data = defaultData(params)
+      data.template = jadeDir + 'interface_personal.jade'
+      var psnl = new layer.Personal(params.user._key)
+      return psnl.load()
+      .then(psnl=>{
+        data.personal = psnl
+        return data
+      })
+    }
+  }

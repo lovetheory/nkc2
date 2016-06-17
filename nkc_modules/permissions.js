@@ -145,6 +145,8 @@ var certificates={
       userRegister:false,
 
       getResourceOfCurrentUser:true,
+
+      changePassword:true,
     },
   },
 

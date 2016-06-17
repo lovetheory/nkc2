@@ -1,0 +1,32 @@
+extends bootstrap_base.jade
+
+block title
+  title 个人设置 - 科创论坛
+  
+block content
+  
+  .container
+    .row
+      .col-xs-12.col-sm-7.col-md-6
+        .PersonalSettingZone
+          h4 修改密码
+          
+          input#oldpassword(type='password' placeholder='旧密码')
+          input#newpassword(type='password' placeholder='新密码，至少6位' )
+          input#newpassword2(type='password' placeholder='重复一次')
+          button#submitnewpassword(onclick='submitnewpassword()') 修改密码
+          
+  include debug_output.jade
+block scripts
+  
+  script(src='/interface_common.js')
+  script.
+    function submitnewpassword(){
+      nkcAPI('changePassword',{
+        oldpassword:geid('oldpassword').value,
+        newpassword:geid('newpassword').value,
+        newpassword2:geid('newpassword2').value,
+      })
+      .then(jalert)
+      .catch(jwarning)
+    }
