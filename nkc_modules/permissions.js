@@ -147,6 +147,7 @@ var certificates={
       getResourceOfCurrentUser:true,
 
       changePassword:true,
+      viewPersonal:true,
     },
   },
 
