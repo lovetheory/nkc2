@@ -892,6 +892,11 @@ pre {
 
 .UserProfileSection1{
 text-align: center;
+border-style: dashed;
+border-width: 1px;
+border-color: #c7c7c7;
+border-radius: 5px;
+padding: 12px;
 }
 .UserProfileTile{
     border-radius: 7px;
