@@ -48,6 +48,7 @@ function getUserDescription(user){
 
 var jadeoptions = {
   markdown:render.commonmark_render,
+  markdown_safe:render.commonmark_safe,
   bbcode:render.bbcode_render,
   plain:render.plain_render,
   experimental_render:render.experimental_render,

@@ -22,10 +22,15 @@ block content
           .panel-body
             - var user = data.user
             h1 #{user.username}
+            hr
             
             div.f12!= plain(getUserDescription(user))
-            
-            p.f12 #{user.post_sign}
+            hr
+
+            |帖子签名
+            if user.post_sign
+              div!=markdown_safe(user.post_sign)
+              hr
             
             p.f12
               a(href='/user_threads/#{user._key}') 查看本人的帖子

@@ -25,8 +25,8 @@ block content
             .ForumName #{forum.display_name}
         .row
           .col-xs-8
-            :markdown_safe
-              #{data.forum.description}
+            if data.forum.description
+              div!=markdown_safe(data.forum.description)
             
             if data.replytarget
               a.btn.btn-default(style="margin-bottom:10px" href='/e?target=#{data.replytarget}') 新
