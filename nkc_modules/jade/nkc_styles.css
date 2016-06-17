@@ -892,10 +892,10 @@ pre {
 
 .UserProfileSection1{
 text-align: center;
-border-style: dashed;
-border-width: 1px;
-border-color: #c7c7c7;
-border-radius: 5px;
+/* border-style: dashed; */
+/* border-width: 1px; */
+/* border-color: #c7c7c7; */
+/* border-radius: 5px; */
 padding: 12px;
 }
 .UserProfileTile{
@@ -914,9 +914,9 @@ pre {
     padding: 5px;
 }
 .TileTitle{
-    background: #8c8c8c;
-    color: white;
+    background: #f7f7f7;
+    /* color: white; */
     display: block;
     font-size: 18px;
-    padding: 3px;
+    padding: 5px;
 }

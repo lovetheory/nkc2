@@ -22,13 +22,17 @@ block content
       .col-xs-12.col-sm-6
         .UserProfileSection1(style='text-align:left')
           -var user = thatuser
+          h4 个人简介
+          hr
           if user.description && user.description.length>0
-            h4 个人简介
+            
             div!=markdown_safe(user.description)
             hr
-            
+          
+          h4 帖子签名
+          hr
           if user.post_sign && user.post_sign.length>0
-            h4 帖子签名
+            
             div!=markdown_safe(user.post_sign)
             
     hr
