@@ -441,6 +441,31 @@ table.viewThread = {
       })
     })
     .then(posts=>{
+
+      //xsf limiting on post content
+      for(i in posts){
+        var p = posts[i]
+
+        p.c =
+        p.c.replace(/\[hide=([0-9]{1,3})](.*?)\[\/hide]/gm, //multiline match
+        function(match,p1,p2,offset,string){
+          console.log('replacing'.red);
+          var specified_xsf = parseInt(p1)
+          var hidden_content = p2
+
+          console.log(specified_xsf,hidden_content);
+
+          var xsf = params.user?params.user.xsf||0:0
+          console.log(xsf);
+          var canShowHiddenContent = (xsf >= specified_xsf)||params.contentClasses['classified']
+
+          if(!canShowHiddenContent){
+            hidden_content = ''
+          }
+          return '[hide='+specified_xsf+']'+hidden_content+'[/hide]'
+        })
+      }
+
       data.posts = posts
       data.thread = thread.model
     })
