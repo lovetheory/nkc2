@@ -838,7 +838,7 @@ h4,h5,h6 {
 border-radius: 6px;
 border-color: #dadada;
 /* background-color: #f9f9f9; */
-padding: 4px;
+/* padding: 4px; */
 margin: 4px;
 }
 .SMSFirstRow{
@@ -856,7 +856,7 @@ h4,h5,h6 {
     /* border-width: inherit; */
     /* border-radius: 4px; */
     /* border-color: #ece8e8; */
-    /* background-color: white; */
+    background-color: white;
     padding: 6px;
     margin: inherit;
 }

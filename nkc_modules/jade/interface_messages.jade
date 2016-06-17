@@ -32,9 +32,7 @@ block content
             .SMSTableItem
               .SMSFirstRow
                 span.reddish #{dateTimeString(s.toc)}
-                span 于
                 span #{fromNow(s.toc)}
-                span 自
                 
                 span
                   - var uid = sender._key
@@ -44,7 +42,7 @@ block content
 
                 span(onclick="setReceiver('#{sender.username}')") #{sender.username}
                   
-                span 至
+                span ▶
                 span
                   - var uid = receiver._key
                   - var avatar = '/avatar_small/' + uid
