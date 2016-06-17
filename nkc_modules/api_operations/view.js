@@ -753,28 +753,57 @@ table.viewSMS = {
 
       return merge(s,{us,ur})
 
-      `,{uid})
-      .then(sarr=>{
-        data.smslist = sarr
+      `,{uid}
+    )
+    .then(sarr=>{
+      data.smslist = sarr
 
-        var psnl = new layer.Personal(uid)
-        return psnl.update({new_message:0})
-        .then(psnl=>{
-          return data
-        })
-      })
-    }
-  }
-
-  table.viewPersonal = {
-    operation:function(params){
-      var data = defaultData(params)
-      data.template = jadeDir + 'interface_personal.jade'
-      var psnl = new layer.Personal(params.user._key)
-      return psnl.load()
+      var psnl = new layer.Personal(uid)
+      return psnl.update({new_message:0})
       .then(psnl=>{
-        data.personal = psnl
         return data
       })
-    }
+    })
   }
+}
+
+table.viewPersonal = {
+  operation:function(params){
+    var data = defaultData(params)
+    data.template = jadeDir + 'interface_personal.jade'
+    var psnl = new layer.Personal(params.user._key)
+    return psnl.load()
+    .then(psnl=>{
+      data.personal = psnl
+      return data
+    })
+  }
+}
+
+table.viewUser = {
+  operation:function(params){
+    var data = defaultData(params)
+    data.template = jadeDir +'interface_profile.jade'
+
+    var uid = params.uid
+    var uname = params.username
+
+    return Promise.resolve()
+    .then(()=>{
+      var thatuser
+      if(uid){
+        thatuser = new layer.User(uid)
+        return thatuser.load()
+      }else if(uname){
+        thatuser = new layer.User()
+        return thatuser.loadByName(uname)
+      }else{
+        throw 'please specify uid or username'
+      }
+    })
+    .then(thatuser=>{
+      data.thatuser = thatuser.model
+      return data
+    })
+  }
+}

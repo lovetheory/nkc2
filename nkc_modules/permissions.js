@@ -166,6 +166,7 @@ var certificates={
       viewThread:true,
       viewForum:true,
       viewHome:true,
+      viewUser:true,
       viewUserThreads:true, ////////////////these are for test purpose only
       //move to visitor afterwards
 

@@ -1,0 +1,74 @@
+extends bootstrap_base.jade
+
+block title
+  title 我是模板 - 科创论坛
+  
+block content
+  
+  -var thatuser = data.thatuser
+  -var thatuid = thatuser._key
+  .container
+    .row
+      .col-xs-12.col-sm-6
+        .UserProfileSection1
+          div(style='display:block;')
+            img(src='/avatar/#{thatuid}' style='width:144px;height:144px;border-radius:6px;')
+          
+          div
+            .ForumTitleCircle(style='background-color:#{thatuser.color||"#bbb"}')
+            .ForumName #{thatuser.username}
+          
+      
+      .col-xs-12.col-sm-6
+        .UserProfileSection1(style='text-align:left')
+          
+          if user.description
+            h4 个人简介
+            div!=markdown_safe(user.description)
+            hr
+            
+          if user.post_sign
+            h4 帖子签名
+            div!=markdown_safe(user.post_sign)
+            
+    hr
+          
+    .row
+    
+      -var tiles = []
+      -var listCertText = getUserDescription(user).split('\n').pop()
+      -tiles.push({number:thatuser.xsf||0,text:'学术分'})
+      -tiles.push({number:thatuser.kcb||0,text:'科创币'})
+      -tiles.push({text:'此君',other:'ahead'})
+      -tiles.push({number:thatuser.count_threads||0,text:'总地基数量'})
+      -tiles.push({number:thatuser.count_posts||0,text:'总建筑层数'})
+      -tiles.push({number:dateTimeString(thatuser.toc),text:'发证日期'})
+      -tiles.push({number:dateTimeString(thatuser.tlv),text:'最后报道日期'})
+      -tiles.push({text:'证书',number:listCertText})
+    
+      each t,index in tiles
+        .col-xs-4.col-sm-3.col-md-2
+          .UserProfileTile
+            .TileTitle
+              span #{t.text}
+            .TileFact
+              if !t.other
+                span #{t.number}
+              else
+                case t.other
+                  when 'ahead'
+                    div(style='font-size:12pt;')
+                      p
+                        a(href='/user_threads/#{thatuser._key}') 建筑一览
+                      p
+                        a(href='/sms?receiver=#{thatuser.username}') 私信谏言
+      
+    .row
+      .col-xs-12.col-sm-7.col-md-6
+      
+    
+  
+  include debug_output.jade
+block scripts
+  
+  script(src='/interface_common.js')

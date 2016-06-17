@@ -889,3 +889,29 @@ pre {
     border-radius: 3px;
     padding: 5px;
 }
+
+.UserProfileSection1{
+text-align: center;
+}
+.UserProfileTile{
+    border-radius: 7px;
+    border-style: solid;
+    border-color: #8c8c8c;
+    overflow: hidden;
+    border-width: 2px;
+    text-align: center;
+    margin-bottom: 30px;
+    height: 120px;
+}
+.TileFact{
+    font-family: monospace;
+    font-size: 20pt;
+    padding: 5px;
+}
+.TileTitle{
+    background: #8c8c8c;
+    color: white;
+    display: block;
+    font-size: 18px;
+    padding: 5px;
+}
