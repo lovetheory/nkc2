@@ -22,7 +22,7 @@ block content
 
         -var smslist = data.smslist
         table.SMSTable
-          tr(style='font-size: 18px;')
+          tr
             td 于
             td 自
             td 至
@@ -37,22 +37,36 @@ block content
             -var content = s.c
             tr
               td #{fromNow(s.toc)}
-              if sender.username == data.user.username
-                td.SMSBGSelf #{sender.username}
-              else
-                td.SMSBGOther(onclick="setReceiver('#{sender.username}')") #{sender.username}
+              
+              td
+                - var uid = sender._key
+                - var avatar = '/avatar_small/' + uid
+                  a(href='/user_profile/#{uid}')
+                    img.HomeThreadAvatar(src='#{avatar}')
+                    
+                if sender.username == data.user.username
+                  .SMSBGSelf #{sender.username}
+                else
+                  .SMSBGOther(onclick="setReceiver('#{sender.username}')") #{sender.username}
                 
-              if receiver.username == data.user.username
-                td.SMSBGSelf #{receiver.username} 
-              else
-                td.SMSBGOther(onclick="setReceiver('#{receiver.username}')") #{receiver.username} 
+
+              td
+                - var uid = receiver._key
+                - var avatar = '/avatar_small/' + uid
+                  a(href='/user_profile/#{uid}')
+                    img.HomeThreadAvatar(src='#{avatar}')
+                if receiver.username == data.user.username
+                  .SMSBGSelf #{receiver.username} 
+                else
+                  .SMSBGOther(onclick="setReceiver('#{receiver.username}')") #{receiver.username} 
                 
-              if sender.username == data.user.username
-                td.SMSSentByMe
-                  div!=plain(content)
-              else
-                td.SMSSentByOthers
-                  div!=plain(content)
+              td
+                if sender.username == data.user.username
+                  .SMSSentByMe
+                    div!=plain(content)
+                else
+                  .SMSSentByOthers
+                    div!=plain(content)
               
               td.lighttext #{dateTimeString(s.toc)}
         
