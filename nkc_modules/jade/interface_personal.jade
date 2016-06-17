@@ -30,17 +30,20 @@ block content
             
             帖子签名显示于个人帖子展示界面。
             
+            ----
+            
           -var user = data.user
+          p 帖子签名
           textarea#post_sign(placeholder='帖子签名') #{user.post_sign}
           br
-          
+          p 个人简介
           textarea#description(placeholder='个人简介') #{user.description}
           br
-          
+          p Colorcode
           input#color(placeholder='colorcode' value='#{user.color}') 
           br
           br
-          button.btn.btn-default#submitpersonalsetting(onclick='submitpersonalsetting()') 提交个人设定
+          button.btn.btn-default#submitpersonalsetting(onclick='submitpersonalsetting()') 提交修改
           
   include debug_output.jade
 block scripts
