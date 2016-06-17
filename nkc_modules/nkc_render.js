@@ -84,13 +84,29 @@ function nkc_render(options){
 
     quote:{
       openTag: function(params,content) {
-        var username = params.length?'引用 ' + params.slice(1).split(',')[0]+':<br>':''
+        var username = params?(params.length?'引用 ' + params.slice(1).split(',')[0]+':<br>':''):''
 
         return '<blockquote class="xbbcode-blockquote">'+username;
       },
       closeTag: function(params,content) {
         return '</blockquote>';
       },
+    },
+
+    "code": {
+      openTag: function(params,content) {
+        //for phpwind compatibility
+        //consider following input: [code brush:cpp;toolbar:false;]
+
+        var class_string = params?params.match(/brush\:([a-zA-Z0-9]{1,19})/):null
+        class_string = class_string?class_string[1]:''
+
+        return '<pre><code class="lang-'+class_string+'">';
+      },
+      closeTag: function(params,content) {
+        return '</code></pre>';
+      },
+      noParse: true
     },
 
   })
