@@ -304,7 +304,7 @@ table.submitPersonalSetting = {
     var description = params.description.toString().trim()
     var color = params.color.toString().trim()
 
-    if(post_sign.length>100||description.length>200||color.length>10) throw 'section too long.'
+    if(post_sign.length>300||description.length>300||color.length>10) throw 'section too long.'
 
     var user = new layer.User(params.user._key)
     return user.update({
