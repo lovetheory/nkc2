@@ -34,7 +34,7 @@
     .ForumThreadCreatorInfo
 
       span.lighttext.ForumThreadItemCreationTime #{dateTimeString(thread.toc)}
-      span.lighttext.ForumThreadItemUsername #{ocuser.username}
+      a.lighttext.ForumThreadItemUsername(href='/user_profile/#{ocuser._key}') #{ocuser.username}
       //帖子发布时间和发布者
 
   
