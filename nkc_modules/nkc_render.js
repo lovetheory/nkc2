@@ -80,7 +80,18 @@ function nkc_render(options){
       closeTag:function(params,content){
         return '</s>'
       },
-    }
+    },
+
+    quote:{
+      openTag: function(params,content) {
+        var username = params.length?'引用 ' + params.slice(1).split(',')[0]+':<br>':''
+
+        return '<blockquote class="xbbcode-blockquote">'+username;
+      },
+      closeTag: function(params,content) {
+        return '</blockquote>';
+      },
+    },
 
   })
 
