@@ -268,9 +268,11 @@ function nkc_render(options){
     var rendered = commonwriter.render(parsed)
     rendered = attachment_filter(rendered,post)
 
-    rendered = render.hiddenReplaceHTML(rendered)
+    rendered= custom_xss_process(rendered);
 
-    return custom_xss_process(rendered);
+    rendered = render.hiddenReplaceHTML(rendered);
+
+    return rendered;
   }
 
   render.experimental_render = function(post){
