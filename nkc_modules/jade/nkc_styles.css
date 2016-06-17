@@ -864,3 +864,28 @@ h4,h5,h6 {
 pre {
   padding:0;
 }
+
+.nkcHiddenBox{
+    border-style: solid;
+    border-width: 1px;
+    border-color: #ff6d6d;
+    border-radius: 5px;
+    padding: 5px;
+    background-color: #fff8f8;
+}
+.nkcHiddenNotes{
+    color: white;
+    margin-bottom: 5px;
+    background: #ff8888;
+    border-radius: 3px;
+    text-align: center;
+    display: block;
+}
+.nkcHiddenContent{
+    border-style: dashed;
+    background: white;
+    border-width: 1px;
+    border-color: #ffcccc;
+    border-radius: 3px;
+    padding: 5px;
+}
