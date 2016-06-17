@@ -447,7 +447,7 @@ table.viewThread = {
         var p = posts[i]
 
         p.c =
-        p.c.replace(/\[hide=([0-9]{1,3})](.*?)\[\/hide]/gm, //multiline match
+        p.c.replace(/\[hide=([0-9]{1,3})]([^]*?)\[\/hide]/gm, //multiline match
         function(match,p1,p2,offset,string){
           console.log('replacing'.red);
           var specified_xsf = parseInt(p1)
