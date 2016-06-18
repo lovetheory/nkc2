@@ -16,8 +16,10 @@ if 0
   .HomeForumContainer
     .HomeForumTitle
       - var forumcolor = f.color||p.color||'#eee'
+      - var url = '/f/'+f._key; url = seo_reverse_rewrite(url)
+      
       .HomeForumTitleCircle(style='background-color:#{forumcolor}')
-      a.HomeForumTitlePrimary(href='/f/#{f._key}') #{f.display_name}
+      a.HomeForumTitlePrimary(href='#{url}') #{f.display_name}
         
       .HomeForumTitleSecondary
         if f.count_posts_today > 0
@@ -36,10 +38,11 @@ if 0
         - var oc = thread.oc
         - var brief = oc.c.replace(/\[.*?]/g,'').trim().slice(0,100)
         
+        - var url = '/f/'+f._key+'/'+thread._key; url = seo_reverse_rewrite(url)
         if !thread.digest
-          a.HomeThreadText(href='/t/#{thread._key}' title="#{brief}") #{thread.oc.t}   
+          a.HomeThreadText(href='#{url}' title="#{brief}") #{thread.oc.t}   
         else
-          a.HomeThreadTextDigest.HomeThreadText(href='/t/#{thread._key}' title="#{brief}") #{thread.oc.t}
+          a.HomeThreadTextDigest.HomeThreadText(href='#{url}' title="#{brief}") #{thread.oc.t}
           
         .HomeThreadTextRightAlign
           if Date.now()-thread.tlm<86400000

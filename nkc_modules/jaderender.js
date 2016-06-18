@@ -47,6 +47,17 @@ function getUserDescription(user){
 }
 
 var jadeoptions = {
+  seo_rewrite_mapping:settings.seo_rewrite_mapping,
+  seo_reverse_rewrite:function(url){
+    for(i in settings.seo_rewrite_mapping)
+    {
+      var map = i
+      var to = settings.seo_rewrite_mapping[i].to
+
+      url = url.replace(new RegExp('^'+to+'(.*)'),map+'$1')
+    }
+    return url
+  },
   markdown:render.commonmark_render,
   markdown_safe:render.commonmark_safe,
   bbcode:render.bbcode_render,

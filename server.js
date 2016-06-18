@@ -82,6 +82,8 @@ nkc.use((req,res,next)=>{
     origurl = origurl.replace(new RegExp('^'+fr+'(.*)'),to+'$1')
   }
 
+  origurl = origurl.replace(/^\/f\/(.+?)\/(.+)/,'/t/$2')
+
   req.url = origurl
   next()
 })
