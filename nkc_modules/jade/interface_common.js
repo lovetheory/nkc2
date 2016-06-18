@@ -138,7 +138,7 @@ function screenTopAlertOfStyle(text,stylestring){
   return new Promise(function(resolve,reject){
     $('#alertOverlay').append(
       '<div class="alert alert-'+ stylestring +'" id="' + itemID +
-      '" role="alert" style="text-align:center;display:block; position:relative;margin:auto; top:0;max-width:500px; width:100%; margin-bottom:3px">'
+      '" role="alert" style="opacity:0.9;text-align:center;display:block; position:relative;margin:auto; top:0;max-width:500px; width:100%; margin-bottom:3px">'
       + objtext +'</div>'
     );
 
@@ -155,7 +155,7 @@ function screenTopAlertOfStyle(text,stylestring){
 
 function screenTopAlertInit(){
   $("body").prepend(
-    '<div id="alertOverlay" style="z-index:9999; display:block; position:fixed; top:0; width:100%;">'
+    '<div id="alertOverlay" style="z-index:999; pointer-events:none; display:block; position:fixed; top:0; width:100%;">'
     +'</div>'
   );
 }
