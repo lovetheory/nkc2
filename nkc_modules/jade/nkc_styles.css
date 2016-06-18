@@ -950,3 +950,12 @@ pre {
     font-size: 18px;
     padding: 5px;
 }
+
+.PanoLVUList{
+display: inline-block;
+margin: 5px;
+}
+
+.PanoLVUList span{
+  margin-left: 5px;
+}

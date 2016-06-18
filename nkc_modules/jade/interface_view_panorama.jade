@@ -59,6 +59,18 @@ block content
                         
                       .DigestThreadContent #{t.oc.c.replace(/\[.*?]/g,'').trim().slice(0,100)}
             
-      
+    .row
+      .col-md-12
+        h4 在线网友
+        hr.hrNarrowSpace
+        each u in data.latestVisitUsers
+          -var url = '/user_profile/'+u._key
+          -var avatar = '/avatar_small/'+u._key
+          .PanoLVUList
+            a(href='#{url}' title='#{fromNowAbbr(u.tlv)}')
+              img.HomeThreadAvatar(src='#{avatar}')
+              span #{u.username}
+        
+  include debug_output.jade
 block scripts
   script(src='/interface_common.js')

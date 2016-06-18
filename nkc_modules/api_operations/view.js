@@ -133,6 +133,13 @@ table.viewPanorama = {
       unique:'false',
       sparse:'false',
     })
+
+    queryfunc.createIndex('users',{
+      fields:['tlv'],
+      type:'skiplist',
+      unique:'false',
+      sparse:'false',
+    })
   },
   operation:params=>{
     var data= defaultData(params)
@@ -244,6 +251,18 @@ table.viewPanorama = {
     })
     .then(res=>{
       data.newestDigestThreads = res
+
+      return AQL(`
+        for u in users
+        //filter u.tlv!=null
+        sort u.tlv desc
+        limit 30
+        return u
+        `
+      )
+    })
+    .then(res=>{
+      data.latestVisitUsers = res
 
       return data
     })
