@@ -44,8 +44,11 @@ block content
                 - var po = data.permittedOperations
                 - if(po.addThreadToCart)
                   a(href="javascript:cartThread('#{data.thread._key}')") 加入管理车
-                - if(po.setDigest)
-                  a(href="javascript:setDigest('#{data.thread._key}')") 设置精华
+                if (po.setDigest)
+                  if thread.digest
+                    a(href="javascript:setDigest('#{data.thread._key}')") 撤销精华
+                  else
+                    a(href="javascript:setDigest('#{data.thread._key}')") 设置精华
 
             
             include interface_navigation_paging.jade      
