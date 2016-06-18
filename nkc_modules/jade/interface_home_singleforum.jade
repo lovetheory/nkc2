@@ -1,18 +1,18 @@
 //refer to forum object as f, count as index..
 
-if 0
-  if index%6==0
-    //.clearfix.visible-lg-block
+if 1
   if index%4==0
-    .clearfix.visible-md-block
+    .clearfix.visible-lg-block
   if index%3==0
+    .clearfix.visible-md-block
+  if index%2==0
     .clearfix.visible-sm-block
   if index%2==0
     .clearfix.visible-xs-block
   //above are necessary when some columns are shorter than others
 - var f = forum
 - var p = parent
-.col-lg-3.col-md-4.col-xs-12.col-sm-6
+.col-lg-3.col-md-4.col-sm-6.col-xs-12
   .HomeForumContainer
     .HomeForumTitle
       - var forumcolor = f.color||p.color||'#eee'
@@ -27,7 +27,11 @@ if 0
           
         span.HomeForumTitleThreadCount #{f.count_threads}/ 
         span.HomeForumTitlePostCount #{f.count_posts}
-    hr.hrNarrowSpace
+        
+    .HomeForumDescription
+      span #{f.description}
+    
+    //hr.hrNarrowSpace
     each thread,index in f.threads
       .HomeThreadItem
         - var uid = thread.oc.uid

@@ -176,28 +176,29 @@ margin-right: 20px;
 
 
 .HomeForumContainer{
-
-  margin-bottom: 15px;
-
-  /* padding: 12px; */
-
-  height: 135px;
-
-  /* overflow-y: hidden; */
-
-  /* border: #E2E2E2; */
-
-  /* border-width: 1px; */
-
-  /* border-style: solid; */
-
-  /* border-radius: 10px; */
+margin-bottom: 20px;
+padding: 8px;
+/* height: 135px; */
+/* overflow-y: hidden; */
+/* border: #E2E2E2; */
+/* border-width: 1px; */
+/* border-style: solid; */
+/* border-radius: 5px; */
 }
 .HomeForumTitle{
 
   height: 26px;
 
   position: relative;
+}
+
+.HomeForumDescription{
+    font-size: 10px;
+    color: #848484;
+    height: 46px;
+    overflow-y: hidden;
+    padding-top: 7px;
+    padding-bottom: 7px;
 }
 
 .HomeForumTitleCircle{
@@ -217,7 +218,7 @@ margin-right: 20px;
 
 .HomeForumTitlePrimary{
   color: #696969;
-  font-size: 16pt;
+  font-size: 14pt;
   display: inline-block;
   /* position: absolute; */
   white-space: nowrap;
@@ -957,5 +958,5 @@ margin: 5px;
 }
 
 .PanoLVUList span{
-  margin-left: 5px;
+margin-left: 5px;
 }
