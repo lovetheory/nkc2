@@ -49,6 +49,12 @@ block content
                     a(href="javascript:setDigest('#{data.thread._key}')") 撤销精华
                   else
                     a(href="javascript:setDigest('#{data.thread._key}')") 设置精华
+                    
+                if (po.setTopped)
+                  if thread.topped
+                    a(href="javascript:setTopped('#{data.thread._key}')") 撤销置顶
+                  else
+                    a(href="javascript:setTopped('#{data.thread._key}')") 设置置顶
 
             
             include interface_navigation_paging.jade      

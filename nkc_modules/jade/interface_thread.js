@@ -20,8 +20,16 @@ function cartPost(pid){
 
 function setDigest(tid){
   nkcAPI('setDigest',{tid:tid})
-  .then(function(){
-    return screenTopAlert(tid+' 设为精华')
+  .then(function(back){
+    return screenTopAlert(tid+ back.message.toString())
+  })
+  .catch(jwarning)
+}
+
+function setTopped(tid){
+  nkcAPI('setTopped',{tid:tid})
+  .then(function(back){
+    return screenTopAlert(tid+back.message.toString())
   })
   .catch(jwarning)
 }

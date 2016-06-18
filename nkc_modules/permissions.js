@@ -40,9 +40,8 @@ var certificates={
       elseModifyTimeLimit:timeYear*20, //20y
       selfModifyTimeLimit:timeYear*20, //20y
 
-
       toggleDigestAllThreads:true,
-
+      toggleToppedAllThreads:true,
       kamikaze:true,
     }
   },
@@ -80,9 +79,12 @@ var certificates={
 
       toggleOwnedPosts:true,
       toggleDigestOwnedThreads:true,
+      toggleToppedOwnedThreads:true,
 
       moveThread:true,
       moveOwnedThreads:true,
+
+      setTopped:true
     }
   },
 

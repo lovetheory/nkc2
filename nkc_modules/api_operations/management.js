@@ -202,7 +202,39 @@ table.setDigest={
     .then(()=>{
       return thread.update({digest:thread.model.digest?null:true})
     })
-    return queryfunc.doc_update(tid,'threads',{digest:true})
+    .then(()=>{
+      return {message:thread.model.digest?'设为精华':'撤销精华'}
+    })
+  },
+  requiredParams:{
+    tid:String,
+  }
+}
+
+table.setTopped={
+  operation:function(params){
+    var tid = params.tid
+    var thread = new layer.Thread(tid)
+    var po = params.permittedOperations
+
+    return thread.load()
+    .then(thread=>{
+      return thread.loadForum()
+    })
+    .then(origforum=>{
+      if(po['toggleToppedAllThreads']){
+        return
+      }
+
+      //else we have to check: do you own the original forum?
+      return origforum.testModerator(params.user.username)
+    })
+    .then(()=>{
+      return thread.update({topped:thread.model.topped?null:true})
+    })
+    .then(()=>{
+      return {message:thread.model.topped?'设为置顶':'撤销置顶'}
+    })
   },
   requiredParams:{
     tid:String,
