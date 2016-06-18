@@ -455,8 +455,15 @@ table.viewThread = {
 
       return thread.mergeOc()
       .then(res=>{
-        data.paging = thread.getPagingParams(params.page)
-        return thread.listPostsOfPage(params.page)
+        var ocuser = new layer.User(thread.model.oc.uid)
+        return ocuser.load()
+        .then(ocuser=>{
+          data.ocuser = ocuser.model
+
+
+          data.paging = thread.getPagingParams(params.page)
+          return thread.listPostsOfPage(params.page)
+        })
       })
     })
     .then(posts=>{

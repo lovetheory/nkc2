@@ -3,6 +3,22 @@ extends bootstrap_base.jade
 block title
   title #{data.forum.display_name} - #{data.site.name}
   
+  -var forum  = data.forum
+  if forum.description
+    -var processed=forum.description.replace(/\[.*?]|\#|\n|\<.*?>/gm,'').trim().slice(0,140)
+  else
+    -var processed = forum.display_name
+    
+  meta(name='description' content='#{processed}')
+  
+  meta(property='og:image' content='http://bbs.kechuang.org/resources/site_specific/umaru_chem_300x200.png')
+  meta(property='og:title' content='#{forum.display_name}')
+  meta(property='og:site_name' content='科创论坛')
+  meta(property='og:description' content='#{processed}')
+  
+  if data.threads.length>0
+    meta(property='article:modified_time' content='#{(new Date(data.threads[0].toc)).toISOString()}')
+  
   style.
     .marginless {
       margin-top:7px;
