@@ -117,7 +117,7 @@ nkc.use('/redirect_t/:tid',function(req,res){
 })
 
 //default avatar redirection
-nkc.use(rewrite('/api/avatar/*','/default/default_avatar.gif')) //if avatar not served
+nkc.use(rewrite('/api/avatar/*','/default/default_avatar_small.gif')) //if avatar not served
 nkc.use(rewrite('/api/avatar_small/*','/default/default_avatar_small.gif')) //if avatar not served
 
 nkc.use('/default/',express.static('resources/default_things/',settings.static_settings)) //staticify
