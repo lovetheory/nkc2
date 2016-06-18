@@ -299,8 +299,8 @@ settings.exam = {
   succeed_interval:3600*1000*12, //12h
   //dont try within given amount of time after succeeded once.
 
-  pass_score:6,
-  number_of_questions:10,
+  pass_score:4,
+  number_of_questions:6,
 
   time_before_register:3600*1000*1, //1h
 }
