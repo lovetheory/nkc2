@@ -306,3 +306,15 @@ function logme(tolog){
 
   geid('logger').innerHTML = logtext;
 }
+
+function directedMove(){
+  var targetforum = gv('TargetForum').trim().split(':')
+  if(targetforum.length!==2)return screenTopWarning('请选择一个移动目标')
+  targetforum = targetforum[0]
+
+  moveSelectedThread(targetforum)
+  .then(count=>{
+    screenTopAlert(count+' thread(s) moved to '+targetforum)
+  })
+  .catch(jwarning)
+}

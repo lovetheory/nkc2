@@ -600,7 +600,13 @@ table.viewExperimental = {
   operation:params=>{
     var data = defaultData(params)
     data.template = jadeDir+'interface_experimental.jade'
-    return data
+
+    return getForumList(params)
+    .then(forumlist=>{
+
+      data.forumlist=forumlist
+      return data
+    })
   }
 }
 
