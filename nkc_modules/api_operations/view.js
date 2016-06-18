@@ -508,7 +508,7 @@ table.viewUserThreads = {
       var user = u.model
 
       data.forum = {
-        display_name:user.username,
+        display_name:user.username+' 的主题',
         description:user.post_sign||'',
         count_threads:user.count_threads||null,
         count_posts:user.count_posts||null,
