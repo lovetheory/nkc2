@@ -186,6 +186,7 @@ settings.root_serve_static =
   //clientside js file serving
   {map:'/attachment',to:'resources/upload'},
   {map:'/static',to:'static/'},
+  {map:'/tool',to:'static/tools/'},
   {map:'/resources/default_things',to:'resources/default_things/'},
   {map:'/resources/site_specific',to:'resources/site_specific/'},
   {map:'/MathJax-2.6-latest',to:'external_pkgs/MathJax-2.6-latest'},
