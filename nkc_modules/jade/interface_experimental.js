@@ -92,7 +92,7 @@ function InitThreadControl(options){
     title:'帖楼管理',
     buttons:{
       refresh:{
-        text:'获取管理车',
+        text:'从管理车加载列表',
         action:function(){
           return nkcAPI('listCart')
           .then(function(result){
@@ -136,7 +136,7 @@ function InitThreadControl(options){
       },
 
       clearCart:{
-        text:'清除管理车',
+        text:'清空我的管理车',
         action:function(){
           nkcAPI('clearCart')
           .then(pc.actions.refresh)
