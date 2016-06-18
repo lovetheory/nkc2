@@ -85,7 +85,12 @@ block content
                     li
                       a(href='#')=val
                 
-               
+        if data.toppedThreads && data.toppedThreads.length>0
+          .ForumThreadList
+            each thread,index in data.toppedThreads
+              include interface_forum_singlethread.jade
+          hr.hrNarrowSpace
+              
         .ForumThreadList
           each thread,index in data.threads
             include interface_forum_singlethread.jade

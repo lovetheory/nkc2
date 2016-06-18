@@ -393,6 +393,14 @@ function getPaging(params){
 table.viewForum = {
   init:function(){
     return layer.Forum.buildIndex()
+    .then(()=>{
+      queryfunc.createIndex('threads',{
+        fields:['topped','fid','toc'],
+        type:'skiplist',
+        unique:'false',
+        sparse:'true',
+      })
+    })
   },
   operation:params=>{
     var data = defaultData(params)
@@ -425,6 +433,28 @@ table.viewForum = {
     .then(forumlist=>{
       data.forumlist = forumlist
       data.replytarget = 'f/' + fid;
+
+      if(data.paging.page==0){
+        return AQL(`
+          for t in threads
+          filter t.topped==true && t.fid == @fid
+          sort t.topped, t.fid, t.toc
+
+          let oc = document(posts,t.oc)
+          let lm = document(posts,t.lm)
+          let ocuser = document(users,oc.uid)
+          let lmuser = document(users,lm.uid)
+
+          return merge(t,{oc,ocuser,lmuser})
+          `,{fid}
+        )
+      }
+      else{
+        return null
+      }
+    })
+    .then(res=>{
+      data.toppedThreads = res
       return data
     })
   },
