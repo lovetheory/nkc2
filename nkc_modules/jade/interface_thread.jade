@@ -7,7 +7,7 @@ block title
   
   include MathJax.jade
   
-  if(thread.oc.c)
+  if (thread.oc&&thread.oc.c)
     -var processed=thread.oc.c.replace(/\[.*?]|\#|\n|\<.*?>/gm,'').trim().slice(0,140)
     
     meta(name='description' content='#{processed}')
