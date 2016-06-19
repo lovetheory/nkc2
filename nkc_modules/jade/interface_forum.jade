@@ -45,12 +45,12 @@ block content
               div!=markdown_safe(data.forum.description)
             
             if data.replytarget
-              a.btn.btn-default(style="margin-bottom:10px" href='/e?target=#{data.replytarget}') 新
+              a.btn.btn-default(style="margin-bottom:10px" href='/e?target=#{data.replytarget}') 新帖
             
             
           .col-xs-4
             p
-              span 今 #{data.forum.count_posts_today} | 著 #{data.forum.count_threads} | 復 #{data.forum.count_posts}
+              span 今日： #{data.forum.count_posts_today} 主题： #{data.forum.count_threads} 回复： #{data.forum.count_posts}
   
             if data.forum.moderators
               span 版主：
