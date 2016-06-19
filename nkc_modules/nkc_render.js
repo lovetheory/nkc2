@@ -114,6 +114,77 @@ function nkc_render(options){
   render.plain_render = plain_escape;
 
 
+  // 论坛化学式转换器模块，由bbs.kechuang.org上的acmilan制作，复制时请保留本行和下一行。
+  // Forum's Chemical Formula Converter. Made by acmilan in bbs.kechuang.org. Copy with this line and the previous line.
+  // 1.1版，解决了上标内存泄露问题
+  // 1.2版，解决了字符串尾内存泄露问题
+  // 1.3版，解决了尾下标不正确问题
+  // now modified by novakon for nkc project
+  function chemFormulaConverter(inputString)
+  {
+  	// 初始化临时字符串
+  	newString=inputString
+  	// 检验是否转换过
+  	// 替换点号
+    newString=newString.replace(/\&/g,'·')
+    .replace(/\~/g,'↑')
+    .replace(/\!/g,'↓')
+
+  	// 插入下标代码
+  	oldString=newString;
+  	newString="";
+  	index=0;
+  	while(oldString!="")
+  	{
+  		index1=oldString.search(/[a-z\)]\d+/i)+1;
+  		if(index1<=0)
+  		{
+  			break;
+  		}
+  		index2=index1+oldString.substring(index1).search(/\D/);
+  		if(index2-index1<=0)
+  		{
+  			index2=oldString.length
+  		}
+  		newString+=oldString.substring(0,index1);
+  		newString+="[sub]"
+  		newString+=oldString.substring(index1,index2);
+  		newString+="[/sub]"
+  		oldString=oldString.substring(index2);
+  	}
+  	newString+=oldString;
+  	// 插入上标代码
+  	oldString=newString;
+  	newString="";
+  	while(oldString!="")
+  	{
+  		index1=oldString.search(/\^/);
+  		if(index1<0)
+  		{
+  			break;
+  		}
+  		index2=index1+oldString.substring(index1).search(/[\+\-]/);
+  		if(index2-index1<=0)
+  		{
+  			index2=oldString.length
+  		}
+  		newString+=oldString.substring(0,index1);
+  		newString+="[sup]";
+  		newString+=oldString.substring(index1+1,index2+1);
+  		newString+="[/sup]"
+  		oldString=oldString.substring(index2+1);
+  	}
+  	newString+=oldString
+
+  	return newString;
+  }
+
+function chemFormulaReplacer(html){
+  return html.replace(/\[cf]([^]+?)\[\/cf]/g,function(match,p1) {
+    return chemFormulaConverter(p1)
+  })
+}
+
   render.hiddenReplaceHTML = function(text){
     return text.replace(/\[hide=([0-9]{1,3}).*?]([^]*?)\[\/hide]/gm, //multiline match
     function(match,p1,p2,offset,string){
@@ -215,9 +286,11 @@ function nkc_render(options){
     var html = ''
 
     if(!isHTML){  //bbcode
+
+      html = chemFormulaReplacer(content)
       html =
       XBBCODE.process({
-        text:content,
+        text:html,
       })
       .html
       .replace(/&#91;/g,'[')
