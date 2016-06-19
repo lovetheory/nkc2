@@ -147,16 +147,17 @@ color: #929292;
 }
 
 .HLMstat{
-    position: relative;
-    display: inline;
-    margin: 0;
-    margin-right: 2px;
-    width: 30px;
-    top: 1px;
-    background-color: #F7EAEB;
-    color: #D67272;
-    padding: 3px;
-    border-radius: 3px;
+  position: relative;
+  display: inline-block;
+  margin: 0;
+  margin-right: 2px;
+  width: 30px;
+  text-align: center;
+  top: 1px;
+  background-color: #F7EAEB;
+  color: #D67272;
+  padding: 1px;
+  border-radius: 3px;
 }
 .HLTstat{
     background: #BFD7E8;
