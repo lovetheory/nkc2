@@ -40,10 +40,20 @@ block content
           textarea#description(placeholder='个人简介') #{user.description}
           br
           p Colorcode
-          input#color(placeholder='colorcode' value='#{user.color}') 
+          input#color(placeholder='例如：#159' value='#{user.color||""}')
           br
-          br
-          button.btn.btn-default#submitpersonalsetting(onclick='submitpersonalsetting()') 提交修改
+          p 关注板块id（用半角逗号分隔）
+          .form-group
+            input#focus_forums(placeholder='例如：81,373' value='#{user.focus_forums||""}')
+          
+          if data.forumlist
+            p 板块id可参考：
+            .form-group
+              include forumlist_dropdown.jade
+            
+          
+          .form-group
+            button.btn.btn-default#submitpersonalsetting(onclick='submitpersonalsetting()') 提交修改
           
   include debug_output.jade
 block scripts
@@ -72,6 +82,7 @@ block scripts
         post_sign:geid('post_sign').value,
         description:geid('description').value,
         color:geid('color').value,
+        focus_forums:geid('focus_forums').value,
       })
       .then(jalert)
       .catch(err=>{

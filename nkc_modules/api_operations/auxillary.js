@@ -39,3 +39,31 @@ table.kamikaze = {
     return 'will restart after 1s'
   }
 }
+
+table.submitPersonalSetting = {
+  operation:function(params){
+    var post_sign = params.post_sign.toString().trim()
+    var description = params.description.toString().trim()
+    var color = params.color.toString().trim()
+    var focus_forums = params.focus_forums.toString().trim()
+
+    if(post_sign.length>300||description.length>300||color.length>10) throw 'section too long.'
+
+    var user = new layer.User(params.user._key)
+    return user.update({
+      post_sign,
+      description,
+      color,
+      focus_forums,
+    })
+    .then(u=>{
+      return 'successfully updated personal settings'
+    })
+  },
+  requiredParams:{
+    post_sign:String,
+    description:String,
+    color:String,
+    focus_forums:String,
+  }
+}

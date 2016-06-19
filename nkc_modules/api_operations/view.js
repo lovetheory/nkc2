@@ -839,6 +839,11 @@ table.viewPersonal = {
     return psnl.load()
     .then(psnl=>{
       data.personal = psnl
+
+      return getForumList(params)
+    })
+    .then(res=>{
+      data.forumlist = res
       return data
     })
   }

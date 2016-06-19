@@ -29,11 +29,8 @@ block content
           .panel-body
             p 将选中帖子移动到：
             .form-group
-              select#TargetForum.form-control
-                each fg in data.forumlist
-                  option ----
-                  each f in fg.forumgroup
-                    option #{f._key}:#{f.display_name}
+              include forumlist_dropdown.jade
+              
             .form-group
               button.btn.btn-default(onclick="directedMove()") 走起
           
