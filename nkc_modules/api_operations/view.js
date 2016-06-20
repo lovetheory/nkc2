@@ -585,7 +585,6 @@ table.viewUserThreads = {
       }
 
       var paging = getPaging(params)
-      paging.pagecount = Math.floor(( data.forum.count_threads-0.1)/paging.perpage )+1
       data.paging = paging
 
       var uid = user._key
@@ -614,6 +613,9 @@ table.viewUserThreads = {
       //if nothing went wrong
       data.threads = threads
       //return apifunc.get_all_forums()
+    .then(res=>{
+      totalcount = res[0]
+
       return getForumList(params)
     })
     .then(forumlist=>{
