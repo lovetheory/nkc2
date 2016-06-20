@@ -69,8 +69,8 @@ var certificates={
       addPostToCart:true,
       setDigest:true,
 
-      selfModifyTimeLimit:timeYear*3, //3y
-      elseModifyTimeLimit:timeYear*1, //1y
+      selfModifyTimeLimit:timeYear*20, //3y
+      elseModifyTimeLimit:timeYear*20, //1y
 
       viewExperimental:true,
 
