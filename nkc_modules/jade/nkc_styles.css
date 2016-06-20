@@ -85,16 +85,12 @@ color: #2563A2;
 vertical-align: middle;
 }
 .HLTtitletext{
-
-overflow: hidden;
-
-/* white-space: pre-wrap; */
-
-/* height: 23px; */
-
-display: inline;
-
-/* color: #1259A2; */
+overflow: hidden;
+/* white-space: pre-wrap; */
+/* height: 23px; */
+display: inline;
+vertical-align: middle;
+/* color: #1259A2; */
 }
 .HLM{
 
@@ -153,6 +149,7 @@ color: #929292;
   margin-right: 2px;
   width: 30px;
   text-align: center;
+  vertical-align: top;
   top: 1px;
   background-color: #F7EAEB;
   color: #D67272;
