@@ -608,13 +608,20 @@ table.viewUserThreads = {
           count:paging.count,
         }
       )
+      .then(threads=>{
+        //if nothing went wrong
+        data.threads = threads
+        //return apifunc.get_all_forums()
+
+        return AQL(`
+          for t in threads ${filter} collect with count into k return k
+          `,{uid}
+        )
+      })
     })
-    .then(threads=>{
-      //if nothing went wrong
-      data.threads = threads
-      //return apifunc.get_all_forums()
     .then(res=>{
       totalcount = res[0]
+      data.paging.pagecount = Math.floor(( totalcount-0.1)/data.paging.perpage )+1
 
       return getForumList(params)
     })
