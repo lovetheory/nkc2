@@ -585,7 +585,7 @@ table.viewUserThreads = {
       }
 
       var paging = getPaging(params)
-      paging.pagecount = Math.floor(( data.forum.count_threads-0.1)/paging.perpage )
+      paging.pagecount = Math.floor(( data.forum.count_threads-0.1)/paging.perpage )+1
       data.paging = paging
 
       var uid = user._key
