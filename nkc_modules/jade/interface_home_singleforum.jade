@@ -34,6 +34,10 @@ if 1
     //hr.hrNarrowSpace
     each thread,index in f.threads
       .HomeThreadItem
+        if thread.count>1
+          span.HomeThreadReplyCount #{thread.count-1}
+        //span.lighttext.rightalign #{fromNow(thread.lm.toc)}
+        
         - var uid = thread.oc.uid
         - var avatar = '/avatar_small/' + uid
         
@@ -56,6 +60,4 @@ if 1
             span.reddish #{fromNowAbbr(thread.tlm)} 
           else
 
-          if thread.count>1
-            span #{thread.count-1}
-          //span.lighttext.rightalign #{fromNow(thread.lm.toc)}
+          

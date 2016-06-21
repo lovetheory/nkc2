@@ -43,7 +43,11 @@ display: inline-block;
 
 color: #D1DDE4;
 }
-
+.HomeThreadReplyCount{
+    display: inline-block;
+    width: 26px;
+    text-align: left;
+}
 .HomeLatestThreadCont{
 
 }
@@ -233,6 +237,7 @@ margin-right: 20px;
   font-size: 10pt;
   display: block;
   position: absolute;
+  top: 1px;
   right: 0px;
   bottom: 0px;
 }
@@ -281,22 +286,21 @@ margin-right: 20px;
   color: #2563A2;
   position: absolute;
   top: 1px;
-  left: 0px;
-  right: 17px;
+  left: 30px;
+  right: 10px;
   /* width: 200px; */
   font-size: 11pt;
   overflow: hidden !important;
 }
 .HomeThreadText:visited{
-
-  color: #7A95B5;
+color: #4f84c3;
 }
 
 .HomeThreadTextDigest{
-  color: #DC871C;
+  color: #d67a06;
 }
 .HomeThreadTextDigest:visited{
-  color: #D4A872;
+  color: #a55d04;
 }
 
 .HomeThreadTextRightAlign{
