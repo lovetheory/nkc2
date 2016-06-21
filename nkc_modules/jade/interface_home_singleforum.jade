@@ -36,9 +36,12 @@ if 1
       .HomeThreadItem
         - var uid = thread.oc.uid
         - var avatar = '/avatar_small/' + uid
-        .HomeThreadAvatarPosition
-          a(href='/user_threads/#{uid}')
-            img.HomeThreadAvatar(src='#{avatar}')
+        
+        if 0 
+          .HomeThreadAvatarPosition
+            a(href='/user_threads/#{uid}')
+              img.HomeThreadAvatar(src='#{avatar}')
+        
         - var oc = thread.oc
         - var brief = oc.c.replace(/\[.*?]/g,'').trim().slice(0,100)
         
@@ -54,5 +57,5 @@ if 1
           else
 
           if thread.count>1
-            span.lighttext #{thread.count-1}
+            span #{thread.count-1}
           //span.lighttext.rightalign #{fromNow(thread.lm.toc)}
