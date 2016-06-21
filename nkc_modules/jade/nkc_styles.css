@@ -281,8 +281,8 @@ margin-right: 20px;
   color: #2563A2;
   position: absolute;
   top: 1px;
-  left: 31px;
-  right: 27px;
+  left: 0px;
+  right: 17px;
   /* width: 200px; */
   font-size: 11pt;
   overflow: hidden !important;
@@ -305,7 +305,7 @@ margin-right: 20px;
   right: 0px;
   top: 0px;
   color: #2a5a5a;
-  /* background: white; */
+  background: #ecf1ef;
   padding-left: 3px;
   /* font-size: 12pt; */
 }
