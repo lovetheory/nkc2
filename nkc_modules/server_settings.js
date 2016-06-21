@@ -206,6 +206,7 @@ settings.root_serve_static =
   }},
 
   {to:'nkc_modules/'},
+  {map:'/node_modules',to:'node_modules/'},
 
   //{map:'/avatar',to:'resources/avatar'},
   {map:'/api/avatar/',to:settings.avatar_path},

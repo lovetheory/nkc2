@@ -22,7 +22,13 @@ var DangerEditor = (function(){
     me.inputid.addEventListener('keypress', me.onkeypressID);
 
     me.btnban.addEventListener('click',me.BanThisUser);
-    me.btnloadforum.addEventListener('click',me.loadforum)
+    me.btnloadforum.addEventListener('click',me.loadforum);
+
+    var jsoneditorContainer = geid('jsoneditor')
+    var opts = {}
+    me.editor = new JSONEditor(jsoneditorContainer,opts)
+
+    me.editor.set(JSON.parse(me.inputcontent.value))
   }
 
   me.load = function(id){
@@ -35,29 +41,27 @@ var DangerEditor = (function(){
 
   me.submit=function(){
     try{
-      var doc = JSON.parse(me.inputcontent.value)
+      var doc = me.editor.get()
     }catch(e){
-      screenTopWarning(e.toString())
+      jwarning(e)
       return
     }
 
     nkcAPI('dangerouslyReplaceDoc',{doc:doc})
     .then(jalert)
-    .catch(screenTopWarning)
+    .catch(jwarning)
   }
   me.BanThisUser =function(){
-    try{
-      var doc = JSON.parse(me.inputcontent.value)
-    }catch(e){
-      screenTopWarning(e.toString())
-      return
+    var doc = me.editor.get()
+    if (doc._id.indexOf('users/')>=0){
+      doc.certs=['banned'];
+
+      nkcAPI('dangerouslyReplaceDoc',{doc:doc})
+      .then(jalert)
+      .catch(screenTopWarning)
+    }else{
+      screenTopWarning('not a user')
     }
-
-    doc.certs=['banned'];
-
-    nkcAPI('dangerouslyReplaceDoc',{doc:doc})
-    .then(jalert)
-    .catch(screenTopWarning)
   }
 
   me.onkeypressID= function(){
@@ -76,6 +80,5 @@ var DangerEditor = (function(){
   }
   return me
 })()
-
 
 DangerEditor.init()
