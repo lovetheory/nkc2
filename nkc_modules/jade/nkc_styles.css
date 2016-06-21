@@ -393,29 +393,25 @@ blockquote {
 
 
 .ForumThreadList{
-
-  border-collapse: collapse;
-
-  display: table;
-
-  margin-bottom: 10px;
-
-  width: 100%;
+/* border-collapse: collapse; */
+padding-left: 6px;
+display: inline-block;
+background: #ecf1ef;
+border-radius: 5px;
+margin-bottom: 10px;
+width: 100%;
 }
 .ForumThreadItem {
   position: relative;
-  display: table-row;
+  /* display: table-row; */
   border-bottom-style: dashed;
-  border-bottom-color: #EAEAEA;
+  border-bottom-color: #e2e2e2;
   border-width: 1px;
 }
 .ForumThreadTitle{
-
-  font-size: 16px;
-
-  display: inline-block;
-
-  /* vertical-align: middle; */
+font-size: 16px;
+display: inline;
+/* vertical-align: middle; */
 }
 .ForumThreadItem>div {
   padding-top: 5px;
@@ -434,14 +430,12 @@ blockquote {
 }
 
 .ForumThreadCreatorInfo{
-
-  display: block;
-
-  /* width: 50%; */
+display: inline-block;
+/* width: 50%; */
 }
 
 .ForumThreadDigestText{
-  color: orange;
+  color: #d48900;
   margin-right: 6px;
 }
 
@@ -449,8 +443,8 @@ blockquote {
   vertical-align: middle;
   /* position: absolute; */
   padding: 0;
-  padding-left: 10px;
-  display: table-cell;
+  /* padding-left: 10px; */
+  /* display: table-cell; */
   /* min-width: 400px; */
   /* right: 140px; */
   /* left: 45px; */
@@ -458,28 +452,27 @@ blockquote {
 .ForumThreadItemReplyCount{
   display: inline-block;
   margin-right: 5px;
+  text-align: right;
   font-size: 14px;
   /* position: absolute; */
   color: #D28A78;
-  /* width: 25px; */
+  width: 25px;
   /* vertical-align: middle; */
   /* right: 100px; */
 }
 
 .ForumThreadItemReplyInfo{
-
-  display: inline-block;
-
-  font-size: 10px;
-
-  /* vertical-align: bottom; */
+display: inline;
+font-size: 10px;
+/* vertical-align: bottom; */
+}
+.ForumThreadItemReplyInfo span{
+    margin-right: 10px;
 }
 
 .ForumThreadItemUsername{
-
-  display: inline-block;
-
-  color: #9E9E9E;
+display: inline-block;
+color: #777777;
 }
 .ForumThreadItemCreationTime{
 
