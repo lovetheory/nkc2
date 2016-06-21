@@ -577,9 +577,8 @@ line-height: 1.4;
   margin-bottom: 5px;
 }
 
-.ThreadPostBody em{
-
-}
+.ThreadPostBody p
+{margin-top: 5px;margin-bottom: 11px;}
 
 .ThreadPostBody span.xbbcode-code{
 
