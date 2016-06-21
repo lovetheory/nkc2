@@ -399,7 +399,7 @@ blockquote {
 .ForumThreadList{
 /* border-collapse: collapse; */
 padding-left: 6px;
-display: inline-block;
+/* display: table; */
 background: #ecf1ef;
 border-radius: 5px;
 margin-bottom: 10px;
@@ -428,9 +428,9 @@ blockquote {
   width: 40px;
 }
 .ForumThreadItemAvatar {
-  vertical-align: middle;
-  display: table-cell;
-  width: 45px;
+  /* vertical-align: middle; */
+  display: inline-block;
+  margin-right: 10px;
 }
 
 .ForumThreadCreatorInfo{
@@ -448,14 +448,14 @@ blockquote {
   /* position: absolute; */
   padding: 0;
   /* padding-left: 10px; */
-  /* display: table-cell; */
+  /* display: table-row; */
   /* min-width: 400px; */
   /* right: 140px; */
   /* left: 45px; */
 }
 .ForumThreadItemReplyCount{
   display: inline-block;
-  margin-right: 5px;
+  margin-right: 7px;
   text-align: right;
   font-size: 14px;
   /* position: absolute; */

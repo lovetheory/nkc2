@@ -13,23 +13,34 @@
         img.ForumThreadAvatar(src='#{avatar}')
   .ForumThreadItemContent
     .row
-      .col-md-8.col-sm-7
+      .col-lg-9.col-md-9.col-sm-8
         .ForumThreadTitle
-          - var brief = oc.c.replace(/\[.*?]/g,'').trim().slice(0,100)
-          if digest
-            //span.f12.ForumThreadDigestText [精]
-            a.ForumThreadDigestText(href="#{url}" title="#{brief}") #{oc.t} 
-          else
-            a(href="#{url}" title="#{brief}") #{oc.t} 
-          //帖子标题链接
+          .tbl(style='display:table-cell;width:36px;')
+            .ForumThreadItemReplyCount #{thread.count-1?(thread.count-1):''}
+            
+            if 0
+              .ForumThreadItemAvatar
+                -var uurl = '/user_profile/'+uid
+                -var avatar = '/avatar_small/'+uid
+                  a(href='#{uurl}')
+                    img.HomeThreadAvatar(src='#{avatar}')
           
-        .ForumThreadCreatorInfo
+          .tbl2(style='display:table-cell')
+            - var brief = oc.c.replace(/\[.*?]/g,'').trim().slice(0,100)
+            if digest
+              //span.f12.ForumThreadDigestText [精]
+              a.ForumThreadDigestText(href="#{url}" title="#{brief}") #{oc.t} 
+            else
+              a(href="#{url}" title="#{brief}") #{oc.t} 
+            //帖子标题链接
+          
+            .ForumThreadCreatorInfo
 
-          if 0
-            span.lighttext.ForumThreadItemCreationTime #{dateTimeString(thread.toc)}
-          
-          a.lighttext.ForumThreadItemUsername(href='/user_profile/#{ocuser._key}') #{ocuser.username}
-          //帖子发布时间和发布者
+              if 0
+                span.lighttext.ForumThreadItemCreationTime #{dateTimeString(thread.toc)}
+              
+              a.lighttext.ForumThreadItemUsername(href='/user_profile/#{ocuser._key}') #{ocuser.username}
+              //帖子发布时间和发布者
 
       
       
@@ -37,8 +48,8 @@
           
 
     
-      .col-md-4.col-sm-5
-        .ForumThreadItemReplyCount #{thread.count-1?(thread.count-1):''}
+      .col-lg-3.col-md-3.col-sm-4
+        
         .ForumThreadItemReplyInfo
           //.ForumThreadItemReplyCount #{thread.count-1?(thread.count-1) + ' 回复':''}
         
