@@ -711,39 +711,50 @@ table.viewDanger = {
     var doc_id = params.id
     var username = params.username
 
-    if(doc_id){
-      var p = doc_id.split('/')
-      var collname = p[0]
-      var doc_key = p[1]
+    return Promise.resolve()
+    .then(()=>{
+      if(doc_id){
+        var p = doc_id.split('/')
+        var collname = p[0]
+        var doc_key = p[1]
 
-      var doc = new layer.BaseDao(collname,doc_key)
+        var doc = new layer.BaseDao(collname,doc_key)
 
-      return doc.load()
-      .then(m=>{
-        data.doc = doc.model
-      })
-      .catch(err=>{
-        //ignore
-        report('no doc to load/bad id')
-      })
-      .then(()=>{
-        return data
-      })
-    }
+        return doc.load()
+        .then(m=>{
+          data.doc = doc.model
+        })
+        .catch(err=>{
+          //ignore
+          report('no doc to load/bad id')
+        })
+        .then(()=>{
+          return data
+        })
+      }
 
-    if(username){
-      var user = new layer.User()
-      return user.loadByName(username)
-      .then(u=>{
-        data.doc = u.model
-        return data
-      })
-      .catch(err=>{
-        return data
-      })
-    }
+      if(username){
+        var user = new layer.User()
+        return user.loadByName(username)
+        .then(u=>{
+          data.doc = u.model
+          return data
+        })
+        .catch(err=>{
+          return data
+        })
+      }
 
-    return data
+      return data
+    })
+    .then(data=>{
+      return getForumList(params)
+    })
+    .then(fl=>{
+      data.forumlist = fl
+      return data
+    })
+
   }
 }
 

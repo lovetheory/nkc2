@@ -1,35 +1,41 @@
-var DangerEditor = {
-  inputid:geid('DocID'),
-  inputcontent:geid('DocJSON'),
+var DangerEditor = (function(){
+  var me = {}
+  me.inputid=geid('DocID')
+  me.inputcontent=geid('DocJSON')
 
-  btnload:geid('LoadDoc'),
-  btnsubmit:geid('SaveDoc'),
-  btnLoadFromUsername:geid('LoadDocAsUsername'),
+  me.btnload=geid('LoadDoc')
+  me.btnsubmit=geid('SaveDoc')
+  me.btnLoadFromUsername=geid('LoadDocAsUsername')
 
-  btnban:geid('BanThisUser'),
+  me.btnloadforum = geid('LoadDocFromSelection')
 
-  init:function(){
+  me.btnban=geid('BanThisUser')
+
+
+  me.init = function(){
     console.log('Danger init...');
-    DangerEditor.btnload.addEventListener('click',DangerEditor.load);
-    DangerEditor.btnLoadFromUsername.addEventListener('click',DangerEditor.loadFromUsername);
 
-    DangerEditor.btnsubmit.addEventListener('click',DangerEditor.submit);
-    DangerEditor.inputid.addEventListener('keypress', DangerEditor.onkeypressID);
+    me.btnload.addEventListener('click',me.load);
+    me.btnLoadFromUsername.addEventListener('click',me.loadFromUsername);
 
-    DangerEditor.btnban.addEventListener('click',DangerEditor.BanThisUser);
-  },
+    me.btnsubmit.addEventListener('click',me.submit);
+    me.inputid.addEventListener('keypress', me.onkeypressID);
 
-  load:function(){
-    window.location = '/danger?id=' + DangerEditor.inputid.value.trim()
-  },
+    me.btnban.addEventListener('click',me.BanThisUser);
+    me.btnloadforum.addEventListener('click',me.loadforum)
+  }
 
-  loadFromUsername:function(){
-    window.location = '/danger?username=' +　DangerEditor.inputid.value.trim()
-  },
+  me.load = function(id){
+    window.location = '/danger?id=' + id||me.inputid.value.trim()
+  }
 
-  submit:function(){
+  me.loadFromUsername=function(){
+    window.location = '/danger?username=' +　me.inputid.value.trim()
+  }
+
+  me.submit=function(){
     try{
-      var doc = JSON.parse(DangerEditor.inputcontent.value)
+      var doc = JSON.parse(me.inputcontent.value)
     }catch(e){
       screenTopWarning(e.toString())
       return
@@ -38,11 +44,10 @@ var DangerEditor = {
     nkcAPI('dangerouslyReplaceDoc',{doc:doc})
     .then(jalert)
     .catch(screenTopWarning)
-  },
-
-  BanThisUser:function(){
+  }
+  me.BanThisUser =function(){
     try{
-      var doc = JSON.parse(DangerEditor.inputcontent.value)
+      var doc = JSON.parse(me.inputcontent.value)
     }catch(e){
       screenTopWarning(e.toString())
       return
@@ -53,14 +58,24 @@ var DangerEditor = {
     nkcAPI('dangerouslyReplaceDoc',{doc:doc})
     .then(jalert)
     .catch(screenTopWarning)
-  },
+  }
 
-  onkeypressID:function(){
+  me.onkeypressID= function(){
     e = event ? event :(window.event ? window.event : null);
     if(e.keyCode===13||e.which===13)
 
-    DangerEditor.load()
-  },
-}
+    me.load()
+  }
+
+  me.loadforum= function(){
+    var targetforum = gv('TargetForum').trim().split(':')
+    if(targetforum.length!==2)return screenTopWarning('请选择一个目标')
+    targetforum = targetforum[0]
+
+    me.load('forums/' + targetforum)
+  }
+  return me
+})()
+
 
 DangerEditor.init()
