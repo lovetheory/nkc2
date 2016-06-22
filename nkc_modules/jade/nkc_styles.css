@@ -46,7 +46,7 @@ color: #D1DDE4;
 .HomeThreadReplyCount{
     display: inline-block;
     width: 26px;
-    text-align: left;
+    text-align: center;
 }
 .HomeLatestThreadCont{
 
@@ -180,7 +180,7 @@ margin-right: 20px;
 .HomeForumContainer{
 margin-bottom: 20px;
 padding: 8px;
-background-color: #ecf1ef;
+/* background-color: #ecf1ef; */
 /* height: 135px; */
 /* overflow-y: hidden; */
 /* border: #E2E2E2; */
@@ -308,8 +308,8 @@ margin-right: 20px;
   position: absolute;
   right: 0px;
   top: 0px;
-  color: #2a5a5a;
-  background: #ecf1ef;
+  /* color: #2a5a5a; */
+  /* background: #ecf1ef; */
   padding-left: 3px;
   /* font-size: 12pt; */
 }
