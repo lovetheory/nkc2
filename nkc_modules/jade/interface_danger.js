@@ -32,7 +32,7 @@ var DangerEditor = (function(){
   }
 
   me.load = function(id){
-    window.location = '/danger?id=' + id||me.inputid.value.trim()
+    window.location = '/danger?id=' + ((typeof id=='string'?id:null)||me.inputid.value.trim())
   }
 
   me.loadFromUsername=function(){
