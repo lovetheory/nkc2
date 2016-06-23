@@ -46,7 +46,7 @@ function validate_and_submit(){
   if(question_object)//if not null
   {
     question_object.qid = boxqid.value==''?undefined:boxqid.value.trim()
-    question_object.category = boxcategory.value==''?undefined:boxcategory.value.trim()
+    question_object.category = boxcategory.value==''?null:boxcategory.value.trim()
 
     nkcAPI('addQuestion',question_object)
     .then(function(res){
