@@ -38,8 +38,16 @@ block content
             a(href='/api/operation?operation=viewPersonal') 去个人设置页面
             
       hr.hrNarrowSpace
-        
-        
+    
+    .row
+      - var cindex = 0
+      each group,gindex in data.grouparray
+        - var parent = group.parentforum
+        each forum,findex in group.forumgroup 
+          - var index = cindex + findex
+          include interface_home_singleforum.jade
+          
+        - cindex += group.forumgroup.length
     
     .row
       .col-md-12(style='margin-bottom:10px;')
@@ -54,18 +62,7 @@ block content
       
         if data.answersheet_count
           span(style='color:#ccc;display:inline-block;') - [ 学术委员会 ] 已经有 #{'0b'+data.answersheet_count.toString(2).toUpperCase()} 人次通过了测试
-    
-    .row
-      - var cindex = 0
-      each group,gindex in data.grouparray
-        - var parent = group.parentforum
-        each forum,findex in group.forumgroup 
-          - var index = cindex + findex
-          include interface_home_singleforum.jade
           
-        - cindex += group.forumgroup.length
-    
-    
     .row
       .col-md-12
         hr.hrNarrowSpace
