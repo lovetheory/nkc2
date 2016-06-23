@@ -832,13 +832,13 @@ h4,h5,h6 {
     margin: 0;
 }
 .SMSTableItem{
-border-style: solid;
+border-bottom-style: solid;
 border-width: 1px;
-border-radius: 6px;
+/* border-radius: 6px; */
 border-color: #dadada;
 /* background-color: #f9f9f9; */
-/* padding: 4px; */
-margin: 4px;
+padding: 2px;
+/* margin: 4px; */
 }
 .SMSFirstRow{
     display: inline-block;
