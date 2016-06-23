@@ -69,7 +69,7 @@ block scripts
         newpassword2:geid('newpassword2').value,
       })
       .then(jalert)
-      .catch(err=>{
+      .catch(function(err){
         jwarning(err)
         
         geid('submitnewpassword').disabled = false
@@ -85,7 +85,7 @@ block scripts
         focus_forums:geid('focus_forums').value,
       })
       .then(jalert)
-      .catch(err=>{
+      .catch(function(err){
         jwarning(err)
               geid('submitpersonalsetting').disabled = false
       })
