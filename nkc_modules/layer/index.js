@@ -374,6 +374,83 @@ var layer = (function(){
 
   }
 
+  class Question extends BaseDao{
+    constructor(key){
+      super('questions',key)
+    }
+
+    static create(qobject){
+      var q = new Question()
+      q.model = qobject
+      return q
+    }
+
+    static listAllQuestions(uid){
+      if(uid){
+        return AQL(`for q in questions filter q.uid==@uid sort q.toc desc let user = document(users,q.uid) return merge(q,{user})`,{uid})
+      }
+      else{
+        //if uid === null
+        return AQL(`for q in questions sort q.toc desc let user = document(users,q.uid) return merge(q,{user})`)
+      }
+    }
+
+    static listAllQuestionsOfCategory(catstr){
+      return AQL(`for q in questions filter q.category == @catstr
+        sort q.toc desc let user = document(users,q.uid) return merge(q,{user})
+        `,{catstr}
+      )
+    }
+
+    static getQuestionCount(){
+      return AQL(`for q in questions collect with count into k return k`)
+      .then(res=>{
+        return res[0]
+      })
+    }
+
+    static randomlyListQuestionsOfCategory(category,count,seed){
+      category = category||null
+      //1. get totalcount of questions
+      return AQL(`for q in questions filter q.category == @cat collect with count into k return k`,{cat:category})
+      .then(res=>{
+        var totalcount=res[0]
+        if(totalcount<count)throw 'not enough questions within this category'
+
+        var rs = require('random-seed')
+        var rand = rs.create(seed)
+
+        var rarr = [];
+        for(var i = 0;i<count;i++){
+          while(1)
+          {
+            var r = Math.floor(rand.random()*totalcount);//random int btween 0 and qlen
+            if(rarr.indexOf(r)<0)//if selection not already exist in array
+            {
+              rarr.push(r);
+              break;
+            }
+          }
+        }
+
+        var qarr=[]
+        var parr=[]
+
+        for(i in rarr){
+          var number = rarr[i]
+          parr.push(AQL(`for q in questions filter q.category == @cat limit @number,1 return q`,{cat:category,number}).then(res=>{
+            var q = res[0]
+            qarr.push(q)
+          }))
+        }
+
+        return Promise.all(parr)
+        .then(()=>{
+          return qarr
+        })
+      })
+    }
+  }
 
   layer.Post = Post
   layer.User = User
@@ -383,6 +460,7 @@ var layer = (function(){
   layer.BaseDao = BaseDao
   layer.ShortMessage = ShortMessage
   layer.Paging = Paging
+  layer.Question = Question
 
   return layer
 })()

@@ -10,6 +10,7 @@ var validation = require('validation')
 var AQL = queryfunc.AQL
 var apifunc = require('api_functions')
 var cookie_signature = require('cookie-signature')
+var layer = require('../layer')
 
 var table = {};
 module.exports = table;
@@ -142,13 +143,8 @@ table.deleteQuestion = {
   operation:function(params){
     var qid = params.qid
 
-    return queryfunc.doc_load(qid,'questions')
-    .then(back=>{
-      if(back.uid!==params.user._key&&!params.permittedOperations.deleteElseQuestions)//if not owning the question
-      throw 'not owning';
-
-      return queryfunc.doc_kill(qid,'questions')
-    })
+    var q = new layer.Question(qid)
+    return q.remove()
   },
   requiredParams:{
     qid:String,
@@ -157,17 +153,35 @@ table.deleteQuestion = {
 
 table.addQuestion = {
   operation:function(params){
+    if(params.qid){
+      var question = {
+        question:params.question,
+        answer:params.answer,
+        type:params.type,
+        category:params.category,
 
-    var question = {
-      question:params.question,
-      answer:params.answer,
-      type:params.type,
+        tlm:Date.now()
+      }
 
-      uid:params.user._key,
-      toc:Date.now(),
+      var q = new layer.Question(params.qid)
+
+      return q.update(question)
+
+    }else{
+
+      var question = {
+        question:params.question,
+        answer:params.answer,
+        type:params.type,
+        category:params.category,
+
+        uid:params.user._key,
+        toc:Date.now(),
+      }
+
+      var q = layer.Question.create(question)
+      return q.save()
     }
-
-    return apifunc.post_questions(question)
   },
   requiredParams:{
     question:String,
@@ -179,7 +193,11 @@ table.addQuestion = {
 table.getQuestion = {
   operation:function(params){
     var qid = params.qid
-    return queryfunc.doc_load(qid,'questions')
+    var q = new layer.Question(qid)
+    return q.load()
+    .then(q=>{
+      return q.model
+    })
   },
   requiredParams:{
     qid:String,
@@ -188,6 +206,6 @@ table.getQuestion = {
 
 table.listAllQuestions = {
   operation:function(params){
-    return apifunc.get_questions(null)
+    return layer.Question.listAllQuestions(null)
   }
 }

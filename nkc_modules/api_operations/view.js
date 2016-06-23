@@ -58,7 +58,7 @@ table.viewExam = {
       return data;
     }
 
-    return apifunc.exam_gen({ip:params._req.iptrim})
+    return apifunc.exam_gen({ip:params._req.iptrim,category:params.category})
     .then(function(back){
       data.exam = back;
       return data;
@@ -66,7 +66,6 @@ table.viewExam = {
   },
 
   requiredParams:{
-
   },
 }
 
@@ -74,6 +73,7 @@ table.viewRegister = {
   operation:function(params){
     var data = defaultData(params)
 
+    data.getcode = params.getcode
     data.code = params.code
     data.template = 'nkc_modules/jade/interface_user_register.jade'
 
@@ -768,14 +768,42 @@ table.dangerouslyReplaceDoc = {
 }
 
 table.viewQuestions = {
+  init:function(){
+    queryfunc.createIndex('questions',{
+      fields:['toc'],
+      type:'skiplist',
+      unique:'false',
+      sparse:'false',
+    })
+    queryfunc.createIndex('questions',{
+      fields:['category','toc'],
+      type:'skiplist',
+      unique:'false',
+      sparse:'false',
+    })
+    queryfunc.createIndex('questions',{
+      fields:['uid','toc'],
+      type:'skiplist',
+      unique:'false',
+      sparse:'false',
+    })
+  },
   operation:params=>{
     var data = defaultData(params)
     data.template = jadeDir + 'questions_edit.jade'
 
-    return apifunc.get_questions(null)
+    return Promise.resolve()
+    .then(()=>{
+      if(params.category){
+        return layer.Question.listAllQuestionsOfCategory(params.category)
+      }
+      else{
+        return layer.Question.listAllQuestions(null)
+      }
+    })
     .then(function(back){
       data.questions_all = back;
-      return apifunc.get_questions(params.user._key)
+      return layer.Question.listAllQuestions(params.user._key)
     })
     .then(function(back){
       data.questions = back;

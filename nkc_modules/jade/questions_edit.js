@@ -1,4 +1,6 @@
 var box = geid('content');
+var boxcategory = geid('category')
+var boxqid = geid('qid')
 
 function validate_and_submit(){
   var q = box.value.trim().replace(/\n/g,'');
@@ -43,8 +45,11 @@ function validate_and_submit(){
 
   if(question_object)//if not null
   {
+    question_object.qid = boxqid.value==''?undefined:boxqid.value.trim()
+    question_object.category = boxcategory.value==''?undefined:boxcategory.value.trim()
+
     nkcAPI('addQuestion',question_object)
-    .then(res=>{
+    .then(function(res){
       location.reload()
     })
     .catch(jwarning)
@@ -84,6 +89,9 @@ function load_question(qid){
     }
 
     box.value= k
+    boxcategory.value = q.category||''
+    boxqid.value = q._key
+    boxqid.focus()
   })
   .catch(jwarning)
 }

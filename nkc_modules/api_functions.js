@@ -406,22 +406,6 @@ apifunc.get_resources = function(key,callback){
   return queryfunc.doc_load(key,'resources',callback);
 }
 
-apifunc.get_questions = function(uid,callback){
-  if(uid){
-    return queryfunc.doc_list({
-      type:'questions',
-      filter_by:'uid',
-      equals:uid,
-      sort_by:'toc',
-      order:'desc',
-    },
-    callback);
-  }
-  else{
-    //if uid === null
-    return queryfunc.doc_list_all_questions(null,callback);
-  }
-}
 
 apifunc.get_certain_questions = function(qlist,callback)
 {
@@ -434,39 +418,37 @@ apifunc.post_questions = function(question,callback){
 
 var rs = require('random-seed')
 
-apifunc.exam_gen = function(options,callback){
-  return apifunc.get_questions(null)
-  .then(function(questions){
-    //questions got
+apifunc.exam_gen = function(options){
+  var seed = options.iptrim + Math.floor(Date.now()/settings.exam.refresh_period).toString() + '123457'
+  var category = options.category
+  var layer = require('layer')
 
-    var qlen = questions.length;
-    if(qlen<settings.exam.number_of_questions)
-    throw ('no enough questions in base.')
+  var qarr = []
 
-    //seed the random generator,
-    //to provide the same set of questions during every refresh_period
-    var rand = rs.create(
-      options.iptrim + Math.floor(Date.now()/settings.exam.refresh_period).toString()
-    );
-
-    var qarr = [];
-    for(var i = 0;i<settings.exam.number_of_questions;i++){
-      while(1)
-      {
-        var r = Math.floor(rand.random()*qlen);//random int btween 0 and qlen
-        if(qarr.indexOf(r)<0)//if selection not already exist in array
-        {
-          qarr.push(r);
-          break;
-        }
-      }
+  return Promise.resolve()
+  .then(()=>{
+    if(category){
+      return layer.Question.randomlyListQuestionsOfCategory(category,settings.exam.number_of_questions_subjective,seed+1)
+      .then(arr=>{
+        qarr = qarr.concat(arr)
+        return layer.Question.randomlyListQuestionsOfCategory('common',settings.exam.number_of_questions_common,seed+2)
+      })
+      .then(arr=>{
+        qarr = qarr.concat(arr)
+      })
+    }else{
+      return layer.Question.randomlyListQuestionsOfCategory(null,settings.exam.number_of_questions,seed)//category, count, seed
+      .then(arr=>{
+        qarr=qarr.concat(arr)
+      })
     }
-
-    //now qarr should contain 6 numbers between 0 and qlen, no repeating.
+  })
+  .then(function(){
+    console.log(qarr);
 
     for(i in qarr){
       var qobj = {};
-      var originalquestion = questions[qarr[i]];
+      var originalquestion = qarr[i];
 
       qobj.question = originalquestion.question;
       qobj.type = originalquestion.type;
@@ -479,7 +461,7 @@ apifunc.exam_gen = function(options,callback){
         default:break;
       }
       qobj.qid = originalquestion._key;
-      qarr[i]=qobj;
+      qarr[i] = qobj;
     }
 
     var exam = {};

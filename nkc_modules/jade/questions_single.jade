@@ -1,29 +1,37 @@
+.Qzone
+  p 类别：
+    span.red #{q.category}
+    span.lighttext   #{q.username||(q.user?q.user.username:'')} - #{fromNow(q.toc)}创建 
+    if q.tlm
+      span.lighttext - #{fromNow(q.tlm)}修改
+    
+  case q.type
+    when 'ans'
+      p
+        text.yellow 问答题：
+        text #{q.question}
+      p.yellow
+        text 答案：
+        text.green #{q.answer}
+    
+    when 'ch4'
+      p
+        text.yellow 选择题：
+        text #{q.question}
 
-case q.type
-  when 'ans'
-    p
-      text.red 问答题：
-      text #{q.question}
-      text.lighttext   #{q.username} - #{fromNow(q.toc)}创建
-    p 
-      text 答案：
-      text.green #{q.answer}
-  
-  when 'ch4'
-    p
-      text.red 选择题：
-      text #{q.question}
-      text.lighttext   #{q.username} - #{fromNow(q.toc)}创建
-    p
-      text 答案：
-      each a,index in q.answer
-        if index==0
-          text.green #{index+1}. #{a} 
-        else
-          text &nbsp;
-          text #{index+1}. #{a} 
+      p
+        text.yellow 答案：
+        each a,index in q.answer
+          if index==0
+            text.green #{index+1}. #{a} 
+          else
+            text &nbsp;
+            text #{index+1}. #{a} 
+            
           
-if q.uid == data.user._key || data.permittedOperations.deleteElseQuestions
-  button.btn.btn-default(onclick="remove_question('#{q._key}')") 删掉
+  if q.uid == data.user._key || data.permittedOperations.deleteElseQuestions
+    button(onclick="remove_question('#{q._key}')") 删掉
 
-button.btn.btn-default(onclick="load_question('#{q._key}')") 复制到输入
+  button(onclick="load_question('#{q._key}')") 修改
+
+  hr.hrNarrowSpace
