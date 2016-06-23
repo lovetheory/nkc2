@@ -35,12 +35,14 @@ block content
                 input#target.form-control(placeholder='发表至' value='#{(data.replytarget?data.replytarget:"")}')
 
               select#lang.form-control
-                if data.original_post
+                if 0
                   option #{data.original_post.l}
-                else
-                  option markdown
-                  option plain
-                  option pwbb
+                
+                option pwbb
+                option markdown
+                option plain
+                option html
+                  
             
               button#post.btn.btn-default(type='submit' style='float:right;') 发表
           hr
