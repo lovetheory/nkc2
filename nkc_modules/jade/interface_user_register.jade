@@ -4,57 +4,68 @@ block title
   title 注册
 
 block content
+  if data.getcode
+    .container
+      .row
+        .col-sm-12
+          h1 获取注册码
+          div.f12(style='line-height:1.8;')
+            :markdown
+              目前仅支持通过测试获取注册码。
+              
+              [参加注册测试](/exam)
   
-  .container
-    .row
-      .col-sm-12
-        h1 注册
-        p 欲于科创论坛交流，请先注册一个账号。
-        br
-        
-        div.f12(style='line-height: 1.8;')
-          include:markdown EULA.md
-        
-        hr
-        .form-horizontal.f12
-        
-          .form-group
-            label.control-label.col-sm-3 注册码
-            .col-sm-6
-              input#regcode.form-control(type='text' placeholder='必须有' value='#{data.code||""}')
-            .col-sm-3.control-label(style='text-align:left')
-              a(href='/exam') 参加注册考试
+  if !data.getcode
+    .container
+      .row
+        .col-sm-12
+          h1 注册
+          p 欲于科创论坛交流，请先注册一个账号。
+          br
+          
+          div.f12(style='line-height: 1.8;')
+            include:markdown EULA.md
+          
+          hr
+          .form-horizontal.f12
+          
+            .form-group
+              label.control-label.col-sm-3 注册码
+              .col-sm-6
+                input#regcode.form-control(type='text' placeholder='必须有' value='#{data.code||""}')
+              .col-sm-3.control-label(style='text-align:left')
+                a(href='/register?getcode=true') 获取注册码
+                
+            .form-group
+              label.control-label.col-sm-3 用户名
+              .col-sm-6
+                input#username.form-control(type='text' placeholder='字母、数字、汉字，区分大小写' onkeydown='username_keypress()')
+                
+            .form-group
+              label.control-label.col-sm-3 邮箱
+              .col-sm-6
+                input#email.form-control(type='email' placeholder='john@example.com' onkeydown='email_keypress()')
+                
+            .form-group
+              label.control-label.col-sm-3 密码
+              .col-sm-6
+                input#password.form-control(type='password' placeholder='至少6位' onkeydown='password_keypress()')
               
-          .form-group
-            label.control-label.col-sm-3 用户名
-            .col-sm-6
-              input#username.form-control(type='text' placeholder='字母、数字、汉字，区分大小写' onkeydown='username_keypress()')
-              
-          .form-group
-            label.control-label.col-sm-3 邮箱
-            .col-sm-6
-              input#email.form-control(type='email' placeholder='john@example.com' onkeydown='email_keypress()')
-              
-          .form-group
-            label.control-label.col-sm-3 密码
-            .col-sm-6
-              input#password.form-control(type='password' placeholder='至少6位' onkeydown='password_keypress()')
-            
-          .form-group
-            label.control-label.col-sm-3 再次输入密码
-            .col-sm-6
-              input#password2.form-control(type='password' placeholder='重复一次' onkeydown='password2_keypress()')
-        
-          .form-group
-            .col-sm-offset-3.col-sm-10
-              //offset 2 grids
-              button.btn.btn-default(onclick='register_submit()') 提交
-              
-          .form-group
-            .col-sm-offset-3.col-sm-6
-              #error_info_panel.panel.panel-default(style='display:none;')
-                .panel-body
-                  div#error_info.d-inline.lighttext() 
+            .form-group
+              label.control-label.col-sm-3 再次输入密码
+              .col-sm-6
+                input#password2.form-control(type='password' placeholder='重复一次' onkeydown='password2_keypress()')
+          
+            .form-group
+              .col-sm-offset-3.col-sm-10
+                //offset 2 grids
+                button.btn.btn-default(onclick='register_submit()') 提交
+                
+            .form-group
+              .col-sm-offset-3.col-sm-6
+                #error_info_panel.panel.panel-default(style='display:none;')
+                  .panel-body
+                    div#error_info.d-inline.lighttext() 
 
   include debug_output.jade
     
