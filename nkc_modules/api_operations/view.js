@@ -558,10 +558,34 @@ table.viewUserThreads = {
 
     var uid = params.uid
 
+    if(params.digest){
+      var filter = `
+      sort t.uid desc,t.disabled desc,t.tlm desc
+      filter t.uid == @uid && t.digest==true
+      `
+      data.digest = true
+    }else{
+      var filter = `
+      sort t.uid desc,t.disabled desc,t.tlm desc
+      filter t.uid == @uid && t.disabled==null
+      `
+    }
+
     var userclass = new layer.User(uid)
     return userclass.load()
-    .then(u=>{
-      var user = u.model
+    .then(()=>{
+      return AQL(`
+        for t in threads ${filter} collect with count into k return k
+        `,{uid}
+      )
+    })
+    .then(res=>{
+      totalcount = res[0]
+
+      var paging = new layer.Paging(params.page)
+      data.paging = paging.getPagingParams(totalcount)
+
+      var user = userclass.model
 
       data.forum = {
         display_name:user.username+' 的主题',
@@ -570,22 +594,6 @@ table.viewUserThreads = {
         count_posts:user.count_posts||null,
         color:user.color||'#bbb'
       }
-
-      if(params.digest){
-        var filter = `
-        sort t.uid desc,t.disabled desc,t.tlm desc
-        filter t.uid == @uid && t.digest==true
-        `
-        data.digest = true
-      }else{
-        var filter = `
-        sort t.uid desc,t.disabled desc,t.tlm desc
-        filter t.uid == @uid && t.disabled==null
-        `
-      }
-
-      var paging = getPaging(params)
-      data.paging = paging
 
       var uid = user._key
       return AQL(`
@@ -604,24 +612,15 @@ table.viewUserThreads = {
         `,
         {
           uid,
-          start:paging.start,
-          count:paging.count,
+          start:data.paging.start,
+          count:data.paging.count,
         }
       )
-      .then(threads=>{
-        //if nothing went wrong
-        data.threads = threads
-        //return apifunc.get_all_forums()
-
-        return AQL(`
-          for t in threads ${filter} collect with count into k return k
-          `,{uid}
-        )
-      })
     })
-    .then(res=>{
-      totalcount = res[0]
-      data.paging.pagecount = Math.floor(( totalcount-0.1)/data.paging.perpage )+1
+    .then(threads=>{
+      //if nothing went wrong
+      data.threads = threads
+      //return apifunc.get_all_forums()
 
       return getForumList(params)
     })

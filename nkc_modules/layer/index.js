@@ -230,7 +230,7 @@ var layer = (function(){
     getPagingParams(total_items){
       var page = this.page
 
-      var perpage = 30
+      var perpage = settings.paging.perpage
       var start = page * perpage
       var count = perpage
 
@@ -382,6 +382,7 @@ var layer = (function(){
   layer.Thread = Thread
   layer.BaseDao = BaseDao
   layer.ShortMessage = ShortMessage
+  layer.Paging = Paging
 
   return layer
 })()

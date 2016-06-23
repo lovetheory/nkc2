@@ -306,4 +306,8 @@ settings.exam = {
   time_before_register:3600*1000*1, //1h
 }
 
+settings.paging={
+  perpage:50,
+}
+
 module.exports = settings;
