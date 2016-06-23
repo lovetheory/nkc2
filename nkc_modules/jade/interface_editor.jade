@@ -35,7 +35,7 @@ block content
                 input#target.form-control(placeholder='发表至' value='#{(data.replytarget?data.replytarget:"")}')
 
               select#lang.form-control
-                if 0
+                if data.original_post
                   option #{data.original_post.l}
                 
                 option pwbb
