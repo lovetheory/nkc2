@@ -15,10 +15,10 @@
     .row
       .col-lg-9.col-md-9.col-sm-8
         .ForumThreadTitle
-          .tbl(style='display:table-cell;width:36px;')
+          .tbl(style='display:table-cell;width:72px;')
             .ForumThreadItemReplyCount #{thread.count-1?(thread.count-1):''}
             
-            if 0
+            if 1
               .ForumThreadItemAvatar
                 -var uurl = '/user_profile/'+uid
                 -var avatar = '/avatar_small/'+uid
