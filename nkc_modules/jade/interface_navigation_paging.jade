@@ -21,6 +21,10 @@ if paging
     //ignore navigation, 1 page only
   else
     ul.pagination.NavigationPaging
+      if start>0
+        li()
+          a(href='#{toQueryString({page:0,digest})}') 始
+    
       each pagenum,index in pagingarray
         - var class_str = pagenum==paging.page?'active':''
         
