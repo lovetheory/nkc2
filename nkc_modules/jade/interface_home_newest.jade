@@ -9,16 +9,16 @@
           .HLMtext
             
             if threadlist == data.latestThreads
-              .HLMstat #{fromNowAbbr(thread.tlm)}
-              
+              //.HLMstat #{fromNowAbbr(thread.tlm)}
+              .HLMstat.HLTstat #{thread.count}
               
             if threadlist == data.newestDigestThreads
-              .HLMstat #{fromNowAbbr(thread.toc)}
+              //.HLMstat #{fromNowAbbr(thread.toc)}
               .HLMstat.HLTstat #{thread.count}
               
             if threadlist == data.newestThreads
-              .HLMstat #{fromNowAbbr(thread.toc)}
-              
+              //.HLMstat #{fromNowAbbr(thread.toc)}
+              .HLMstat.HLTstat #{thread.count}
             
             
             - var titletext = thread.oc.t

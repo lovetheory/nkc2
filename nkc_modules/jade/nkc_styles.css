@@ -150,7 +150,7 @@ color: #929292;
   position: relative;
   display: inline-block;
   margin: 0;
-  margin-right: 2px;
+  margin-right: 4px;
   width: 30px;
   text-align: center;
   vertical-align: top;
@@ -161,7 +161,7 @@ color: #929292;
   border-radius: 3px;
 }
 .HLTstat{
-    background: #BFD7E8;
+    background: #dde9f1;
     color: #2F68BF;
 }
 .HomeFriendlyLink{
