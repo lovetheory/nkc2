@@ -106,7 +106,7 @@ var certificates={
 
   scholar:{ //学者，1学分为限。
     display_name:'学者',
-    inheritFrom:['examinated'],
+    inheritFrom:['examinated','qc'],
 
     contentClasses:{
       sensitive:true,
