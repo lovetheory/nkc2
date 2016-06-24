@@ -75,21 +75,20 @@ block content
 
       .col-xs-12.col-sm-6  
         if data.user
-          h4 所有最近提交的问题
-          -for(c in categories)
-            if (c=='')
-              a(href='?operation=viewQuestions') all 
-            else
-              a(href='?operation=viewQuestions&category=#{c}') [#{c}-#{categories[c]}] 
-            
-          //a(href='/api/questions?all=true' target='_blank') 下载JSON格式
-          .panel.panel-default
-            .panel-body.post-body
-              each q,index in data.questions_all
-
-                include questions_single.jade
+          if data.questions_all
+            h4 所有最近提交的问题
+            -for(c in categories)
+              if (c=='')
+                a(href='?operation=viewQuestions') all 
+              else
+                a(href='?operation=viewQuestions&category=#{c}') [#{c}-#{categories[c]}] 
               
-            
+            //a(href='/api/questions?all=true' target='_blank') 下载JSON格式
+            .panel.panel-default
+              .panel-body.post-body
+                each q,index in data.questions_all
+
+                  include questions_single.jade
   
   include debug_output.jade
 block scripts

@@ -807,7 +807,7 @@ table.viewQuestions = {
       }
     })
     .then(function(back){
-      data.questions_all = back;
+      data.questions_all = params.permittedOperations.listAllQuestions?back:undefined;
       return layer.Question.listAllQuestions(params.user._key)
     })
     .then(function(back){

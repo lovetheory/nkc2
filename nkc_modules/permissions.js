@@ -37,12 +37,26 @@ var certificates={
       deleteQuestion:true,
       getQuestion:true,
 
+      listAllQuestions:true,
+
       elseModifyTimeLimit:timeYear*20, //20y
       selfModifyTimeLimit:timeYear*20, //20y
 
       toggleDigestAllThreads:true,
       toggleToppedAllThreads:true,
       kamikaze:true,
+    }
+  },
+
+  qc:{
+    display_name:'题委',
+
+    permittedOperations:{
+      viewQuestions:true,
+
+      addQuestion:true,
+
+      getQuestion:true,
     }
   },
 
@@ -83,7 +97,7 @@ var certificates={
 
       moveThread:true,
       moveOwnedThreads:true,
-      
+
       viewPostHistory:true,
 
       setTopped:true
