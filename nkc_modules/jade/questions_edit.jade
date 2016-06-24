@@ -5,7 +5,7 @@ block title
   
 block content
 
-  -var categories = {'':'','chem':'化学','bio':'生物','math':'数学','phys':'物理','cs':'计算机科学','english':'英文','common':'科学基础','mix':'简单题大杂烩','earth':'地球科学','ee':'电子技术','electrical':'电气工程','med':'医学卫生','agri':'农业技术','aerospace':'航空航天'}
+  -var categories = {'':'','chem':'化学','bio':'生物','math':'数学','phys':'物理','cs':'计算机科学','english':'英文','common':'科学基础','mix':'简单题大杂烩','earth':'地球科学','ee':'电子技术','electrical':'电气工程','med':'医药卫生','agri':'农业技术','aerospace':'航空航天'}
 
   style.
     .red {
@@ -29,7 +29,7 @@ block content
         if data.user
           h4 撰写题目
           p.
-            请按照下面列出的格式提交题目，尽量不要加空格或者回车。
+            请按照下面列出的格式提交题目。用钱号($)分隔问题和答案或选项。
           p.green.
             问答题：
             问题$答案
@@ -38,6 +38,7 @@ block content
             问题$正确答案$错误项1$错误项2$错误项3
           p.red.
             不支持其他未声明的格式，因为程序员比较懒。
+          p 请注意：每道问答题只允许有一种回答方式。请通过在题目中提示格式，避免答题时出现诸如“到底写1/2还是0.5”的问题。
           p 类别可选：
             -for(c in categories)
               | [
