@@ -19,8 +19,8 @@ var regex_validation = require('nkc_regex_validation');
 var create_user = function(user){
   //check if user exists.
 
-  return AQL(`for u in users filter u.username == @newusername return u`,
-    {newusername:user.username}
+  return AQL(`for u in users filter u.username_lowercase == @newusername return u`,
+    {newusername:user.username.toLowerCase()}
   )
   .then(resultArr=>{
     if(resultArr.length!=0)throw 'username exists already. pick another one'
@@ -35,6 +35,7 @@ var create_user = function(user){
     var newuser = {
       _key:newuid,
       username:user.username,
+      username_lowercase:user.username.toLowerCase(),
       toc:timestamp,
       tlv:timestamp,
       certs:['examinated'],
@@ -61,6 +62,9 @@ var create_user = function(user){
     .then(()=>{
       return queryfunc.doc_save(newuser_personal,'users_personal')
     })
+    .then(res=>{
+      return res
+    })
   })
 }
 
@@ -75,6 +79,13 @@ table.userRegister = {
   init:function(){
     queryfunc.createIndex('users',{
       fields:['username'],
+      type:'hash',
+      unique:'true',
+      sparse:'true',
+    })
+
+    queryfunc.createIndex('users',{
+      fields:['username_lowercase'],
       type:'hash',
       unique:'true',
       sparse:'true',
@@ -97,8 +108,7 @@ table.userRegister = {
       throw ('failed reconizing regcode')
     })
     .then(ans=>{
-      if(ans.uid)
-      throw ('answersheet expired, consider re-take the exam.')
+      if(ans.uid) throw ('answersheet expired, consider re-take the exam.')
 
       // NOTE: we don't want any of our registered user to help
       // others with the regcode.
@@ -109,6 +119,15 @@ table.userRegister = {
       throw ('answersheet expired, consider re-take the exam.')
 
       return create_user(userobj)
+    })
+    .then(res=>{
+      var uid = res._key
+
+      var answersheet = new layer.BaseDao('answersheets',userobj.regcode)
+      return answersheet.update({uid})
+      .then(a=>{
+        return res
+      })
     })
 
   },
@@ -161,10 +180,15 @@ function testPassword(input,hashtype,storedPassword){
 
 
 table.userLogin = {
+  init:function(){
+
+  },
   operation:function(params){
     var user = {}
 
-    return apifunc.get_user_by_name(params.username)
+    return AQL(`for u in users filter u.username_lowercase == @username return u`,
+      {username:params.username.toLowerCase()}
+    )
     .then((back)=>{
       if(back.length!==1)//user not exist
       throw ('user not exist by name');
@@ -295,5 +319,19 @@ table.changePassword = {
     oldpassword:String,
     newpassword:String,
     newpassword2:String,
+  }
+}
+
+table.sendRegcode = {
+  operation:function(params){
+    regex_validation.validate({
+      email:params.email,
+    })
+
+
+
+  },
+  requiredParams:{
+    email:String,
   }
 }
