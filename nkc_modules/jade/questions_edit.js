@@ -3,7 +3,7 @@ var boxcategory = geid('category')
 var boxqid = geid('qid')
 
 function validate_and_submit(){
-  var q = box.value.trim().replace(/\n/g,'');
+  var q = box.value.trim()//.replace(/\n/g,'');
   box.value=q;
   q=q.split('$');
 
