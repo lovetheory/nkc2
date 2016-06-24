@@ -421,12 +421,15 @@ table.viewForum = {
     })
     .then(()=>{
       data.forum = forum.model
-      data.paging = forum.getPagingParams(params.page)
+    })
+    .then(()=>{
+
       return forum.listThreadsOfPage(params)
     })
     .then(result=>{
       //if nothing went wrong
       data.threads = result
+      data.paging = result.paging
 
       return getForumList(params)
     })

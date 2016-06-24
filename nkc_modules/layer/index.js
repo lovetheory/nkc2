@@ -168,15 +168,7 @@ var layer = (function(){
       }
     }
 
-    getPagingParams(pagestr){
-      var p = new Paging(pagestr)
-      var t = this.model
-      return p.getPagingParams(t.count_threads)
-    }
-
     listThreadsOfPage(params){
-      var pp = this.getPagingParams(params.page)
-
       if(params.digest){
         var filter = `
         filter t.fid == @fid && t.digest == true
@@ -189,27 +181,50 @@ var layer = (function(){
         `
       }
 
+      var count_result
+
       return AQL(`
         for t in threads
         ${filter}
-        limit @start,@count
-
-        let oc = document(posts,t.oc)
-        let lm = document(posts,t.lm)
-        let ocuser = document(users,oc.uid)
-        let lmuser = document(users,lm.uid)
-
-        return merge(t,{oc,ocuser,lmuser})
-
+        collect with count into k
+        return k
         `,
         {
           fid:this.key,
-          start:pp.start,
-          count:pp.count,
         }
       )
-    }
+      .then(res=>{
+        count_result = res[0]
 
+        var p = new Paging(params.page)
+        var paging = p.getPagingParams(count_result)
+
+        return AQL(`
+          for t in threads
+          ${filter}
+          limit @start,@count
+
+          let oc = document(posts,t.oc)
+          let lm = document(posts,t.lm)
+          let ocuser = document(users,oc.uid)
+          let lmuser = document(users,lm.uid)
+
+          return merge(t,{oc,ocuser,lmuser})
+
+          `,
+          {
+            fid:this.key,
+            start:paging.start,
+            count:paging.count,
+          }
+        )
+        .then(threads=>{
+          threads.count = count_result
+          threads.paging = paging
+          return threads
+        })
+      })
+    }
   }
 
   class Paging {
