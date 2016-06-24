@@ -38,7 +38,9 @@ if !post.disabled || (post.disabled && po.enablePost)
           
         - if(po.disablePost)
           a(href="javascript:disablePost('#{post._key}')") 屏蔽
-
+          
+        - if(post.tlm>post.toc && po.viewPostHistory)
+          a(href="/post_history/#{post._key}") 历史
           
         if data.user
           - var user = data.user
