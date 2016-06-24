@@ -1,0 +1,27 @@
+extends bootstrap_base.jade
+
+block title
+  title 我是模板 - 科创论坛
+  
+block content
+  
+  .container
+    .row
+      .col-xs-12
+        h3 目前版本
+
+        
+        -var p = data.post
+        include interface_post_history_single.jade
+        
+        h3 过去版本
+
+        each post in data.histories
+          -var p = post
+          include interface_post_history_single.jade
+    
+  
+  include debug_output.jade
+block scripts
+  
+  script(src='/interface_common.js')

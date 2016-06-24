@@ -928,3 +928,33 @@ table.viewUser = {
     })
   }
 }
+
+table.viewPostHistory = {
+  operation:function(params){
+    var data = defaultData(params)
+    data.template = jadeDir + 'interface_post_history.jade'
+
+    var pid = params.pid
+
+    var p = new layer.Post(pid)
+    return p.load()
+    .then(p=>{
+      data.post = p.model
+      return AQL(
+        `
+        for p in histories
+        filter p.pid == @pid
+        sort p.tlm
+        return p
+        `,{pid}
+      )
+    })
+    .then(posts=>{
+      data.histories = posts
+      return data
+    })
+  },
+  requiredParams:{
+    pid:String,
+  }
+}

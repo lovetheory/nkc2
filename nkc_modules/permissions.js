@@ -152,6 +152,8 @@ var certificates={
       viewPersonal:true,
 
       submitPersonalSetting:true,
+
+      viewPostHistory:true,
     },
   },
 

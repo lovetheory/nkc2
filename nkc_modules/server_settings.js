@@ -136,6 +136,10 @@ settings.urlrewrite = [ //happens before serve_static
     to:'/api/operation?&operation=viewUser&username=$1&$2'
   },
 
+  {map:/^\/post_history\/([^\?]*)\??(.*)/,
+    to:'/api/operation?&operation=viewPostHistory&pid=$1&$2'
+  },
+
   //{map:'/e*',to:'/interface/editor$1'},
 
   {map:'/r/:rid',to:'/api/operation?&operation=getResource&rid=:rid'},
