@@ -83,6 +83,8 @@ var certificates={
 
       moveThread:true,
       moveOwnedThreads:true,
+      
+      viewPostHistory:true,
 
       setTopped:true
     }
@@ -153,7 +155,7 @@ var certificates={
 
       submitPersonalSetting:true,
 
-      viewPostHistory:true,
+
     },
   },
 
