@@ -39,7 +39,8 @@ block content
           p.red.
             不支持其他未声明的格式，因为程序员比较懒。
           p 请注意：每道问答题只允许有一种回答方式。请通过在题目中提示格式，避免答题时出现诸如“到底写1/2还是0.5”的问题。
-          p 类别可选：
+          p 类别可选：（如果不能选择类别，说明权限不足，请提交题目后等待管理员将其启用）
+          p.yellow 
             -for(c in categories)
               | [
               span.red  #{c} 
@@ -54,9 +55,13 @@ block content
             
           .form-group
             select#category.form-control()
-              -for(c in categories)
-                option #{c}
-
+              if data.permittedOperations.listAllQuestions
+                //if user is administrative
+                -for(c in categories)
+                  option #{c}
+              else
+                option #{''}
+                
           .form-group
             textarea#content.form-control(rows='8' placeholder='问题和答案，请参考格式')
 

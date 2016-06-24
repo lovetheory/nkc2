@@ -37,7 +37,7 @@ var certificates={
       deleteQuestion:true,
       getQuestion:true,
 
-      listAllQuestions:true,
+      listAllQuestions:true, //important, with this you can modify categories of questions
 
       elseModifyTimeLimit:timeYear*20, //20y
       selfModifyTimeLimit:timeYear*20, //20y
