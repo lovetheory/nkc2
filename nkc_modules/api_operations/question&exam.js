@@ -117,6 +117,7 @@ table.submitExam = {
           ip:params._req.iptrim,
           score:examResult.score,
           toc:params.exam.toc,
+          category:params.category,
           tsm:Date.now(),
           _key:token,
         }

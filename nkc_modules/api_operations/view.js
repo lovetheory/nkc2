@@ -55,12 +55,14 @@ table.viewExam = {
     if(params.result){
       data.detail = params.detail
       data.result = params.result
+
       return data;
     }
 
     return apifunc.exam_gen({ip:params._req.iptrim,category:params.category})
     .then(function(back){
       data.exam = back;
+      data.category = params.category
       return data;
     })
   },

@@ -11,9 +11,12 @@ function submit(){
 
   var exam = JSON.parse(decodeURI(ga('exam','exam-object')));
 
+  var category=ga('category','category-string')
+
   var examobj={
     exam:exam,
     sheet:sheet,
+    category:category.length?category:undefined,
   }
 
   console.log(examobj);
