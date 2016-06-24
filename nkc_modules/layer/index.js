@@ -467,6 +467,21 @@ var layer = (function(){
     }
   }
 
+  class RegCode{
+    static generate(){
+      return new Promise(function(resolve,reject){
+        require('crypto').randomBytes(16, function(err, buffer) {
+          if(err)return reject(err);
+          resolve(buffer);
+        })
+      })
+      .then(buffer=>{
+        return buffer.toString('hex');
+      })
+    }
+  }
+
+  layer.RegCode = RegCode
   layer.Post = Post
   layer.User = User
   layer.Personal = Personal
