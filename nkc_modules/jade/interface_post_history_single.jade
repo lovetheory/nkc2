@@ -2,8 +2,9 @@
 .panel.panel-default
   .panel-body
     p.reddish #{dateTimeString(p.tlm)} 
-    p 作者：
-      a(href='/user_profile/#{p.uid}') #{p.uid}
+    p 作者(修改者)：
+      -var uid = p.uidlm||p.uid
+      a(href='/user_profile/#{uid}') #{uid}
     
     p 语言：#{p.l}
     
