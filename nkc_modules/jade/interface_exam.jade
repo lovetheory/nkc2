@@ -2,6 +2,7 @@ extends bootstrap_base.jade
 
 block title
   meta#category(category-string='#{data.category?data.category:""}')
+  include MathJax.jade
   title 注册测试 - 科创论坛
   
 block content
@@ -56,7 +57,7 @@ block content
               meta(id='number_of_questions' value='#{data.exam.qarr.length}')
               each q,index in data.exam.qarr
                 span #{index+1}.
-                != markdown_safe( q.question)
+                .QuestionText!= markdown_safe(q.question)
                 
                 case q.type
                   when 'ans'
