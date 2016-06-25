@@ -38,6 +38,10 @@ block content
             a(href='/api/operation?operation=viewPersonal') 去个人设置页面
             
       hr.hrNarrowSpace
+      
+      if data.permittedOperations.viewQuestions
+        :markdown
+          科创题库现已面向1学术分以上会员开放。为科创入站测试[添加你的题目](/api/operation?&operation=viewQuestions)吧！
     
     .row
       - var cindex = 0
