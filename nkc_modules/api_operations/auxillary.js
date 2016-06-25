@@ -47,7 +47,7 @@ table.gitpull={
     return im.gitpull()
     .then(res=>{
       elapsed = Date.now()-elapsed
-      return {message:'git pull successfully executed in '+elapsed+' ms'}
+      return {message:`git pull successfully executed in ${elapsed} ms`}
     })
   }
 }
