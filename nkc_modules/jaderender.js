@@ -114,6 +114,10 @@ var jadeoptions = {
     }
     return true
   },
+
+  de_hide:function(str){
+    return str.replace(/\[hide.*?].*?\[\/hide]/g,'')
+  },
 };
 
 Object.assign(jadeoptions,settings.jadeoptions); //apply settings from settings.js

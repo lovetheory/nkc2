@@ -47,7 +47,7 @@ if 1
               img.HomeThreadAvatar(src='#{avatar}')
         
         - var oc = thread.oc
-        - var brief = oc.c.replace(/\[.*?]/g,'').trim().slice(0,100)
+        - var brief = de_hide(oc.c).replace(/\[.*?]/g,'').trim().slice(0,100)
         
         - var url = '/f/'+f._key+'/'+thread._key; url = seo_reverse_rewrite(url)
         if !thread.digest
