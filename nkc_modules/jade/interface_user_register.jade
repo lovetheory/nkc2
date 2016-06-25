@@ -11,13 +11,19 @@ block content
           h1 获取注册码
           div.f12(style='line-height:1.8;')
             :markdown
-              目前仅支持通过测试获取注册码。
+              目前仅支持参加注册测试获取注册码。
               
               已经登录的老用户，通过测试后可以开始发帖。
               
               --------
               
-              [参加注册测试：混合基础题](/exam?category=mix)
+              请在下面选择您最擅长的题目类别。
+              
+          -var categories = {'phys':'物理学','mix':'混合基础题','agri':'农业技术'}
+          -for(k in categories)
+            p.f14
+              a(href='/exam?category=#{k}') 参加 [#{categories[k]}] 测试
+              
   
   if !data.getcode
     .container
