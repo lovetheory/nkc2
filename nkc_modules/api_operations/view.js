@@ -378,7 +378,7 @@ function getPaging(params){
     var page = 0
   }
 
-  var perpage = 30
+  var perpage = settings.paging.perpage
   var start = page* perpage
   var count = perpage
 

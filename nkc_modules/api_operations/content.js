@@ -68,7 +68,7 @@ var postToThread = function(params,tid,user){
 
       if(updatedThread.count){
         var total = updatedThread.count
-        var page = Math.floor((total-1)/30)
+        var page = Math.floor((total-1)/settings.paging.perpage)
         if(page){
           saveResult.redirect += '?page=' + page.toString()
         }
@@ -180,7 +180,7 @@ var postToPost = function(params,pid,user){ //modification.
 
       if(updatedThread.count){
         var total = updatedThread.count
-        var page = Math.floor((total-1)/30)
+        var page = Math.floor((total-1)/settings.paging.perpage)
         if(page){
           result.redirect += '?page=' + page.toString()
         }
