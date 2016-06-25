@@ -36,42 +36,38 @@ var nkc_editor = function(){
     })
   }
 
-  var debounce=false;
-  editor.update = function(e){
-    //console.log(debounce,e);
-    if(!debounce)
-    {
-      var post = editor.assemblePostObject()
-      var title = post.t||""
-      hset('parsedtitle',title); //XSS prone.
+  var debounce_timer;
 
-      var content = post.c
-      var parsedcontent = '';
-
-      parsedcontent = render.experimental_render(post)
-
-      hset('parsedcontent',parsedcontent); //XSS prone
-
-      ReHighlightEverything() //interface_common code highlight
-
-      if(e==='reenter'){
-        //enough!
-        debounce=false;
-      }
-      else{
-        debounce = true;
-        setTimeout(function(){
-          debounce=false;
-          editor.update('reenter');
-        },500);
-      }
+  editor.trigger = function(e){
+    if(debounce_timer){
+      clearTimeout(debounce_timer)
     }
+    debounce_timer = setTimeout(function(){
+      editor.update()
+    },300)
+  }
+
+  editor.update = function(){
+
+    var post = editor.assemblePostObject()
+    var title = post.t||""
+    hset('parsedtitle',title); //XSS prone.
+
+    var content = post.c
+    var parsedcontent = '';
+
+    parsedcontent = render.experimental_render(post)
+
+    hset('parsedcontent',parsedcontent); //XSS prone
+
+    ReHighlightEverything() //interface_common code highlight
+
   }
 
   //enable click
-  geid('title').addEventListener('keyup', editor.update);
+  geid('title').addEventListener('keyup', editor.trigger);
   //enable click
-  geid('content').addEventListener('keyup', editor.update);
+  geid('content').addEventListener('keyup', editor.trigger);
 
   geid('post').addEventListener('click', editor.submit);
   geid('lang').addEventListener('change',editor.update);
