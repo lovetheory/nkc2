@@ -59,9 +59,6 @@ var nkc_editor = function(){
     parsedcontent = render.experimental_render(post)
 
     hset('parsedcontent',parsedcontent); //XSS prone
-
-    ReHighlightEverything() //interface_common code highlight
-
   }
 
   //enable click
@@ -78,6 +75,9 @@ var nkc_editor = function(){
 function mathfresh(){
   if(MathJax){
     MathJax.Hub.PreProcess(geid('parsedcontent'),function(){MathJax.Hub.Process(geid('parsedcontent'))})
+  }
+  if(hljs){
+    ReHighlightEverything() //interface_common code highlight
   }
 }
 

@@ -223,9 +223,6 @@ NavBarSearch.init()
 
 window.ReHighlightEverything = function(){
   //hljs.configure({useBR:true})
-  $('span.xbbcode-code').each(function(i, block) {
-    hljs.highlightBlock(block);
-  });
   $('pre code').each(function(i, block) {
     hljs.highlightBlock(block);
   });
