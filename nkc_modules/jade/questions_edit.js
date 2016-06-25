@@ -89,7 +89,13 @@ function load_question(qid){
     }
 
     box.value= k
+
+    var optiontag = document.createElement('option')
+    optiontag.appendChild(document.createTextNode(q.category||''))
+
+    boxcategory.appendChild(optiontag)
     boxcategory.value = q.category||''
+    
     boxqid.value = q._key
     boxqid.focus()
   })
