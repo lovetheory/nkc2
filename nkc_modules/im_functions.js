@@ -6,11 +6,11 @@ const spawn = require('child_process').spawn; //introduce the spawn function
 var im = {};
 var settings = require('server_settings');
 
-function run_async(pathname,options){
+function run_async(pathname,args,options){
   return new Promise((resolve,reject)=>{
     var starttime = Date.now();
 
-    var child = spawn(pathname, options);
+    var child = spawn(pathname,args,options);
     var errorstring = '';
     var stdout_str = '';
 
@@ -46,6 +46,14 @@ function run_async(pathname,options){
 
   })
 };
+
+im.gitpull = function(){
+  return run_async('git',[
+    'pull',
+  ],{
+    cwd:__projectroot,
+  })
+}
 
 //resize and crop to produce rectangular avatar.
 im.avatarify = function(path,callback){

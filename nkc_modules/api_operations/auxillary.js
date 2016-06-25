@@ -40,6 +40,18 @@ table.kamikaze = {
   }
 }
 
+table.gitpull={
+  operation:function(params){
+    var elapsed = Date.now()
+    var im = require('im_functions')
+    return im.gitpull()
+    .then(res=>{
+      elapsed = Date.now()-elapsed
+      return {message:'git pull successfully executed in '+elapsed+' ms'}
+    })
+  }
+}
+
 table.submitPersonalSetting = {
   operation:function(params){
     var post_sign = params.post_sign.toString().trim()
