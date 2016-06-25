@@ -465,6 +465,9 @@ apifunc.exam_gen = function(options){
     }
 
     var exam = {};
+
+    shuffle(qarr);//mix the questions
+
     exam.qarr = qarr;
     exam.toc = Date.now();
 
