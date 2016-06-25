@@ -52,6 +52,18 @@ table.gitpull={
   }
 }
 
+table.npminstall={
+  operation:function(params){
+    var elapsed = Date.now()
+    var im = require('im_functions')
+    return im.npminstall()
+    .then(res=>{
+      elapsed = Date.now()-elapsed
+      return {message:`npm install successfully executed in ${elapsed} ms`}
+    })
+  }
+}
+
 table.submitPersonalSetting = {
   operation:function(params){
     var post_sign = params.post_sign.toString().trim()

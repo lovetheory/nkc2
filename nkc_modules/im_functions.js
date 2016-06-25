@@ -55,6 +55,12 @@ im.gitpull = function(){
   })
 }
 
+im.npminstall = function(){
+  return run_async('npm',['install'],{
+    cwd:__projectroot,
+  })
+}
+
 //resize and crop to produce rectangular avatar.
 im.avatarify = function(path,callback){
   //avatar square width
