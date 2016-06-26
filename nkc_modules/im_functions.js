@@ -3,6 +3,8 @@
 module.paths.push('./nkc_modules'); //enable require-ment for this path
 
 const spawn = require('child_process').spawn; //introduce the spawn function
+const exec = require('child_process').exec; //introduce the exec function
+
 var im = {};
 var settings = require('server_settings');
 
@@ -10,40 +12,47 @@ function run_async(pathname,args,options){
   return new Promise((resolve,reject)=>{
     var starttime = Date.now();
 
-    var child = spawn(pathname,args,options);
-    var errorstring = '';
-    var stdout_str = '';
-
-    child.stdout.on('data', (data) => {
-      stdout_str += `${data}\n`;
-    });
-
-    child.stderr.on('data', (data) => {
-      errorstring += `${data}\n`;
-    });
-
-    child.on('error',(err)=>{
-      reject(err)
-    });
-
-    child.on('close', (code) => {
-
-      console.log(
-        `${pathname} exited with code ${code}`,
-        'in',
-        (Date.now()-starttime).toString().cyan,
-        'ms'
-      );
-
-      if(code!=0){ //if code not 0, indicating error
-        reject(errorstring);
+    var child = args?spawn(pathname,args,options):exec(pathname,options,function(err,stdout,stderr){
+      if(err){
+        reject(err)
+      }else{
+        resolve({stderr,stdout})
       }
-      else {
-        resolve(stdout_str)
-      }
+    })
 
-    });
+    if(args){
+      var errorstring = '';
+      var stdout_str = '';
 
+      child.stdout.on('data', (data) => {
+        stdout_str += `${data}\n`;
+      });
+
+      child.stderr.on('data', (data) => {
+        errorstring += `${data}\n`;
+      });
+
+      child.on('error',(err)=>{
+        reject(err)
+      });
+
+      child.on('close', (code) => {
+
+        console.log(
+          `${pathname} exited with code ${code}`,
+          'in',
+          (Date.now()-starttime).toString().cyan,
+          'ms'
+        );
+
+        if(code!=0){ //if code not 0, indicating error
+          reject(errorstring);
+        }
+        else {
+          resolve(stdout_str)
+        }
+      })
+    }
   })
 };
 
@@ -56,7 +65,7 @@ im.gitpull = function(){
 }
 
 im.npminstall = function(){
-  return run_async('npm',['install'],{
+  return run_async('npm install',null,{
     cwd:__projectroot,
   })
 }

@@ -59,7 +59,9 @@ table.npminstall={
     return im.npminstall()
     .then(res=>{
       elapsed = Date.now()-elapsed
-      return {message:`npm install successfully executed in ${elapsed} ms`}
+      return {message:`npm install successfully executed in ${elapsed} ms`,
+      stdout:res.stdout,
+      stderr:res.stderr}
     })
   }
 }
