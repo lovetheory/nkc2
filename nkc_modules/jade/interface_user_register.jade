@@ -19,10 +19,10 @@ block content
               
               请在下面选择您最擅长的题目类别。
               
-          -var categories = {'phys':'物理学','mix':'混合基础题','agri':'农业技术'}
+          -var categories = {'phys':'物理学','mix':'混合基础题','agri':'农业技术','hedc':'高能材料'}
           -for(k in categories)
             p.f14
-              a(href='/exam?category=#{k}') 参加 [#{categories[k]}] 测试
+              a(href='/exam?category=#{k}') 参加 【#{categories[k]}】 测试
               
   
   if !data.getcode
