@@ -12,9 +12,7 @@ block content
         if data.examinated
           p.f12.reddish 如果没猜错的话，你刚刚通过了一次考试，并获得了证书。
         
-        if data.permittedOperations
-          if !data.permittedOperations.postTo
-            p.f12.reddish 根据系统记录，你貌似没有发布内容的权限。也许是因为你还没有参加#[a(href='/exam') 考试]，又或者被管理员封号了。
+        include exam_notification.jade
         
     .row
       .col-md-12
