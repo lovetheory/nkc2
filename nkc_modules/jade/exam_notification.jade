@@ -1,6 +1,6 @@
 if data.user
   if !data.permittedOperations.postTo
-    p.f12.reddish 新科创论坛要求每一位老用户必须通过测验才能发帖。到 #[a(href='/register?getcode=true') 这里参加测验]。
+    p.f12.reddish 新科创论坛要求每一位老用户先参加一个小测验才能发帖。到 #[a(href='/register?getcode=true') 这里参加测验]。
     
   if !data.permittedOperations.viewExam && !data.permittedOperations.postTo
     p.f12.reddish 根据系统记录，你的账号已经被封禁，请重新注册。
