@@ -295,17 +295,17 @@ function chemFormulaReplacer(html){
         escapeHtml:false,
       })
       .html
-      //.replace(/&#91;/g,'[')
-      //.replace(/&#93;/g,']')
+      .replace(/&#91;/g,'[')
+      .replace(/&#93;/g,']')
       .replace(/\[[/]{0,1}backcolor[=#a-zA-Z0-9]{0,16}]/g,'')
 
       // for history reasons...
 
       .replace(/\n/g,'<br>')
       .replace(/\{#newline#}/g,'\n')
-      
+
       .replace(/\[attachment=([0-9]{1,16})\]/g,'#{r=$1}')
-      .replace(/\[flash=.*?](.+.*?)\[\/flash]/gi,
+      .replace(/\[flash.*?](.+.*?)\[\/flash]/gi,
       '<embed class="PostEmbedFlash" src="$1" allowFullScreen="true" quality="high" allowScriptAccess="always" type="application/x-shockwave-flash"></embed>')
 
       .replace(/\[(\/?)strike]/g,'<$1s>')
