@@ -222,10 +222,14 @@ var NavBarSearch = {
 NavBarSearch.init()
 
 window.ReHighlightEverything = function(){
-  //hljs.configure({useBR:true})
   $('pre code').each(function(i, block) {
     hljs.highlightBlock(block);
   });
+}
+
+window.HighlightEverything=function(){
+  hljs.configure({tabReplace:'    '})
+  hljs.initHighlighting()
 }
 
 // Regular Expression for URL validation
