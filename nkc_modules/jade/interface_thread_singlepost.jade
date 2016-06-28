@@ -46,7 +46,7 @@ if !post.disabled || (post.disabled && po.enablePost)
           - var user = data.user
           - var ownership = user._key===uid
           - if(testModifyTimeLimit(data,ownership,post.toc))
-            a(href='/e?target=post/#{post._key}') 编辑
+            a(href='/editor?target=post/#{post._key}') 编辑
             
           - var cc = data.contentClasses
           - if(cc.classified)

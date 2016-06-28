@@ -78,7 +78,7 @@ settings.static_settings = {
   lastModified:true,
 };
 
-http://localhost:1086/api/operation?&operation=viewUserThreads&uid=5097
+//http://localhost:1086/api/operation?&operation=viewUserThreads&uid=5097
 
 function urlrewriteGen(pathname,opname){
   return {
@@ -112,7 +112,7 @@ settings.urlrewrite = [ //happens before serve_static
   urlrewriteGen('login','viewLogin'),
   urlrewriteGen('experimental','viewExperimental'),
   urlrewriteGen('me','viewMe'),
-  urlrewriteGen('e','viewEditor'),
+  urlrewriteGen('editor','viewEditor'),
   urlrewriteGen('danger','viewDanger'),
   urlrewriteGen('pano','viewPanorama'),
   urlrewriteGen('sms','viewSMS'),
@@ -169,7 +169,7 @@ settings.seo_rewrite_mapping = {
   '/hedc':      {to:'/f/13',display_name:'HEDC'},
 
   '/rocketry':  {to:'/f/89',display_name:'火箭技术'},
-    '/fuel':  {to:'/f/368',display_name:'燃料'},
+  '/fuel':  {to:'/f/368',display_name:'燃料'},
 
   '/aviation':{to:'/f/165',display_name:'航空'},
   '/space':{to:'/f/366',display_name:'空间技术'},
@@ -198,6 +198,8 @@ settings.root_serve_static =
   {map:'/xbbcode',to:'node_modules/xbbcode-parser/'},
   {map:'/xss',to:'node_modules/xss/dist'},
 
+
+  {map:'/external_pkgs',to:'external_pkgs/'},
   {to:'external_pkgs/react'},
 
   {map:'/promise',to:'external_pkgs/Promise'},
