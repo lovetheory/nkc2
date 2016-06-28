@@ -73,10 +73,16 @@ block content
                   a.f12(href='/e?target=#{data.replytarget}') 回复（去编辑器）
 
                 .form-group
-                  textarea#ReplyContent.form-control(rows='4' placeholder='快速回复 （默认markdown语法）' style='resize:none;')
+                  textarea#ReplyContent.form-control(rows='4' placeholder='快速回复（bbcode语法）' style='resize:none;')
                 
-                .form-group
-                  button#ButtonReply.btn.btn-default(onclick='submit()') 快速回复
+                .form-inline
+                  .form-group
+                    button#ButtonReply.btn.btn-default(onclick='submit()') 快速回复
+                  
+                  .checkbox-inline
+                    label
+                      input#ParseURL(type='checkbox' checked)
+                      |处理URL
               
             include exam_notification.jade
                 

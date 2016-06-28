@@ -39,8 +39,20 @@ function assemblePostObject(){
     //t:gv('title').trim(),
 
     c:gv('ReplyContent').trim(),
-    l:"markdown",
+    l:"pwbb",
   }
+
+  if(geid('ParseURL').checked){
+    if(post.l=='markdown'){
+      post.c = common.URLifyMarkdown(post.c)
+    }
+    if(post.l=='pwbb'){
+      post.c = common.URLifyBBcode(post.c)
+    }
+  }
+
+  post.c = post.c.replace(/(?:\[\/quote])\n+/g,'')
+
   return post
 }
 
@@ -88,14 +100,10 @@ function quotePost(pid){
   .then(function(pc){
     length_limit = 100
 
-    var str = pc.c.slice(0,length_limit)
+    var str = pc.c.replace(/\[quote.*?][^]*?\[\/quote]/g,'').slice(0,length_limit).trim()
     if(str.length==length_limit)str+='……'
 
-    str = '引用 '+pc.username+' : ' + str
-
-    str = str.split('\n').map(function(s){return ('> '+s)}).join('\n')
-
-    str+='\n\n'
+    str = '[quote='+pc.username+']'+ str + '[/quote]'
 
     geid('ReplyContent').value += str
     window.location.href='#ReplyContent'
