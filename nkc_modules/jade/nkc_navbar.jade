@@ -11,9 +11,9 @@ div
       .col-xs-6.col-sm-4
         ul.pagination(style='margin-top:8px; margin-bottom:0px')
           li(class="#{navbar.highlight=='tools'?'active':''}")
-            a(href='/static/tools/index.htm') 工具
+            a(href='/static/tools/index.htm' title='由论坛朋友贡献的工具箱') 工具
           li(class="#{navbar.highlight=='pano'?'active':''}")
-            a(href='/pano') 广场
+            a(href='/pano' title='看看大家都在忙什么') 广场
         if 0
           li(class="#{navbar.highlight=='editor'?'active':''}")
             a(href='/e') 著
@@ -33,7 +33,7 @@ div
         .NavBarLinkArea.f12.text-center
           if data.user
             - var user = data.user
-            a(href='/me') #{user.username}
+            a(href='/me' title='#{getUserDescription(user)}') #{user.username}
             
             if data.permittedOperations.viewSMS
               a(href='/sms')
@@ -45,11 +45,11 @@ div
             
             if data.permittedOperations
               if data.permittedOperations.viewExperimental
-                a(href='/experimental') 管
+                a(href='/experimental' title='管理界面') 管
             
-            a(href='/logout') 退
+            a(href='/logout' title='不，不要走！') 退
             
           else
-            a(href='/login') 登录
-            a(href='/register') 注册
+            a(href='/login' title='还记得密码吗？') 登录
+            a(href='/register' title='恭喜！\n你发现了世界上\n最难注册的论坛') 注册
           

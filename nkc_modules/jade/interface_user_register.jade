@@ -8,21 +8,27 @@ block content
     .container
       .row
         .col-sm-12
-          h1 获取注册码
+          
           div.f12(style='line-height:1.8;')
             :markdown
+              # 获取注册码
+              --------
+              
               目前仅支持参加注册测试获取注册码。
               
               已经登录的老用户，通过测试后可以开始发帖。
               
-              --------
+
               
-              请在下面选择您最擅长的题目类别。
-              
+              请在下面选择您最擅长的题目类别。通过任一类别测试，均可获得注册码。
+          
+          
           -var categories = {'phys':'物理学','mix':'混合基础题','agri':'农业技术','hedc':'高能材料','cs':'计算机科学','3dp':'3D打印'}
           -for(k in categories)
             p.f14
               a(href='/exam?category=#{k}') 参加 【#{categories[k]}】 测试
+              
+          img(src='/resources/site_specific/kclogo_misaka1.png')
               
   
   if !data.getcode
@@ -32,7 +38,7 @@ block content
           h1 注册
           p 欲于科创论坛交流，请先注册一个账号。
           br
-          
+          img(src='/resources/site_specific/kclogo_umaru1_nc.png')
           div.f12(style='line-height: 1.8;')
             include:markdown EULA.md
           

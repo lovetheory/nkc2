@@ -7,24 +7,28 @@ block content
   
   .container
     .row
-      .col-sm-12.col-md-9
+      .col-sm-12
         h1 登录
         p 
-          span 还记得用户名吗？ 如果还没有账号，请 
+          span 还记得用户名吗？ 如果还没有账号，现在就 
           a(href='register') 注册
           span 。
         
         hr
-        .form-horizontal()
+    
+    .row
+      
+      .col-lg-4.col-md-5.col-sm-6
+        .form-horizontal().row
           .form-group
             label.control-label.col-sm-3 用户名
-            .col-sm-6
-              input#username.form-control(type='text' placeholder='用户名' onkeydown='username_keypress()')
+            .col-sm-9
+              input#username.form-control(type='text' placeholder='不区分大小写' onkeydown='username_keypress()')
               
           .form-group
             label.control-label.col-sm-3 密码
-            .col-sm-6
-              input#password.form-control(type='password' placeholder='密码' onkeydown='password_keypress()')
+            .col-sm-9
+              input#password.form-control(type='password' placeholder='旁边没人吧？' onkeydown='password_keypress()')
         
           .form-group
             .col-sm-offset-3.col-sm-3
@@ -32,11 +36,13 @@ block content
               button.btn.btn-default(onclick='login_submit()') 提交
               
           .form-group
-            .col-sm-offset-3.col-sm-6
+            .col-sm-12
               #error_info_panel.panel.panel-default(style='display:none;')
                 .panel-body
                   div#error_info.d-inline.lighttext() 
       
+      .col-lg-4.col-md-5.col-sm-6
+        img(src='/resources/site_specific/owl_reverse.jpg' style='max-width:100%;border-radius:5px;')
 
   include debug_output.jade
     
