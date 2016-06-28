@@ -290,7 +290,7 @@ var common=(function(){
   var common = {}
 
   var URLTestRegex = new RegExp("^"+URLRegexStem+"$","i")
-  var URLExtractRegex = /(?:[^\(\[\]]|^)\b((?:(?:https?|ftp|file):\/\/|www\.|ftp\.)[-A-Z0-9+&@#/%=~_|$?!:,.]*[A-Z0-9+&@#\/%=~_|$])/gi
+  var URLExtractRegex = /(?:[^“”‘’\'\"\(\[\]]|^)\b((?:(?:https?|ftp|file):\/\/|www\.|ftp\.)[-A-Z0-9+&@#/%=~_|$?!:,.]*[A-Z0-9+&@#\/%=~_|$])/gi
 
   common.URLifyMarkdown = function(content){
     return content.replace(URLExtractRegex,function(match,p1){
