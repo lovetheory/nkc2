@@ -21,6 +21,15 @@ var nkc_editor = function(){
     if(post.c==''){screenTopWarning('请填写内容。');return;}
     if(target==''){screenTopWarning('请填写发表至的目标。');return;}
 
+    if(geid('ParseURL').checked){
+      if(post.l=='markdown'){
+        post.c = common.URLifyMarkdown(post.c)
+      }
+      if(post.l=='pwbb'){
+        post.c = common.URLifyBBcode(post.c)
+      }
+    }
+
     geid('post').disabled = true
     return nkcAPI('postTo',{
       target:target,

@@ -31,8 +31,9 @@ block content
             
           .form-inline
             .form-group
-                input#target.form-control(placeholder='发表至' value='#{(data.replytarget?data.replytarget:"")}')
-
+              input#target.form-control(placeholder='发表至' value='#{(data.replytarget?data.replytarget:"")}')
+            
+            .form-group
               select#lang.form-control
                 if data.original_post
                   option #{data.original_post.l}
@@ -41,8 +42,13 @@ block content
                 option markdown
                 option plain
                 option html
-                  
-            
+
+            .checkbox
+              label
+                input#ParseURL(type='checkbox' checked)
+                |&nbsp;处理URL
+                
+            .form-group
               button#post.btn.btn-default(type='submit' style='float:right;') 发表
           hr
           .panel.panel-default
