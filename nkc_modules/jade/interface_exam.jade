@@ -38,6 +38,8 @@ block content
         .col-xs-12
           h1 欢迎来到科创论坛注册测试（暨科学素养测验）
           hr
+          
+        .col-sm-8
           div.f12
             p
               span.reddish 注：请使用最先进的浏览器作为科研工具。新科创论坛支持最新版本的IE、Chrome、Safari。浏览器版本过低、使用“兼容”模式，或使用360等贴牌浏览器会导致公式显示不正常，或者答卷无法提交。
@@ -50,8 +52,11 @@ block content
               通过测试后将获得注册码，但同一IP地址在12小时内多次通过的，无法获得注册码。
               
               已登陆的老用户，通过测试之后可以开始发帖；未通过测试的，不妨多试几次。
-            
-            br
+              
+        .col-sm-4
+          img(src='/resources/site_specific/holy_exam.gif' height='200')
+        br
+        .col-xs-12
           .panel.panel-default.f12
             .panel-body
               meta(id='number_of_questions' value='#{data.exam.qarr.length}')
