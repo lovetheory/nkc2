@@ -37,16 +37,17 @@ block content
             |你还没有关注任何板块。
             a(href='/api/operation?operation=viewPersonal') 去个人设置页面
             
-      hr.hrNarrowSpace
+      //hr.hrNarrowSpace
       
       if data.permittedOperations.viewQuestions
         :markdown
           科创题库现已面向1学术分以上会员开放。为科创入站测试[添加你的题目](/api/operation?&operation=viewQuestions)吧！
     
+    hr.hrNarrowSpace
     .ka
       - var cindex = 0
       each group,gindex in data.grouparray
-        h4(style='display:inline-block; margin-right:10px;') #{group.parentforum.display_name}
+        span(style='font-size:17pt;margin-right:10px;') #{group.parentforum.display_name}
         span #{group.parentforum.description}
         hr.hrNarrowSpace
         .row
