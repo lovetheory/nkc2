@@ -282,6 +282,9 @@ var getPermissionsFromCerts = (certsArray)=>{
     Object.assign(contentClasses,lcc)
   }
 
+  if(contentClasses['null']){
+    contentClasses['']=true
+  }
   return {
     permittedOperations,
     contentClasses,
