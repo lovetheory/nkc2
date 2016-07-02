@@ -82,7 +82,7 @@ settings.static_settings = {
 
 function urlrewriteGen(pathname,opname){
   return {
-    map: new RegExp(`^\\/${pathname}\\??(.*)`),
+    map: new RegExp(`^\\/${pathname}\\b\\??(.*?)`),
     to: `/api/operation?&operation=${opname}&$1`
   }
 }
@@ -116,6 +116,7 @@ settings.urlrewrite = [ //happens before serve_static
   urlrewriteGen('danger','viewDanger'),
   urlrewriteGen('pano','viewPanorama'),
   urlrewriteGen('sms','viewSMS'),
+  urlrewriteGen('self','viewSelf'),
 
   // {map:/^\/logout\?{0,1}(.*)/,to:'/api/operation?&operation=viewLogout&$1'},
   // {map:/^\/login\?{0,1}(.*)/,to:'/api/operation?&operation=viewLogin&$1'},
