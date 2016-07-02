@@ -82,7 +82,7 @@ settings.static_settings = {
 
 function urlrewriteGen(pathname,opname){
   return {
-    map: new RegExp(`^\\/${pathname}\\b\\??(.*?)`),
+    map: new RegExp(`^\\/${pathname}\\b\\??(.*)`),
     to: `/api/operation?&operation=${opname}&$1`
   }
 }
