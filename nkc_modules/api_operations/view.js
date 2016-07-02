@@ -325,7 +325,7 @@ table.viewHome = {
 
       let class = parentforum.class
 
-      filter has(@contentClasses,TO_STRING(class)) /*content ctrl*/
+      //filter has(@contentClasses,TO_STRING(class)) /*content ctrl*/
 
       let group =  {parentforum,forumgroup}
       sort group.parentforum.order asc
@@ -336,6 +336,19 @@ table.viewHome = {
       }
     )
     .then(grouparray=>{
+
+      //aftermath: filter out the invisible while preserve the visible, even if group is invisible
+      for(i in grouparray){
+        var group = grouparray[i]
+        for(g in group.forumgroup){
+          var forum = group.forumgroup[g]
+          if(!contentClasses[(forum.class||group.parentforum.class||'null')]){ //if user can't view this
+            group.forumgroup[g] = null
+            //group.forumgroup[g]=null
+          }
+        }
+      }
+
       data.grouparray = grouparray;
       //data.forums = forums;
       return AQL(`
