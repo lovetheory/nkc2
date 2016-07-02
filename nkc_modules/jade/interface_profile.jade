@@ -7,7 +7,7 @@ block content
   
   -var thatuser = data.thatuser
   -var thatuid = thatuser._key
-  -var isViewingSelf = data.user._key===thatuser._key
+  -var isViewingSelf = data.user && data.user._key===thatuser._key //lazy evaluation
   
   .container
   
