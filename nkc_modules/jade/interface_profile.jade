@@ -7,74 +7,18 @@ block content
   
   -var thatuser = data.thatuser
   -var thatuid = thatuser._key
+  -var isViewingSelf = data.user._key===thatuser._key
+  
   .container
-    .row
-      .col-xs-12.col-sm-6
-        .UserProfileSection1
-          div(style='display:block;')
-            img(src='/avatar/#{thatuid}' style='width:144px;height:144px;border-radius:6px;')
-          
-          div
-            .ForumTitleCircle(style='background-color:#{thatuser.color||"#bbb"}')
-            .ForumName #{thatuser.username}
-          
-      
-      .col-xs-12.col-sm-6
-        .UserProfileSection1(style='text-align:left')
-          -var user = thatuser
-          h4 个人简介
-          hr
-          if user.description && user.description.length>0
-            
-            div!=markdown_safe(user.description)
-            hr
-          
-          h4 帖子签名
-          hr
-          if user.post_sign && user.post_sign.length>0
-            
-            div!=markdown_safe(user.post_sign)
-            
-    hr
-          
-    .row
-    
-      -var tiles = []
-      -var listCertText = getUserDescription(thatuser).split('\n').pop()
-      -tiles.push({number:thatuser.xsf||0,text:'学术分'})
-      -tiles.push({number:thatuser.kcb||0,text:'科创币'})
-      -tiles.push({text:'此君',other:'ahead'})
-      -tiles.push({number:thatuser.count_threads||0,text:'总地基数量'})
-      -tiles.push({number:thatuser.count_posts||0,text:'总建筑层数'})
-      -tiles.push({other:'toc',text:'发证日期'})
-      -tiles.push({other:'tlv',text:'最后报到日期'})
-      -tiles.push({text:'证书',number:listCertText})
-    
-      each t,index in tiles
-        .col-xs-4.col-sm-3.col-md-2
-          .UserProfileTile
-            .TileTitle
-              span #{t.text}
-            .TileFact
-              if !t.other
-                span #{t.number}
-              else
-                case t.other
-                  when 'ahead'
-                    div(style='font-size:12pt;')
-                      p
-                        a(href='/user_threads/#{thatuser._key}') 建筑一览
-                      p
-                        a(href='/sms?receiver=#{thatuser.username}') 私信谏言
-      
-                  when 'toc'
-                    div(style='font-size:12pt;') #{dateTimeString(thatuser.toc)}
-                  when 'tlv'
-                    div(style='font-size:12pt;') #{dateTimeString(thatuser.tlv||thatuser.toc)}
-    .row
-      .col-xs-12.col-sm-7.col-md-6
-      
-    
+  
+    if isViewingSelf
+      include interface_profile_recent.jade
+      hr
+      include interface_profile_info.jade
+    else
+      include interface_profile_info.jade
+      hr
+      include interface_profile_recent.jade
   
   include debug_output.jade
 block scripts

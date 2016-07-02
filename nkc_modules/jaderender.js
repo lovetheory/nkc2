@@ -118,6 +118,11 @@ var jadeoptions = {
   de_hide:function(str){
     return str.replace(/\[hide.*?].*?\[\/hide]/g,'')
   },
+
+  digestText:function(str,length){
+    length = length||100
+    return jadeoptions.de_hide(str).replace(/\n|  |\[.+]|\<.+>/g,' ').slice(0,length).trim()
+  },
 };
 
 Object.assign(jadeoptions,settings.jadeoptions); //apply settings from settings.js

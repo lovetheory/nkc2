@@ -1,0 +1,43 @@
+.row
+  .col-xs-12.col-sm-6
+    .UserProfileSection1
+      div(style='display:inline-block;margin-right:10px')
+        img(src='/avatar/#{thatuid}' style='width:72px;height:72px;border-radius:6px;')
+      
+      div(style='display:block')
+        .ForumTitleCircle(style='background-color:#{thatuser.color||"#bbb"}')
+        .ForumName #{thatuser.username}
+      
+    .UserProfileSection2
+      -var user = thatuser
+        a(href='/user_threads/#{thatuser._key}') 主题一览
+        a(href='/sms?receiver=#{thatuser.username}') 发私信
+        br
+        span 学术分 #{user.xsf||0}
+        span 科创币 #{user.kcb||0}
+        
+        
+        span 总主题 #{user.count_threads||0} 帖
+        span 总回复 #{user.count_posts||0} 楼
+        
+        -var listCertText = getUserDescription(thatuser).split('\n').pop()
+        span 拥有证书：#{listCertText}
+        br
+        span 注册于 #{dateTimeString(user.toc)}
+        span 最后于 #{dateTimeString(user.tlv||user.toc)} 登陆
+          
+  .col-xs-12.col-sm-6
+    .UserProfileSection1(style='text-align:left')
+      -var user = thatuser
+      h4 个人简介
+      //hr
+      if user.description && user.description.length>0
+        
+        div!=markdown_safe(user.description)
+        hr
+      
+      h4 帖子签名
+      //hr
+      if user.post_sign && user.post_sign.length>0
+        
+        div!=markdown_safe(user.post_sign)

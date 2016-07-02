@@ -924,6 +924,66 @@ table.viewUser = {
     })
     .then(thatuser=>{
       data.thatuser = thatuser.model
+      uid = thatuser.model._key
+      //1. list posts replied by this user
+      return AQL(`
+        for p in posts
+        filter p.uid == @uid
+        sort p.tlm desc
+        limit 20
+
+        let thread = document(threads,p.tid)
+
+        filter !p.disabled
+        filter thread.oc != p._key
+
+        let oc = document(posts,thread.oc)
+
+        limit 10
+        return merge(p,{thread:merge(thread,{oc})})
+
+        `,{uid}
+      )
+    })
+    .then(recentposts=>{
+      data.recentReplies = recentposts
+
+      return AQL(`
+        for p in posts
+        filter p.uid == @uid
+        sort p.tlm desc
+        limit 40
+
+        filter !p.disabled
+
+        let thread = document(threads,p.tid)
+
+        filter thread.lm != p._key && thread.oc!= p._key
+
+        let oc = document(posts,thread.oc)
+        let lm = document(posts,thread.lm)
+        let lmuser = document(users,lm.uid)
+
+        return merge(p,{thread:merge(thread,{oc,lm,lmuser})})
+
+        `,{uid}
+      )
+    })
+    .then(res=>{
+
+      //filtering:
+      // remove duplicate threads in result
+      var resfiltered = [];var cache={}
+      for(p in res){
+        if(cache[res[p].tid]){
+
+        }else{
+          cache[res[p].tid]=true;
+          resfiltered.push(res[p])
+        }
+      }
+      data.recentInvolvedThreadResponses = resfiltered.slice(0,10)
+
       return data
     })
   }

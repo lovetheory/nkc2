@@ -922,12 +922,25 @@ pre {
 }
 
 .UserProfileSection1{
-text-align: center;
+/* text-align: center; */
 /* border-style: dashed; */
 /* border-width: 1px; */
 /* border-color: #c7c7c7; */
 /* border-radius: 5px; */
-padding: 12px;
+margin-bottom: 12px;
+}
+.UserProfileSection2{}
+.UserProfileSection2 span,.UserProfileSection2 a{
+    display: inline-block;
+    margin: 5px;
+    padding: 3px;
+    margin-left: 0;
+    margin-right: 10px;
+    background-color: #efefef;
+    border-radius: 3px;
+}
+.UserRecentPostItem{
+    /* margin-bottom: 5px; */
 }
 .UserProfileTile{
     border-radius: 7px;

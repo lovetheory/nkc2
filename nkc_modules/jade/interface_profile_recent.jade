@@ -1,0 +1,31 @@
+.row
+
+  if data.recentInvolvedThreadResponses
+    .col-xs-12.col-sm-6
+      h4 最近参与
+      
+      .list-group
+        each p in data.recentInvolvedThreadResponses
+          -var turl = '/t/'+p.tid
+          a.list-group-item(href='#{turl}')
+            span.lighttext #{p.thread.lmuser.username} 于 #{fromNow(p.thread.lm.tlm)} 回复 
+              span.reddish #{p.thread.oc.t} : 
+            -var postContentBrief = digestText(p.thread.lm.c)
+            div(style='margin-left:5px') #{postContentBrief}
+
+
+  if data.recentReplies
+    .col-xs-12.col-sm-6
+      h4 最近回复
+      
+      .list-group
+        each p in data.recentReplies
+          
+          -var turl = '/t/'+p.tid
+          a.list-group-item(href='#{turl}')
+            span.lighttext #{data.thatuser.username} 于 #{fromNow(p.tlm)} 回复 
+              span.reddish #{p.thread.oc.t} : 
+              
+            -var postContentBrief = digestText(p.c)
+            div(style='margin-left:5px') #{postContentBrief}
+  
