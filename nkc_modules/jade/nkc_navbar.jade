@@ -9,11 +9,19 @@ div
           a.f16(href='/' style='text-decoration: none;') #{data.site.name}
       
       .col-xs-6.col-sm-4
+        -var navbar_highlight = data.navbar_highlight||navbar.highlight
+        -var isActive = function(label){return (navbar_highlight==label)?'active':''}
         ul.pagination(style='margin-top:8px; margin-bottom:0px')
-          li(class="#{navbar.highlight=='tools'?'active':''}")
+          li(class="#{isActive('tool')}")
             a(href='/static/tools/index.htm' title='由论坛朋友贡献的工具箱') 工具
-          li(class="#{navbar.highlight=='pano'?'active':''}")
-            a(href='/pano' title='看看大家都在忙什么') 广场
+            
+          li(class="#{isActive('pano')}")
+            a(href='/pano' title='大家都在忙什么？') 广场
+            
+          if data.user&&data.user._key
+            li(class="#{isActive('self')}")
+              a(href='/self' title='个人动态') 我的
+            
         if 0
           li(class="#{navbar.highlight=='editor'?'active':''}")
             a(href='/e') 著

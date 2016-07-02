@@ -905,6 +905,10 @@ table.viewSelf = {
   operation:function(params){
     params.uid = params.user._key
     return table.viewUser.operation(params)
+    .then(data=>{
+      data.navbar_highlight = 'self'
+      return data
+    })
   },
 }
 
