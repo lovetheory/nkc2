@@ -169,6 +169,7 @@ var certificates={
 
       submitPersonalSetting:true,
 
+      viewSelf:true,
 
     },
   },

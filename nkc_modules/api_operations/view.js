@@ -901,6 +901,13 @@ table.viewPersonal = {
   }
 }
 
+table.viewSelf = {
+  operation:function(params){
+    params.uid = params.user._key
+    return table.viewUser.operation(params)
+  },
+}
+
 table.viewUser = {
   operation:function(params){
     var data = defaultData(params)
@@ -913,11 +920,11 @@ table.viewUser = {
     .then(()=>{
       var thatuser
       if(uid){
-        thatuser = new layer.User(uid)
+        thatuser = new layer.User(uid.toString())
         return thatuser.load()
       }else if(uname){
         thatuser = new layer.User()
-        return thatuser.loadByName(uname)
+        return thatuser.loadByName(uname.toString())
       }else{
         throw 'please specify uid or username'
       }
