@@ -117,6 +117,9 @@ nkc.use('/redirect_f/:fid',function(req,res){
 nkc.use('/redirect_t/:tid',function(req,res){
   res.redirect(301,'/t/'+req.params.tid)
 })
+nkc.use('/index.*',function(req,res){
+  res.redirect(301,'/')
+})
 
 //default avatar redirection
 nkc.use(rewrite('/api/avatar/*','/default/default_avatar_small.gif')) //if avatar not served
