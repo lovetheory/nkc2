@@ -340,13 +340,15 @@ table.viewHome = {
       //aftermath: filter out the invisible while preserve the visible, even if group is invisible
       for(i in grouparray){
         var group = grouparray[i]
+        var k = []
         for(g in group.forumgroup){
           var forum = group.forumgroup[g]
-          if(!contentClasses[(forum.class||group.parentforum.class||'null')]){ //if user can't view this
-            group.forumgroup[g] = null
+          if(contentClasses[(forum.class||group.parentforum.class||'null')]){ //if user can view this
+            k.push(forum)
             //group.forumgroup[g]=null
           }
         }
+        group.forumgroup=k
       }
 
       data.grouparray = grouparray;
