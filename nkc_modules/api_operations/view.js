@@ -207,9 +207,10 @@ table.viewPanorama = {
 
         let oc = document(posts,t.oc)
         let lm = document(posts,t.lm)
+        let forum = document(forums,t.fid)
 
         limit 10
-        return merge(t,{oc:oc,lm:lm})
+        return merge(t,{oc:oc,lm:lm,forum})
         `,{contentClasses:params.contentClasses}
       )
     })
@@ -229,8 +230,9 @@ table.viewPanorama = {
         limit 10
         let oc = document(posts,t.oc)
         let lm = document(posts,t.lm)
+        let forum = document(forums,t.fid)
 
-        return merge(t,{oc:oc,lm:lm})
+        return merge(t,{oc,lm,forum})
 
         `,{contentClasses:params.contentClasses}
       )
@@ -246,8 +248,9 @@ table.viewPanorama = {
         limit 10
         let oc = document(posts,t.oc)
         let lm = document(posts,t.lm)
+        let forum = document(forums,t.fid)
 
-        return merge(t,{oc:oc,lm:lm})
+        return merge(t,{oc:oc,lm:lm,forum})
         `
       )
     })

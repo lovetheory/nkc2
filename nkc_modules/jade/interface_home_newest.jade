@@ -21,6 +21,9 @@
               .HLMstat.HLTstat #{thread.count}
             
             
+            if thread.forum && thread.forum.abbr
+              span.HLTtitletext #{thread.forum.abbr} 
+              
             - var titletext = thread.oc.t
             a.HLTtitletext(href='/t/#{thread._key}') #{titletext}
             
