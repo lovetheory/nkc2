@@ -352,6 +352,7 @@ table.viewHome = {
       }
 
       data.grouparray = grouparray;
+      data.navbar_highlight = 'home'
       //data.forums = forums;
       return AQL(`
         for a in answersheets collect with count into k return k

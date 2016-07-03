@@ -12,8 +12,12 @@ div
         -var navbar_highlight = data.navbar_highlight||navbar.highlight
         -var isActive = function(label){return (navbar_highlight==label)?'active':''}
         ul.pagination(style='margin-top:8px; margin-bottom:0px')
-          li(class="#{isActive('tool')}")
-            a(href='/static/tools/index.htm' title='由论坛朋友贡献的工具箱') 工具
+          if 0
+            li(class="#{isActive('tool')}")
+              a(href='/static/tools/index.htm' title='由论坛朋友贡献的工具箱') 工具
+            
+          li(class="#{isActive('home')}")
+            a(href='/' title='扫一眼') 板块
             
           li(class="#{isActive('pano')}")
             a(href='/pano' title='大家都在忙什么？') 广场
