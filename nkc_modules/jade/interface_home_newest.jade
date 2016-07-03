@@ -1,5 +1,5 @@
 - var threadlist = threadlist
-  .col-lg-4.col-md-4.col-sm-6.col-xs-12
+  .col-md-6.col-sm-6.col-xs-12
     H4 #{listtitle}
     hr.hrNarrowSpace
     each thread,index in threadlist
@@ -26,4 +26,5 @@
               
             - var titletext = thread.oc.t
             a.HLTtitletext(href='/t/#{thread._key}') #{titletext}
-            
+          - var u = thread.ocuser
+          a.HUsernameRightAlign.lighttext(href='/user_profile/#{u._key}') #{u.username}

@@ -145,7 +145,7 @@ table.viewPanorama = {
   },
   operation:params=>{
     var data= defaultData(params)
-    data.template = jadeDir + 'interface_view_panorama.jade'
+    data.template = jadeDir + 'interface_panorama.jade'
     data.navbar={highlight:'pano'}
     return AQL(`
       for t in threads
@@ -156,7 +156,7 @@ table.viewPanorama = {
     )
     .then(count_digests=>{
       count_digests = count_digests[0]
-      var count = 15
+      var count = 6
 
       var randomarray=[]
       for(i=0;i<count;i++){
@@ -208,9 +208,10 @@ table.viewPanorama = {
         let oc = document(posts,t.oc)
         let lm = document(posts,t.lm)
         let forum = document(forums,t.fid)
+        let ocuser = document(users,t.uid)
 
         limit 10
-        return merge(t,{oc:oc,lm:lm,forum})
+        return merge(t,{oc:oc,lm:lm,forum,ocuser})
         `,{contentClasses:params.contentClasses}
       )
     })
@@ -231,8 +232,9 @@ table.viewPanorama = {
         let oc = document(posts,t.oc)
         let lm = document(posts,t.lm)
         let forum = document(forums,t.fid)
+        let ocuser = document(users,t.uid)
 
-        return merge(t,{oc,lm,forum})
+        return merge(t,{oc,lm,forum,ocuser})
 
         `,{contentClasses:params.contentClasses}
       )
@@ -245,12 +247,13 @@ table.viewPanorama = {
         filter t.digest == true
         sort t.digest desc, t.toc desc
 
-        limit 10
+        limit 6
         let oc = document(posts,t.oc)
         let lm = document(posts,t.lm)
         let forum = document(forums,t.fid)
+        let ocuser = document(users,t.uid)
 
-        return merge(t,{oc:oc,lm:lm,forum})
+        return merge(t,{oc:oc,lm:lm,forum,ocuser})
         `
       )
     })

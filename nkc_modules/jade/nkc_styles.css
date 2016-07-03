@@ -145,6 +145,13 @@ color: #969696;
 
 color: #929292;
 }
+.HUsernameRightAlign{
+    position: absolute;
+    right: 0;
+    top: 0;
+    padding: 3px;
+    background-color: white;
+}
 
 .HLMstat{
   position: relative;
