@@ -125,6 +125,8 @@ settings.urlrewrite = [ //happens before serve_static
   {map:/^\/f\/([^\?]*)\??(.*)/,to:'/api/operation?&operation=viewForum&fid=$1&$2'},
   {map:/^\/t\/([^\?]*)\??(.*)/,to:'/api/operation?&operation=viewThread&tid=$1&$2'},
 
+  {map:/^\/page\/([^\?]*)\??(.*)/,to:'/api/operation?&operation=viewPage&pagename=$1&$2'},
+
   {map:/^\/user_threads\/([^\?]*)\??(.*)/,
     to:'/api/operation?&operation=viewUserThreads&uid=$1&$2'
   },
