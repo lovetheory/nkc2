@@ -1048,3 +1048,25 @@ table.viewPostHistory = {
     pid:String,
   }
 }
+
+table.viewPage = {
+  operation:function(params){
+    var data = defaultData(params)
+    data.template = jadeDir + 'interface_page.jade'
+
+    var pagenames = {'faq':'822194'}
+    var pid = pagenames[params.pagename]||params.pagename
+    var post = new layer.Post(pid)
+    return post.load()
+    .then(p=>{
+      return p.mergeResources()
+    })
+    .then(p=>{
+      data.post = p.model
+      return data
+    })
+  },
+  requiredParams:{
+    pagename:String,
+  }
+}

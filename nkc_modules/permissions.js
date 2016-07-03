@@ -208,6 +208,8 @@ var certificates={
       getResource:true,
 
       exampleOperation:true,
+
+      viewPage:true,
     }
   },
 

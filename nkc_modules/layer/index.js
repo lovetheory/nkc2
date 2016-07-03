@@ -387,6 +387,37 @@ var layer = (function(){
       })
     }
 
+    mergeResources(){
+      return AQL(`
+        let p = document(posts,@pid)
+
+        let user = document(users,p.uid)
+
+        let resources_declared = (
+          filter is_array(p.r)
+          for r in p.r
+          let rd = document(resources,r)
+          filter rd!=null
+          return rd
+        )
+
+        let resources_assigned = (
+          for r in resources
+          filter r.pid == p._key
+          return r
+        )
+
+        return merge(p,{user,
+          r:union_distinct(resources_declared,resources_assigned)
+        })
+        `,{pid:this.key}
+      )
+      .then(res=>{
+        this.model=res[0]
+        return this
+      })
+    }
+
   }
 
   class Question extends BaseDao{
