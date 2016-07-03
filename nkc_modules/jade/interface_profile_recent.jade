@@ -6,17 +6,19 @@
       
       .list-group
         each p in data.recentInvolvedThreadResponses
-          -var turl = '/t/'+p.tid
-          a.list-group-item(href='#{turl}')
-            .UserPostTitle
-              span.reddish #{fromNow(p.thread.lm.tlm)} 
-              span #{p.thread.lmuser.username} 
+          if p.thread
+            -var turl = '/t/'+p.tid
+            a.list-group-item(href='#{turl}')
+              .UserPostTitle
+                
+                span.reddish #{fromNow(p.thread.lm.tlm)} 
+                span #{p.thread.lmuser.username} 
+                
+                span 回复 
+                span.UserPostTitleText #{p.thread.oc.t} : 
               
-              span 回复 
-              span.UserPostTitleText #{p.thread.oc.t} : 
-            
-            -var postContentBrief = digestText(p.thread.lm.c)
-            .UserPostContent #{postContentBrief}
+              -var postContentBrief = digestText(p.thread.lm.c)
+              .UserPostContent #{postContentBrief}
 
 
   if data.recentReplies
@@ -25,16 +27,16 @@
       
       .list-group
         each p in data.recentReplies
-          
-          -var turl = '/t/'+p.tid
-          a.list-group-item(href='#{turl}')
-            .UserPostTitle
-              span.reddish #{fromNow(p.tlm)} 
-              span #{data.thatuser.username} 
-              
-              span 回复 
-              span.UserPostTitleText #{p.thread.oc.t} : 
-              
-            -var postContentBrief = digestText(p.c)
-            .UserPostContent #{postContentBrief}
+          if p.thread
+            -var turl = '/t/'+p.tid
+            a.list-group-item(href='#{turl}')
+              .UserPostTitle
+                span.reddish #{fromNow(p.tlm)} 
+                span #{data.thatuser.username} 
+                
+                span 回复 
+                span.UserPostTitleText #{p.thread.oc.t} : 
+                
+              -var postContentBrief = digestText(p.c)
+              .UserPostContent #{postContentBrief}
   

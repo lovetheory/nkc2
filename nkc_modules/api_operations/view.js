@@ -981,14 +981,14 @@ table.viewUser = {
       return AQL(`
         for p in posts
         filter p.uid == @uid
-        sort p.tlm desc
+        sort p.toc desc
         limit 40
 
         filter !p.disabled
 
         let thread = document(threads,p.tid)
-
-        filter thread.lm != p._key && thread.oc!= p._key
+        filter thread
+        filter thread.lm != p._key
 
         let oc = document(posts,thread.oc)
         let lm = document(posts,thread.lm)
@@ -1012,7 +1012,9 @@ table.viewUser = {
           resfiltered.push(res[p])
         }
       }
-      data.recentInvolvedThreadResponses = resfiltered.slice(0,10)
+      data.recentInvolvedThreadResponses = resfiltered.sort(function(a,b){
+        return b.thread.tlm - a.thread.tlm
+      }).slice(0,10)
 
       return data
     })
