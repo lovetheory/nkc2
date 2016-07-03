@@ -54,7 +54,7 @@ var jadeoptions = {
       var map = i
       var to = settings.seo_rewrite_mapping[i].to
 
-      url = url.replace(new RegExp(`^${to}((?:\\b|[^0-9]).*)`),map+'$1')
+      url = url.replace(new RegExp(`^${to}((?:$|[^0-9]).*)`),map+'$1')
     }
     return url
   },
