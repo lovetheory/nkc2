@@ -70,23 +70,10 @@ block content
             -var fr = i
             -var to = mapping[i].to
             -var display_name = mapping[i].display_name
-            a.HomeSEOLink(href='#{fr+"?&digest=true"}') #{display_name}
+            a.HomeSEOLink(href='#{fr}') #{display_name}
       
         if data.answersheet_count
           span(style='color:#ccc;display:inline-block;') - [ 学术委员会 ] 已经有 #{'0b'+data.answersheet_count.toString(2).toUpperCase()} 人次通过了测试
-          
-    .row
-      .col-md-12
-        hr.hrNarrowSpace
-        :thru
-          <ul class="HomeFriendlyLink">
-          <li><a href="http://www.leiphone.com/" target="_blank">雷锋网</a></li>
-          <li><a href="http://gyhj.org/" target="_blank">故园怀旧</a></li>
-          <li><a href="http://www.5csf.com" target="_blank">5C科幻协会</a></li>
-          <li><a href="http://www.timestation.cn" target="_blank">准时钟表网</a></li>
-          <li><a href="http://www.hellocq.net/forum" target="_blank">hellocq火腿社区</a></li>
-          <li><a href="http://www.moz8.com" target="_blank">模友之吧</a></li>
-          </ul>
     
   include debug_output.jade
 

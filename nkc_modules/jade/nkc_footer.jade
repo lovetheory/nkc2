@@ -2,8 +2,18 @@ hr
 .container
   .row
     .col-md-12
-      p #{server.name}
-      p #[a(href='#{server.github}') #{server.github}]
-      p #{data?data.site?data.site.copyright:'':''}
+      :thru
+        <ul class="HomeFriendlyLink">
+        <li>友情链接</li>
+        <li><a href="http://www.leiphone.com/" target="_blank">雷锋网</a></li>
+        <li><a href="http://gyhj.org/" target="_blank">故园怀旧</a></li>
+        <li><a href="http://www.5csf.com" target="_blank">5C科幻协会</a></li>
+        <li><a href="http://www.timestation.cn" target="_blank">准时钟表网</a></li>
+        <li><a href="http://www.hellocq.net/forum" target="_blank">hellocq火腿社区</a></li>
+        <li><a href="http://www.moz8.com" target="_blank">模友之吧</a></li>
+        </ul>
+      hr.hrNarrowSpace
+      p #{server.name} #[a(href='#{server.github}') #{server.github}] 
+      p #{data?data.site?data.site.copyright:'':''} 
+      p.lighttext 蜀ICP备11004945号-2 川公网安备51010802000058号
       br
-      p 蜀ICP备11004945号-2 川公网安备 51010802000058号
