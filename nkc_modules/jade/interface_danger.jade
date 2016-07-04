@@ -29,6 +29,20 @@ block content
       .col-md-12
         #jsoneditor(style='width:100%;height:500px;')
         
+        h4 AQL
+        
+        .form-group
+          textarea#AQL.form-control(rows='10' placeholder='AQL')
+        .form-group
+          button#runAQL.btn.btn-default() Run 
+        
+        h4 Result
+        //hr.hrNarrowSpace
+        
+        .form-group
+          #AQLresult
+        
+        hr.hrNarrowSpace
         .f12
           :markdown
             # Danger

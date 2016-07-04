@@ -11,6 +11,9 @@ var DangerEditor = (function(){
 
   me.btnban=geid('BanThisUser')
 
+  me.btnrunaql=geid('runAQL')
+  me.aqltext = geid('AQL')
+  me.aqlresult = geid('AQLresult')
 
   me.init = function(){
     console.log('Danger init...');
@@ -23,6 +26,8 @@ var DangerEditor = (function(){
 
     me.btnban.addEventListener('click',me.BanThisUser);
     me.btnloadforum.addEventListener('click',me.loadforum);
+
+    me.btnrunaql.addEventListener('click',me.runaql);
 
     var jsoneditorContainer = geid('jsoneditor')
     var opts = {}
@@ -77,6 +82,19 @@ var DangerEditor = (function(){
     targetforum = targetforum[0]
 
     me.load('forums/' + targetforum)
+  }
+
+  me.runaql=function(){
+    jalert('AQL running...')
+    nkcAPI('runAQL',{query:me.aqltext.value})
+    .then(function(res){
+      jalert('AQL done')
+
+      me.aqlresult.innerHTML = '<pre><code>' + JSON.stringify(res,null,2) + '</code></pre>'
+    })
+    .catch(function(err){
+      jwarning(err)
+    })
   }
   return me
 })()

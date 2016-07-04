@@ -93,3 +93,9 @@ table.submitPersonalSetting = {
     focus_forums:String,
   }
 }
+
+table.runAQL={
+  operation:function(params){
+    return AQL(params.query)
+  }
+}
