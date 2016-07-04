@@ -98,7 +98,7 @@ var certificates={
       moveThread:true,
       moveOwnedThreads:true,
 
-      viewPostHistory:true,
+
 
       setTopped:true
     }
@@ -114,6 +114,8 @@ var certificates={
 
     permittedOperations:{
       selfModifyTimeLimit:timeHour*24,//24h
+
+      viewPostHistory:true,
     }
   },
 
