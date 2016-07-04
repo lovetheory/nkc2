@@ -51,7 +51,7 @@ function assemblePostObject(){
     }
   }
 
-  post.c = post.c.replace(/(?:\[\/quote])\n+/g,'')
+  post.c = post.c.replace(/\[\/quote] *\n+/gi,'[/quote]')
 
   return post
 }
