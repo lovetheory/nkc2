@@ -290,16 +290,16 @@ var common=(function(){
   var common = {}
 
   var URLTestRegex = new RegExp("^"+URLRegexStem+"$","i")
-  var URLExtractRegex = /(?:[^“”‘’\/<\'\"\(\[\]]|^)\b((?:(?:https?|ftp|file):\/\/|www\.|ftp\.)[-A-Z0-9+&@#/%=~_|$?!:,.]*[A-Z0-9+&@#\/%=~_|$])/gi
+  var URLExtractRegex = /([^“”‘’\/<\'\"\(\[\]]|^)\b((?:(?:https?|ftp|file):\/\/|www\.|ftp\.)[-A-Z0-9+&@#/%=~_|$?!:,.]*[A-Z0-9+&@#\/%=~_|$])/gi
 
   common.URLifyMarkdown = function(content){
-    return content.replace(URLExtractRegex,function(match,p1){
-      return '['+p1+']('+p1+')'
+    return content.replace(URLExtractRegex,function(match,p1,p2){
+      return p1+'<'+p2+'/>'
     })
   }
   common.URLifyBBcode = function(content){
-    return content.replace(URLExtractRegex,function(match,p1){
-      return '[url]'+p1+'[/url]'
+    return content.replace(URLExtractRegex,function(match,p1,p2){
+      return p1+'[url]'+p2+'[/url]'
     })
   }
 
