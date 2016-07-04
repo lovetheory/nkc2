@@ -4,6 +4,7 @@
       .col-xs-12
         input#file-selector(type='file' multiple style='float:left;')
         button.btn.btn-default#upload-button(style='float:left;') 上传
+        span （最大25MB）
         text#upload-counter(style='float:left; margin-left:20px')
         text#upload-percentage(style='float:left; margin-left:5px') 0%
     .row
@@ -20,7 +21,7 @@
           }
         
         .pastearea#paste-target
-          p.text-center 黏贴上传测试中。
+          p.text-center 剪贴板上传测试中
           p.text-center 先点一下我，再 Ctrl+V 黏贴。
         
     .row
