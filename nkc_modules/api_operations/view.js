@@ -1039,7 +1039,7 @@ table.viewPostHistory = {
         `
         for p in histories
         filter p.pid == @pid
-        sort p.tlm
+        sort p.pid desc, p.tlm desc
         return p
         `,{pid}
       )
