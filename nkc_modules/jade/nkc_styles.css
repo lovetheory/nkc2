@@ -995,3 +995,10 @@ margin: 5px;
 .PanoLVUList span{
 margin-left: 5px;
 }
+
+.DiffAdded{
+    background-color: #acefac;
+}
+.DiffRemoved{
+    background-color: #ffaaaa;
+}

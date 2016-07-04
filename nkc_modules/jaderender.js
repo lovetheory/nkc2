@@ -17,6 +17,21 @@ jade.filters.plain = render.plain_render;
 jade.filters.thru = function(k){return k}
 jade.filters.experimental = render.experimental_render
 
+var jsdiff = require('diff')
+
+function htmlDiff(earlier,later){
+  var diff = jsdiff.diffChars(earlier,later)
+  var outputHTML = ''
+
+  diff.forEach(function(part){
+    var stylestr = part.added?'DiffAdded':part.removed?'DiffRemoved':null
+    part.value = render.plain_render(part.value)
+    outputHTML += (stylestr?`<span class="${stylestr}">${part.value}</span>`:part.value)
+  })
+
+  return outputHTML
+}
+
 function fromNow(time){
   return moment(time).fromNow();
 }
@@ -66,6 +81,7 @@ var jadeoptions = {
   dateString:dateString,
   dateTimeString,
   fromNow:fromNow,
+  htmlDiff,
   fromNowAbbr:function(t){
     return fromNow(t)
     .replace(/ 秒前/,'s')

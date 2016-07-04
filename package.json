@@ -18,6 +18,7 @@
     "compression": "^1.6.2",
     "cookie-parser": "^1.4.1",
     "cookie-signature": "^1.0.6",
+    "diff": "^2.2.3",
     "express": "^4.13.4",
     "express-urlrewrite": "^1.2.0",
     "forever": "^0.15.1",

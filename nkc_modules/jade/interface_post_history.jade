@@ -12,12 +12,14 @@ block content
 
         
         -var p = data.post
+        -var formerPost = data.histories[0]
         include interface_post_history_single.jade
         
         h3 过去版本
 
-        each post in data.histories
+        each post,index in data.histories
           -var p = post
+          -var formerPost = data.histories[index+1]
           include interface_post_history_single.jade
     
   

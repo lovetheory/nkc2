@@ -10,5 +10,8 @@
     
     hr.hrNarrowSpace
       
-    div!=plain(p.c)
+    if formerPost
+      div!=htmlDiff(formerPost.c,p.c)
+    else
+      div!=plain(p.c)
   
