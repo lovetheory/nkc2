@@ -25,6 +25,10 @@
               span.HLTtitletext #{thread.forum.abbr} 
               
             - var titletext = thread.oc.t
-            a.HLTtitletext(href='/t/#{thread._key}') #{titletext}
+            if thread.digest
+              a.HLTtitletext.HomeThreadTextDigest(href='/t/#{thread._key}') #{titletext}
+            else
+              a.HLTtitletext(href='/t/#{thread._key}') #{titletext}
+              
           - var u = thread.ocuser
           a.HUsernameRightAlign.lighttext(href='/user_profile/#{u._key}') #{u.username}
