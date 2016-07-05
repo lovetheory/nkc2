@@ -211,6 +211,8 @@ var certificates={
 
       exampleOperation:true,
 
+      getGalleryRecent:true,
+
       viewPage:true,
     }
   },
