@@ -35,7 +35,7 @@ var gallery = (function(){
   }
 
   gallery.init = function(){
-    imageItem.addEventListener('click',gallery.next)
+    gallery.imageItem.addEventListener('click',gallery.next)
 
     console.log('gallery init...');
     return nkcAPI('getGalleryRecent')
