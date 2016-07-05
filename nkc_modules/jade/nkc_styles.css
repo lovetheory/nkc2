@@ -1010,9 +1010,10 @@ margin: 5px;
     width: 100%;
 }
 .Gallery #GalleryImage{
-    width: 100%;
-    position: absolute;
-    top: -50%;
+    width: auto;
+    height: auto;
+    min-width: 100%;
+    min-height: 100%;
 }
 .GalleryTitle{
     background-color: rgba(0, 0, 0, 0.5);

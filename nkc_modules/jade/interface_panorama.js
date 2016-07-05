@@ -35,6 +35,8 @@ var gallery = (function(){
   }
 
   gallery.init = function(){
+    imageItem.addEventListener('click',gallery.next)
+
     console.log('gallery init...');
     return nkcAPI('getGalleryRecent')
     .then(function(arr){
@@ -51,5 +53,5 @@ gallery.init().then(function(){
   gallery.next()
   setInterval(function(){
     gallery.next()
-  },5000)
+  },6000)
 })

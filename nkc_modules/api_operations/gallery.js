@@ -33,7 +33,7 @@ table.getGalleryRecent = {
       let ocuser = document(users,oc.uid)
       let forum = document(forums,thread.fid)
 
-      limit 20
+      limit 30
 
       return {r:parr[rand()*length(parr)],forum,thread:merge(thread,{oc,ocuser})}
       `
