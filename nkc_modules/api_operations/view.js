@@ -731,6 +731,7 @@ table.viewEditor = {
         return data
       })
     }
+    data.original_post = {c:params.content?decodeURI(params.content):''}
     return data
   }
 }

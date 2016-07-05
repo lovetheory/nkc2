@@ -65,12 +65,12 @@ block content
               
             br
             include interface_navigation_paging.jade
-            hr
+            hr.hrNarrowSpace
             
             if data.permittedOperations
               if data.permittedOperations.postTo
-                .form-group
-                  a.f12(href='/editor?target=#{data.replytarget}') 回复（去编辑器）
+                //.form-group
+                  //a.f12(href='/editor?target=#{data.replytarget}') 回复（去编辑器）
 
                 .form-group
                   textarea#ReplyContent.form-control(rows='4' placeholder='快速回复（bbcode语法）' style='resize:none;')
@@ -78,6 +78,7 @@ block content
                 .form-inline
                   .form-group
                     button#ButtonReply.btn.btn-default(onclick='submit()') 快速回复
+                    button#GoEditor.btn.btn-default(onclick='goEditor()') 去编辑器
                   
                   .checkbox-inline
                     label

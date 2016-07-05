@@ -108,5 +108,8 @@ function quotePost(pid){
     geid('ReplyContent').value += str
     window.location.href='#ReplyContent'
   })
+}
 
+function goEditor(){
+  window.location = '/editor?target='+replyTarget.trim()+'&content='+encodeURI(assemblePostObject().c)
 }
