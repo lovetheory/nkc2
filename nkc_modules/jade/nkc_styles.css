@@ -7,7 +7,7 @@
 }
 .lighttext {
   color:#bbb;
-  font-size: 10px;
+  font-size: 9pt;
 }
 .f16 {
   font-size:16pt;
@@ -474,7 +474,7 @@ blockquote {
 
 .ForumThreadItemReplyInfo{
 display: inline;
-font-size: 10px;
+font-size: 10pt;
 /* vertical-align: bottom; */
 }
 .ForumThreadItemReplyInfo span{
