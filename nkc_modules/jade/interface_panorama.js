@@ -16,6 +16,23 @@ var gallery = (function(){
     gallery.counter = (gallery.counter+1)%arr.length
   }
 
+  gallery.click = function(){
+    gallery.end()
+    gallery.next()
+    gallery.start()
+  }
+
+  gallery.start = function(){
+    gallery.timer = setTimeout(function(){
+      gallery.next()
+      gallery.start()
+    },6000)
+  }
+
+  gallery.end = function(){
+    clearTimeout(gallery.timer)
+  }
+
   gallery.render = function(galleryItem){
 
     var r = galleryItem.r
@@ -35,7 +52,7 @@ var gallery = (function(){
   }
 
   gallery.init = function(){
-    gallery.imageItem.addEventListener('click',gallery.next)
+    gallery.imageItem.addEventListener('click',gallery.click)
 
     console.log('gallery init...');
     return nkcAPI('getGalleryRecent')
@@ -51,7 +68,5 @@ var gallery = (function(){
 
 gallery.init().then(function(){
   gallery.next()
-  setInterval(function(){
-    gallery.next()
-  },6000)
+  gallery.start()
 })
