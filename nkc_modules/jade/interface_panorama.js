@@ -23,9 +23,15 @@ var gallery = (function(){
     var f = galleryItem.forum
 
     gallery.imageItem.src = '/r/'+ r._key
+
     gallery.titleItem.innerHTML = thread.oc.t.replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    gallery.titleItem.href = '/t/' + thread._key
+
     gallery.authorItem.innerHTML = thread.ocuser.username
+    gallery.authorItem.href = '/user_profile/' + thread.ocuser._key
+
     gallery.forumName.innerHTML = f.display_name
+    gallery.forumName.href = '/f/' + f._key
   }
 
   gallery.init = function(){

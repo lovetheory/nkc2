@@ -1006,7 +1006,7 @@ margin: 5px;
     position: relative;
     border-radius: 5px;
     overflow: hidden;
-    height: 200px;
+    height: 300px;
     width: 100%;
 }
 .Gallery #GalleryImage{
@@ -1022,10 +1022,12 @@ margin: 5px;
     right: 0;
 }
 .GalleryTitle #GalleryTitle{
+    display: block;
     font-size: 12pt;
     color: white;
 }
 .GalleryTitle #GalleryAuthor{
+    margin-right: 5px;
     display: inline-block;
     color: #b6ddff;
 }
