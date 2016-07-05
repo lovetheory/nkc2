@@ -13,6 +13,15 @@ block title
 block content
   .container
     .row
+      .col-md-12
+        .Gallery
+          img#GalleryImage(src='')
+          .GalleryTitle
+            #GalleryTitle
+            #GalleryAuthor
+            #GalleryForumName
+      
+    .row
       -var threadlist = data.latestThreads
       -var listtitle = '最新回复'
       include interface_home_newest.jade
@@ -57,3 +66,4 @@ block content
   include debug_output.jade
 block scripts
   script(src='/interface_common.js')
+  script(src='/interface_panorama.js')

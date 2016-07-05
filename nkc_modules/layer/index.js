@@ -40,7 +40,6 @@ var layer = (function(){
     }
   }
 
-
   class Personal extends BaseDao{
     constructor(key){
       super('users_personal',key)
@@ -342,6 +341,17 @@ var layer = (function(){
           count,
         }
       )
+    }
+
+    testView(contentClasses){
+      var f = new Forum(this.model.fid)
+      return f.load()
+      .then(f=>{
+        return f.testView(contentClasses)
+      })
+      .then(f=>{
+        return this
+      })
     }
 
     mergeOc(){

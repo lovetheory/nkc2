@@ -1002,3 +1002,33 @@ margin: 5px;
 .DiffRemoved{
     background-color: #ffaaaa;
 }
+.Gallery{
+    position: relative;
+    border-radius: 5px;
+    overflow: hidden;
+    height: 200px;
+    width: 100%;
+}
+.Gallery #GalleryImage{
+    width: 100%;
+}
+.GalleryTitle{
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 4px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+.GalleryTitle #GalleryTitle{
+    font-size: 12pt;
+    color: white;
+}
+.GalleryTitle #GalleryAuthor{
+    display: inline-block;
+    color: #b6ddff;
+}
+.GalleryTitle #GalleryForumName{
+    display: inline-block;
+    color: #bdbdbd;
+}

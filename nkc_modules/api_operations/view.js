@@ -272,6 +272,12 @@ table.viewPanorama = {
     .then(res=>{
       data.latestVisitUsers = res
 
+
+      return data
+    })
+    .then(galleryItems=>{
+      //data.galleryItems = galleryItems
+
       return data
     })
   }
