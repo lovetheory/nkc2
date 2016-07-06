@@ -232,7 +232,7 @@ table.viewPanorama = {
         let oc = document(posts,t.oc)
         let lm = document(posts,t.lm)
         let forum = document(forums,t.fid)
-        let ocuser = document(users,t.uid)
+        let ocuser = document(users,oc.uid)
 
         return merge(t,{oc,lm,forum,ocuser})
 
