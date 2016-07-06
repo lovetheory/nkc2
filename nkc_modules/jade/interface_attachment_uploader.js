@@ -2,7 +2,7 @@ var attachment_uploader = function(options){
   var uploader = {};
   //multi-part uploader.
   //data should be a FormData object
-  post_upload = function(target,data,callback)
+  var post_upload = function(target,data,callback)
   {
     var xhr = new XMLHttpRequest();
 
@@ -30,26 +30,58 @@ var attachment_uploader = function(options){
 
   uploader.files_left = 0;
 
-  files_left_incr = function(){
+  var files_left_incr = function(){
     uploader.files_left += 1;
     options.files_left_callback(uploader.files_left);
   }
 
-  files_left_decr = function(){
+  var files_left_decr = function(){
     uploader.files_left -= 1;
     options.files_left_callback(uploader.files_left);
   }
 
-  create_upload = function (data){
-    files_left_incr();
-    post_upload(options.upload_target, data , function(err,back){
-      files_left_decr();
-      if(err){
-        options.upload_failed_callback(err);
-      }else{
-        options.upload_success_callback(back);
+  var create_upload = function (data){
+    return new Promise(function(resolve,reject){
+
+      post_upload(options.upload_target, data , function(err,back){
+        if(err){
+          options.upload_failed_callback(err);
+          reject(err)
+        }else{
+          options.upload_success_callback(back);
+          resolve(back)
+        }
+      });
+
+    })
+  }
+
+  function uploadListOfFile(items,start){
+    start = start||0
+    return Promise.resolve()
+    .then(function(){
+      if(items&&items[start]&&items[start].size){
+
+        var formData = new FormData();
+        formData.append('file', items[start]);
+        return create_upload(formData)
+
+        .catch(function(err){
+          console.log(err);
+        })
       }
-    });
+      else{
+        return 1
+      }
+    })
+    .then(function(){
+      files_left_decr()
+      if(items){
+        if(start<items.length-1){
+          return uploadListOfFile(items,start+1)
+        }
+      }
+    })
   }
 
   //on click of the upload button
@@ -58,15 +90,14 @@ var attachment_uploader = function(options){
     if(items.length==0)return alert('至少选一个呗');
     if(items.length>10) return alert('尼玛一次上传那么多，服务器根本受不了');
 
-    for(i in items){
-      if(!items[i].size)break;
-
-      var formData = new FormData();
-      formData.append('file', items[i]);
-      create_upload(formData);
+    for(i=0;i<items.length;i++){
+      files_left_incr();
     }
 
-    geid('file-selector').value = '';
+    uploadListOfFile(items)
+    .then(function(){
+      geid('file-selector').value = '';
+    })
   };
 
   //When paste happens
