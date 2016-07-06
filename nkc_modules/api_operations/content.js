@@ -340,6 +340,17 @@ table.updateAllThreads = {
         return k
       )[0]
 
+      let iarr = (
+        filter oc.r
+        for r in oc.r
+        let res = document(resources,r)
+        filter position(['jpg','png','svg','jpeg'],res.ext,false)
+        return true
+      )
+
+      let has_image = length(iarr)?true:null
+      let has_file = (length(oc.r) - length(iarr))?true:null
+
       update thread with {
         count,
         count_today,
@@ -347,7 +358,9 @@ table.updateAllThreads = {
         lm:lm._key,
         toc:oc.toc,
         tlm:lm.toc,
-        uid:oc.uid
+        uid:oc.uid,
+        has_image,
+        has_file
       } in threads
       `
     )
@@ -573,7 +586,18 @@ update_thread = (tid)=>{
       return k
     )[0]
 
-    UPDATE t WITH {toc:oc.toc,tlm:lm.toc,lm:lm._key,oc:oc._key,uid:oc.uid,count,count_today} IN threads
+    let iarr = (
+      filter oc.r
+      for r in oc.r
+      let res = document(resources,r)
+      filter position(['jpg','png','svg','jpeg'],res.ext,false)
+      return true
+    )
+
+    let has_image = length(iarr)?true:null
+    let has_file = (length(oc.r) - length(iarr))?true:null
+
+    UPDATE t WITH {toc:oc.toc,tlm:lm.toc,lm:lm._key,oc:oc._key,uid:oc.uid,count,count_today,has_image,has_file} IN threads
     return NEW
     `
     ,
