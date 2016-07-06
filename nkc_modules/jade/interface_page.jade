@@ -12,7 +12,10 @@ block content
         .panel.panel-default
           .panel-heading
             .f16 #{post.t}
-            .lighttext by #{post.user.username}
+                
+            .lighttext by #{post.user.username} 
+              if data.contentClasses.classified
+                a(href='/t/#{post.tid}##{post._key}') 原文
           .panel-body
             div.ThreadPostBody!= experimental_render(post)
       
