@@ -13,7 +13,7 @@ block title
 block content
   .container
     .row
-      .col-md-12
+      .col-xs-12.col-sm-6
         .Gallery
           img#GalleryImage(src='')
           .GalleryTitle
@@ -21,16 +21,17 @@ block content
             a#GalleryAuthor
             a#GalleryForumName
       
-    .row
+    
       -var threadlist = data.latestThreads
       -var listtitle = '最新回复'
       include interface_home_newest.jade
       
+    .row
       -var threadlist = data.newestThreads
       -var listtitle = '全站新帖'
       include interface_home_newest.jade
       
-      if 0
+      if 1
         -var threadlist = data.newestDigestThreads
         -var listtitle = '近期精华'
         include interface_home_newest.jade
