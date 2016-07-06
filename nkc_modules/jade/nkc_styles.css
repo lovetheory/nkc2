@@ -1026,6 +1026,9 @@ margin: 5px;
 }
 .GalleryTitle #GalleryTitle{
     display: block;
+    text-overflow: clip;
+    white-space: pre;
+    margin-right: 40px;
     font-size: 12pt;
     color: white;
 }
@@ -1039,13 +1042,15 @@ margin: 5px;
     color: #bdbdbd;
 }
 .GalleryNavigation{
-    font-size: 16pt;
+    font-size: 18pt;
     position: absolute;
     padding: 0px;
-    bottom: 3px;
+    bottom: 0;
     right: 10px;
     color: white;
 }
 .GalleryNavigation span{
     padding: 4px;
+    /* padding-left: 10px; */
+    /* padding-right: 10px; */
 }
