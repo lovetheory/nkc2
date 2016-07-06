@@ -37,12 +37,13 @@ block content
         include interface_home_newest.jade
   
     br
-    h4 近期精华
-    hr.hrNarrowSpace
-    .row
-      .col-lg-12
-        -var digestThreads = data.newestDigestThreads
-        include interface_panorama_single_digest.jade
+    if 0
+      h4 近期精华
+      hr.hrNarrowSpace
+      .row
+        .col-lg-12
+          -var digestThreads = data.newestDigestThreads
+          include interface_panorama_single_digest.jade
     
     H4 全站精华
     hr.hrNarrowSpace
