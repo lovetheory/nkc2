@@ -65,8 +65,14 @@ block content
               
             br
             include interface_navigation_paging.jade
-            hr.hrNarrowSpace
             
+            - var forumname = data.forum.display_name
+            span.lighttext 返回 
+              a(href='/f/#{fid}') #{forumname} 
+              //link back to forum
+              
+            hr.hrNarrowSpace
+              
             if data.permittedOperations
               if data.permittedOperations.postTo
                 //.form-group
