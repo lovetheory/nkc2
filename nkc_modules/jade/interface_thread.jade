@@ -87,13 +87,15 @@ block content
                 .form-inline
                   .form-group
                     button#ButtonReply.btn.btn-default(onclick='submit()') 快速回复
-                    button#GoEditor.btn.btn-default(onclick='goEditor()') 去编辑器
+                    
                   
                   .checkbox-inline
                     label
                       input#ParseURL(type='checkbox' checked)
                       |处理URL
               
+                  .form-group
+                    button#GoEditor.btn.btn-default(onclick='goEditor()') 去编辑器
             include exam_notification.jade
                 
                 
