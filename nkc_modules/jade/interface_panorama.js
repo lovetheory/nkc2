@@ -4,27 +4,37 @@ var gallery = (function(){
     titleItem:geid('GalleryTitle'),
     authorItem:geid('GalleryAuthor'),
     forumName:geid('GalleryForumName'),
+
+    navileft:geid('GalleryNavigationLeft'),
+    naviright:geid('GalleryNavigationRight'),
   }
 
-  gallery.next = function(){
+  gallery.next = function(step){
     var arr = gallery.arr
+
+    gallery.counter = (gallery.counter+step+arr.length)%arr.length
+
     var counter = gallery.counter
     var galleryItem = arr[counter]
 
     gallery.render(galleryItem)
-
-    gallery.counter = (gallery.counter+1)%arr.length
   }
 
   gallery.click = function(){
     gallery.end()
-    gallery.next()
+    gallery.next(1)
+    gallery.start()
+  }
+
+  gallery.backclick =function(){
+    gallery.end()
+    gallery.next(-1)
     gallery.start()
   }
 
   gallery.start = function(){
     gallery.timer = setTimeout(function(){
-      gallery.next()
+      gallery.next(1)
       gallery.start()
     },6000)
   }
@@ -53,6 +63,8 @@ var gallery = (function(){
 
   gallery.init = function(){
     gallery.imageItem.addEventListener('click',gallery.click)
+    gallery.navileft.addEventListener('click',gallery.backclick)
+    gallery.naviright.addEventListener('click',gallery.click)
 
     console.log('gallery init...');
     return nkcAPI('getGalleryRecent')
@@ -67,6 +79,6 @@ var gallery = (function(){
 })()
 
 gallery.init().then(function(){
-  gallery.next()
   gallery.start()
+  gallery.click()
 })

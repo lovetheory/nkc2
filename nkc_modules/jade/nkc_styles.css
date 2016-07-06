@@ -1038,3 +1038,14 @@ margin: 5px;
     display: inline-block;
     color: #bdbdbd;
 }
+.GalleryNavigation{
+    font-size: 16pt;
+    position: absolute;
+    padding: 0px;
+    bottom: 3px;
+    right: 10px;
+    color: white;
+}
+.GalleryNavigation span{
+    padding: 4px;
+}
