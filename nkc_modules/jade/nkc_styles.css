@@ -186,7 +186,7 @@ margin-right: 20px;
 
 .HomeForumContainer{
 margin-bottom: 20px;
-padding: 8px;
+padding: 6px;
 /* background-color: #ecf1ef; */
 /* height: 135px; */
 /* overflow-y: hidden; */
@@ -198,7 +198,7 @@ margin-right: 20px;
 .HomeForumTitle{
 height: 26px;
 position: relative;
-margin-bottom: 3px;
+/* margin-bottom: 3px; */
 }
 
 .HomeForumDescription{
@@ -294,7 +294,7 @@ margin-right: 20px;
   position: absolute;
   top: 1px;
   left: 30px;
-  right: 10px;
+  right: 5px;
   /* width: 200px; */
   font-size: 11pt;
   overflow: hidden !important;

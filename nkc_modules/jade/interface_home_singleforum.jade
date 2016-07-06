@@ -12,52 +12,57 @@ if (forum!==null)
     //above are necessary when some columns are shorter than others
   - var f = forum
   - var p = parent
-  .col-lg-3.col-md-4.col-sm-6.col-xs-12
-    .HomeForumContainer
-      .HomeForumTitle
-        - var forumcolor = f.color||p.color||'#eee'
-        - var url = '/f/'+f._key; url = seo_reverse_rewrite(url)
+  //.col-lg-3.col-md-4.col-sm-6.col-xs-12
+  .col-xs-12
+    .row
+      .HomeForumContainer
+        .col-xs-12.col-md-3
+          .HomeForumTitle
+            - var forumcolor = f.color||p.color||'#eee'
+            - var url = '/f/'+f._key; url = seo_reverse_rewrite(url)
+            
+            .HomeForumTitleCircle(style='background-color:#{forumcolor}')
+            a.HomeForumTitlePrimary(href='#{url}') #{f.display_name}
+              
+            .HomeForumTitleSecondary
+              if f.count_posts_today > 0
+                span.HomeForumTitlePostCountToday #{f.count_posts_today||""}/ 
+                
+              span.HomeForumTitleThreadCount #{f.count_threads}/ 
+              span.HomeForumTitlePostCount #{f.count_posts}
+              
+          .HomeForumDescription
+            span #{f.description}
         
-        .HomeForumTitleCircle(style='background-color:#{forumcolor}')
-        a.HomeForumTitlePrimary(href='#{url}') #{f.display_name}
-          
-        .HomeForumTitleSecondary
-          if f.count_posts_today > 0
-            span.HomeForumTitlePostCountToday #{f.count_posts_today||""}/ 
-            
-          span.HomeForumTitleThreadCount #{f.count_threads}/ 
-          span.HomeForumTitlePostCount #{f.count_posts}
-          
-      .HomeForumDescription
-        span #{f.description}
-      
-      //hr.hrNarrowSpace
-      each thread,index in f.threads
-        .HomeThreadItem
-          if thread.count>1
-            span.HomeThreadReplyCount #{thread.count-1}
-          //span.lighttext.rightalign #{fromNow(thread.lm.toc)}
-          
-          - var uid = thread.oc.uid
-          - var avatar = '/avatar_small/' + uid
-          
-          if 0 
-            .HomeThreadAvatarPosition
-              a(href='/user_threads/#{uid}')
-                img.HomeThreadAvatar(src='#{avatar}')
-          
-          - var oc = thread.oc
-          - var brief = de_hide(oc.c).replace(/\[.*?]/g,'').trim().slice(0,100)
-          
-          - var url = '/f/'+f._key+'/'+thread._key; url = seo_reverse_rewrite(url)
-          if !thread.digest
-            a.HomeThreadText(href='#{url}' title="#{brief}") #{thread.oc.t}   
-          else
-            a.HomeThreadTextDigest.HomeThreadText(href='#{url}' title="#{brief}") #{thread.oc.t}
-            
-          .HomeThreadTextRightAlign
-            if Date.now()-thread.tlm<86400000
-              span.reddish #{fromNowAbbr(thread.tlm)} 
-            else
+        
+        //hr.hrNarrowSpace
+        each thread,index in f.threads
+          .col-xs-12.col-sm-6.col-md-3
+            .HomeThreadItem
+              if thread.count>1
+                span.HomeThreadReplyCount #{thread.count-1}
+              //span.lighttext.rightalign #{fromNow(thread.lm.toc)}
+              
+              - var uid = thread.oc.uid
+              - var avatar = '/avatar_small/' + uid
+              
+              if 0 
+                .HomeThreadAvatarPosition
+                  a(href='/user_threads/#{uid}')
+                    img.HomeThreadAvatar(src='#{avatar}')
+              
+              - var oc = thread.oc
+              - var brief = de_hide(oc.c).replace(/\[.*?]/g,'').trim().slice(0,100)
+              
+              - var url = '/f/'+f._key+'/'+thread._key; url = seo_reverse_rewrite(url)
+              if !thread.digest
+                a.HomeThreadText(href='#{url}' title="#{brief}") #{thread.oc.t}  
+              else
+                a.HomeThreadTextDigest.HomeThreadText(href='#{url}' title="#{brief}") #{thread.oc.t}
+                
+              .HomeThreadTextRightAlign
+                if Date.now()-thread.tlm<86400000
+                  span.reddish #{fromNowAbbr(thread.tlm)} 
+                else
 
             
