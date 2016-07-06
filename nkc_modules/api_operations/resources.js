@@ -159,7 +159,7 @@ table.getResourceOfCurrentUser={
       for r in resources
       filter r.uid == @uid && r.pid == null
       sort r.toc desc
-      limit 20
+      limit 30
       return r
       `,{
         uid,
