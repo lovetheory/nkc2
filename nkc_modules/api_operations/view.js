@@ -1000,8 +1000,10 @@ table.viewUser = {
         filter thread
         filter thread.lm != p._key
 
-        let oc = document(posts,thread.oc)
         let lm = document(posts,thread.lm)
+        filter !lm.disabled
+        let oc = document(posts,thread.oc)
+
         let lmuser = document(users,lm.uid)
 
         return merge(p,{thread:merge(thread,{oc,lm,lmuser})})
