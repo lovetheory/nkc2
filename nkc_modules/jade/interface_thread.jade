@@ -38,9 +38,10 @@ block content
               
               a.ThreadTitleText(href='/t/#{data.thread._key}') #{thread.oc.t}
                 
-              .ThreadTitleAuxillary.d-inline.lighttext
+              //.ThreadTitleAuxillary.d-inline.lighttext
                                 
               .ThreadTitleAuxillaryLink
+                a(href='#bottom') 底部
                 - var po = data.permittedOperations
                 - if(po.addThreadToCart)
                   a(href="javascript:cartThread('#{data.thread._key}')") 加入管理车
@@ -62,6 +63,8 @@ block content
             .ThreadPostList
               each post,index in data.posts
                 include interface_thread_singlepost.jade
+                if index == data.posts.length-3
+                  #bottom
               
             br
             include interface_navigation_paging.jade
