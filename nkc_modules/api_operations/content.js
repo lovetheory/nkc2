@@ -595,7 +595,7 @@ update_thread = (tid)=>{
     )
 
     let has_image = length(iarr)?true:null
-    let has_file = (length(oc.r) - length(iarr))?true:null
+    let has_file = ((oc.r?length(oc.r):0) - length(iarr))?true:null
 
     UPDATE t WITH {toc:oc.toc,tlm:lm.toc,lm:lm._key,oc:oc._key,uid:oc.uid,count,count_today,has_image,has_file} IN threads
     return NEW

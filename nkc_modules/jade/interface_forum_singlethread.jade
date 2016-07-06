@@ -5,6 +5,9 @@
 - var avatar = '/avatar_small/' + oc.uid
 - var uid = oc.uid
 - var digest = thread.digest
+-var has_file = thread.has_file
+-var has_image = thread.has_image
+
 .ForumThreadItem
 
   if 0
@@ -27,11 +30,13 @@
           
           .tbl2(style='display:table-cell')
             - var brief = oc.c.replace(/\[.*?]/g,'').trim().slice(0,100)
-            if digest
-              //span.f12.ForumThreadDigestText [精]
-              a.ForumThreadDigestText(href="#{url}" title="#{brief}") #{oc.t} 
-            else
-              a(href="#{url}" title="#{brief}") #{oc.t} 
+            //span.f12.ForumThreadDigestText [精]
+            a(class='#{digest?"ForumThreadDigestText":""}' href="#{url}" title="#{brief}") #{oc.t} 
+            if has_image
+              span.ForumThreadHasImage 图
+            if has_file
+              span.ForumThreadHasImage.ForumThreadHasFile 附
+                
             //帖子标题链接
           
             .ForumThreadCreatorInfo

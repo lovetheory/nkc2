@@ -491,7 +491,22 @@ blockquote {
 
   margin-right: 10px;
 }
-
+.ForumThreadHasImage{
+    background-color: #6fbf6f;
+    border-radius: 3px;
+    vertical-align: middle;
+    display: inline-block;
+    text-align: center;
+    width: 18px;
+    height: 18px;
+    font-size: 8pt;
+    color: white;
+    margin-right: 3px;
+}
+.ForumThreadHasFile{
+    background-color: #78a2ce;
+}
+  
 .ThreadBox{
 
 }
