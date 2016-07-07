@@ -523,6 +523,13 @@ var layer = (function(){
     }
   }
 
+  class Collection extends BaseDao{
+    constructor(key){
+      super('collections',key)
+    }
+  }
+
+  layer.Collection = Collection
   layer.RegCode = RegCode
   layer.Post = Post
   layer.User = User

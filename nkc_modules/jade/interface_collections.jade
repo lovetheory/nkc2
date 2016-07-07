@@ -1,0 +1,69 @@
+extends bootstrap_base.jade
+
+block title
+  title 收藏 - 科创论坛
+  
+block content
+  
+  .container
+    .row
+      .col-xs-12
+        -var uid = data.thisuser._key
+        include interface_profile_avatar.jade
+        .ForumName #{data.thisuser.username} 的个人收藏
+        hr
+        
+        if data.thisuser._key == data.user._key
+          .form-inline
+            .form-group
+              button.btn.btn-default(onclick='clearbtn()') 清空
+              
+            .form-group
+              input#cid.form-control(type='text' style='width:400px;' placeholder='收藏项ID' value='')
+              
+            .form-group
+              input#category.form-control(type='text' placeholder='分类名称' value='')
+            
+            .form-group
+              button#movebtn.btn.btn-default(onclick='movebtn()') 移动
+
+            if data.categoryNames.length
+              .btn-group
+                button.btn.btn-default.dropdown-toggle(data-toggle='dropdown' type='button') 移动到
+                  span.caret
+                ul.dropdown-menu
+                  each cat in data.categoryNames
+                    li
+                      a(href="javascript:moveTo('#{cat||'null'}')") #{cat||'null'}
+                      
+            .form-group
+              button#deletebutton.btn.btn-danger(onclick='deletebtn()') 删除
+          br
+          
+        -if(!data.categoryNames.length){data.categoryNames=[null]}
+
+        
+        ul.nav.nav-tabs
+          each cat in data.categoryNames
+            li(role='presentation' class="#{(cat==data.category)?'active':''}")
+              a(href='?category=#{cat}') #{cat||'null'}
+        
+        br
+        
+        .CollectionCategoryThreads
+          each item in data.categoryThreads
+            
+            .CollectionCategoryThreadItem
+              -var thread = item.thread
+              if thread
+                include interface_forum_singlethread.jade
+                
+            .CollectionCategoryThreadActions
+              a(href="javascript:select('#{item._key}')") 选择
+
+  
+  include debug_output.jade
+block scripts
+  
+  script(src='/interface_common.js')
+  script(src='/interface_collections.js')

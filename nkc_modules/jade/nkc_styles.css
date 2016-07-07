@@ -506,7 +506,7 @@ blockquote {
 .ForumThreadHasFile{
     background-color: #78a2ce;
 }
-  
+
 .ThreadBox{
 
 }
@@ -1074,4 +1074,16 @@ margin: 5px;
     padding: 4px;
     /* padding-left: 10px; */
     /* padding-right: 10px; */
+}
+.CollectionCategoryThreadItem{
+    width: calc(100% - 64px);
+    vertical-align: middle;
+    /* left: 0; */
+    display: inline-block;
+}
+.CollectionCategoryThreadActions{
+    display: inline-block;
+    width: 60px;
+    text-align: right;
+    vertical-align: middle;
 }

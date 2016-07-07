@@ -131,6 +131,10 @@ settings.urlrewrite = [ //happens before serve_static
     to:'/api/operation?&operation=viewUserThreads&uid=$1&$2'
   },
 
+  {map:/^\/user_collection\/([^\?]*)\??(.*)/,
+    to:'/api/operation?&operation=viewCollectionOfUser&uid=$1&$2'
+  },
+
   {map:/^\/user_profile\/([^\?]*)\??(.*)/,
     to:'/api/operation?&operation=viewUser&uid=$1&$2'
   },

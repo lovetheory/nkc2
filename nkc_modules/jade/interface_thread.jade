@@ -41,6 +41,8 @@ block content
               //.ThreadTitleAuxillary.d-inline.lighttext
                                 
               .ThreadTitleAuxillaryLink
+                a(href="javascript:addColl('#{thread._key}')") 收藏
+                
                 a(href='#bottom') 底部
                 - var po = data.permittedOperations
                 - if(po.addThreadToCart)

@@ -113,3 +113,11 @@ function quotePost(pid){
 function goEditor(){
   window.location = '/editor?target='+replyTarget.trim()+'&content='+encodeURI(assemblePostObject().c)
 }
+
+function addColl(tid){
+  nkcAPI('addThreadToCollection',{tid:tid})
+  .then(function(res){
+    screenTopAlert('已收藏 '+tid)
+  })
+  .catch(jwarning)
+}

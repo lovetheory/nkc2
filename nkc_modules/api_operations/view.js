@@ -1084,3 +1084,36 @@ table.viewPage = {
     pagename:String,
   }
 }
+
+table.viewCollectionOfUser = {
+  operation:function(params){
+    var operations = require('api_operations')
+
+    var data = defaultData(params)
+    data.template = jadeDir + 'interface_collections.jade'
+
+    var uid = params.uid||params.user._key
+    params.uid = uid
+    var u = new layer.User(uid)
+    return u.load()
+    .then(u=>{
+      data.thisuser = u.model
+
+      return operations.table.listMyCategories.operation(params)
+    })
+    .then(arr=>{
+      data.categoryNames = arr
+      if(arr.indexOf(params.category||null)<0){
+        //if specified category not exist
+        params.category = arr[0]
+      }
+
+      return operations.table.listMyCollectionOfCategory.operation(params)
+    })
+    .then(arr=>{
+      data.categoryThreads = arr
+      data.category = params.category
+      return data
+    })
+  }
+}

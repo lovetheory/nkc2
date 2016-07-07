@@ -1,8 +1,8 @@
 .row
   .col-xs-12.col-sm-6
     .UserProfileSection1
-      div(style='display:inline-block;margin-right:10px')
-        img(src='/avatar/#{thatuid}' style='width:72px;height:72px;border-radius:6px;')
+      -var uid = thatuid
+      include interface_profile_avatar.jade
       
       div(style='display:block')
         .ForumTitleCircle(style='background-color:#{thatuser.color||"#bbb"}')
