@@ -10,6 +10,14 @@ var AQL = queryfunc.AQL
 
 //this is an example API
 table.useSearch = {
+  init:function(){
+    return queryfunc.createIndex('logs',{
+      fields:['searchstring'],
+      type:'skiplist',
+      unique:'false',
+      sparse:'true',
+    })
+  },
   operation:function(params){
     var user = params.user
     var searchstring = params.searchstring

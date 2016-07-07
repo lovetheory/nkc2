@@ -208,14 +208,18 @@ var NavBarSearch = {
 
   search:function(){
     var searchstr = NavBarSearch.box.value.trim()
-    nkcAPI('useSearch',{searchstring:searchstr});
+    nkcAPI('useSearch',{searchstring:searchstr})
+    .catch(function(err){
 
-    //    https://www.google.com.hk/search?newwindow=1&safe=strict&source=hp&q=zvs+site%3Abbs.kechuang.org
-    window.location =
-    //'https://www.google.com.hk/search?newwindow=1&safe=strict&source=hp&q='
-    'http://cn.bing.com/search?q='
-    +encodeURI(searchstr)
-    +'+site%3Abbs.kechuang.org'
+    })
+    .then(function(){
+      //    https://www.google.com.hk/search?newwindow=1&safe=strict&source=hp&q=zvs+site%3Abbs.kechuang.org
+      window.location =
+      //'https://www.google.com.hk/search?newwindow=1&safe=strict&source=hp&q='
+      'http://cn.bing.com/search?q='
+      +encodeURI(searchstr)
+      +'+site%3Abbs.kechuang.org'
+    })
   },
 };
 

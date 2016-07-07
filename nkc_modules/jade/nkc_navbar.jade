@@ -35,11 +35,17 @@ div
             a(href='#') 传
       
       .col-xs-8.col-sm-3
-        .row(style='margin-top:8px;')
-          .col-xs-9(style='padding-right:0px')
-            input#SearchBox.form-control(type='text',placeholder='搜索' style='')
-          .col-xs-3(style='padding-left:4px;')
-            button#SearchButton.btn.btn-default(style='float:left') 搜索
+        .input-group(style='margin-top:8px;')
+          input#SearchBox.form-control(type='text' placeholder='...')
+          span.input-group-btn
+            button#SearchButton.btn.btn-default(type='button') 搜索
+          
+        if 0
+          .row(style='margin-top:8px;')
+            .col-xs-9(style='padding-right:0px')
+              input#SearchBox.form-control(type='text',placeholder='搜索' style='')
+            .col-xs-3(style='padding-left:4px;')
+              button#SearchButton.btn.btn-default(style='float:left') 搜索
       
       .col-xs-4.col-sm-3
         .NavBarLinkArea.f12.text-center
