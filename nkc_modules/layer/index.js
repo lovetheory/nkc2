@@ -7,12 +7,14 @@ var helper_mod = require('helper.js')();
 var queryfunc = require('query_functions')
 var apifunc = require('api_functions')
 var validation = require('validation')
+var rs = require('random-seed')
 var AQL = queryfunc.AQL
 
 var db = require('arangojs')(settings.arango.address);
 db.useDatabase(settings.server.database_name);
 
 var permission = require('permissions')
+var crypto =require('crypto')
 
 var layer = (function(){
   'use strict';
@@ -473,7 +475,6 @@ var layer = (function(){
         var totalcount=res[0]
         if(totalcount<count)throw 'not enough questions within this category'
 
-        var rs = require('random-seed')
         var rand = rs.create(seed)
 
         var rarr = [];
@@ -511,7 +512,7 @@ var layer = (function(){
   class RegCode{
     static generate(){
       return new Promise(function(resolve,reject){
-        require('crypto').randomBytes(16, function(err, buffer) {
+        crypto.randomBytes(16, function(err, buffer) {
           if(err)return reject(err);
           resolve(buffer);
         })
