@@ -88,7 +88,7 @@ table.removeCollectionItem = {
   }
 }
 
-table.moveCollectionItemToCategory={
+table.moveCollectionItemToCategory = {
   operation:function(params){
     var c = new layer.Collection(params.cid)
     return c.update({category:params.category})

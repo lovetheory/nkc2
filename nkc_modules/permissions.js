@@ -173,6 +173,11 @@ var certificates={
 
       viewSelf:true,
 
+      addThreadToCollection:true,
+      listMyCollectionOfCategory:true,
+      listMyCategories:true,
+      removeCollectionItem:true,
+      moveCollectionItemToCategory:true,
     },
   },
 
@@ -205,6 +210,7 @@ var certificates={
       viewLogin:true,
 
       viewPanorama:true,
+      viewCollectionOfUser:true,
 
       getResourceThumbnail:true,
       getResource:true,
