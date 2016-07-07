@@ -11,6 +11,7 @@
     .UserProfileSection2
       -var user = thatuser
         a(href='/user_threads/#{thatuser._key}') 主题一览
+        a(href='/user_collection/#{thatuser._key}') 收藏夹
         a(href='/sms?receiver=#{thatuser.username}') 发私信
         br
         span 学术分 #{user.xsf||0}

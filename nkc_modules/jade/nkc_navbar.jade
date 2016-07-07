@@ -47,6 +47,8 @@ div
             - var user = data.user
             a(href='/me' title='#{getUserDescription(user)}') #{user.username}
             
+            
+            
             if data.permittedOperations.viewSMS
               a(href='/sms')
                 span 信
@@ -58,6 +60,8 @@ div
             if data.permittedOperations
               if data.permittedOperations.viewExperimental
                 a(href='/experimental' title='管理界面') 管
+            
+            a(href='/users_collection/' title='我的珍藏') 藏
             
             a(href='/logout' title='不，不要走！') 退
             
