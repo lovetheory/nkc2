@@ -34,15 +34,17 @@ block content
 
             if data.categoryNames.length
               .form-group
-                button.btn.btn-default.dropdown-toggle(data-toggle='dropdown' type='button') 移动到
-                  span.caret
-                ul.dropdown-menu
-                  each cat in data.categoryNames
-                    li
-                      a(href="javascript:moveTo('#{cat||'null'}')") #{cat||'null'}
-                        
+                .btn-group
+                  button.btn.btn-default.dropdown-toggle(data-toggle='dropdown' type='button') 移动到
+                    span.caret
+                  ul.dropdown-menu
+                    each cat in data.categoryNames
+                      li
+                        a(href="javascript:moveTo('#{cat||'null'}')") #{cat||'null'}
+              
+       
                 button#deletebutton.btn.btn-danger(onclick='deletebtn()') 删除
-              //hr.hrNarrowSpace
+                //hr.hrNarrowSpace
           
       -if(!data.categoryNames.length){data.categoryNames=[null]}
 
