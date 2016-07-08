@@ -99,7 +99,7 @@ var certificates={
       moveOwnedThreads:true,
 
 
-
+      pullNewPosts24h:true,
       setTopped:true
     }
   },

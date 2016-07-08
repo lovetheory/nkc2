@@ -189,6 +189,19 @@ function InitThreadControl(options){
         }
       },
 
+      listNewPosts:{
+        text:'拉取24h新帖',
+        action:function(){
+          return nkcAPI('pullNewPosts24h')
+          .then(function(arr){
+            logme(arr.length+' posts got')
+            pc.list = arr
+            pc.render()
+          })
+          .catch(logme)
+        }
+      }
+
     },
 
     list:[

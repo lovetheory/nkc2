@@ -240,3 +240,13 @@ table.setTopped={
     tid:String,
   }
 }
+
+table.pullNewPosts24h = {
+  operation:function(params){
+    return AQL(`for p in posts
+      filter p.toc> date_now()-86400000
+      sort p.toc desc
+      return p`
+    )
+  }
+}
