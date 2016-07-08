@@ -3,12 +3,12 @@ div
   - var navbar = data.navbar || {}
   .container-fluid
     .row(style='background-color:#f3f3f3;margin-bottom: 10px; padding-bottom: 3px;border-bottom-color: rgb(221, 221, 221); border-bottom-width: 1px; border-bottom-style: solid;')
-      .col-xs-6.col-sm-2
+      .col-xs-4.col-sm-2
       
         div.text-center(style='margin-top:9px; margin-bottom:0px')
-          a.f16(href='/' style='text-decoration: none;') #{data.site.name}
+          a.f16(href='/' style='text-decoration: none; display:inline-block;') #{data.site.name}
       
-      .col-xs-6.col-sm-4
+      .col-xs-8.col-sm-4
         -var navbar_highlight = data.navbar_highlight||navbar.highlight
         -var isActive = function(label){return (navbar_highlight==label)?'active':''}
         ul.pagination(style='margin-top:8px; margin-bottom:0px')
@@ -34,9 +34,9 @@ div
           li(class="#{navbar.highlight=='uploader'?'active':''}")
             a(href='#') 传
       
-      .col-xs-8.col-sm-3
+      .col-xs-7.col-sm-3
         .input-group(style='margin-top:8px;')
-          input#SearchBox.form-control(type='text' placeholder='...')
+          input#SearchBox.form-control(type='text' placeholder='关键词')
           span.input-group-btn
             button#SearchButton.btn.btn-default(type='button') 搜索
           
@@ -47,7 +47,7 @@ div
             .col-xs-3(style='padding-left:4px;')
               button#SearchButton.btn.btn-default(style='float:left') 搜索
       
-      .col-xs-4.col-sm-3
+      .col-xs-5.col-sm-3
         .NavBarLinkArea.f12.text-center
           if data.user
             - var user = data.user
@@ -67,7 +67,7 @@ div
               if data.permittedOperations.viewExperimental
                 a(href='/experimental' title='管理界面') 管
             
-            a(href='/user_collection/' title='我的珍藏') 藏
+            a(href='/user_collection/#{data.user._key}' title='我的珍藏') 藏
             
             a(href='/logout' title='不，不要走！') 退
             
