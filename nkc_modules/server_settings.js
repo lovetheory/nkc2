@@ -316,8 +316,8 @@ settings.exam = {
   pass_score:6,
   number_of_questions:10,
 
-  number_of_questions_subjective:6,
-  number_of_questions_common:4,
+  number_of_questions_subjective:7,
+  number_of_questions_common:3,
 
   time_before_register:3600*1000*1, //1h
 }
