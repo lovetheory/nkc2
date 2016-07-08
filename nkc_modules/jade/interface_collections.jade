@@ -1,7 +1,7 @@
 extends bootstrap_base.jade
 
 block title
-  title 收藏 - 科创论坛
+  title #{data.category} - #{data.thisuser.username}的收藏 - 科创论坛
   
 block content
   
@@ -10,7 +10,7 @@ block content
       .col-xs-12
         -var uid = data.thisuser._key
         include interface_profile_avatar.jade
-        .ForumName #{data.thisuser.username} 的个人收藏
+        .ForumName #{data.category} - #{data.thisuser.username} 的个人收藏
         hr
         
         if data.thisuser._key == data.user._key
