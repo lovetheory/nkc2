@@ -257,25 +257,7 @@ table.userLogin = {
   },
 }
 
-table.userLogout = {
-  operation:function(params){
-    var data = {}
 
-    data.user = undefined
-    params._res.cookie('userinfo',{info:'nkc_logged_out'},{
-      signed:true,
-      expires:(new Date(Date.now()-86400000)),
-    });
-
-    var signed_cookie = params._res.get('set-cookie');
-
-    //put the signed cookie in response, also
-    Object.assign(data, {'cookie':signed_cookie,'instructions':
-    'you have logged out. you may replace existing cookie with this one'})
-
-    return data;
-  },
-}
 
 function newPasswordObject(plain){
   var salt = Math.floor((Math.random()*65536)).toString(16)
@@ -319,6 +301,19 @@ table.changePassword = {
     oldpassword:String,
     newpassword:String,
     newpassword2:String,
+  }
+}
+
+table.userLogout = {
+  operation:function(params){
+
+
+    params._res.cookie('userinfo',{info:'nkc_logged_out'},{
+      signed:true,
+      expires:(new Date(Date.now()-86400000)),
+    });
+
+    return {}
   }
 }
 

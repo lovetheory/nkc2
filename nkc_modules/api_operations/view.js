@@ -24,6 +24,7 @@ function defaultData(params){ //default data obj for views
     user,
     contentClasses:params.contentClasses,
     permittedOperations:params.permittedOperations,
+    lastlogin:params._req.userinfo?params._req.userinfo.lastlogin:undefined
   }
 }
 
@@ -670,6 +671,16 @@ table.viewLogout = {
     data.template = jadeDir+'interface_user_logout.jade'
 
     data.user = undefined
+
+    //gotta avoid CSRF here
+    var ihash = params.hash
+
+    if(params._req.userinfo){
+      if(Number(ihash)!==params._req.userinfo.lastlogin){
+        throw 'potential CSRF'
+      }
+    }
+
     params._res.cookie('userinfo',{info:'nkc_logged_out'},{
       signed:true,
       expires:(new Date(Date.now()-86400000)),
@@ -678,8 +689,8 @@ table.viewLogout = {
     var signed_cookie = params._res.get('set-cookie');
 
     //put the signed cookie in response, also
-    Object.assign(data, {'cookie':signed_cookie,'instructions':
-    'you have logged out. you may replace existing cookie with this one'})
+    // Object.assign(data, {'cookie':signed_cookie,'instructions':
+    // 'you have logged out. you may replace existing cookie with this one'})
 
     return data;
   },

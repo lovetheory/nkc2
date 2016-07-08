@@ -69,7 +69,7 @@ div
             
             a(href='/user_collection/#{data.user._key}' title='我的珍藏') 藏
             
-            a(href='/logout' title='不，不要走！') 退
+            a(href='/logout?hash=#{data.lastlogin||""}' title='不，不要走！') 退
             
           else
             a(href='/login' title='还记得密码吗？') 登录
