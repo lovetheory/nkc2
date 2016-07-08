@@ -11,38 +11,42 @@ block content
         -var uid = data.thisuser._key
         include interface_profile_avatar.jade
         .ForumName #{data.category} - #{data.thisuser.username} 的个人收藏
-        hr
+        //hr
+      
+      if data.thisuser._key == data.user._key
+        .col-xs-12
         
-        if data.thisuser._key == data.user._key
-          .form-inline
+          .form-inline(style='margin-top:12px;margin-bottom:12px')
             .form-group
-              button.btn.btn-default(onclick='clearbtn()') 清空
-              
+              .input-group
+                span.input-group-btn
+                  button.btn.btn-default(onclick='clearbtn()') 清空
+                
+                input#cid.form-control(type='text' placeholder='选中列表' value='')
+                
             .form-group
-              input#cid.form-control(type='text' style='width:400px;' placeholder='收藏项ID' value='')
-              
-            .form-group
-              input#category.form-control(type='text' placeholder='分类名称' value='')
-            
-            .form-group
-              button#movebtn.btn.btn-default(onclick='movebtn()') 移动
+              .input-group
+                input#category.form-control(type='text' placeholder='输入分类名称' value='')
+                span.input-group-btn
+                  button#movebtn.btn.btn-default(onclick='movebtn()') 移动
+          
+
 
             if data.categoryNames.length
-              .btn-group
+              .form-group
                 button.btn.btn-default.dropdown-toggle(data-toggle='dropdown' type='button') 移动到
                   span.caret
                 ul.dropdown-menu
                   each cat in data.categoryNames
                     li
                       a(href="javascript:moveTo('#{cat||'null'}')") #{cat||'null'}
-                      
-            .form-group
-              button#deletebutton.btn.btn-danger(onclick='deletebtn()') 删除
-          br
+                        
+                button#deletebutton.btn.btn-danger(onclick='deletebtn()') 删除
+              //hr.hrNarrowSpace
           
-        -if(!data.categoryNames.length){data.categoryNames=[null]}
+      -if(!data.categoryNames.length){data.categoryNames=[null]}
 
-        
+      .col-xs-12
         ul.nav.nav-tabs
           each cat in data.categoryNames
             li(role='presentation' class="#{(cat==data.category)?'active':''}")
@@ -61,7 +65,22 @@ block content
             .CollectionCategoryThreadActions
               a(href="javascript:select('#{item._key}')") 选择
 
-  
+      .col-xs-12
+        
+        :markdown
+          ### 收藏使用说明
+          
+          1. 浏览帖子的时候 标题处有“收藏”按钮，点击可将帖子加入收藏夹。可以重复加入多次。
+          2. 在收藏夹中帖子列表右侧有“选择”链接，逐个点击即可逐个将收藏夹项加入“选中列表”。
+          3. 在“输入分类名称”中填写新的分类名称，然后点“移动”。
+          4. 如果要把帖子移动到已有的分类，也可以点“移动到”下拉菜单，选择分类。
+          5. “删除”按钮会将选中的收藏项删除。
+          
+          ### 收藏夹的意义
+          
+          1. 整理论坛资料，方便个人日后取用。
+          2. 整理一整个系列的作品/著述，方便他人直接浏览。
+      
   include debug_output.jade
 block scripts
   
