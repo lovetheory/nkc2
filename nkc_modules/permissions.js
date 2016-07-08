@@ -160,7 +160,7 @@ var certificates={
       viewMe:true,
 
       userLogout:true,
-      viewLogout:true,
+
 
       userRegister:false,
 
@@ -208,6 +208,8 @@ var certificates={
 
       userLogin:true,
       viewLogin:true,
+
+      viewLogout:true,
 
       viewPanorama:true,
       viewCollectionOfUser:true,
