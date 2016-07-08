@@ -42,14 +42,15 @@ block content
                                 
               .ThreadTitleAuxillaryLink
                 - var po = data.permittedOperations
-                - if(po.addThreadToCart)
                 
                 if po.addThreadToCollection
                   a(href="javascript:addColl('#{thread._key}')") 收藏
                 
                 a(href='#bottom') 底部
                 
+                if po.addThreadToCart
                   a(href="javascript:cartThread('#{data.thread._key}')") 加入管理车
+                  
                 if (po.setDigest)
                   if thread.digest
                     a(href="javascript:setDigest('#{data.thread._key}')") 撤销精华
