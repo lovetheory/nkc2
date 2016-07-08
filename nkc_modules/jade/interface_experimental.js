@@ -216,7 +216,15 @@ function InitThreadControl(options){
         return(
           <div className="SomeItemDisplay">
             <div className="ItemTypeText">{type}</div>
-            <div className="ItemMeta">id:{item._key} fid:{item.fid} uid:{item.oc.uid}</div>
+            <div className="ItemMeta">
+
+              <a href={'/t/'+item._key}> 帖:{item._key} </a>
+
+              <a href={'/f/'+item.fid}> 版:{item.fid} </a>
+
+              <a href={'/user_profile/'+item.uid}> 户:{item.oc.uid} </a>
+
+            </div>
             <div className="ItemText">{item.oc.t}</div>
           </div>
         )
@@ -225,8 +233,14 @@ function InitThreadControl(options){
         return(
           <div className="SomeItemDisplay">
             <div className="ItemTypeText">{type}</div>
-            <div className="ItemMeta">id:{item._key} tid: {item.tid} uid:{item.uid}</div>
-            <div className="ItemText">{item.t} - {item.c.slice(0,25)}</div>
+            <div className="ItemMeta">楼:{item._key}
+
+              <a href={'/t/'+item.tid}> 帖: {item.tid} </a>
+
+              <a href={'/user_profile/'+item.uid}> 户:{item.uid} </a>
+
+            </div>
+            <div className="ItemText">{item.t} - {item.c.trim().replace(/\n/g,' ').slice(0,50)}</div>
           </div>
         )
 
