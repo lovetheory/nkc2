@@ -7,6 +7,7 @@
 - var digest = thread.digest
 -var has_file = thread.has_file
 -var has_image = thread.has_image
+-var topped = thread.topped
 
 .ForumThreadItem
 
@@ -31,6 +32,10 @@
           .tbl2(style='display:table-cell')
             - var brief = oc.c.replace(/\[.*?]/g,'').trim().slice(0,100)
             //span.f12.ForumThreadDigestText [精]
+            
+            if topped
+              span.ForumThreadHasImage.ForumThreadTopped 顶
+              
             a(class='#{digest?"ForumThreadDigestText":""}' href="#{url}" title="#{brief}") #{oc.t} 
             if has_image
               span.ForumThreadHasImage 图

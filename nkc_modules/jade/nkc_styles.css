@@ -506,7 +506,9 @@ blockquote {
 .ForumThreadHasFile{
     background-color: #78a2ce;
 }
-
+.ForumThreadTopped{
+    background-color: #f54f4f;
+}
 .ThreadBox{
 
 }
