@@ -31,7 +31,7 @@ function nkc_render(options){
   default_whitelist.font = ['color']
 
   if(!in_browser){
-    default_whitelist.iframe = ['height','width','src','frameborder','allowfullscreen']
+    //default_whitelist.iframe = ['height','width','src','frameborder','allowfullscreen']
   }
 
   var xssoptions = {whiteList:default_whitelist}
