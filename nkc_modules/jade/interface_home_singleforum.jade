@@ -13,10 +13,10 @@ if (forum!==null)
   - var f = forum
   - var p = parent
   //.col-lg-3.col-md-4.col-sm-6.col-xs-12
-  .col-xs-12
+  .col-xs-12(style='margin-bottom:6px')
     .row
       .HomeForumContainer
-        .col-xs-12.col-md-3
+        .col-xs-12.col-sm-6.col-md-3
           .HomeForumTitle
             - var forumcolor = f.color||p.color||'#eee'
             - var url = '/f/'+f._key; url = seo_reverse_rewrite(url)
@@ -37,6 +37,8 @@ if (forum!==null)
         
         //hr.hrNarrowSpace
         each thread,index in f.threads
+          if (index+1)%2==0
+            .clearfix.visible-sm-block
           .col-xs-12.col-sm-6.col-md-3
             .HomeThreadItem
               if thread.count>1
