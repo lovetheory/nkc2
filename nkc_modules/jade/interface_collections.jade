@@ -17,13 +17,7 @@ block content
         .col-xs-12
         
           .form-inline(style='margin-top:12px;margin-bottom:12px')
-            .form-group
-              .input-group
-                span.input-group-btn
-                  button.btn.btn-default(onclick='clearbtn()') 清空
-                
-                input#cid.form-control(type='text' placeholder='选中列表' value='')
-                
+
             .form-group
               .input-group
                 input#category.form-control(type='text' placeholder='输入分类名称' value='')
@@ -41,9 +35,9 @@ block content
                     each cat in data.categoryNames
                       li
                         a(href="javascript:moveTo('#{cat||'null'}')") #{cat||'null'}
-              
-       
+
                 button#deletebutton.btn.btn-danger(onclick='deletebtn()') 删除
+                button.btn.btn-default(onclick='selectbtn()') 全选/不选
                 //hr.hrNarrowSpace
           
       -if(!data.categoryNames.length){data.categoryNames=[null]}
@@ -64,8 +58,8 @@ block content
               if thread
                 include interface_forum_singlethread.jade
                 
-            .CollectionCategoryThreadActions
-              a(href="javascript:select('#{item._key}')") 选择
+              .CollectionCategoryThreadActions
+                input.ThreadCheckboxes(id='#{item._key}' type='checkbox')
 
       .col-xs-12
         

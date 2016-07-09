@@ -1078,14 +1078,17 @@ margin: 5px;
     /* padding-right: 10px; */
 }
 .CollectionCategoryThreadItem{
-    width: calc(100% - 64px);
+    width: 100%;
+    position: relative;
     vertical-align: middle;
     /* left: 0; */
-    display: inline-block;
+    /* display: inline-block; */
 }
 .CollectionCategoryThreadActions{
     display: inline-block;
-    width: 60px;
-    text-align: right;
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
     vertical-align: middle;
 }
