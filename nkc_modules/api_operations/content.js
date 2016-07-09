@@ -9,11 +9,17 @@ var queryfunc = require('query_functions')
 var validation = require('validation')
 var AQL = queryfunc.AQL
 var apifunc = require('api_functions')
-
+var layer = require('../layer')
 var permissions = require('permissions')
 
 var table = {};
 module.exports = table;
+
+function createReplyRelation(frompid,topid){
+  var operations = require('api_operations')
+  report('create reply relation '+frompid+' to '+topid)
+  return operations.table.createReplyRelation.operation({frompid,topid})
+}
 
 //post to a given thread.
 var postToThread = function(params,tid,user){
@@ -55,7 +61,34 @@ var postToThread = function(params,tid,user){
     //update thread object to make sync
     var updatedThread = null
 
-    return update_thread(tid)
+    //extract quotation if exists
+    var found = post.c.match(/\[quote=(.*?),(.*?)]/)
+    if(found[2]){
+      var topid = found[2]
+      report(found)
+      createReplyRelation(pid,topid)
+    }
+
+    return Promise.resolve()
+    .then(()=>{
+      if(user._key==tobject.uid){
+        //if the reply was to oneself
+        return
+      }else{
+
+        var tc = new layer.Thread(tid)
+        return tc.load()
+        .then(tc=>{
+          return tc.mergeOc()
+        })
+        .then(tc=>{
+          return createReplyRelation(pid,tc.model.oc._key)
+        })
+      }
+    })
+    .then(()=>{
+      return update_thread(tid)
+    })
     .then(t=>{
       updatedThread = t
       return incrementForumOnNewPost(tid)
@@ -113,6 +146,7 @@ var postToForum = function(params,fid,user){
     var newthread =
     {
       _key:newtid.toString(),//key must be string.
+      uid:user._key,
       fid:fid.toString(),
     };
 
@@ -295,9 +329,9 @@ table.updateAllPostsFromCreditLog = {
       filter p!=null
 
       let sorted = (
-          for c in g
-          sort g.toc asc
-          return c
+        for c in g
+        sort g.toc asc
+        return c
       )
 
       update p with {credits:sorted} in posts

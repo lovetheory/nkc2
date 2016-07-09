@@ -103,7 +103,7 @@ function quotePost(pid){
     var str = pc.c.replace(/\[quote.*?][^]*?\[\/quote]/g,'').slice(0,length_limit).trim()
     if(str.length==length_limit)str+='……'
 
-    str = '[quote='+pc.username+']'+ str + '[/quote]'
+    str = '[quote='+pc.username+','+pc._key+']'+ str + '[/quote]'
 
     geid('ReplyContent').value += str
     window.location.href='#ReplyContent'
