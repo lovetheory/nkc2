@@ -914,8 +914,29 @@ table.viewSMS = {
     .then(sarr=>{
       data.smslist = sarr
 
+      return AQL(`
+        for r in replies
+        filter r.touid == @uid
+        sort r.touid desc, r.toc desc
+        limit 10
+        let frompost = document(posts,r.frompid)
+        let fromuser = document(users,frompost.uid)
+        let touser = document(users,r.touid)
+        let topost = document(posts,r.topid)
+
+        return merge(r,{fromuser,frompost,topost,touser})
+        `,{uid}
+      )
+    })
+    .then(arr=>{
+      data.replylist = arr
+
       var psnl = new layer.Personal(uid)
-      return psnl.update({new_message:0})
+      return psnl.load()
+      .then(psnl=>{
+        data.lastVisitTimestamp = psnl.model.message_lastvisit||0
+        return psnl.update({new_message:0,message_lastvisit:Date.now()})
+      })
       .then(psnl=>{
         return data
       })

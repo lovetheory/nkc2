@@ -5,10 +5,35 @@ block title
   meta#replytarget(value='#{data.replytarget}')
 
 block content
-  .container
+  .container-fluid
     .row
-      .col-md-12
-        
+      if data.replylist && data.replylist.length
+        .col-xs-12
+          h4 回复提醒
+          .SMSTable
+            each r in data.replylist
+              -var goto = '/t/'+r.topost.tid
+              -var isNew = r.toc>data.lastVisitTimestamp
+              .SMSTableItem
+                .SMSFirstRow
+                  span(class='#{isNew?"reddish":""}') #{dateTimeString(r.toc)} 
+                  span #{fromNow(r.toc)}
+                  
+                  span
+                    - var uid = r.fromuser._key
+                    - var avatar = '/avatar_small/' + uid
+                      a(href='/user_profile/#{uid}')
+                        img.HomeThreadAvatar(src='#{avatar}')
+                        
+                  span #{r.fromuser.username} 回复了 #{r.touser.username} 的 
+                    a(href='#{goto}') #{digestText(r.topost.t||''+'-'+r.topost.c,20)+'...'}
+                
+                .SMSSecondRow
+                  .SMSSentByOthers
+                    a(href='#{goto}') #{digestText(r.frompost.t||''+'-'+r.frompost.c)}
+                  
+      .col-xs-12
+        h4 短消息
         .row
           .form-group.col-sm-3
             input#username.form-control(type='text' placeholder='收信人用户名' value="#{data.receiver||''}")
@@ -24,6 +49,7 @@ block content
         .SMSTable
             
           each s,index in smslist
+            -var isNew = s.toc>data.lastVisitTimestamp
             -var sender = s.us
             -var receiver = s.ur
             -var senderid = s.s
@@ -31,7 +57,7 @@ block content
             -var content = s.c
             .SMSTableItem
               .SMSFirstRow
-                span.reddish #{dateTimeString(s.toc)}
+                span(class='#{isNew?"reddish":""}') #{dateTimeString(s.toc)}
                 span #{fromNow(s.toc)}
                 
                 span

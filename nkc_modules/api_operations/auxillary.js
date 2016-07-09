@@ -99,3 +99,51 @@ table.runAQL={
     return AQL(params.query)
   }
 }
+
+var incrementPsnl = function(key){
+  var psnl = new layer.Personal(key)
+  return psnl.load()
+  .then(psnl=>{
+    return psnl.update({new_message:(psnl.model.new_message||0)+1})
+  })
+}
+
+table.createReplyRelation = {
+  init:()=>{
+    queryfunc.createIndex('replies',{
+      fields:['touid','toc'],
+      type:'skiplist',
+      unique:'false',
+      sparse:'false',
+    })
+  },
+  operation:function(params){
+    var frompid = params.frompid
+    var topid = params.topid
+    var toc = Date.now()
+
+    var p = new layer.Post(topid)
+    return p.load()
+    .then(p=>{
+      var r = new layer.BaseDao('replies')
+      var touid = p.model.uid
+
+      return r.save({
+        frompid,
+        topid,
+        touid,
+        toc,
+      })
+      .then(r=>{
+        return incrementPsnl(touid)
+        .then(psnl=>{
+          return {_key:r.key}
+        })
+      })
+    })
+  },
+  requiredParams:{
+    frompid:String,
+    topid:String,
+  }
+}
