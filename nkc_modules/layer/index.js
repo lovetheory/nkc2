@@ -165,7 +165,7 @@ var layer = (function(){
       if(contentClasses[forum.class]){ // if user have enough class
         return this;
       }else{
-        throw 'no enough permission. you need a content-class named ['+ forum.class +']'
+        throw '权限不足. 要浏览这部分内容，你需要一个叫做 ['+ forum.class +'] 的权限级别. 请尝试登陆或者注册.'
       }
     }
 
