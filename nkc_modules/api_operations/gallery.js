@@ -19,6 +19,7 @@ table.getGalleryRecent = {
       sort p.toc desc
       filter p.r
       filter length(p.r)
+      filter !p.disabled
 
       let parr = (
         for r in p.r
