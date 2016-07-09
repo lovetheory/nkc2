@@ -63,7 +63,7 @@ var postToThread = function(params,tid,user){
 
     //extract quotation if exists
     var found = post.c.match(/\[quote=(.*?),(.*?)]/)
-    if(found[2]){
+    if(found&&found[2]){
       var topid = found[2]
       report(found)
       createReplyRelation(pid,topid)
