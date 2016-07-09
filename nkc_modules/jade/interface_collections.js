@@ -30,23 +30,6 @@ function selectbtn(){
   }
 }
 
-function applyAsyncFunc(arr,func,k){
-  k = k||0
-  return Promise.resolve()
-  .then(function(){
-    if(!arr.length||k==arr.length){
-      throw 1
-    }
-    return func(arr[k])
-  })
-  .then(function(){
-    return applyAsyncFunc(arr,func,k+1)
-  })
-  .catch(function(err){
-    return err
-  })
-}
-
 var movebutton = geid('movebtn')
 //移动按钮
 function movebtn(){
@@ -58,7 +41,7 @@ function movebtn(){
 
   movebutton.disabled = true
 
-  applyAsyncFunc(extractCidArray(),function(item){
+  common.mapWithPromise(extractCidArray(),function(item){
     return nkcAPI('moveCollectionItemToCategory',{cid:item,category:targetCategory})
     .then(function(){
       screenTopAlert(item + '移动到' +targetCategory)
@@ -79,7 +62,7 @@ function moveTo(targetCategory){
 
 function deletebtn(){
   geid('deletebutton').disabled = true
-  applyAsyncFunc(extractCidArray(),function(item){
+  common.mapWithPromise(extractCidArray(),function(item){
 
     return nkcAPI('removeCollectionItem',{
       cid:item

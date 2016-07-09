@@ -307,6 +307,26 @@ var common=(function(){
     })
   }
 
+  function mapWithPromise(arr,func,k){
+    k = k||0
+    return Promise.resolve()
+    .then(function(){
+      if(!arr.length||k==arr.length){
+        throw 0
+      }else{
+        return func(arr[k])
+      }
+    })
+    .then(function(){
+      return mapWithPromise(arr,func,k+1)
+    })
+    .catch(function(err){
+      return err
+    })
+  }
+
+  common.mapWithPromise = mapWithPromise
+
   return common
 })()
 

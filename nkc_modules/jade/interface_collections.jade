@@ -33,8 +33,9 @@ block content
                     span.caret
                   ul.dropdown-menu
                     each cat in data.categoryNames
-                      li
-                        a(href="javascript:moveTo('#{cat||'null'}')") #{cat||'null'}
+                      if cat
+                        li
+                          a(href="javascript:moveTo('#{cat||'null'}')") #{cat||'null'}
 
                 button#deletebutton.btn.btn-danger(onclick='deletebtn()') 删除
                 button.btn.btn-default(onclick='selectbtn()') 全选/不选
@@ -46,7 +47,7 @@ block content
         ul.nav.nav-tabs
           each cat in data.categoryNames
             li(role='presentation' class="#{(cat==data.category)?'active':''}")
-              a(href='?category=#{cat}') #{cat||'null'}
+              a(href='#{cat?"?category="+cat:"?nocategory"}') #{cat||'null'}
         
         br
         
