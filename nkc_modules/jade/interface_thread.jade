@@ -27,82 +27,79 @@ block content
       
       .col-sm-9.col-md-10.col-lg-10
         .ThreadBox
-          if data.posts.length == 0
-            h2 您要找的帖子可能不存在 / 翻页过度，请后退
-          else
-            - var thread = data.thread
-            - var fid = thread.fid
-            .ThreadTitle
-              - var forumname = data.forum.display_name
-              a.ThreadTitleForumLink(href='/f/#{fid}') #{forumname} 
-              
-              a.ThreadTitleText(href='/t/#{data.thread._key}') #{thread.oc.t}
-                
-              //.ThreadTitleAuxillary.d-inline.lighttext
-                                
-              .ThreadTitleAuxillaryLink
-                - var po = data.permittedOperations
-                
-                if po.addThreadToCollection
-                  a(href="javascript:addColl('#{thread._key}')") 收藏
-                
-                a(href='#bottom') 底部
-                
-                if po.addThreadToCart
-                  a(href="javascript:cartThread('#{data.thread._key}')") 加入管理车
-                  
-                if (po.setDigest)
-                  if thread.digest
-                    a(href="javascript:setDigest('#{data.thread._key}')") 撤销精华
-                  else
-                    a(href="javascript:setDigest('#{data.thread._key}')") 设置精华
-                    
-                if (po.setTopped)
-                  if thread.topped
-                    a(href="javascript:setTopped('#{data.thread._key}')") 撤销置顶
-                  else
-                    a(href="javascript:setTopped('#{data.thread._key}')") 设置置顶
-
-            
-            include interface_navigation_paging.jade      
-            //hr.ThreadTitleHr
-            .ThreadPostList
-              each post,index in data.posts
-                include interface_thread_singlepost.jade
-                if index == data.posts.length-3
-                  #bottom
-              
-            br
-            include interface_navigation_paging.jade
-            
+          - var thread = data.thread
+          - var fid = thread.fid
+          .ThreadTitle
             - var forumname = data.forum.display_name
-            span.lighttext 返回 
-              a(href='/f/#{fid}') #{forumname} 
-              //link back to forum
+            a.ThreadTitleForumLink(href='/f/#{fid}') #{forumname} 
+            
+            a.ThreadTitleText(href='/t/#{data.thread._key}') #{thread.oc.t}
               
-            hr.hrNarrowSpace
+            //.ThreadTitleAuxillary.d-inline.lighttext
+                              
+            .ThreadTitleAuxillaryLink
+              - var po = data.permittedOperations
               
-            if data.permittedOperations
-              if data.permittedOperations.postTo
-                //.form-group
-                  //a.f12(href='/editor?target=#{data.replytarget}') 回复（去编辑器）
-
-                .form-group
-                  textarea#ReplyContent.form-control(rows='4' placeholder='快速回复（bbcode语法）' style='resize:none;')
+              if po.addThreadToCollection
+                a(href="javascript:addColl('#{thread._key}')") 收藏
+              
+              a(href='#bottom') 底部
+              
+              if po.addThreadToCart
+                a(href="javascript:cartThread('#{data.thread._key}')") 加入管理车
                 
-                .form-inline
-                  .form-group
-                    button#ButtonReply.btn.btn-default(onclick='submit()') 快速回复
-                    
+              if (po.setDigest)
+                if thread.digest
+                  a(href="javascript:setDigest('#{data.thread._key}')") 撤销精华
+                else
+                  a(href="javascript:setDigest('#{data.thread._key}')") 设置精华
                   
-                  .checkbox-inline
-                    label
-                      input#ParseURL(type='checkbox' checked)
-                      |处理URL
+              if (po.setTopped)
+                if thread.topped
+                  a(href="javascript:setTopped('#{data.thread._key}')") 撤销置顶
+                else
+                  a(href="javascript:setTopped('#{data.thread._key}')") 设置置顶
+
+          
+          include interface_navigation_paging.jade      
+          //hr.ThreadTitleHr
+          .ThreadPostList
+            each post,index in data.posts
+              include interface_thread_singlepost.jade
+              if index == data.posts.length-3
+                #bottom
+            
+          br
+          include interface_navigation_paging.jade
+          
+          - var forumname = data.forum.display_name
+          span.lighttext 返回 
+            a(href='/f/#{fid}') #{forumname} 
+            //link back to forum
+            
+          hr.hrNarrowSpace
+            
+          if data.permittedOperations
+            if data.permittedOperations.postTo
+              //.form-group
+                //a.f12(href='/editor?target=#{data.replytarget}') 回复（去编辑器）
+
+              .form-group
+                textarea#ReplyContent.form-control(rows='4' placeholder='快速回复（bbcode语法）' style='resize:none;')
               
-                  .form-group
-                    button#GoEditor.btn.btn-default(onclick='goEditor()') 去编辑器
-            include exam_notification.jade
+              .form-inline
+                .form-group
+                  button#ButtonReply.btn.btn-default(onclick='submit()') 快速回复
+                  
+                
+                .checkbox-inline
+                  label
+                    input#ParseURL(type='checkbox' checked)
+                    |处理URL
+            
+                .form-group
+                  button#GoEditor.btn.btn-default(onclick='goEditor()') 去编辑器
+          include exam_notification.jade
                 
                 
       .col-sm-3.col-md-2

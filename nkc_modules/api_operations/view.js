@@ -552,6 +552,10 @@ table.viewThread = {
         })
       }
 
+      if (!posts.length) {
+        params._res.redirect('/t/'+params.tid)
+      }
+
       data.posts = posts
       data.thread = thread.model
     })
