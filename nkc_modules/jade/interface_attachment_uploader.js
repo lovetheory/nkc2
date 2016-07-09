@@ -41,9 +41,12 @@ var attachment_uploader = function(options){
   }
 
   var create_upload = function (data){
+    console.log('create upload start');
     return new Promise(function(resolve,reject){
 
       post_upload(options.upload_target, data , function(err,back){
+
+        console.log('post upload called back')
         if(err){
           options.upload_failed_callback(err);
           reject(err)
@@ -56,30 +59,21 @@ var attachment_uploader = function(options){
     })
   }
 
-  function uploadListOfFile(items,start){
-    start = start||0
-    return Promise.resolve()
-    .then(function(){
-      if(items&&items[start]&&items[start].size){
-
+  function uploadListOfFile(items){
+    console.log('ulof');
+    return common.mapWithPromise(items,function(item){
+      console.log('item');
+      console.log(item);
+      if(item&&item.size){
         var formData = new FormData();
-        formData.append('file', items[start]);
+        formData.append('file', item);
         return create_upload(formData)
-
         .catch(function(err){
           console.log(err);
         })
-      }
-      else{
-        return 1
-      }
-    })
-    .then(function(){
-      files_left_decr()
-      if(items){
-        if(start<items.length-1){
-          return uploadListOfFile(items,start+1)
-        }
+        .then(function(){
+          files_left_decr()
+        })
       }
     })
   }
@@ -88,7 +82,7 @@ var attachment_uploader = function(options){
   uploader.uploadfile_click = function(){
     var items = geid('file-selector').files;
     if(items.length==0)return alert('至少选一个呗');
-    if(items.length>10) return alert('尼玛一次上传那么多，服务器根本受不了');
+    if(items.length>10) return alert('一次不要上传超过10个文件。');
 
     for(i=0;i<items.length;i++){
       files_left_incr();

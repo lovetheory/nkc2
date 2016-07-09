@@ -314,6 +314,7 @@ var common=(function(){
       if(!arr.length||k==arr.length){
         throw 0
       }else{
+        console.log('run func on ',k);
         return func(arr[k])
       }
     })
@@ -321,6 +322,7 @@ var common=(function(){
       return mapWithPromise(arr,func,k+1)
     })
     .catch(function(err){
+      console.log(err);
       return err
     })
   }
