@@ -92,7 +92,7 @@ settings.urlrewrite = [ //happens before serve_static
   // {map:'/nkc/*',to:'/$1'}, //记得删掉
   // {map:'/nkc',to:'/api'},//到时要删掉。
 
-  {map:/^\/read\.php\?tid=([0-9]{1,10})/,to:'/redirect_t/$1'},
+  {map:/^\/read\.php\?.*tid=([0-9]{1,10})/,to:'/redirect_t/$1'},
   {map:/^\/index\.php\?.*fid=([0-9]{1,10})/,to:'/redirect_f/$1'},
   //{map:/^read\.php\?tid=([0-9]{1,10}).*/,to:'t/$1'},
 
