@@ -345,7 +345,7 @@ table.viewHome = {
       return group
       `,
       {
-        contentClasses,
+        contentClasses:Object.assign(contentClasses,{sensitive:true}),
       }
     )
     .then(grouparray=>{
