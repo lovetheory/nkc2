@@ -62,7 +62,7 @@ block content
               meta(id='number_of_questions' value='#{data.exam.qarr.length}')
               each q,index in data.exam.qarr
                 span #{index+1}.
-                .QuestionText!= markdown_safe(q.question)
+                .ThreadPostBody!= markdown_safe(q.question)
                 
                 case q.type
                   when 'ans'
