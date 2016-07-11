@@ -1087,7 +1087,7 @@ margin: 5px;
 .CollectionCategoryThreadActions{
     display: inline-block;
     position: absolute;
-    right: 0;
+    left: 0;
     top: 0;
     bottom: 0;
     vertical-align: middle;
