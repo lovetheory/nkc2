@@ -25,7 +25,7 @@ block content
   .container
     .row
       
-      .col-sm-9.col-md-10.col-lg-10
+      .col-sm-12.col-md-9.col-lg-10
         .ThreadBox
           - var thread = data.thread
           - var fid = thread.fid
@@ -108,7 +108,7 @@ block content
               想参与大家的讨论？现在就 [注册](/register)。
                 
                 
-      .col-sm-3.col-md-2
+      .col-md-3.col-lg-2.hidden-xs.hidden-sm
         include interface_forums_list.jade
   include debug_output.jade
     
