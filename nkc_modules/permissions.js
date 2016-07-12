@@ -357,10 +357,10 @@ var calculateThenConcatCerts = function(user){
   if(!user)return ['visitor']
 
   if(!user.certs){
-    user.certs =  ['default']
+    user.certs =  []
   }
 
-  var certs = [].concat(user.certs)
+  var certs = ['default'].concat(user.certs)
   //-----------------------below are calculated permissions
   if(user.xsf > 0){
     certs.push('scholar')
