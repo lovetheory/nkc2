@@ -33,6 +33,7 @@ module.exports = function(){
     if(err){
       console.log(dateString(),"err:",description.red);
       console.log(err.toString().red);
+      if(err.stack){console.log(err.stack)}
       return({'error':description,'detail':err.toString()});
     }else{
       if(development){
