@@ -65,7 +65,7 @@ settings.jadeoptions= {
 };
 
 settings.arango={
-  address:'http://127.0.0.1:8529'
+  address:'http://root:@127.0.0.1:8529'
 };
 
 settings.couchdb={
