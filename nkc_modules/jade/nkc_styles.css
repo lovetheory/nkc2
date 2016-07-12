@@ -523,13 +523,21 @@ blockquote {
 
   font-size: 14pt;
 }
+
+.PostTitleAuxillaryLink{
+    display: inline-block;
+}
 .ThreadTitle {
   display: block;
   margin-bottom: 0;
 }
 
 .ThreadTitleText, .ThreadTitleText:visited{
-  color: black;font-size: 22pt;margin-bottom: 5px;margin-top: 0;display: inline-block;
+  color: black;
+  font-size: 20pt;
+  margin-bottom: 5px;
+  margin-top: 0;
+  display: inline-block;
 }
 
 .ThreadTitleText:hover, .ThreadTitleText:focus{
@@ -545,9 +553,10 @@ blockquote {
 }
 
 .ThreadTitleAuxillaryLink{
-  display: inline-block;
+  /* display: inline-block; */
   /* margin-left: 10px; */
   /* position: absolute; */
+  /* float: right; */
   /* top: 5px; */
 }
 

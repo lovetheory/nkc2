@@ -40,13 +40,15 @@ block content
             .ThreadTitleAuxillaryLink
               - var po = data.permittedOperations
               
+              a(href='#bottom') 底部
+              
               if po.addThreadToCollection
                 a(href="javascript:addColl('#{thread._key}')") 收藏
               
-              a(href='#bottom') 底部
+              
               
               if po.addThreadToCart
-                a(href="javascript:cartThread('#{data.thread._key}')") 加入管理车
+                a(href="javascript:cartThread('#{data.thread._key}')") 帖入管理车
                 
               if (po.setDigest)
                 if thread.digest
@@ -100,6 +102,10 @@ block content
                 .form-group
                   button#GoEditor.btn.btn-default(onclick='goEditor()') 去编辑器
           include exam_notification.jade
+          
+          if !data.user
+            :markdown
+              想参与大家的讨论？现在就 [注册](/register)。
                 
                 
       .col-sm-3.col-md-2
