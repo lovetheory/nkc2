@@ -64,7 +64,8 @@ var nkc_editor = function(){
     if(!list||!list.rlist)return undefined;
 
     var arr = text.match(render.resource_extractor)
-    console.log(arr);
+    if(!arr)return undefined
+
     var rarr = []
     arr.map(function(item){
       var reskey = item.replace(render.resource_extractor,'$1')
