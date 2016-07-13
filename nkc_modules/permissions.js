@@ -133,7 +133,6 @@ var certificates={
       selfModifyTimeLimit:timeHour*12, //12h
       //elseModifyTimeLimit:timeHour*4,//4h
 
-      viewPostHistory:true,
     }
   },
 
