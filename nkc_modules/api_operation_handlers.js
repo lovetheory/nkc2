@@ -105,7 +105,7 @@ function verifySubmittedParams(params){
 
   if(operation.requiredParams){
     for(i in operation.requiredParams){
-      if(params[i]===undefined||params[i]===null) throw 'missing parameter: '+i
+      if(params[i]===undefined||params[i]===null) throw '缺少参数 missing parameter: '+i
     }
   }
 
@@ -118,7 +118,7 @@ function testPermission(params){
   report(permissionList);
 
   if(!permissionList.permittedOperations[params.operation]){ //user does not have permission for this operation
-    throw 'permission denied.'
+    throw '权限不足。permission denied.'
   }
 
   Object.assign(params,permissionList)
@@ -143,7 +143,7 @@ function testPermission(params){
 function executeOperation(params)
 {
   if(!table[params.operation].operation)
-  throw 'operation function n/a, contact developer'
+  throw '此操作不存在。operation function n/a, contact developer'
   return table[params.operation].operation(params);
 }
 
@@ -166,7 +166,7 @@ function APIroutine(context){
   if(!context.body) throw 'submit with body, please'
   var params = context.body; //parameter object
 
-  if(!params.operation)throw 'please specify an operation in your request body object'
+  if(!params.operation)throw '请在请求中指定一个operation。please specify an operation in your request body object'
   report(params);
 
   var _copy = Object.assign({},context.body) //made a copy
