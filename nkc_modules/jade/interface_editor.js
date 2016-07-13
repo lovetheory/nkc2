@@ -60,7 +60,7 @@ var nkc_editor = function(){
     // this function extract resource tags from text,
     // then find matches in list.rlist(the uploaded resources array)
 
-    if(!render)return undefined;
+    if(!render||!render.resource_extractor)return undefined;
     if(!list||!list.rlist)return undefined;
 
     var arr = text.match(render.resource_extractor)
