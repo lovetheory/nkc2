@@ -335,6 +335,7 @@ table.viewHome = {
 
       collect parent = nf.parentid into forumgroup = nf
       let parentforum = document(forums,parent)
+      filter parentforum
 
       let class = parentforum.class
 
