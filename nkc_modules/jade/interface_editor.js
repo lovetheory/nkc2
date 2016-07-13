@@ -56,9 +56,42 @@ var nkc_editor = function(){
     },300)
   }
 
+  var extract_resource_from_tag = function(text){
+    // this function extract resource tags from text,
+    // then find matches in list.rlist(the uploaded resources array)
+
+    if(!render)return undefined;
+    if(!list||!list.rlist)return undefined;
+
+    var arr = text.match(render.resource_extractor)
+    console.log(arr);
+    var rarr = []
+    arr.map(function(item){
+      var reskey = item.replace(render.resource_extractor,'$1')
+      list.rlist.map(function(item){
+        if(item._key==reskey){
+          rarr.push(item)
+        }
+      })
+    })
+    //
+    // for(i in arr){
+    //   var reskey = arr[i].replace(render.resource_extractor,'$1')
+    //   for(k in list.rlist){
+    //     if(list.rlist[k]._key==reskey){
+    //       rarr.push(list.rlist[k])
+    //     }
+    //   }
+    // }
+
+    return rarr
+  }
+
   editor.update = function(){
 
     var post = editor.assemblePostObject()
+    post.r = extract_resource_from_tag(post.c)
+
     var title = post.t||""
     hset('parsedtitle',title); //XSS prone.
 
@@ -67,7 +100,7 @@ var nkc_editor = function(){
 
     parsedcontent = render.experimental_render(post)
 
-    hset('parsedcontent',parsedcontent); //XSS prone
+    hset('parsedcontent',parsedcontent);
   }
 
   //enable click
@@ -91,4 +124,4 @@ function mathfresh(){
 }
 
 var editor = nkc_editor();
-editor.update();
+window.onload = editor.update

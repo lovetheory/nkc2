@@ -266,9 +266,11 @@ function chemFormulaReplacer(html){
     return replaced
   }
 
+  render.resource_extractor = /\#\{r=([0-9a-z]{1,16})\}/g
+
   //replace attachment tags in text to their appropriate HTML representation
   var attachment_filter = function(stringToFilter,post){
-    return stringToFilter.replace(/\#\{r=([0-9a-z]{1,16})\}/g,function(match,p1,offset,string){
+    return stringToFilter.replace(render.resource_extractor,function(match,p1,offset,string){
       var rid = p1
       for(i in post.r){
         var r = post.r[i]
