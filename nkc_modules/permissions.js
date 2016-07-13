@@ -113,8 +113,8 @@ var certificates={
     },
 
     permittedOperations:{
-      selfModifyTimeLimit:timeYear*1,//1y
-      elseModifyTimeLimit:timeMonth*2,//2m
+      selfModifyTimeLimit:timeYear*3,//3y
+      //elseModifyTimeLimit:timeMonth*2,//2m
 
       viewPostHistory:true,
     }
