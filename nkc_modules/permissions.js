@@ -83,8 +83,8 @@ var certificates={
       addPostToCart:true,
       setDigest:true,
 
-      selfModifyTimeLimit:timeYear*20, //3y
-      elseModifyTimeLimit:timeYear*20, //1y
+      selfModifyTimeLimit:timeYear*20, //20y
+      elseModifyTimeLimit:timeYear*20, //20y
 
       viewExperimental:true,
 
@@ -113,7 +113,8 @@ var certificates={
     },
 
     permittedOperations:{
-      selfModifyTimeLimit:timeHour*24,//24h
+      selfModifyTimeLimit:timeYear*1,//1y
+      elseModifyTimeLimit:timeMonth*2,//2m
 
       viewPostHistory:true,
     }
@@ -129,7 +130,10 @@ var certificates={
       postTo:true,
       getPostContent:true,
       testExaminated:true,
-      selfModifyTimeLimit:timeHour*3, //1h
+      selfModifyTimeLimit:timeHour*12, //12h
+      elseModifyTimeLimit:timeHour*4,//4h
+
+      viewPostHistory:true,
     }
   },
 
