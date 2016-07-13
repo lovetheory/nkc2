@@ -151,12 +151,12 @@ var layer = (function(){
 
     testModerator(username){
       var forum = this.model
-      if(!forum.moderators) throw 'no moderator specified for this forum yet'
+      if(!forum.moderators||forum.moderators.length==0) throw '此版似乎未设定版主'
       if(forum.moderators.indexOf(username)>=0){
         //if user exists as moderator for the forum
         return true
       }
-      throw 'forum not owning by you.'
+      throw '你不是该版版主。'
     }
 
     testView(contentClasses){
@@ -390,6 +390,18 @@ var layer = (function(){
       var p = this.model
       var t = new Thread(p.tid)
       return t.load()
+    }
+
+    testView(contentClasses){
+      var tid = this.model.tid
+      var t = new Thread(tid)
+      return t.load()
+      .then(t=>{
+        return t.testView(contentClasses)
+      })
+      .then(t=>{
+        return this
+      })
     }
 
     loadForum(){

@@ -1081,6 +1081,10 @@ table.viewPostHistory = {
     var p = new layer.Post(pid)
     return p.load()
     .then(p=>{
+      return p.testView(params.contentClasses)
+    })
+    .then(p=>{
+
       data.post = p.model
       return AQL(
         `
