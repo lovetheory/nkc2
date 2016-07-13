@@ -131,7 +131,7 @@ var certificates={
       getPostContent:true,
       testExaminated:true,
       selfModifyTimeLimit:timeHour*12, //12h
-      elseModifyTimeLimit:timeHour*4,//4h
+      //elseModifyTimeLimit:timeHour*4,//4h
 
       viewPostHistory:true,
     }
