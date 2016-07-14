@@ -166,11 +166,28 @@ table.userRegister = {
       })
     }
 
-    return testMobileCode(userobj.regcode)
-    .catch(err=>{
-      //if code not exist in mobilecodes
-      return testAnswerSheet(userobj.regcode)
-    })
+    function testCode(code){
+      var mc = new layer.BaseDao('mobilecodes',code)
+      var mobilecode_exist = false
+      return mc.load()
+      .then(()=>{
+        mobilecode_exist=true
+      })
+      .catch(err=>{
+        //mobilecode notexist
+        mobilecode_exist=false
+      })
+      .then(()=>{
+        if(mobilecode_exist){
+          return testMobileCode(code)
+        }
+        else {
+          return testAnswerSheet(code)
+        }
+      })
+    }
+
+    return testCode(userobj.regcode)
   },
   requiredParams:{
     username:String,
