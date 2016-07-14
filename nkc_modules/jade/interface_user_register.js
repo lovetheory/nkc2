@@ -67,7 +67,7 @@ function password2_keypress(){
 }
 
 if(gv('regcode')!=''){
-    geid('regcode').focus()
+  geid('regcode').focus()
 }else{
 }
 
@@ -79,7 +79,13 @@ function getRegcodeFromMobile(){
   nkcAPI('getRegcodeFromMobile',{mobile:number})
   .then(function(ret){
     if(ret.code){
-      window.location = 'register?code='+ret.code
+      if(!ret.uid){
+        window.location = '/register?code='+ret.code
+      }else{
+        //if logged in
+        screenTopAlert('手机号码验证成功！')
+        geid('mobilenumber').value='验证成功！'
+      }
     }
   })
   .catch(jwarning)

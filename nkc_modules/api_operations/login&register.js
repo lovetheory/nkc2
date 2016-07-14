@@ -418,15 +418,25 @@ table.getRegcodeFromMobile = {
       })
       .then(code=>{
 
+        if(params.user){
+          //if user logged in
+
+          queryfunc.addCertToUser(params.user._key,'mobile')
+          var up = new layer.Personal(params.user._key)
+          up.update({mobile})
+        }
+
         var record = arr[0]
         var ans = new layer.BaseDao('mobilecodes',code)
+        var uid = params.user?params.user._key:undefined
+
         return ans.save({
           toc:Date.now(),
           mobile:record.mobile,
-          uid:params.user?params.user._key:undefined,
+          uid,
         })
         .then(ans=>{
-          return {code}
+          return {code,uid}
         })
       })
     })
