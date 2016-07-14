@@ -145,18 +145,14 @@ table.userRegister = {
     }
 
     function testMobileCode(code){
+
       var mc = new layer.BaseDao('mobilecodes',code)
       return mc.load()
-      .catch(err=>{
-        //if code not exist in mobilecodes
-        return testAnswerSheet(code)
-      })
       .then(mc=>{
         //if code exists in mobilecodes
         var ans = mc.model
 
         if(ans.uid) throw ('此验证码已被使用过。')
-
         userobj.mobile = ans.mobile
 
         return create_user(userobj)
@@ -171,6 +167,10 @@ table.userRegister = {
     }
 
     return testMobileCode(userobj.regcode)
+    .catch(err=>{
+      //if code not exist in mobilecodes
+      return testAnswerSheet(userobj.regcode)
+    })
   },
   requiredParams:{
     username:String,
