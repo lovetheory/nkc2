@@ -364,7 +364,7 @@ table.updateAllThreads = {
       filter thread!=null
 
       let oc = (for p in posts filter p.tid==tid sort p.toc asc limit 1 return p)[0]
-      let lm = (for p in posts filter p.tid==tid sort p.tlm desc limit 1 return p)[0]
+      let lm = (for p in posts filter p.tid==tid sort p.toc desc limit 1 return p)[0]
       let count = pcount
 
       let count_today = (
