@@ -391,7 +391,10 @@ table.getRegcodeFromMobile = {
     return AQL(`for m in mobilelogs
       filter m.mobile == @mobile
       filter m.toc>date_now()-60*1000*10 //10 minutes
-      filter m.mobile == m.content //content should be equal to mobile number
+
+      //filter m.mobile == m.content
+      //well, dont filter here
+
       limit 1
       return m
       `,{mobile}
