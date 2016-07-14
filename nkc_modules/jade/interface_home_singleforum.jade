@@ -41,8 +41,8 @@ if (forum!==null)
             .clearfix.visible-sm-block
           .col-xs-12.col-sm-6.col-md-3
             .HomeThreadItem
-              if thread.count>1
-                span.HomeThreadReplyCount #{thread.count-1}
+              if 1||thread.count>1
+                span.HomeThreadReplyCount #{thread.count}
               //span.lighttext.rightalign #{fromNow(thread.lm.toc)}
               
               - var uid = thread.oc.uid
