@@ -208,17 +208,28 @@ var NavBarSearch = {
 
   search:function(){
     var searchstr = NavBarSearch.box.value.trim()
+
+    var later = window.open('','_blank')
+    //the tricky part. open new window in sync context to prevent blocking.
+
     nkcAPI('useSearch',{searchstring:searchstr})
     .catch(function(err){
 
     })
     .then(function(){
       //    https://www.google.com.hk/search?newwindow=1&safe=strict&source=hp&q=zvs+site%3Abbs.kechuang.org
-      window.location =
+      var goto =
       //'https://www.google.com.hk/search?newwindow=1&safe=strict&source=hp&q='
       'http://cn.bing.com/search?q='
       +encodeURI(searchstr)
       +'+site%3Abbs.kechuang.org'
+
+      later.location.href=goto //alter the address in async context.
+
+      //geid('HiddenLink').setAttribute('href',goto)
+      //geid('HiddenLink').click()
+      //window.location=goto
+      //window.open(goto,'_blank')
     })
   },
 };
