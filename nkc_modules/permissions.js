@@ -125,6 +125,7 @@ var certificates={
     inheritFrom:['default'],
     contentClasses:{
       sensitive:true,
+      professional:true,
     },
     permittedOperations:{
       postTo:true,
@@ -133,6 +134,19 @@ var certificates={
       selfModifyTimeLimit:timeHour*12, //12h
       //elseModifyTimeLimit:timeHour*4,//4h
 
+    }
+  },
+
+  mobile:{
+    display_name:'机友',
+    inheritFrom:['default'],
+    contentClasses:{
+
+    },
+    permittedOperations:{
+      postTo:true,
+      getPostContent:true,
+      selfModifyTimeLimit:timeHour*1,
     }
   },
 
@@ -227,6 +241,7 @@ var certificates={
       viewPage:true,
 
       receiveMobileMessage:true,
+      getRegcodeFromMobile:true,
     }
   },
 
