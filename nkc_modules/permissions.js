@@ -239,6 +239,7 @@ var certificates={
       getGalleryRecent:true,
 
       viewPage:true,
+      viewTemplate:true,
 
       receiveMobileMessage:true,
       getRegcodeFromMobile:true,

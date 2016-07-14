@@ -1132,6 +1132,17 @@ table.viewPage = {
   }
 }
 
+table.viewTemplate = {
+  operation:function(params){
+    var data = defaultData(params)
+    data.template = jadeDir+params.template
+    return data
+  },
+  requiredParams:{
+    template:String,
+  }
+}
+
 table.viewCollectionOfUser = {
   operation:function(params){
     var operations = require('api_operations')
