@@ -21,8 +21,34 @@ api.use(function(req,res,next){
 //api_resouces_handlers
 api.use(require('api_resources_handlers'));
 
+var multer = require('multer'); //multi-part parser, for upload
+var upload = multer({limits:{files:0,parts:100}})
+//fuck submail: they dont use json.
+api.post('/receiveMobileMessage',upload.array(),function(req,res,next){
+var layer = require('layer')
+var params = req.body
+
+    var mobile = params.address
+    var type = params.events
+    var content = params.content
+
+    var mlog = new layer.BaseDao('mobilelogs')
+    return mlog.save({
+      toc:Date.now(),
+      mobile,
+      content,
+      type,
+    })
+    .then(m=>{
+      res.send('success')
+    })
+	.catch(next)
+  
+})
+
 //parse body. expect JSON;
 api.use(bodyparser.json());
+
 
 api.use(function(req,res,next){
   //if(!req.body&&req.method=='POST')throw ('bodyless POST request');

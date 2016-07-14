@@ -326,28 +326,3 @@ table.userLogout = {
 //
 //   }
 // }
-
-table.receiveMobileMessage = {
-  init:function(){
-
-  },
-  operation:function(params){
-
-    if(params.events!=='mo')throw 'this api accepts SUBHOOK push for upstream messages only.'
-
-    var mobile = params.address
-    console.log(mobile);
-
-    var content = params.content
-
-    var mlog = new layer.BaseDao('mobilelogs')
-    return mlog.save({
-      toc:Date.now(),
-      mobile,
-      content,
-    })
-    .then(m=>{
-      return 'success'
-    })
-  }
-}
