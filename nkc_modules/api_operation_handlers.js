@@ -9,7 +9,12 @@ var helper_mod = require('helper')()
 var queryfunc = require('query_functions')
 
 api.use('/operation', (req,res,next)=>{
-  if(req.method=='POST')return next()
+  if(req.method=='POST'){
+    if(req.query.operation){
+      req.body[operation] = req.query.operation
+    }
+    return next()
+  }
 
   for(key in req.query){
     req.body[key] = req.query[key]
