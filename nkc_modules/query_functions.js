@@ -36,6 +36,7 @@ queryfunc.db_init = function(){
   'collections',
   'replies',
   'mobilelogs',
+  'mobilecodes',
 ].map(function(collection_name){db.collection(collection_name).create()});
 //create every collection, if not existent
 }
