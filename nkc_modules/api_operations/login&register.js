@@ -317,12 +317,15 @@ table.userLogout = {
   }
 }
 
-table.sendRegcode = {
-  operation:function(params){
-    regex_validation.validate({
-      email:params.email,
-    })
-
+// var request = require('request')
+//
+// table.sendMobileMessage = {
+//   operation:function(params){
+//     var num = params.number
+//     return {message:'sent to '+num}
+//
+//   }
+// }
 
 table.recieveMobileMessage = {
   init:function(){
