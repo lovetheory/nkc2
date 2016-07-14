@@ -403,6 +403,7 @@ table.getRegcodeFromMobile = {
         return ans.save({
           toc:Date.now(),
           mobile:record.mobile,
+          uid:params.user?params.user._key:undefined,
         })
         .then(ans=>{
           return {code}
