@@ -8,27 +8,57 @@ block content
     .container
       .row
         .col-sm-12
+          img(src='/resources/site_specific/kclogo_misaka1.png' style='max-width:100%')
           
           div.f12(style='line-height:1.8;')
             :markdown
               # 获取注册码
-              --------
               
-              目前仅支持参加注册测试获取注册码。
+              科创论坛目前支持通过两种方式获取注册码。
               
-              已经登录的老用户，通过测试后可以开始发帖。
+              ### 参加测试
               
-
+              - <font color=red>尚未注册的用户，参加测试后将获得注册码。</font>
               
-              请在下面选择您最擅长的题目类别。通过任一类别测试，均可获得注册码。
+              - 已经登录但发现自己无法发帖的老用户，通过测试后将可以在所有专业版块发表内容。
+              
+              - 通过手机验证注册并登陆的用户，通过测试后将可以在所有专业版块发表内容。
+              
+              ### 手机验证
+              
+              - <font color=red>验证手机号码后可获得注册码</font>。注册之后可以参与绝大多数板块的讨论，如需参与个别专业版块，届时可在此补测。
+              
+              ----
+              
+              # 测试
+              
+              请在下面选择你最擅长的题目类别。通过任一类别测试，均可获得注册码。
           
+      
           
-          -var categories = {'chem':'化学','phys':'物理学','aviation':'民航知识','mix':'混合基础题','agri':'农业技术','hedc':'高能材料','cs':'计算机科学','3dp':'3D打印','ham':'业余无线电','ee':'电子技术','electrical':'电气工程','dev':'软件开发'}
+          -var categories = {'chem':'化学','phys':'物理学','aviation':'民航知识','agri':'农业技术','hedc':'高能材料','cs':'计算机科学','3dp':'3D打印','ham':'业余无线电','ee':'电子技术','electrical':'电气工程','dev':'软件开发'}
           -for(k in categories)
             p.f14
               a(href='/exam?category=#{k}') 参加 【#{categories[k]}】 测试
               
-          img(src='/resources/site_specific/kclogo_misaka1.png')
+          div.f12(style='line-height:1.8;')
+            :markdown
+              # 手机验证
+              
+              <font color=gray>注：最近手机验证功能正在调试中，可能会间歇抽风，建议需要注册的各位同学、老师、工程师、教授直接参加测试。</font>
+              
+              （仅支持大陆用户）请 <font color=darkgreen>将您的手机号码作为短信内容</font>，发送短信至
+              <span style="color:orange;font-size:22pt">106905705811672</span>
+              
+              先等待10秒钟让短信到达服务器，然后在下面输入您的手机号码，并点击蓝色的按钮。
+              
+          .form-inline
+            .form-group
+              input#mobilenumber.form-control(type='text' placeholder='您的手机号码')
+            .form-group
+              button.btn.btn-primary(type='button' onclick='getRegcodeFromMobile()') 嗯，我已经发了短信
+              
+          
               
   
   if !data.getcode

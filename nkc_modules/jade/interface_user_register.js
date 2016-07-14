@@ -66,9 +66,21 @@ function password2_keypress(){
   register_submit();
 }
 
-if(gv('regcode')!='')
-{
+if(gv('regcode')!=''){
     geid('regcode').focus()
 }else{
+}
 
+function getRegcodeFromMobile(){
+  var number = geid('mobilenumber').value.trim()
+  if(number.length<11){
+    return screenTopWarning('请输入11位手机号码')
+  }
+  nkcAPI('getRegcodeFromMobile',{mobile:number})
+  .then(function(ret){
+    if(ret.code){
+      window.location = 'register?code='+ret.code
+    }
+  })
+  .catch(jwarning)
 }
