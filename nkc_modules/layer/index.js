@@ -379,9 +379,8 @@ var layer = (function(){
     mergeUsername(){
       var u = new User(this.model.uid)
       return u.load()
-      .then(user=>{
-        var p = Object.assign({},this.model)
-        p.username = user.model.username
+      .then(u=>{
+        this.model.username = u.model.username
         return this
       })
     }
