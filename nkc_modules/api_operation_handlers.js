@@ -11,7 +11,7 @@ var queryfunc = require('query_functions')
 api.use('/operation', (req,res,next)=>{
   if(req.method=='POST'){
     if(req.query.operation){
-      req.body[operation] = req.query.operation
+      req.body.operation = req.query.operation
     }
     return next()
   }
