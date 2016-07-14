@@ -324,9 +324,15 @@ table.sendRegcode = {
     })
 
 
+table.recieveMobileMessage = {
+  init:function(){
 
   },
-  requiredParams:{
-    email:String,
+  operation:function(params){
+    var mlog = new layer.BaseDao('mobilelogs')
+    return mlog.save({toc:Date.now()})
+    .then(m=>{
+      return 'success'
+    })
   }
 }

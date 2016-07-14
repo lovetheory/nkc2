@@ -225,6 +225,8 @@ var certificates={
       getGalleryRecent:true,
 
       viewPage:true,
+
+      recieveMobileMessage:true,
     }
   },
 
