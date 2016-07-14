@@ -8,24 +8,7 @@
         .ForumTitleCircle(style='background-color:#{thatuser.color||"#bbb"}')
         .ForumName #{thatuser.username}
       
-    .UserProfileSection2
-      -var user = thatuser
-        a(href='/user_threads/#{thatuser._key}') 主题一览
-        a(href='/user_collection/#{thatuser._key}') 收藏夹
-        a(href='/sms?receiver=#{thatuser.username}') 发私信
-        br
-        span 学术分 #{user.xsf||0}
-        span 科创币 #{user.kcb||0}
-        
-        
-        span 总主题 #{user.count_threads||0} 帖
-        span 总回复 #{user.count_posts||0} 楼
-        
-        -var listCertText = getUserDescription(thatuser).split('\n').pop()
-        span 拥有证书：#{listCertText}
-        br
-        span 注册于 #{dateTimeString(user.toc)}
-        span 最后于 #{dateTimeString(user.tlv||user.toc)} 登陆
+      include interface_profile_info_section2.jade
           
   .col-xs-12.col-sm-6
     .UserProfileSection1(style='text-align:left')

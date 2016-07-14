@@ -1,0 +1,30 @@
+-var uid = user._key
+.panel.panel-default
+  .panel-heading
+    .f12 作者
+  .panel-body
+    div(style='text-align:center;')
+      a(href='/user_profile/#{uid}')
+        img(src='/avatar/#{uid}' style='max-width:100%;width:144px;height:auto;border-radius:10px;')
+  
+      div(style='font-size:18pt') #{user.username}
+    hr
+    
+    include interface_profile_info_section2.jade
+    
+    hr
+    
+    h4 个人简介
+    //hr
+    if user.description && user.description.length>0
+      
+      div!=markdown_safe(user.description)
+      hr
+    else
+      |暂未填写
+      
+
+    if user.post_sign && user.post_sign.length>0
+      hr
+      h4 帖子签名
+      div!=markdown_safe(user.post_sign)

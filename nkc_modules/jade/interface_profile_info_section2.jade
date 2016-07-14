@@ -1,0 +1,18 @@
+.UserProfileSection2
+  -var user= user
+    a(href='/user_threads/#{user._key}') 主题一览
+    a(href='/user_collection/#{user._key}') 收藏夹
+    a(href='/sms?receiver=#{user.username}') 发私信
+    br
+    span 学术分 #{user.xsf||0}
+    span 科创币 #{user.kcb||0}
+    
+    
+    span 总主题 #{user.count_threads||0} 帖
+    span 总回复 #{user.count_posts||0} 楼
+    
+    -var listCertText = getUserDescription(user).split('\n').pop()
+    span 拥有证书：#{listCertText}
+    br
+    span 注册于 #{dateTimeString(user.toc)}
+    span 最后于 #{dateTimeString(user.tlv||user.toc)} 登陆
