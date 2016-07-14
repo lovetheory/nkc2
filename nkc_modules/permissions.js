@@ -226,7 +226,7 @@ var certificates={
 
       viewPage:true,
 
-      recieveMobileMessage:true,
+      receiveMobileMessage:true,
     }
   },
 

@@ -327,7 +327,7 @@ table.userLogout = {
 //   }
 // }
 
-table.recieveMobileMessage = {
+table.receiveMobileMessage = {
   init:function(){
 
   },
