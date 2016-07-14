@@ -10,52 +10,70 @@ block content
         .col-sm-12
           img(src='/resources/site_specific/kclogo_misaka1.png' style='max-width:100%')
           
+        .col-sm-6
           div.f12(style='line-height:1.8;')
             :markdown
-              # 获取注册码
+              # 如果你是准备注册的新用户
               
-              科创论坛目前支持通过两种方式获取注册码。
+              ### 方法一：手机验证
               
-              ### 参加测试
+              - 验证手机号码后可获得注册码。注册之后可以参与绝大多数板块的讨论，如需参与所有专业版块，届时可再参加测试。
               
-              - <font color=red>尚未注册的用户，参加测试后将获得注册码。</font>
+              ### 方法二：参加测试
               
-              - 已经登录但发现自己无法发帖的老用户，通过测试后将可以在所有专业版块发表内容。
+              - 通过测试之后就可以获得注册码，可以参与所有专业版块的讨论。
               
-              - 通过手机验证注册并登陆的用户，通过测试后将可以在所有专业版块发表内容。
+        .col-sm-6
+          div.f12(style='line-height:1.8;')
+            :markdown
+              # 如果你是科创论坛的老用户
               
-              ### 手机验证
+              ### 方法一：手机验证
               
-              - <font color=red>验证手机号码后可获得注册码</font>。注册之后可以参与绝大多数板块的讨论，如需参与个别专业版块，届时可在此补测。
+              - 验证手机号码后就可以开始发帖。
               
-              ----
+              ### 方法二：参加测试
               
-              # 测试
+              - 通过测试之后就可以开始发帖，可以参与所有专业版块的讨论。
               
-              请在下面选择你最擅长的题目类别。通过任一类别测试，均可获得注册码。
-          
-      
+      hr
+      .row
+        
+        .col-sm-6
+          div.f12(style='line-height:1.8;')
+            :markdown
+              # 手机验证
+              
+              （仅支持大陆用户）请先发送任意短信至
+              <span style="color:orange;font-size:22pt">106905705811672</span>
+              
+              然后等10秒钟，待短信到达服务器。接着在下面输入您的手机号码，最后点击蓝色的按钮。
+              
+              
+              
+          .form-inline
+            .form-group
+              input#mobilenumber.form-control(type='text' placeholder='输入您的手机号码')
+            .form-group
+              button.btn.btn-primary(type='button' onclick='getRegcodeFromMobile()') 嗯，我已经发了短信
+          hr
+          p 如果不成功，可以等几秒钟再试试，没准短信还在路上呢。
+              
+        .col-sm-6
+          div.f12(style='line-height:1.8;')
+            :markdown
+              # 参加测试
+              
+              请在下面选择你最擅长的题目类别。测试题目来自论坛专家们的集体贡献。
+
           
           -var categories = {'chem':'化学','phys':'物理学','aviation':'民航知识','agri':'农业技术','hedc':'高能材料','cs':'计算机科学','3dp':'3D打印','ham':'业余无线电','ee':'电子技术','electrical':'电气工程','dev':'软件开发'}
           -for(k in categories)
             p.f14
               a(href='/exam?category=#{k}') 参加 【#{categories[k]}】 测试
               
-          div.f12(style='line-height:1.8;')
-            :markdown
-              # 手机验证
-              
-              （仅支持大陆用户）请发送任意短信至
-              <span style="color:orange;font-size:22pt">106905705811672</span>
-              
-              等待10秒钟让短信到达服务器，然后在下面输入您的手机号码，并点击蓝色的按钮。
-              
-          .form-inline
-            .form-group
-              input#mobilenumber.form-control(type='text' placeholder='您的手机号码')
-            .form-group
-              button.btn.btn-primary(type='button' onclick='getRegcodeFromMobile()') 嗯，我已经发了短信
-              
+          hr
+          p 试题版权归科创研究院所有，请勿转载。
           
               
   
