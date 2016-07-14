@@ -986,12 +986,7 @@ pre {
 .UserProfileSection2{}
 .UserProfileSection2 span,.UserProfileSection2 a{
     display: inline-block;
-    margin: 5px;
-    padding: 3px;
-    margin-left: 0;
-    margin-right: 10px;
-    background-color: #efefef;
-    border-radius: 3px;
+    margin: 0 10px 10px 0;
 }
 .UserRecentPostItem{
     /* margin-bottom: 5px; */

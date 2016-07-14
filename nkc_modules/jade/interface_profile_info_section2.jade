@@ -15,4 +15,5 @@
     span 拥有证书：#{listCertText}
     br
     span 注册于 #{dateTimeString(user.toc)}
-    span 最后于 #{dateTimeString(user.tlv||user.toc)} 登陆
+    if !user.hidelastlogin
+      span 最后于 #{dateTimeString(user.tlv||user.toc)} 登陆
