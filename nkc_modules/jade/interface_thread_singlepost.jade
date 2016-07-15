@@ -65,14 +65,16 @@ if !post.disabled || (post.disabled && po.enablePost)
       if post.credits
         .ThreadPostCredits
           each c,index in post.credits
+            -var username = c.username||c.uid
+            -var profile = (c.uid&&c.uid!='0')?'/user_profile/'+c.uid:'/user_profile_byname/'+c.username
             .ThreadPostCreditItem
               .TPCQ #{(c.q>0?'+':'-')}#{c.q}
               .TPCType #{creditString(c.type)}
               .TPCIA
-                a(href='/user_threads/#{c.uid}')
+                a(href='#{profile}')
                   img.TPCIAI(src='/avatar_small/#{c.uid}')
                   
-              .TPCIssuer #{c.username||c.uid}
+              .TPCIssuer #{username}
               .TPCDate #{dateTimeString(c.toc).split(' ')[0]}
               .TPCReason #{c.reason}                
   
