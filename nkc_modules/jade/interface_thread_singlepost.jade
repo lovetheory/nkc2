@@ -63,7 +63,7 @@ if !post.disabled || (post.disabled && po.enablePost)
       //span #{post.user?post.user.post_sign:''}
       
       if post.credits
-        .ThreadPostCredits
+        .nkcpanel.ThreadPostCredits
           each c,index in post.credits
             -var username = c.username||c.uid
             -var profile = (c.uid&&c.uid!='0')?'/user_profile/'+c.uid:'/user_profile_byname/'+c.username
