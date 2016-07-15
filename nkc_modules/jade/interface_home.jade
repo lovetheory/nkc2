@@ -77,6 +77,10 @@ block content
         if data.answersheet_count
           span(style='color:#ccc;display:inline-block;') - [ 学术委员会 ] 已经有 #{'0b'+data.answersheet_count.toString(2).toUpperCase()} 人次通过了测试
     
+    .row
+      .col-md-12
+        include nkc_friendlies.jade
+        
   include debug_output.jade
 
 block scripts
