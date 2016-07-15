@@ -454,19 +454,33 @@ var layer = (function(){
       return q
     }
 
-    static listAllQuestions(uid){
+    static listAllQuestions(uid,showcount){
       if(uid){
-        return AQL(`for q in questions filter q.uid==@uid sort q.toc desc let user = document(users,q.uid) return merge(q,{user})`,{uid})
+        return AQL(`
+          for q in questions filter q.uid==@uid sort q.toc desc let user = document(users,q.uid)
+          ${showcount?'limit '+showcount:''}
+          return merge(q,{user})
+          `,{uid}
+        )
       }
       else{
         //if uid === null
-        return AQL(`for q in questions sort q.toc desc let user = document(users,q.uid) return merge(q,{user})`)
+        return AQL(`
+          for q in questions sort q.toc desc let user = document(users,q.uid)
+          ${showcount?'limit '+showcount:''}
+          return merge(q,{user})
+          `
+        )
       }
     }
 
-    static listAllQuestionsOfCategory(catstr){
-      return AQL(`for q in questions filter q.category == @catstr
-        sort q.toc desc let user = document(users,q.uid) return merge(q,{user})
+    static listAllQuestionsOfCategory(catstr,showcount){
+      return AQL(`
+        for q in questions filter q.category == @catstr
+        sort q.toc desc let user = document(users,q.uid)
+
+        ${showcount?'limit '+showcount:''}
+        return merge(q,{user})
         `,{catstr}
       )
     }

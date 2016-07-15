@@ -850,19 +850,46 @@ table.viewQuestions = {
 
     return Promise.resolve()
     .then(()=>{
+      var showcount = params.permittedOperations.listAllQuestions?null:5;
+
       if(params.category){
-        return layer.Question.listAllQuestionsOfCategory(params.category)
+        return layer.Question.listAllQuestionsOfCategory(params.category,showcount)
       }
       else{
-        return layer.Question.listAllQuestions(null)
+        return layer.Question.listAllQuestions(null,showcount)
       }
     })
     .then(function(back){
-      data.questions_all = params.permittedOperations.listAllQuestions?back:undefined;
+      data.questions_all = back
+
       return layer.Question.listAllQuestions(params.user._key)
     })
     .then(function(back){
       data.questions = back;
+
+      return AQL(`
+        let byuser = (
+            for q in questions
+            collect username = (q.username||document(users,q.uid).username) with count into number
+            sort number desc
+            return {username,number}
+        )
+
+        let bycategory = (
+            for q in questions
+            collect category = q.category with count into number
+            sort number desc
+            return {category,number}
+        )
+
+        return {byuser,bycategory}
+        `
+      )
+    })
+    .then(back=>{
+      data.byuser = back[0].byuser
+      data.bycategory = back[0].bycategory
+
       return data
     })
   }

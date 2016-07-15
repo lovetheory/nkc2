@@ -24,11 +24,11 @@ block content
   .container
     .row
       .col-xs-12.col-sm-6
-        h4 向科创题库提交您的题目
-        p 您可以在这里为题库撰写题目。某个题目最终是否收录入正式题库，将由论坛学术委员会决定。
+        h3 向科创题库提交您的题目
+        p 您可以在这里为题库撰写题目，以帮助科创扩充完善测试类目。某个题目最终是否收录入正式题库，将由论坛学术委员会决定。
       
         if data.user
-          h4 撰写题目
+          h3 撰写题目
           p.
             请按照下面列出的格式提交题目。用钱号($)分隔问题和答案或选项。
           p.green.
@@ -40,25 +40,17 @@ block content
           p.red.
             不支持其他未声明的格式，因为程序员比较懒。
           p 请注意：每道问答题只允许有一种回答方式。请通过在题目中提示格式，避免答题时出现诸如“到底写1/2还是0.5”的问题。
-          p 类别可选：（如果不能选择类别，说明权限不足，请提交题目后等待管理员将其启用）
           
-          p.yellow 
-            -for(c in categories)
-              | [
-              span.red  #{c} 
-              span #{categories[c]} 
-              |] 
-          
-          p.reddish 如果你希望增设某个类别的题目，但上述类别中没有，请先添加题目，并在题目的开头用括号标明“（题目类别）”，待管理员看到之后进行增设。
+          p.reddish 如果你希望增设某个类别的题目，但现有类别中没有，请先添加题目，并在题目的开头用括号标明“（题目类别）”，待管理员看到之后进行增设。
           
           :markdown
-            最近发现部分会员提交的题目过于困难且考察意味不足。这里给出指导意见：
+            指导意见：
             
               1. 不要出作业练习题。不要出炫技计算题。
               2. 对于专业题，请确保：学习过该专业知识/在该行业工作的人士应能在30秒内得出答案，而一般人通过搜索等方法很难在5分钟内得到答案。
           
           :markdown
-            问题支持Markdown, TeX请用`\\(`,`\\)`以及`\\[`,`\\]`，不要用钱号。
+            问题支持Markdown, TeX请用`\\(`,`\\)`以及`\\[`,`\\]`，不要用钱号。答案(包括选择和填空题)只能为纯文本。
         
           br
           
@@ -70,8 +62,8 @@ block content
               select#category.form-control()
                 if data.permittedOperations.listAllQuestions
                   //if user is administrative
-                  -for(c in categories)
-                    option #{c}
+                  each c in data.bycategory
+                    option #{c.category||'null'}
                 else
                   option null
                 
@@ -99,10 +91,21 @@ block content
       .col-xs-12.col-sm-6  
         if data.user
           if data.questions_all
-            h4 所有最近提交的问题
-            a(href='?operation=viewQuestions') all
-            -for(c in categories)
-              a(href='?operation=viewQuestions&category=#{c}') [#{c}-#{categories[c]}] 
+              
+            h4 类目(只显示前5题)
+            span(style='margin:5px')
+              |[
+              a(href='?operation=viewQuestions') all
+              -var total = data.bycategory.map(el=>el.number||0).reduce((pre,cur)=>{return pre+cur})
+              | : #{total}]
+            
+            each i in data.bycategory
+              -var category = i.category||'undefined';var number=i.number;
+              span(style='margin:5px')
+                |[
+                a(href='?operation=viewQuestions&category=#{category}') #{category}
+                | : #{number}]
+            
               
             //a(href='/api/questions?all=true' target='_blank') 下载JSON格式
             .panel.panel-default
@@ -110,6 +113,27 @@ block content
                 each q,index in data.questions_all
 
                   include questions_single.jade
+                  
+      .col-xs-12.col-sm-6
+        .panel.panel-default
+          .panel-body
+            h1 统计
+            hr
+            h4 专家
+            each i in data.byuser
+              -var username = i.username;var number = i.number;
+              div(style='margin:5px')
+                a(href='/user_profile_byname/#{username}') #{username}
+                | : #{number}
+            
+            hr
+            h4 类目
+            each i in data.bycategory
+              -var category = i.category||'undefined';var number=i.number;
+              div(style='margin:5px')
+                a(href='?operation=viewQuestions&category=#{category}') #{category}
+                | : #{number}
+          
   
   include debug_output.jade
 block scripts
