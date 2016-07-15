@@ -1,27 +1,23 @@
 -var uid = user._key
-.panel.panel-default
-  if 0
-    .panel-heading
-      .f12 作者
-  .panel-body
+.nkcpanel
+
+  .UserProfileSection1
+    include interface_profile_avatar.jade
+    
+    div(style='display:block')
+      .ForumTitleCircle(style='background-color:#{user.color||"#bbb"}')
+      .ForumName #{user.username}
+      
+  -user.hidelastlogin = true
+  include interface_profile_info_section2.jade
   
-    .UserProfileSection1
-      include interface_profile_avatar.jade
-      
-      div(style='display:block')
-        .ForumTitleCircle(style='background-color:#{user.color||"#bbb"}')
-        .ForumName #{user.username}
-        
-    -user.hidelastlogin = true
-    include interface_profile_info_section2.jade
+  hr
+  
+  h4 个人简介
+  //hr
+  if user.description && user.description.length>0
     
-    hr
+    div!=markdown_safe(user.description)
+  else
+    |暂未填写
     
-    h4 个人简介
-    //hr
-    if user.description && user.description.length>0
-      
-      div!=markdown_safe(user.description)
-    else
-      |暂未填写
-      

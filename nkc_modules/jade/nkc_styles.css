@@ -920,7 +920,7 @@ h4,h5,h6 {
 }
 
 .NavBarLinkArea{
-    margin-top: 13px;
+    margin-top: 9px;
 }
 .NavBarLinkArea a{
     margin-left: 5px;
@@ -1094,3 +1094,12 @@ margin: 5px;
     bottom: 0;
     vertical-align: middle;
 }
+.nkcpanel{
+  margin-bottom: 18px;
+  padding: 16px;
+  background-color: #fff;
+  border-radius: 5px;
+  border: 1px solid #d8d8d8;
+  box-shadow: rgba(0, 0, 0, 0.14) 3px 3px 10px;
+}
+.nkcshade{box-shadow: rgba(0, 0, 0, 0.14) 0px 3px 10px;}
