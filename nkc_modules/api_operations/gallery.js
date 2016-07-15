@@ -51,7 +51,7 @@ table.getGalleryRecent = {
 
         var prom = t.load()
         .then(t=>{
-          return t.testView(Object.assign(params.contentClasses,{sensitive:true}))
+          return t.testView(Object.assign(params.contentClasses,{sensitive:true,non_broadcast:undefined}))
         })
         .then(t=>{
           resarr.push(t.i)

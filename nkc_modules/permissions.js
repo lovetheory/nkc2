@@ -158,6 +158,8 @@ var certificates={
       images:true,
       non_images:true,
       non_public:true,
+
+      non_broadcast:true,
     },
     permittedOperations:{
 

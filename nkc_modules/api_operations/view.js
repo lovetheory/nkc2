@@ -214,7 +214,7 @@ table.viewPanorama = {
 
         limit 10
         return merge(t,{oc:oc,lm:lm,forum,ocuser})
-        `,{contentClasses:Object.assign(params.contentClasses,{sensitive:true})}
+        `,{contentClasses:Object.assign(params.contentClasses,{sensitive:true,non_broadcast:undefined})}
       )
     })
     .then(res=>{
@@ -238,7 +238,7 @@ table.viewPanorama = {
 
         return merge(t,{oc,lm,forum,ocuser})
 
-        `,{contentClasses:Object.assign(params.contentClasses,{sensitive:true})}
+        `,{contentClasses:Object.assign(params.contentClasses,{sensitive:true,non_broadcast:undefined})}
       )
     })
     .then(res=>{
