@@ -110,6 +110,26 @@ function nkc_render(options){
       displayContent:false,
     },
 
+    b:{
+      openTag:function(){
+        return '<b>'
+      },
+      closeTag:function(){
+        return '</b>'
+      }
+    },
+
+    size:{
+      openTag:function(params,content){
+        var color = params.slice(1)
+
+        return '<font size='+ color +'>'
+      },
+      closeTag:function(){
+        return '</font>'
+      }
+    }
+
   })
 
   render.plain_render = plain_escape;
