@@ -1102,4 +1102,14 @@ margin: 5px;
   border: 1px solid #d8d8d8;
   box-shadow: rgba(0, 0, 0, 0.14) 3px 3px 10px;
 }
+
+@media (max-width: 768px){
+  .nkcpanel {
+    padding:0;
+    margin-top: 15px;
+    border:none;
+    box-shadow: none;
+  }
+}
+
 .nkcshade{box-shadow: rgba(0, 0, 0, 0.14) 0px 3px 10px;}
