@@ -309,7 +309,7 @@ var common=(function(){
 
   common.URLifyMarkdown = function(content){
     return content.replace(URLExtractRegex,function(match,p1,p2){
-      return p1+'<'+p2+'/>'
+      return p1+'<'+p2+'>'
     })
   }
   common.URLifyBBcode = function(content){
