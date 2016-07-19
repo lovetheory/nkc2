@@ -43,14 +43,55 @@ block content
           .col-xs-8
             if data.forum.description
               div!=markdown_safe(data.forum.description)
+              
+            .form-inline(style='margin-top:12px;margin-bottom:12px')
+              if data.replytarget
+                .form-group
+                  a.btn.btn-default(href='/editor?target=#{data.replytarget}') 新帖
             
-            if data.replytarget
-              a.btn.btn-default(style="margin-bottom:10px" href='/editor?target=#{data.replytarget}') 新帖
+            
+            
+              .form-group
+                button.btn.btn-default(onclick='enterManagementMode()') 管理
+                
+            .form-inline.ForumManagement(style='display:none;margin-top:12px;margin-bottom:12px')
+              
+              if data.permittedOperations.addThreadToCollection
+                .form-group
+                  .input-group
+                    input#category.form-control(type='text' placeholder='输入收藏名称' value='')
+                    span.input-group-btn
+                      button#addSelectedToMyCollection.btn.btn-default(onclick='addSelectedToMyCollection()') 添加到我的收藏
+
+              if data.permittedOperations.moveThread
+                .form-group
+                  .btn-group
+                    button#moveThreadToForum.btn.btn-default.dropdown-toggle(data-toggle='dropdown' type='button') 移动到板块
+                      span.caret
+                    ul.dropdown-menu
+                        
+                      - var cindex = 0
+                      each group,gindex in data.forumlist        
+                        - var parent = group.parentforum
+                        each forum,findex in group.forumgroup 
+                          - var index = cindex + findex
+                          - var fid = forum._key; var name = forum.display_name
+                            li
+                              a(href="javascript:moveThreadToForum('#{fid}')") #{name}
+                              
+                        - cindex += group.forumgroup.length
+                
+                .form-group
+                  button#recyclebtn.btn.btn-danger(onclick='recyclebtn()') 送回收站
+                
+              if 1
+                .form-group
+                  button.btn.btn-default(onclick='selectbtn()') 全选/不选  
             
             
           .col-xs-4
             p
-              span 今日： #{data.forum.count_posts_today} 主题： #{data.forum.count_threads} 回复： #{data.forum.count_posts}
+              span 今日:#{data.forum.count_posts_today} 主题:#{data.forum.count_threads} 回复: #{data.forum.count_posts}
   
             if data.forum.moderators
               span 版主：
@@ -84,7 +125,14 @@ block content
                   else
                     li
                       a(href='#')=val
-                
+        
+        if 1
+          .row
+            .col-xs-12
+            
+              
+                  
+              
         if data.toppedThreads && data.toppedThreads.length>0
           .ForumThreadList
             each thread,index in data.toppedThreads
@@ -110,3 +158,5 @@ block content
 
 block scripts
   script(src='/interface_common.js')
+  script(src='/interface_collections.js')
+  script(src='/interface_forum.js')

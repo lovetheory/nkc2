@@ -4,28 +4,26 @@ block title
   title #{data.category} - #{data.thisuser.username}的收藏 - 科创论坛
   
 block content
-  
+  -var ownership = data.thisuser._key == data.user._key
   .container
     .row
       .col-xs-12
-        -var uid = data.thisuser._key
-        include interface_profile_avatar.jade
-        .ForumName #{data.category} - #{data.thisuser.username} 的个人收藏
-        //hr
+        .nkcpanel
+          -var uid = data.thisuser._key
+          include interface_profile_avatar.jade
+          .ForumName #{data.category} - #{data.thisuser.username} 的个人收藏
       
-      if data.thisuser._key == data.user._key
+      if ownership
         .col-xs-12
-        
-          .form-inline(style='margin-top:12px;margin-bottom:12px')
 
+          .form-inline(style='margin-bottom:12px')
+        
             .form-group
               .input-group
                 input#category.form-control(type='text' placeholder='输入分类名称' value='')
                 span.input-group-btn
                   button#movebtn.btn.btn-default(onclick='movebtn()') 移动
           
-
-
             if data.categoryNames.length
               .form-group
                 .btn-group
@@ -41,8 +39,7 @@ block content
                 button.btn.btn-default(onclick='selectbtn()') 全选/不选
                 //hr.hrNarrowSpace
       else
-        .col-xs-12
-          br
+        
           
       -if(!data.categoryNames.length){data.categoryNames=[null]}
 
@@ -60,10 +57,8 @@ block content
             .CollectionCategoryThreadItem
               -var thread = item.thread
               if thread
+                -var showTicks = ownership
                 include interface_forum_singlethread.jade
-                
-              .CollectionCategoryThreadActions
-                input.ThreadCheckboxes(id='#{item._key}' type='checkbox')
 
       .col-xs-12
         

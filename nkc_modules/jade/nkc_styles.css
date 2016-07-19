@@ -1093,6 +1093,7 @@ margin: 5px;
     top: 0;
     bottom: 0;
     vertical-align: middle;
+    z-index: 999;
 }
 .nkcpanel{
   margin-bottom: 18px;

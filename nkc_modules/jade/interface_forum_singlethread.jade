@@ -10,6 +10,8 @@
 -var topped = thread.topped
 
 .ForumThreadItem
+  .CollectionCategoryThreadActions
+    input.ThreadCheckboxes(id='#{thread._key}' type='checkbox' style="#{showTicks?'':'display:none;'}")
 
   if 0
     .ForumThreadItemAvatar
