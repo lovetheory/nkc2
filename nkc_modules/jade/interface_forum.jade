@@ -59,19 +59,19 @@ block content
               if data.permittedOperations.addThreadToCollection
                 .form-inline
                   .form-group
-                    .input-group
+                    .input-group.input-group-sm
                       input#category.form-control(type='text' placeholder='输入收藏夹名称' value='')
                       span.input-group-btn
-                        button#addSelectedToMyCollection.btn.btn-default(onclick='addSelectedToMyCollection()') 添加选中帖子到我的收藏
+                        button#addSelectedToMyCollection.btn-sm.btn.btn-default(onclick='addSelectedToMyCollection()') 添加选中帖子到我的收藏
 
               .form-inline(style='margin-top:10px')
                 .form-group
-                  button.btn.btn-default(onclick='selectbtn()') 全选/不选  
+                  button.btn.btn-xs.btn-default(onclick='selectbtn()') 全选/不选  
 
                 if data.permittedOperations.moveThread
                   .form-group
                     .btn-group
-                      button#moveThreadToForum.btn.btn-default.dropdown-toggle(data-toggle='dropdown' type='button') 移动到板块
+                      button#moveThreadToForum.btn.btn-xs.btn-default.dropdown-toggle(data-toggle='dropdown' type='button') 移动到板块
                         span.caret
                       ul.dropdown-menu
                           
@@ -87,7 +87,7 @@ block content
                           - cindex += group.forumgroup.length
                 
                   .form-group
-                    button#recyclebtn.btn.btn-danger(onclick='recyclebtn()') 送回收站
+                    button#recyclebtn.btn.btn-xs.btn-danger(onclick='recyclebtn()') 送回收站
                 
 
             
