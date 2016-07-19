@@ -11,7 +11,9 @@
 
 .ForumThreadItem
   .CollectionCategoryThreadActions
-    input.ThreadCheckboxes(id='#{thread._key}' type='checkbox' style="#{showTicks?'':'display:none;'}")
+
+    input.ThreadCheckboxes(id='#{(item?item._key:null)||thread._key}' type='checkbox' style="#{showTicks?'':'display:none;'}")
+
 
   if 0
     .ForumThreadItemAvatar
