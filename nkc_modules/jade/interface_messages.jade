@@ -9,84 +9,86 @@ block content
     .row
       if data.replylist && data.replylist.length
         .col-xs-12
-          h4 回复提醒
+          .nkcpanel(style='max-height:300px;overflow-x:scroll;')
+            h4 回复提醒
+            .SMSTable
+              each r in data.replylist
+                -var goto = '/t/'+r.topost.tid
+                -var isNew = r.toc>data.lastVisitTimestamp
+                .SMSTableItem
+                  .SMSFirstRow
+                    span(class='#{isNew?"reddish":""}') #{dateTimeString(r.toc)} 
+                    span #{fromNow(r.toc)}
+                    
+                    span
+                      - var uid = r.fromuser._key
+                      - var avatar = '/avatar_small/' + uid
+                        a(href='/user_profile/#{uid}')
+                          img.HomeThreadAvatar(src='#{avatar}')
+                          
+                    span #{r.fromuser.username} 回复了 #{r.touser.username} 的 
+                      a(href='#{goto}') #{digestText(r.topost.t||''+'-'+r.topost.c,20)+'...'}
+                  
+                  .SMSSecondRow
+                    .SMSSentByOthers
+                      a(href='#{goto}') #{digestText(r.frompost.t||''+'-'+r.frompost.c)}
+                  
+      .col-xs-12
+        .nkcpanel
+          h4 短消息
+          .row
+            .form-group.col-sm-3
+              input#username.form-control(type='text' placeholder='收信人用户名' value="#{data.receiver||''}")
+          
+            .form-group.col-sm-7
+              input#content.form-control(type='text' placeholder='消息内容')
+              
+            .form-group.col-sm-2
+              button#send.btn.btn-default() 发送
+              
+
+          -var smslist = data.smslist
           .SMSTable
-            each r in data.replylist
-              -var goto = '/t/'+r.topost.tid
-              -var isNew = r.toc>data.lastVisitTimestamp
+              
+            each s,index in smslist
+              -var isNew = s.toc>data.lastVisitTimestamp
+              -var sender = s.us
+              -var receiver = s.ur
+              -var senderid = s.s
+              -var receiverid = s.r
+              -var content = s.c
               .SMSTableItem
                 .SMSFirstRow
-                  span(class='#{isNew?"reddish":""}') #{dateTimeString(r.toc)} 
-                  span #{fromNow(r.toc)}
+                  span(class='#{isNew?"reddish":""}') #{dateTimeString(s.toc)}
+                  span #{fromNow(s.toc)}
                   
                   span
-                    - var uid = r.fromuser._key
+                    - var uid = sender._key
                     - var avatar = '/avatar_small/' + uid
                       a(href='/user_profile/#{uid}')
                         img.HomeThreadAvatar(src='#{avatar}')
-                        
-                  span #{r.fromuser.username} 回复了 #{r.touser.username} 的 
-                    a(href='#{goto}') #{digestText(r.topost.t||''+'-'+r.topost.c,20)+'...'}
-                
-                .SMSSecondRow
-                  .SMSSentByOthers
-                    a(href='#{goto}') #{digestText(r.frompost.t||''+'-'+r.frompost.c)}
-                  
-      .col-xs-12
-        h4 短消息
-        .row
-          .form-group.col-sm-3
-            input#username.form-control(type='text' placeholder='收信人用户名' value="#{data.receiver||''}")
-        
-          .form-group.col-sm-7
-            input#content.form-control(type='text' placeholder='消息内容')
-            
-          .form-group.col-sm-2
-            button#send.btn.btn-default() 发送
-            
 
-        -var smslist = data.smslist
-        .SMSTable
-            
-          each s,index in smslist
-            -var isNew = s.toc>data.lastVisitTimestamp
-            -var sender = s.us
-            -var receiver = s.ur
-            -var senderid = s.s
-            -var receiverid = s.r
-            -var content = s.c
-            .SMSTableItem
-              .SMSFirstRow
-                span(class='#{isNew?"reddish":""}') #{dateTimeString(s.toc)}
-                span #{fromNow(s.toc)}
-                
-                span
-                  - var uid = sender._key
-                  - var avatar = '/avatar_small/' + uid
-                    a(href='/user_profile/#{uid}')
-                      img.HomeThreadAvatar(src='#{avatar}')
-
-                span(onclick="setReceiver('#{sender.username}')") #{sender.username}
-                  
-                span ▶
-                span
-                  - var uid = receiver._key
-                  - var avatar = '/avatar_small/' + uid
-                    a(href='/user_profile/#{uid}')
-                      img.HomeThreadAvatar(src='#{avatar}')
+                  span(onclick="setReceiver('#{sender.username}')") #{sender.username}
                     
-                span(onclick="setReceiver('#{receiver.username}')") #{receiver.username} 
-                
-                
-                
-                
-              .SMSSecondRow
-                if sender.username == data.user.username
-                  .SMSSentByMe
-                    div!=plain(content)
-                else
-                  .SMSSentByOthers
-                    div!=plain(content)
+                  span ▶
+                  span
+                    - var uid = receiver._key
+                    - var avatar = '/avatar_small/' + uid
+                      a(href='/user_profile/#{uid}')
+                        img.HomeThreadAvatar(src='#{avatar}')
+                      
+                  span(onclick="setReceiver('#{receiver.username}')") #{receiver.username} 
+                  
+                  
+                  
+                  
+                .SMSSecondRow
+                  if sender.username == data.user.username
+                    .SMSSentByMe
+                      div!=plain(content)
+                  else
+                    .SMSSentByOthers
+                      div!=plain(content)
               
               
         

@@ -956,7 +956,7 @@ table.viewSMS = {
         for r in replies
         filter r.touid == @uid
         sort r.touid desc, r.toc desc
-        limit 10
+        limit 30
         let frompost = document(posts,r.frompid)
         let fromuser = document(users,frompost.uid)
         let touser = document(users,r.touid)
