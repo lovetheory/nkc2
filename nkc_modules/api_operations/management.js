@@ -256,7 +256,23 @@ table.banUser = {
     var u = new layer.User(params.uid)
     return u.load()
     .then(u=>{
-      var certs = (u.certs||[]).concat(['banned'])
+      var certs = (u.model.certs||[]).concat(['banned'])
+
+      if(
+        certs.indexOf('moderator')>=0||
+        certs.indexOf('editor')>=0||
+        certs.indexOf('dev')>=0||
+        certs.indexOf('scholar')>=0||
+
+        u.model.xsf>0
+      ){
+        throw '为什么？你为何要封禁此用户？你是怎么了？'
+      }
+
+      if(certs.indexOf('banned')>=0){
+        throw '这人被封过了吧。。。'
+      }
+
       return u.update({certs})
     })
     .then(u=>{
