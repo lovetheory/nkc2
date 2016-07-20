@@ -21,7 +21,6 @@ var certificates={
     },
     // see end of api_operations.js
   },
-
   editor:{
     display_name:'编辑',
     inheritFrom:['senior_moderator'],
@@ -69,6 +68,7 @@ var certificates={
     permittedOperations:{
       moveAllThreads:true,
       toggleAllPosts:true,
+      editAllThreads:true,
     }
   },
 
@@ -125,7 +125,7 @@ var certificates={
   },
 
   examinated:{
-    display_name:'状元',
+    display_name:'进士',
     inheritFrom:['default'],
     contentClasses:{
       sensitive:true,
@@ -253,7 +253,7 @@ var certificates={
   },
 
   banned:{
-    display_name:'作死',
+    display_name:'开除学籍',
     inheritFrom:['visitor'],
 
     contentClasses:{

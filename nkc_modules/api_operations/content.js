@@ -177,25 +177,44 @@ var postToPost = function(params,pid,user){ //modification.
     toc = original_post.toc
 
     permissions.testModifyTimeLimit(params,author===user._key,toc)
+    //params, isSelf, timeofcreation
 
-    timestamp = Date.now();
+    //test to see if he owns the forum
+    var origthread = new layer.Thread(tid)
+    return origthread.load()
+    .then(origthread=>{
+      return new layer.Forum(origthread.model.fid).load()
+    })
+    .then(origforum=>{
+      return origforum.inheritPropertyFromParent()
+    })
+    .then(origforum=>{
+      if(params.permittedOperations['editAllThreads']){
+        return
+      }
+      //else we have to check: do you own the original forum?
+      return origforum.testModerator(params.user.username)
+    })
+    .then(()=>{
+      timestamp = Date.now();
 
-    newpost.tlm = timestamp
-    newpost.c = post.c
-    newpost.t = post.t
-    newpost.l = post.l
+      newpost.tlm = timestamp
+      newpost.c = post.c
+      newpost.t = post.t
+      newpost.l = post.l
 
-    newpost.uidlm = params.user._key
-    newpost.iplm = params._req.iptrim
+      newpost.uidlm = params.user._key
+      newpost.iplm = params._req.iptrim
 
-    //update only the necessary ones
+      //update only the necessary ones
 
-    //modification to the original
-    original_post.pid = original_key;
-    original_post._key = undefined;
+      //modification to the original
+      original_post.pid = original_key;
+      original_post._key = undefined;
 
-    //now save original to history;
-    return queryfunc.doc_save(original_post,'histories')
+      //now save original to history;
+      return queryfunc.doc_save(original_post,'histories')
+    })
   })
   .then((back)=>{
     //now update the existing with the newly created:

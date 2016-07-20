@@ -136,7 +136,7 @@ var layer = (function(){
       .catch(err=>{
         if(development){
           if(err!=='parent not exist'){
-            report('parent load failed on '+p.parentid,err)
+            report('parent load failed on '+p._key,err)
           }
         }
 

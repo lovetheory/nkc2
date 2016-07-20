@@ -28,16 +28,16 @@ table.moveThread = {
     .then(thread=>{
       origforum = new layer.Forum(thread.model.fid)
       return origforum.load()
-    })
-    .then(origforum=>{
-      return origforum.inheritPropertyFromParent()
-    })
-    .then(origforum=>{
-      if(po['moveAllThreads']){
-        return
-      }
-      //else we have to check: do you own the original forum?
-      return origforum.testModerator(params.user.username)
+      .then(origforum=>{
+        return origforum.inheritPropertyFromParent()
+      })
+      .then(origforum=>{
+        if(po['moveAllThreads']){
+          return
+        }
+        //else we have to check: do you own the original forum?
+        return origforum.testModerator(params.user.username)
+      })
     })
     .then(()=>{
       return destforum.load()
