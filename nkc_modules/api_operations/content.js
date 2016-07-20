@@ -192,6 +192,11 @@ var postToPost = function(params,pid,user){ //modification.
       if(params.permittedOperations['editAllThreads']){
         return
       }
+
+      if(author===user._key){ //self modification is not limited!
+        return
+      }
+
       //else we have to check: do you own the original forum?
       return origforum.testModerator(params.user.username)
     })
