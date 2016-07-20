@@ -68,7 +68,9 @@ block scripts
         newpassword:geid('newpassword').value,
         newpassword2:geid('newpassword2').value,
       })
-      .then(jalert)
+      .then(function(){
+        window.location.reload()
+      })
       .catch(function(err){
         jwarning(err)
         
@@ -84,7 +86,9 @@ block scripts
         color:geid('color').value,
         focus_forums:geid('focus_forums').value,
       })
-      .then(jalert)
+      .then(function(){
+        window.location.reload()
+      })
       .catch(function(err){
         jwarning(err)
               geid('submitpersonalsetting').disabled = false
