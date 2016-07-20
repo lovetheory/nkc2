@@ -250,3 +250,20 @@ table.pullNewPosts24h = {
     )
   }
 }
+
+table.banUser = {
+  operation:function(params){
+    var u = new layer.User(params.uid)
+    return u.load()
+    .then(u=>{
+      var certs = (u.certs||[]).concat(['banned'])
+      return u.update({certs})
+    })
+    .then(u=>{
+      return 'success'
+    })
+  },
+  requiredParams:{
+    uid:String,
+  }
+}

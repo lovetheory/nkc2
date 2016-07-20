@@ -45,6 +45,8 @@ var certificates={
       toggleDigestAllThreads:true,
       toggleToppedAllThreads:true,
       kamikaze:true,
+
+      banUser:true,
     }
   },
 
@@ -100,7 +102,9 @@ var certificates={
 
 
       pullNewPosts24h:true,
-      setTopped:true
+      setTopped:true,
+
+      banUser:true,
     }
   },
 

@@ -3,6 +3,10 @@
     a(href='/user_threads/#{user._key}') 主题一览
     a(href='/user_collection/#{user._key}') 收藏夹
     a(href='/sms?receiver=#{user.username}') 发私信
+    
+    if data.permittedOperations.banUser
+      a(href="javascript:nkcAPI('banUser',{uid:'#{user._key}'}).then(jalert).catch(jwarning)") 一键封禁此人（慎点）
+    
     br
     span 学术分 #{user.xsf||0}
     span 科创币 #{user.kcb||0}
