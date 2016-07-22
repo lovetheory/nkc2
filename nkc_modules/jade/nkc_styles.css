@@ -577,7 +577,8 @@ blockquote {
 
 .ThreadPostBody{
   font-size: 16px;
-  line-height: 1.8;
+  line-height: 1.9;
+  letter-spacing: 0.3px;
 }
 
 .ThreadPostBody img{
@@ -605,8 +606,7 @@ line-height: 1.4;
   margin-bottom: 5px;
 }
 
-.ThreadPostBody p
-{margin-top: 5px;margin-bottom: 11px;}
+.ThreadPostBody *+p{margin-top: 20px;/* margin-bottom: 11px; */}
 
 .ThreadPostBody span.xbbcode-code{
 
