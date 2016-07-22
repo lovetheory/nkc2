@@ -285,3 +285,71 @@ table.banUser = {
     uid:String,
   }
 }
+
+table.addCredit = {
+  operation:function(params){
+    //0. extract params
+    var q = Number(params.q)
+    if(q>10000 ||q<-10000){
+      throw 'invalid q value'
+    }
+
+    var type = params.type
+    var pid = params.pid
+
+    var reason = params.reason
+    if(reason.length<2)throw '写太短啦'
+
+    if(typeof(reason)!='string')throw 'bad reason'
+
+    //1. tell type
+
+    switch (type) {
+      case 'xsf':
+      case 'kcb':
+      break;
+
+      default:
+      throw 'credit type not recognized'
+    }
+
+    //3. give to targetuser
+    return AQL(`
+      let p = document(posts,@pid)
+      let u = document(users,p.uid)
+      update u with {@type:(@q+u.@type)} in users
+      return NEW
+      `,{pid,type,q}
+    )
+    .then(arr=>{
+      var touid = arr[0]._key;
+
+      //2. make new
+      var cl = new layer.BaseDao('creditlogs')
+      return cl.save({
+        pid,
+        type,
+        q,
+        uid:params.user._key,
+        username:params.user.username,
+        touid,
+        reason,
+        source:'nkc',
+        toc:Date.now(),
+      })
+      .then(cl=>{
+        var operations = require('api_operations')
+        return operations.table.updatePost.operation(params)
+      })
+      .then(()=>{
+        return arr[0]
+      })
+    })
+  },
+  requiredParams:{
+    pid:String,
+    reason:String,
+    type:String,
+    q:Number,
+  }
+}

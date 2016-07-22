@@ -530,6 +530,12 @@ function updatePost(pid){
   })
 }
 
+table.updatePost = {
+  operation:function(params){
+    return updatePost(params.pid)
+  }
+}
+
 function incrementForumOnNewThread(tid){
   return AQL(`
     let t = document(threads,@tid)
