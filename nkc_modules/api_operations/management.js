@@ -256,7 +256,7 @@ table.banUser = {
     var u = new layer.User(params.uid)
     return u.load()
     .then(u=>{
-      var certs = (u.model.certs||[]).concat(['banned'])
+      var certs = (u.model.certs||[])
 
       if(
         certs.indexOf('moderator')>=0||
@@ -272,6 +272,8 @@ table.banUser = {
       if(certs.indexOf('banned')>=0){
         throw '这人被封过了吧。。。'
       }
+
+      certs = certs.concat(['banned'])
 
       return u.update({certs})
     })
