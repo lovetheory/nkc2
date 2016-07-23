@@ -132,5 +132,5 @@ block scripts
   script(src='/interface_common.js')
   script(src='/interface_thread.js')
   script.
-    common.backcolorChange("#{data.forum.color||'#dddddd'}");
+    common.backcolorChange("#{(data.user?data.user.color:null)||'#e4e4e4'}");
                 
