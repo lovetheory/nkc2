@@ -121,3 +121,35 @@ function addColl(tid){
   })
   .catch(jwarning)
 }
+
+function addCredit(pid){
+  var cobj = promptCredit(pid)
+  if(cobj){
+    return nkcAPI('addCredit',cobj)
+    .then(function(){
+      window.location.reload()
+    })
+    .catch(jwarning)
+  }
+  else{
+    screenTopWarning('取消评分。')
+  }
+}
+
+function promptCredit(pid){
+  var cobj = {pid:pid}
+
+  var q = prompt('请输入学术分：','1')
+  if(q&&Number(q)){
+    cobj.q=Number(q)
+
+    var reason = prompt('请输入评分理由：','')
+    if(reason&&reason.length>1){
+      cobj.reason = reason
+      cobj.type = 'xsf'
+
+      return cobj
+    }
+  }
+  return null
+}

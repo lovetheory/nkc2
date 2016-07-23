@@ -36,6 +36,9 @@ if !post.disabled || (post.disabled && po.enablePost)
         - if(po.addPostToCart)
           a(href="javascript:cartPost('#{post._key}')") 加入管理车
           
+        - if(po.addCredit)
+          a(href="javascript:addCredit('#{post._key}')") 评学术分
+          
         - if(po.disablePost)
           a(href="javascript:disablePost('#{post._key}')") 屏蔽
           

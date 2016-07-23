@@ -105,6 +105,8 @@ var certificates={
       setTopped:true,
 
       banUser:true,
+
+      addCredit:true,
     }
   },
 
