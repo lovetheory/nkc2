@@ -4,7 +4,7 @@ block title
   title #{data.category} - #{data.thisuser.username}的收藏 - 科创论坛
   
 block content
-  -var ownership = data.thisuser._key == data.user._key
+  -var ownership = data.thisuser._key == (data.user?data.user._key:null)
   .container
     .row
       .col-xs-12
