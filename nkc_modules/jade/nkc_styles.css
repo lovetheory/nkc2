@@ -512,14 +512,10 @@ blockquote {
 }
 
 .ThreadTitleForumLink{
-
-  display: block;
-
-  margin-bottom: 0;
-
-  color: #bbb;
-
-  font-size: 14pt;
+display: block;
+margin-bottom: 0;
+color: #656565;
+font-size: 14pt;
 }
 
 .PostTitleAuxillaryLink{

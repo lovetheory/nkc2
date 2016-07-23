@@ -340,6 +340,14 @@ var common=(function(){
 
   common.mapWithPromise = mapWithPromise
 
+  function backcolorChange(colorstr){
+    geid('body').style = 'background-color:'+colorstr
+  }
+
+  //geid('body').addEventListener('click',backcolorChange)
+
+  common.backcolorChange = backcolorChange
+
   return common
 })()
 
