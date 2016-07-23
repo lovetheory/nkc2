@@ -59,7 +59,7 @@ if !post.disabled || (post.disabled && po.enablePost)
               - var queryforip = 'http://ip138.com/ips138.asp?ip='+ipoc.toString()+'&action=2'
               a.lighttext(href='#{queryforip}') #{ipoc}
         
-      div.ThreadPostBody!= experimental_render(post)
+      div.ThreadPostBody(style="#{postHeight?'overflow-y:scroll;max-height:'+postHeight:''}")!= experimental_render(post)
 
       if post.toc!=post.tlm
         p.lighttext [修改于 #{fromNow(post.tlm)} - #{dateString(post.tlm)}]

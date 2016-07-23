@@ -24,14 +24,14 @@ block content
             span#GalleryNavigationLeft <
             span#GalleryNavigationRight >
       
-    
-      -var threadlist = data.latestThreads
-      -var listtitle = '最新回复'
-      include interface_home_newest.jade
-      
-    .row
       -var threadlist = data.newestThreads
       -var listtitle = '全站新帖'
+      include interface_home_newest.jade
+
+      
+    .row
+      -var threadlist = data.latestThreads
+      -var listtitle = '最新回复'
       include interface_home_newest.jade
       
       if 1
@@ -47,6 +47,34 @@ block content
         .col-lg-12
           -var digestThreads = data.newestDigestThreads
           include interface_panorama_single_digest.jade
+    
+    if data.latestReplies
+      h4 回复展开
+      div
+        each p,index in data.latestReplies
+          -var post = p
+          -var title = p.thread.oc.t
+          -var postHeight = '150px'
+          div
+            p
+              a(href='/user_profile/#{p.user._key}') #{p.user.username}
+              |  在 
+              a(href='/user_profile/#{p.thread.ocuser._key}') #{p.thread.ocuser.username}
+              |  的帖子 
+              a(href='/t/#{p.thread._key}') #{title}
+              //a(href='/user_profile/#{p.thread.ocuser._key}') #{p.thread.ocuser.username}
+            include interface_thread_singlepost.jade
+            
+    if data.latestReplies2
+      h4 最新动态
+      div
+        each p,index in data.latestReplies2
+          -var user = p.user
+          p
+            a(href='/user_profile/#{user._key}') #{user.username}
+            |  回复了帖子
+            a(href='/t/#{p.tid}') #{p.thread.oc.t}
+            //a(href='/user_profile/#{p.thread.ocuser._key}') #{p.thread.ocuser.username}
     
     H4 全站精华
     hr.hrNarrowSpace

@@ -274,12 +274,46 @@ table.viewPanorama = {
     .then(res=>{
       data.latestVisitUsers = res
 
+      return null
 
-      return data
+      return AQL(`
+        for t in threads
+        sort t.disabled desc, t.toc desc
+        filter t.disabled==null
+        limit 60
+
+        let parentforum = document(forums,t.fid)
+        let class = parentforum.class
+
+        filter has(@contentClasses,TO_STRING(class)) /*content ctrl*/
+
+
+        let oc = document(posts,t.oc)
+        let lm = document(posts,t.lm)
+        filter lm.disabled!=true
+        limit 10
+        let forum = document(forums,t.fid)
+        let ocuser = document(users,oc.uid)
+        let lmuser = document(users,lm.uid)
+
+        let resources_declared = (
+          let p = lm
+          filter is_array(p.r)
+          for r in p.r
+          let rd = document(resources,r)
+          filter rd!=null
+          return rd
+        )
+
+        //return merge(t,{oc,lm,forum,ocuser})
+        return merge(lm,{r:resources_declared,user:lmuser,thread:merge(t,{oc,ocuser})})
+        `,{contentClasses:Object.assign(params.contentClasses,{sensitive:true,non_broadcast:undefined})}
+      )
     })
-    .then(galleryItems=>{
+    .then(res=>{
       //data.galleryItems = galleryItems
 
+      data.latestReplies2 = res
       return data
     })
   }
