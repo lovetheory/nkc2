@@ -24,7 +24,7 @@ block content
           
       if data.user.focus_forums && data.user.focus_forums.length>0
         .row
-          -var ff = data.user.focus_forums.split(',').filter(n=>{return n.trim()!=''}).slice(0,12)
+          -var ff = data.user.focus_forums.replace(/，/g,',').split(',').filter(n=>{return n.trim()!=''}).slice(0,12)
           -var userChosenForumArray = []
           -for(fid of ff){for(g of data.grouparray){for(af of g.forumgroup){ if(af._key==fid){af.parentforum = g.parentforum ;userChosenForumArray.push(af)} }}}
           if 1
@@ -42,8 +42,8 @@ block content
       if data.permittedOperations.viewQuestions
         :markdown
           科创题库现已面向1学术分以上会员开放。为科创入站测试[添加你的题目](/api/operation?&operation=viewQuestions)吧！
-    
-    hr.hrNarrowSpace
+        br
+    //hr.hrNarrowSpace
     .ka
       - var cindex = 0
       each group,gindex in data.grouparray
