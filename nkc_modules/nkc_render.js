@@ -128,6 +128,17 @@ function nkc_render(options){
       closeTag:function(){
         return '</font>'
       }
+    },
+
+    font:{
+      openTag:function(params,content){
+        var fontstr = params.slice(1)
+
+        return '<font face='+ fontstr +'>'
+      },
+      closeTag:function(){
+        return '</font>'
+      }
     }
 
   })
