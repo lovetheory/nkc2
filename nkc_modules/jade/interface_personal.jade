@@ -26,9 +26,9 @@ block content
           :markdown
             关于帖子签名：新KC取消了帖子签名在帖子中的显示，但保留了数据。
             
-            个人简介显示于个人页面（施工中），支持markdown语法。
+            个人简介显示于个人页面和帖子页面，支持markdown语法。
             
-            帖子签名显示于个人帖子展示界面。
+            帖子签名显示于个人帖子列表。
             
             ----
             
@@ -42,7 +42,7 @@ block content
           p Colorcode
           input#color(placeholder='例如：#159' value='#{user.color||""}')
           br
-          p 关注板块id（用半角逗号分隔）
+          p 关注板块id（用半角逗号分隔）（后来我发现有的同学非要用全角逗号，所以我只好写了兼容代码）
           .form-group
             input#focus_forums(placeholder='例如：81,373' value='#{user.focus_forums||""}')
           
@@ -50,7 +50,7 @@ block content
             p 板块id可参考：
             .form-group
               include forumlist_dropdown.jade
-            
+            p 被关注的板块会显示在“板块”页的顶部，无需向下翻动。
           
           .form-group
             button.btn.btn-default#submitpersonalsetting(onclick='submitpersonalsetting()') 提交修改
