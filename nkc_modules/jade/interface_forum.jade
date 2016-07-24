@@ -32,123 +32,129 @@ block content
 
       .col-sm-9.col-md-10
         //split 10/12 for post area
-        .row
-          .col-md-12
-            //img(src='http://bbs.kechuang.org/themes/site/dingzhi/images/logo.png')
-            
-            -var forum = data.forum
-            .ForumTitleCircle(style='background-color:#{forum.color}')
-            .ForumName #{forum.display_name}
-        .row
-          .col-xs-8
-            if data.forum.description
-              div!=markdown_safe(data.forum.description)
+        .nkcpanel
+          .row
+            .col-md-12
+              //img(src='http://bbs.kechuang.org/themes/site/dingzhi/images/logo.png')
               
-            .form-inline(style='margin-top:12px;margin-bottom:12px')
-              if data.replytarget
-                .form-group
-                  a.btn.btn-default(href='/editor?target=#{data.replytarget}') 新帖
-            
-            
-            
-              .form-group
-                button#enterManagementMode.btn.btn-default(onclick='enterManagementMode()') 管理
-                
-            .ForumManagement(style='display:none;margin-top:12px;margin-bottom:12px')
-              
-              if data.permittedOperations.addThreadToCollection
-                .form-inline
-                  .form-group
-                    .input-group.input-group-sm
-                      input#category.form-control(type='text' placeholder='输入收藏夹名称' value='')
-                      span.input-group-btn
-                        button#addSelectedToMyCollection.btn-sm.btn.btn-default(onclick='addSelectedToMyCollection()') 添加选中帖子到我的收藏
-
-              .form-inline(style='margin-top:10px')
-                .form-group
-                  button.btn.btn-xs.btn-default(onclick='selectbtn()') 全选/不选  
-
-                if data.permittedOperations.moveThread
-                  .form-group
-                    .btn-group
-                      button#moveThreadToForum.btn.btn-xs.btn-default.dropdown-toggle(data-toggle='dropdown' type='button') 移动到板块
-                        span.caret
-                      ul.dropdown-menu
-                          
-                        - var cindex = 0
-                        each group,gindex in data.forumlist        
-                          - var parent = group.parentforum
-                          each forum,findex in group.forumgroup 
-                            - var index = cindex + findex
-                            - var fid = forum._key; var name = forum.display_name
-                              li
-                                a(href="javascript:moveThreadToForum('#{fid}')") #{name}
-                                
-                          - cindex += group.forumgroup.length
-                
-                  .form-group
-                    button#recyclebtn.btn.btn-xs.btn-danger(onclick='recyclebtn()') 送回收站
-                
-
-            
-            
-          .col-xs-4
-            p
-              span 今日:#{data.forum.count_posts_today} 主题:#{data.forum.count_threads} 回复: #{data.forum.count_posts}
-  
-            if data.forum.moderators
-              span 版主：
-                - var moderators = data.forum.moderators
-                each k in moderators
-                  a.d-inline.margin-right(href='/user_profile_byname/#{k}') #{k}
-
-        .row
-          .col-md-12
-            nav
-              include interface_navigation_paging.jade
-              
-              - var paging = data.paging
-              - var digest = data.digest
-              - var class_str_all = digest?'':'active'
-              - var class_str_digest = digest?'active':''
-              
-              ul.pagination.NavigationPaging
-                - var page = paging?paging.page:null
-                li(class="#{class_str_all}")
-                  a(href='#{toQueryString({})}') 俱
-                  
-                li(class="#{class_str_digest}")
-                  a(href='#{toQueryString({digest:true})}') 精
+              -var forum = data.forum
+              .ForumTitleCircle(style='background-color:#{forum.color}')
+              .ForumName #{forum.display_name}
           
-              ul.pagination.NavigationPaging
-                each val,index in ['復序','帖序','施工中']
-                  if index==0
-                    li.active
-                      a(href='#')=val
-                  else
-                    li
-                      a(href='#')=val
+            .col-xs-8
+              if data.forum.description
+                div!=markdown_safe(data.forum.description)
+                
+            .col-xs-4
+              p.f12
+                span 今日: #{data.forum.count_posts_today} 主题: #{data.forum.count_threads} 回复: #{data.forum.count_posts}
+    
+              if data.forum.moderators
+                span.f12 版主：
+                  - var moderators = data.forum.moderators
+                  each k in moderators
+                    a.d-inline.margin-right(href='/user_profile_byname/#{k}') #{k}
+          
+        .nkcpanel
+          .row
+            .col-xs-12
+              .form-inline(style='margin-top:12px;margin-bottom:12px')
+                if data.replytarget
+                  .form-group
+                    a.btn.btn-default(href='/editor?target=#{data.replytarget}') 新帖
               
+              
+              
+                .form-group
+                  button#enterManagementMode.btn.btn-default(onclick='enterManagementMode()') 管理
                   
-              
-        if data.toppedThreads && data.toppedThreads.length>0
+              .ForumManagement(style='display:none;margin-top:12px;margin-bottom:12px')
+                
+                if data.permittedOperations.addThreadToCollection
+                  .form-inline
+                    .form-group
+                      .input-group.input-group-sm
+                        input#category.form-control(type='text' placeholder='输入收藏夹名称' value='')
+                        span.input-group-btn
+                          button#addSelectedToMyCollection.btn-sm.btn.btn-default(onclick='addSelectedToMyCollection()') 添加选中帖子到我的收藏
+
+                .form-inline(style='margin-top:10px')
+                  .form-group
+                    button.btn.btn-xs.btn-default(onclick='selectbtn()') 全选/不选  
+
+                  if data.permittedOperations.moveThread
+                    .form-group
+                      .btn-group
+                        button#moveThreadToForum.btn.btn-xs.btn-default.dropdown-toggle(data-toggle='dropdown' type='button') 移动到板块
+                          span.caret
+                        ul.dropdown-menu
+                            
+                          - var cindex = 0
+                          each group,gindex in data.forumlist        
+                            - var parent = group.parentforum
+                            each forum,findex in group.forumgroup 
+                              - var index = cindex + findex
+                              - var fid = forum._key; var name = forum.display_name
+                                li
+                                  a(href="javascript:moveThreadToForum('#{fid}')") #{name}
+                                  
+                            - cindex += group.forumgroup.length
+                  
+                    .form-group
+                      button#recyclebtn.btn.btn-xs.btn-danger(onclick='recyclebtn()') 送回收站
+                  
+
+            .col-md-12
+              nav
+                include interface_navigation_paging.jade
+                
+                - var paging = data.paging
+                - var digest = data.digest
+                - var class_str_all = digest?'':'active'
+                - var class_str_digest = digest?'active':''
+                
+                ul.pagination.NavigationPaging
+                  - var page = paging?paging.page:null
+                  li(class="#{class_str_all}")
+                    a(href='#{toQueryString({})}') 俱
+                    
+                  li(class="#{class_str_digest}")
+                    a(href='#{toQueryString({digest:true})}') 精
+            
+                ul.pagination.NavigationPaging
+                  each val,index in ['復序','帖序','施工中']
+                    if index==0
+                      li.active
+                        a(href='#')=val
+                    else
+                      li
+                        a(href='#')=val
+                
+              hr.hrNarrowSpace  
+                
+          if data.toppedThreads && data.toppedThreads.length>0
+            .ForumThreadList
+              each thread,index in data.toppedThreads
+                include interface_forum_singlethread.jade
+            //hr.hrNarrowSpace
+                
           .ForumThreadList
-            each thread,index in data.toppedThreads
+            each thread,index in data.threads
               include interface_forum_singlethread.jade
-          //hr.hrNarrowSpace
-              
-        .ForumThreadList
-          each thread,index in data.threads
-            include interface_forum_singlethread.jade
 
-        .row
-          .col-md-12
-            nav
-              include interface_navigation_paging.jade
-          
-            if data.replytarget
-              a.btn.btn-default(style="margin-top:10px" href='/editor?target=#{data.replytarget}') 新帖
-          
+          .row
+            .col-md-12
+              nav
+                include interface_navigation_paging.jade
+            
+              if data.replytarget
+                a.btn.btn-default(style="margin-top:10px" href='/editor?target=#{data.replytarget}') 新帖
+            
+      .col-sm-3.col-md-2
+        -var skipOtherParent = true
+        include interface_forums_list.jade
+        -skipOtherParent=false
+        
       .col-sm-3.col-md-2
         include interface_forums_list.jade
               

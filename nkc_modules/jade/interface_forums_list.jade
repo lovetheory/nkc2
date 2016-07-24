@@ -1,12 +1,13 @@
-.panel.panel-default
-  .panel-heading
-    .f12 一览
-  .panel-body
+.nkcpanel
   
-    - var cindex = 0
-    each group,gindex in data.forumlist
-      - var groupcolor = Math.floor(Math.random()*16777216).toString('16')
-      - var parent = group.parentforum
+  - var cindex = 0
+  each group,gindex in data.forumlist
+    - var groupcolor = Math.floor(Math.random()*16777216).toString('16')
+    - var parent = group.parentforum
+    
+    -var skip = (skipOtherParent&&(parent._key!=data.forum.parentid))
+    
+    if !skip
       .ForumsListBody.ForumsListGroupItem
         
         a.lighttext(href='/f/#{parent._key}') #{parent?parent.display_name:''}
@@ -27,9 +28,10 @@
               span #{f.display_name} 
           .ForumsListCountNumber(style='color:brown;') #{f.count_posts_today||""}
         
-      hr.hrNarrowSpace
+      if !skipOtherParent
+        hr.hrNarrowSpace
       - cindex += group.forumgroup.length
-  
-  
+    
+    
 
-        
+          
