@@ -5,7 +5,7 @@
     - var groupcolor = Math.floor(Math.random()*16777216).toString('16')
     - var parent = group.parentforum
     
-    -var skip = (skipOtherParent&&(parent._key!=data.forum.parentid))
+    -var skip = (skipOtherParent&&(parent._key!=data.forum.parentid&&parent._key!=data.forum._key))
     
     if !skip
       .ForumsListBody.ForumsListGroupItem

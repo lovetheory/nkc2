@@ -47,8 +47,9 @@ block content
     .ka
       - var cindex = 0
       each group,gindex in data.grouparray
-        span(style='font-size:17pt;margin-right:10px;') #{group.parentforum.display_name}
-        span #{group.parentforum.description}
+        -var p = group.parentforum
+        a(href='/f/#{p._key}' style='font-size:17pt;margin-right:10px;') #{p.display_name}
+        span #{p.description}
         hr.hrNarrowSpace
         .row
           

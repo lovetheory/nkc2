@@ -545,6 +545,36 @@ table.viewForum = {
     })
     .then(res=>{
       data.toppedThreads = res
+
+      return AQL(`
+        for f in forums
+        filter f.parentid==@parentid
+        sort f.order
+
+        let class = f.class
+
+        filter has(@contentClasses,TO_STRING(class)) /*content ctrl*/
+
+        let threads =
+        (
+          for t in threads
+
+          filter t.fid == f._key && t.disabled==null
+          sort t.fid desc,t.disabled desc, t.tlm desc
+          limit 6
+
+          let oc = document(posts,t.oc)
+          let ocuser = document(users,t.uid)
+          return merge(t,{oc,ocuser})
+        )
+        let nf = merge(f,{threads})
+
+        return nf
+        `,{parentid:data.forum._key||999,contentClasses:params.contentClasses}
+      )
+    })
+    .then(res=>{
+      data.forums = res
       return data
     })
   },
@@ -903,17 +933,17 @@ table.viewQuestions = {
 
       return AQL(`
         let byuser = (
-            for q in questions
-            collect username = (q.username||document(users,q.uid).username) with count into number
-            sort number desc
-            return {username,number}
+          for q in questions
+          collect username = (q.username||document(users,q.uid).username) with count into number
+          sort number desc
+          return {username,number}
         )
 
         let bycategory = (
-            for q in questions
-            collect category = q.category with count into number
-            sort number desc
-            return {category,number}
+          for q in questions
+          collect category = q.category with count into number
+          sort number desc
+          return {category,number}
         )
 
         return {byuser,bycategory}
