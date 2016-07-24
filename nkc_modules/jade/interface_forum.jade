@@ -32,7 +32,7 @@ block content
 
       .col-sm-9.col-md-10
         //split 10/12 for post area
-        .nkcpanel
+        #fullwidthpanel.nkcpanel
           .row
             .col-md-12
               //img(src='http://bbs.kechuang.org/themes/site/dingzhi/images/logo.png')
@@ -60,7 +60,7 @@ block content
         if hasChildren
           each forum,index in data.forums
             -var f=forum;var p=data.forum
-            .nkcpanel
+            .nkcpanel#fullwidthpanel
               .HomeForumTitle
                 - var forumcolor = f.color||p.color||'#eee'
                 - var url = '/f/'+f._key; url = seo_reverse_rewrite(url)
@@ -82,7 +82,7 @@ block content
                   include interface_forum_singlethread.jade
           
         if !hasChildren  
-          .nkcpanel
+          .nkcpanel#fullwidthpanel
             .row
               .col-xs-12
                 .form-inline(style='margin-top:12px;margin-bottom:12px')
