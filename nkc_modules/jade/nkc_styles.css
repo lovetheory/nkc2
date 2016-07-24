@@ -602,7 +602,19 @@ line-height: 1.4;
   margin-bottom: 5px;
 }
 
-.ThreadPostBody *+p{margin-top: 20px;/* margin-bottom: 11px; */}
+.ThreadPostBody p+p{margin-top: 18px;/* margin-bottom: 11px; */}
+.ThreadPostBody p+*{}
+.ThreadPostBody *+p{}
+
+  .ThreadPostBody li{
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.ThreadPostBody li li{
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
 
 .ThreadPostBody span.xbbcode-code{
 
@@ -611,8 +623,8 @@ margin-top: 5px;
 margin-bottom: 5px;
 }
 .ThreadPostBody hr{
-  margin-top: 9px;
-  margin-bottom: 9px;
+  margin-top: 12px;
+  margin-bottom: 12px;
 }
 
 .ThreadPostAvatar{
