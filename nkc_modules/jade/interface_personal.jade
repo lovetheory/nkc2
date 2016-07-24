@@ -39,21 +39,22 @@ block content
           p 个人简介
           textarea#description(placeholder='个人简介') #{user.description}
           br
-          p Colorcode
+          p Colorcode，作为页面背景的颜色，有时显示在用户名的左侧成一个小圆圈。
           input#color(placeholder='例如：#159' value='#{user.color||""}')
-          br
+          hr
           p 关注板块id（用半角逗号分隔）（后来我发现有的同学非要用全角逗号，所以我只好写了兼容代码）
           .form-group
             input#focus_forums(placeholder='例如：81,373' value='#{user.focus_forums||""}')
           
           if data.forumlist
-            p 板块id可参考：
+            p 板块id可参考这个列表：
             .form-group
               include forumlist_dropdown.jade
             p 被关注的板块会显示在“板块”页的顶部，无需向下翻动。
           
+          hr
           .form-group
-            button.btn.btn-default#submitpersonalsetting(onclick='submitpersonalsetting()') 提交修改
+            button.btn.btn-default#submitpersonalsetting(onclick='submitpersonalsetting()') 提交个人资料修改
           
   include debug_output.jade
 block scripts
