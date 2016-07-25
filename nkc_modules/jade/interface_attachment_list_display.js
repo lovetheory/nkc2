@@ -18,6 +18,14 @@ var ResourceListItem = React.createClass({
   }
 })
 
+var MoarButton = React.createClass({
+  render:function(){
+    return (
+      <button onClick={showMoreAttachments} className="btn btn-default">更多</button>
+    )
+  }
+})
+
 var ResourceList = React.createClass({
   render:function(){
     var list = this.props.list
@@ -32,6 +40,7 @@ var ResourceList = React.createClass({
     return(
       <div className="ResourceList">
         {renderedNodes}
+        <MoarButton/>
       </div>
     )
   }
@@ -45,10 +54,10 @@ var list_display = function(options){
 
   list_father.innerHTML = '';//clear
   list_display.rlist = [];
-
+  list_display.quota = 30;
   list_display.refresh = function(){
     //obtain rlist here
-    nkcAPI('getResourceOfCurrentUser',{})
+    nkcAPI('getResourceOfCurrentUser',{quota:list_display.quota})
     .then(rarr=>{
       list_display.rlist = rarr;
       React.render(
@@ -59,11 +68,20 @@ var list_display = function(options){
     .catch(jalert)
   }
 
+  list_display.showMore = function(){
+    list_display.quota+=10;
+    list_display.refresh();
+  }
+
   return list_display;
 }
 
 var list = list_display();
 list.refresh();
+
+function showMoreAttachments(){
+  list.showMore();
+}
 
 function content_insert_resource(event)
 {

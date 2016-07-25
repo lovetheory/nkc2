@@ -154,15 +154,17 @@ table.getResourceOfCurrentUser={
     if(!params.user)throw 'must login'
     var uid = params.user._key
 
+    var quota = Number(params.quota||30)
+
     return AQL(
       `
       for r in resources
       filter r.uid == @uid && r.pid == null
       sort r.toc desc
-      limit 30
+      limit @quota
       return r
       `,{
-        uid,
+        uid,quota,
       }
     )
   }
