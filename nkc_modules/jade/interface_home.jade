@@ -44,25 +44,52 @@ block content
           科创题库现已面向1学术分以上会员开放。为科创入站测试[添加你的题目](/api/operation?&operation=viewQuestions)吧！
         br
     //hr.hrNarrowSpace
-    .ka
-      - var cindex = 0
-      each group,gindex in data.grouparray
-        -var p = group.parentforum
-        a(href='/f/#{p._key}' style='font-size:17pt;margin-right:10px;') #{p.display_name}
-        span #{p.description}
-        hr.hrNarrowSpace
-        .row
+    if 0
+      .ka
+        - var cindex = 0
+        each group,gindex in data.grouparray
+          -var p = group.parentforum
+          a(href='/f/#{p._key}' style='font-size:17pt;margin-right:10px;') #{p.display_name}
+          span #{p.description}
+          hr.hrNarrowSpace
+          .row
+            
+            
+            
+            - var parent = group.parentforum
+            each forum,findex in group.forumgroup 
+              - var index = cindex + findex
+              include interface_home_singleforum.jade
           
+          - cindex += group.forumgroup.length
+      
+    if 1
+      .ka
+        - var cindex = 0
+        each group,gindex in data.grouparray
+          -var p = group.parentforum
+          .row
+
+            -var parent = group.parentforum
+            -var forum = parent
+            -var ts = []; group.forumgroup.map(item=>{ts=ts.concat(item.threads)})
+            -ts = ts.sort((i1,i2)=>i1.tlm>i2.tlm).slice(0,3)
+            -forum.threads = ts
+            -var sum = (tot,cur)=>tot+cur
+            -var sfk = (key)=>group.forumgroup.map(k=>k[key]).reduce(sum)
+            
+            -var count_posts_today = sfk('count_posts_today')
+            -var count_threads = sfk('count_threads')
+            -var count_posts = sfk('count_posts')
+            
+            -Object.assign(forum,{count_posts_today,count_posts,count_threads})
+            -var index = 0
+            
+              //each forum,findex in group.forumgroup 
+              //- var index = cindex + findex
+              include interface_home_singleforum.jade
           
-          
-          - var parent = group.parentforum
-          each forum,findex in group.forumgroup 
-            - var index = cindex + findex
-            include interface_home_singleforum.jade
-        
-        br
-        
-        - cindex += group.forumgroup.length
+          - cindex += group.forumgroup.length
     
     .row
       .col-md-12(style='margin-bottom:10px;')
