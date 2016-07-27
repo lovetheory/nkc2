@@ -1,5 +1,8 @@
 select#TargetForum.form-control
   each fg in data.forumlist
-    option ----
+    if listParent
+      option #{fg.parentforum._key}:#{fg.parentforum.display_name} ====
+    else
+      option ----
     each f in fg.forumgroup
       option #{f._key}:#{f.display_name}

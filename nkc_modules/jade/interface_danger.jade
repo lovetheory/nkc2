@@ -19,6 +19,7 @@ block content
           button#BanThisUser.btn.btn-warning(type='submit') （封禁当前载入的用户）
       .col-md-6    
         .form-group
+          -var listParent = true
           include forumlist_dropdown.jade
         .form-group
           button#LoadDocFromSelection.btn.btn-default(type='submit') 拉取板块
