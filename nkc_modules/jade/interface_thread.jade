@@ -121,14 +121,11 @@ block content
         
         //forum profile section
         .nkcpanel
-          div
-            - var forumname = data.forum.display_name
-            a.f12(href='/f/#{fid}') #{forumname} 
-          
-          hr.hrNarrowSpace
-          
-          div!=markdown(data.forum.description)
+          include interface_thread_forumprofile.jade
         
+        .nkcpanel
+          ul.HomeFriendlyLink
+            include nkc_footer_links.jade
         //include interface_forums_list.jade
 
           

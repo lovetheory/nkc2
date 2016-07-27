@@ -26,26 +26,31 @@ block title
       margin-right:15px;
     }
 
-block content        
+block content   
+  
+  -var forumIsParent = data.forum.type&&data.forum.type=='category'
+  -var hasChildren = data.forum.type&&data.forum.type=='category'&&data.forums&&data.forums.length
+  
   .container-fluid(style='max-width:1400px;')
     .row
 
       .col-sm-9.col-md-10
+      
         //split 10/12 for post area
         #fullwidthpanel.nkcpanel
-          .row
-            .col-md-12
-              //img(src='http://bbs.kechuang.org/themes/site/dingzhi/images/logo.png')
+          if !forumIsParent
+            //if forum is not category
+            .row
+              .col-xs-12.col-md-8
+                //img(src='http://bbs.kechuang.org/themes/site/dingzhi/images/logo.png')
+                
+                -var forum = data.forum
+                .ForumTitleCircle(style='background-color:#{forum.color}')
+                .ForumName #{forum.display_name}
+
+                if data.forum.description
+                  div!=markdown_safe(data.forum.description)
               
-              -var forum = data.forum
-              .ForumTitleCircle(style='background-color:#{forum.color}')
-              .ForumName #{forum.display_name}
-          
-            .col-xs-8
-              if data.forum.description
-                div!=markdown_safe(data.forum.description)
-            
-            if data.forum.type!='category'  
               .col-xs-4
                 p.f12
                   span 今日: #{data.forum.count_posts_today} 主题: #{data.forum.count_threads} 回复: #{data.forum.count_posts}
@@ -55,9 +60,25 @@ block content
                     - var moderators = data.forum.moderators
                     each k in moderators
                       a.d-inline.margin-right(href='/user_profile_byname/#{k}') #{k}
+          
+          if forumIsParent
+            //if forum is category
+            .ForumNavigation1
+              each group,index in data.forumlist
+                -var gpf = group.parentforum
+                -var name = gpf.display_name
+                -var url = '/f/'+gpf._key
+                a(href='#{url}' class='#{gpf._key==data.forum._key?"active":""}') #{name}
+              
+            .ForumNavigation2
+              each forum,index in data.forums
+                -var f = forum
+                -var name = f.display_name
+                -var url = '/f/'+f._key; url=seo_reverse_rewrite(url)
+                a(href='#{url}') #{name}
         
-        -var hasChildren = data.forum.type&&data.forum.type=='category'&&data.forums&&data.forums.length
-        if hasChildren
+        if hasChildren && 0
+          //older ver, discarded
           each forum,index in data.forums
             -var f=forum;var p=data.forum
             .nkcpanel#fullwidthpanel
@@ -80,6 +101,15 @@ block content
               .ForumThreadList
                 each thread,index in forum.threads
                   include interface_forum_singlethread.jade
+                  
+        if hasChildren
+          -var threads = data.forums.map(i=>i.threads).reduce((a,b)=>b.concat(a)).sort((a,b)=>b.tlm-a.tlm).slice(0,30)
+          
+          .nkcpanel
+            .ForumThreadList
+              each thread,index in threads
+                include interface_forum_singlethread.jade
+
           
         if !hasChildren  
           .nkcpanel#fullwidthpanel
@@ -178,14 +208,23 @@ block content
                 if data.replytarget
                   a.btn.btn-default(style="margin-top:10px" href='/editor?target=#{data.replytarget}') 新帖
               
-      .col-sm-3.col-md-2
+      .col-sm-3.col-md-2.hidden-xs.hidden-sm
+        .nkcpanel#fullwidthpanel
+          img(src='/resources/site_specific/kclogo_umaru1_nc.png' style='max-width:100%')
+        
         -var skipOtherParent = true
         include interface_forums_list.jade
         -skipOtherParent=false
+          
+        .nkcpanel
+          include interface_thread_forumprofile.jade
+          
+        .nkcpanel
+          ul.HomeFriendlyLink
+            include nkc_footer_links.jade
         
-      .col-sm-3.col-md-2
-        include interface_forums_list.jade
-              
+        if !forumIsParent
+          include interface_forums_list.jade
   include debug_output.jade
 
 block scripts

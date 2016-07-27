@@ -73,7 +73,7 @@ block content
             -var parent = group.parentforum
             -var forum = parent
             -var ts = []; group.forumgroup.map(item=>{ts=ts.concat(item.threads)})
-            -ts = ts.sort((i1,i2)=>i1.tlm<i2.tlm).slice(0,3)
+            -ts = ts.sort((a,b)=>b.tlm-a.tlm).slice(0,3)
             -forum.threads = ts
             -var sum = (tot,cur)=>tot+cur
             -var sfk = (key)=>group.forumgroup.map(k=>k[key]).reduce(sum)

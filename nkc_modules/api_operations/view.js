@@ -535,7 +535,7 @@ table.viewForum = {
           let ocuser = document(users,oc.uid)
           let lmuser = document(users,lm.uid)
 
-          return merge(t,{oc,ocuser,lmuser})
+          return merge(t,{oc,lm,ocuser,lmuser})
           `,{fid}
         )
       }
@@ -561,11 +561,14 @@ table.viewForum = {
 
           filter t.fid == f._key && t.disabled==null
           sort t.fid desc,t.disabled desc, t.tlm desc
-          limit 6
+          limit 30
 
           let oc = document(posts,t.oc)
           let ocuser = document(users,t.uid)
-          return merge(t,{oc,ocuser})
+          let lm = document(posts,t.lm)
+          let lmuser = document(users,lm.uid)
+
+          return merge(t,{oc,ocuser,lm,lmuser})
         )
         let nf = merge(f,{threads})
 
