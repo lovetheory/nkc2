@@ -5,7 +5,7 @@
     a(href='/sms?receiver=#{user.username}') 发私信
     
     if data.permittedOperations.banUser
-      a(href="javascript:nkcAPI('banUser',{uid:'#{user._key}'}).then(jalert).catch(jwarning)") 一键封禁此人（慎点）
+      a(href='javascript:void(0)' onclick="nkcAPI('banUser',{uid:'#{user._key}'}).then(jalert).catch(jwarning)") 一键封禁此人（慎点）
     
     br
     span 学术分 #{user.xsf||0}
