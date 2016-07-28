@@ -65,23 +65,11 @@ block content
               if po.moveThread
                 .form-inline
                   .form-group
-                    .btn-group
-                      button#moveThreadToForum.btn.btn-xs.btn-default.dropdown-toggle(data-toggle='dropdown' type='button') 移动到板块
-                        span.caret
-                      ul.dropdown-menu
-                          
-                        - var cindex = 0
-                        each group,gindex in data.forumlist        
-                          - var parent = group.parentforum
-                          if gindex
-                            li.divider(role='separator')
-                          each forum,findex in group.forumgroup 
-                            - var index = cindex + findex
-                            - var fid = forum._key; var name = forum.display_name
-                              li
-                                a(href="javascript:moveThreadToForum('#{data.thread._key}','#{fid}')") #{name}
+
+                    include forumlist_dropdown.jade
+                    button(onclick="javascript:moveThreadTo('#{data.thread._key}')") 移动
                                 
-                          - cindex += group.forumgroup.length
+
                 
                   .form-group
                     button#recyclebtn.btn.btn-xs.btn-danger(onclick="recycleThread('#{data.thread._key}')") 送回收站

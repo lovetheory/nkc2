@@ -154,8 +154,20 @@ function promptCredit(pid){
   return null
 }
 
+function extractfid(){
+  var targetforum = gv('TargetForum').trim().split(':')
+  if(targetforum.length!==2)return screenTopWarning('请选择一个目标')
+  targetforum = targetforum[0]
+  return targetforum
+}
+
+
+function moveThreadTo(tid){
+  var fid = extractfid()
+  moveThreadToForum(tid,fid);
+}
+
 function moveThreadToForum(tid,fid){
-  if(!confirm('确定要把 '+tid+' 移动到 '+fid+' 吗？'))return;
   nkcAPI('moveThread',{tid:tid,fid:fid})
   .then(function(){
     screenTopAlert(tid+' moved to '+fid)
