@@ -121,7 +121,9 @@ block content
         
         //forum profile section
         .nkcpanel
-          include interface_thread_forumprofile.jade
+          -var f = data.forum
+          -var p = data.forum
+          include interface_forumprofile2.jade
         
         .nkcpanel
           ul.HomeFriendlyLink

@@ -1,0 +1,12 @@
+
+div
+  - var forumname = f.display_name
+  //a.f12(href='/f/#{fid}') #{forumname} 
+  - var forumcolor = f.color||p.color||'#eee'
+  
+  .HomeForumTitleCircle(style='background-color:#{forumcolor}')
+  a.HomeForumTitlePrimary(href='#{url}') #{f.display_name}
+
+hr.hrNarrowSpace
+
+div!=markdown(f.description||'')

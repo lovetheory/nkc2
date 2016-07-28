@@ -34,7 +34,7 @@ block content
   .container-fluid(style='max-width:1400px;')
     .row
 
-      .col-sm-9.col-md-10
+      .col-md-9
       
         //split 10/12 for post area
         #fullwidthpanel.nkcpanel
@@ -70,12 +70,16 @@ block content
                 -var url = '/f/'+gpf._key
                 a(href='#{url}' class='#{gpf._key==data.forum._key?"active":""}') #{name}
               
-            .ForumNavigation2
+            .ForumNavigation2.row
               each forum,index in data.forums
                 -var f = forum
                 -var name = f.display_name
                 -var url = '/f/'+f._key; url=seo_reverse_rewrite(url)
-                a(href='#{url}') #{name}
+                -var p = data.forum
+                .col-xs-6.col-sm-4.col-md-3
+                  .ForumNaviProf
+                    include interface_forumprofile2.jade
+                  
         
         if hasChildren && 0
           //older ver, discarded
@@ -208,7 +212,7 @@ block content
                 if data.replytarget
                   a.btn.btn-default(style="margin-top:10px" href='/editor?target=#{data.replytarget}') 新帖
               
-      .col-sm-3.col-md-2.hidden-xs.hidden-sm
+      .col-md-3.hidden-xs.hidden-sm
         .nkcpanel#fullwidthpanel
           img(src='/resources/site_specific/kclogo_umaru1_nc.png' style='max-width:100%')
         
@@ -217,7 +221,9 @@ block content
         -skipOtherParent=false
           
         .nkcpanel
-          include interface_thread_forumprofile.jade
+          -var f = data.forum
+          -var p = data.forum
+          include interface_forumprofile2.jade
           
         .nkcpanel
           ul.HomeFriendlyLink

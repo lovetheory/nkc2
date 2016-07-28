@@ -384,12 +384,10 @@ vertical-align: middle;
 }
 .ForumNavigation2{
     /* background-color: #f3f3f3; */
-}
-.ForumNavigation2 a{
-    padding: 1px 7px 1px 7px;
-    display: inline-block;
+    margin-top: 10px;
 }
 
+.ForumNavigation2 .ForumNaviProf{/* border-left-color: #b78383; *//* border-left-style: solid; *//* padding-left: 10px; */}
 .NavigationPaging{
 
   margin: 0;
