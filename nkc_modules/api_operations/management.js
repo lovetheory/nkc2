@@ -81,6 +81,13 @@ table.disablePost = {
     })
     .then(()=>{
       return post.update({disabled:true})
+      .then(post=>{
+        var op = require('api_operations')
+        return op.table.updateThread.operation({tid:post.model.tid})
+        .then(()=>{
+          return 'success'
+        })
+      })
     })
   },
   requiredParams:{

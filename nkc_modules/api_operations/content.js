@@ -616,6 +616,19 @@ function updateAllForums(){
 
 }
 
+table.updateThread = {
+  init:()=>{
+    queryfunc.createIndex('posts',{
+      fields:['tid','disabled'],
+      type:'skiplist',
+      unique:'false',
+      sparse:'false',
+    })
+  },
+  operation:function(params) {
+    return update_thread(params.tid)
+  }
+}
 
 //在对thread或者post作操作之后，更新thread的部分属性以确保其反应真实情况。
 update_thread = (tid)=>{
@@ -632,14 +645,14 @@ update_thread = (tid)=>{
     )[0]
     let lm = (
       FOR p IN posts
-      FILTER p.tid == t._key //all post of that thread
+      FILTER p.tid == t._key && !p.disabled//all post of that thread
       sort p.toc desc //sort by creation time, descending
       limit 0,1 //get first
       return p
     )[0]
     let count = (
       for p in posts
-      filter p.tid == t._key
+      filter p.tid == t._key && !p.disabled
       COLLECT WITH COUNT INTO k
       return k
     )[0]

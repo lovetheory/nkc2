@@ -52,7 +52,7 @@ module.exports = (function(){
       //use model itself if doc not specified
       return db.collection(this.collection).update(this.key,doc)
       .then(res=>{
-        this.model = doc
+        this.model = Object.assign(this.model||{},doc)
         return this
       })
     }
