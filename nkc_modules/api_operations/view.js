@@ -1023,12 +1023,15 @@ table.viewSMS = {
         for r in replies
         filter r.touid == @uid
         sort r.touid desc, r.toc desc
-        limit 30
+        limit 40
         let frompost = document(posts,r.frompid)
         let fromuser = document(users,frompost.uid)
         let touser = document(users,r.touid)
         let topost = document(posts,r.topid)
 
+        filter !frompost.disabled
+
+        limit 30
         return merge(r,{fromuser,frompost,topost,touser})
         `,{uid}
       )
