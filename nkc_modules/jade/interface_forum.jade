@@ -109,7 +109,7 @@ block content
         if hasChildren
           -var threads = data.forums.map(i=>i.threads).reduce((a,b)=>b.concat(a)).sort((a,b)=>b.tlm-a.tlm).slice(0,30)
           
-          .nkcpanel
+          .nkcpanel#fullwidthpanel
             .ForumThreadList
               each thread,index in threads
                 include interface_forum_singlethread.jade
