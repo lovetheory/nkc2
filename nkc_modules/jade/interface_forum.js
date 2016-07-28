@@ -32,9 +32,19 @@ function addColl(tid){
   .catch(jwarning)
 }
 
+function extractfid(){
+  var targetforum = gv('TargetForum').trim().split(':')
+  if(targetforum.length!==2)return screenTopWarning('请选择一个目标')
+  targetforum = targetforum[0]
+  return targetforum
+}
+
+function moveThreadTo(){
+  var fid = extractfid()
+  if(moveThreadToForum(fid))geid('moveThreadTo').disabled=true
+}
+
 function moveThreadToForum(fid){
-  if(!confirm('确定要把 选中帖子 移动到 '+fid+' 吗？'))return false;
-  geid('moveThreadToForum').disabled=true
 
   applyAll(function(tid){
     return moveThread(tid,fid)
