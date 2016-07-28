@@ -376,10 +376,10 @@ vertical-align: middle;
     /* margin-right: 15px; */
     padding: 1px 7px 1px 7px;
     border-radius: 4px;
-    color: #bfbfbf;
+    color: #909090;
 }
 .ForumNavigation1 .active{
-background-color: #909090;
+background-color: #f3834c;
 color: white;
 }
 .ForumNavigation2{
