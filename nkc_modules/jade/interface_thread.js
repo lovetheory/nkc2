@@ -155,6 +155,7 @@ function promptCredit(pid){
 }
 
 function moveThreadToForum(tid,fid){
+  if(!confirm('确定要把 '+tid+' 移动到 '+fid+' 吗？'))return;
   nkcAPI('moveThread',{tid:tid,fid:fid})
   .then(function(){
     screenTopAlert(tid+' moved to '+fid)

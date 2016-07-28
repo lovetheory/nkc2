@@ -21,14 +21,7 @@ function moveThread(tid,fid){
 }
 
 function recyclebtn(){
-  geid('recyclebtn').disabled = true
-  applyAll(function(item){
-    return moveThread(item,'recycle')
-  })
-  .then(function(){
-    window.location.reload()
-  })
-  .catch(jwarning)
+  if(moveThreadToForum('recycle'))geid('recyclebtn').disabled = true
 }
 
 function addColl(tid){
@@ -40,7 +33,9 @@ function addColl(tid){
 }
 
 function moveThreadToForum(fid){
+  if(!confirm('确定要把 选中帖子 移动到 '+fid+' 吗？'))return false;
   geid('moveThreadToForum').disabled=true
+
   applyAll(function(tid){
     return moveThread(tid,fid)
   })
@@ -48,6 +43,8 @@ function moveThreadToForum(fid){
     window.location.reload()
   })
   .catch(jwarning)
+
+  return true
 }
 
 function addSelectedToMyCollection(){
