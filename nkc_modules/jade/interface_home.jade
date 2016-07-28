@@ -76,7 +76,7 @@ block content
             -ts = ts.sort((a,b)=>b.tlm-a.tlm).slice(0,3)
             -forum.threads = ts
             -var sum = (tot,cur)=>tot+cur
-            -var sfk = (key)=>group.forumgroup.map(k=>k[key]).reduce(sum)
+            -var sfk = (key)=>group.forumgroup.map(k=>k[key]).reduce(sum,0)
             
             -var count_posts_today = sfk('count_posts_today')
             -var count_threads = sfk('count_threads')
