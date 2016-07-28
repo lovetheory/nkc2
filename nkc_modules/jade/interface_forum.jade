@@ -76,6 +76,17 @@ block content
                 -var name = f.display_name
                 -var url = '/f/'+f._key; url=seo_reverse_rewrite(url)
                 -var p = data.forum
+                if (forum!=null)
+                  if 1
+                    if index%4==0
+                      .clearfix.visible-lg-block
+                    if index%4==0
+                      .clearfix.visible-md-block
+                    if index%3==0
+                      .clearfix.visible-sm-block
+                    if index%2==0
+                      .clearfix.visible-xs-block
+                      
                 .col-xs-6.col-sm-4.col-md-3
                   .ForumNaviProf
                     include interface_forumprofile2.jade
