@@ -239,6 +239,6 @@ block scripts
   script(src='/interface_forum.js')
   
   -var isModerator = data.permittedOperations.moveThread
-  if isModerator
+  if isModerator&&!forumIsParent
     script.
       enterManagementMode()

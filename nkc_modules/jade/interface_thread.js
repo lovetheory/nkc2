@@ -153,3 +153,16 @@ function promptCredit(pid){
   }
   return null
 }
+
+function moveThreadToForum(tid,fid){
+  nkcAPI('moveThread',{tid:tid,fid:fid})
+  .then(function(){
+    screenTopAlert(tid+' moved to '+fid)
+    window.location.reload()
+  })
+  .catch(jwarning)
+}
+
+function recycleThread(tid){
+  moveThreadToForum(tid,'recycle')
+}
