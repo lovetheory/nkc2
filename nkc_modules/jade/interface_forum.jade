@@ -41,7 +41,7 @@ block content
           if !forumIsParent
             //if forum is not category
             .row
-              .col-xs-12.col-md-8
+              .col-xs-7.col-sm-8.col-md-8
                 //img(src='http://bbs.kechuang.org/themes/site/dingzhi/images/logo.png')
                 
                 -var forum = data.forum
@@ -51,7 +51,7 @@ block content
                 if data.forum.description
                   div!=markdown_safe(data.forum.description)
               
-              .col-xs-4
+              .col-xs-5.col-sm-4.col-md-4
                 p.f12
                   span 今日: #{data.forum.count_posts_today} 主题: #{data.forum.count_threads} 回复: #{data.forum.count_posts}
       
@@ -119,14 +119,11 @@ block content
           .nkcpanel#fullwidthpanel
             .row
               .col-xs-12
-                .form-inline(style='margin-top:12px;margin-bottom:12px')
+                .form-group(style='margin-top:12px;margin-bottom:12px')
                   if data.replytarget
-                    .form-group
-                      a.btn.btn-default(href='/editor?target=#{data.replytarget}') 新帖
+                    
+                    a.btn.btn-default(href='/editor?target=#{data.replytarget}') 新帖
                 
-                
-                
-                  .form-group
                     button#enterManagementMode.btn.btn-default(onclick='enterManagementMode()') 管理
                     
                 .ForumManagement(style='display:none;margin-top:12px;margin-bottom:12px')
