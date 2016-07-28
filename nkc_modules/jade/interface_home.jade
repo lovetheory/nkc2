@@ -11,7 +11,8 @@ block title
   title #{data.site.name} - #{data.site.description}
 
 block content
-  .container
+  -var mainContainer1400 = true
+  .container-fluid(style='max-width:1400px;')
     .row
       .col-md-12
         -var quotes=['今天，你看书了吗？','实践必须和理论相结合','注意实验安全！','华语世界最纯粹的科技/文艺/爱好社区, Since 2001.','从这里开始你的发现之旅。','发展科技爱好，倡导科学理性','那榆蔭下的一潭，不是清泉，是天上虹。','揉碎在浮藻間，沉澱著彩虹似的夢。']
