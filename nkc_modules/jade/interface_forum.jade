@@ -206,11 +206,11 @@ block content
                   include interface_navigation_paging.jade
               
                 if data.replytarget
-                  a.btn.btn-default(style="margin-top:10px" href='/editor?target=#{data.replytarget}') 新帖
+                  a.btn.btn-default(style="margin-top:13px" href='/editor?target=#{data.replytarget}') 新帖
               
       .col-md-3.hidden-xs.hidden-sm
-        .nkcpanel#fullwidthpanel
-          img(src='/resources/site_specific/kclogo_umaru1_nc.png' style='max-width:100%')
+        .nkcpanel
+          include forum_logo_wisdom.jade
         
         -var skipOtherParent = true
         include interface_forums_list.jade
