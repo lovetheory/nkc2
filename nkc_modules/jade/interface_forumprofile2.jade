@@ -6,6 +6,8 @@ div
   
   .HomeForumTitleCircle(style='background-color:#{forumcolor}')
   a.HomeForumTitlePrimary(href='#{url}') #{f.display_name}
+  if f.count_posts_today
+    span.reddish  (今日 #{f.count_posts_today}
 
 hr.hrNarrowSpace
 
