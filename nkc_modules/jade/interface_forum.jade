@@ -45,8 +45,15 @@ block content
                 //img(src='http://bbs.kechuang.org/themes/site/dingzhi/images/logo.png')
                 .ForumNavigation1
                   each group,index in data.forumlist
+
                     -var gpf = group.parentforum
                     if gpf._key == data.forum.parentid
+                    
+                      -var gpf = group.parentforum
+                      -var name = gpf.display_name
+                      -var url = '/f/'+gpf._key
+                      a(href='#{url}' class='parentforum') #{name} /
+                    
                       each f,findex in group.forumgroup
                         -var name = f.display_name
                         -var url = '/f/'+f._key
