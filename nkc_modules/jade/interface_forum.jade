@@ -41,8 +41,17 @@ block content
           if !forumIsParent
             //if forum is not category
             .row
-              .col-xs-7.col-sm-8.col-md-8
+              .col-xs-12
                 //img(src='http://bbs.kechuang.org/themes/site/dingzhi/images/logo.png')
+                .ForumNavigation1
+                  each group,index in data.forumlist
+                    -var gpf = group.parentforum
+                    if gpf._key == data.forum.parentid
+                      each f,findex in group.forumgroup
+                        -var name = f.display_name
+                        -var url = '/f/'+f._key
+                        a(href='#{url}' class='#{f._key==data.forum._key?"active":""}') #{name}
+                  
                 
                 -var forum = data.forum
                 .ForumTitleCircle(style='background-color:#{forum.color}')
@@ -51,12 +60,12 @@ block content
                 if data.forum.description
                   div!=markdown_safe(data.forum.description)
               
-              .col-xs-5.col-sm-4.col-md-4
-                p.f12
-                  span 今日: #{data.forum.count_posts_today} 主题: #{data.forum.count_threads} 回复: #{data.forum.count_posts}
+              
+                
+                span(style='margin-right:20px;') 今日: #{data.forum.count_posts_today} 主题: #{data.forum.count_threads} 回复: #{data.forum.count_posts}
       
                 if data.forum.moderators
-                  span.f12 版主：
+                  span 版主：
                     - var moderators = data.forum.moderators
                     each k in moderators
                       a.d-inline.margin-right(href='/user_profile_byname/#{k}') #{k}
@@ -74,7 +83,7 @@ block content
               each forum,index in data.forums
                 -var f = forum
                 -var name = f.display_name
-                -var url = '/f/'+f._key; url=seo_reverse_rewrite(url)
+                -var url = '/f/'+f._key; // url=seo_reverse_rewrite(url)
                 -var p = data.forum
                 if (forum!=null)
                   if 1
