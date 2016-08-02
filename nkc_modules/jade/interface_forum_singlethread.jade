@@ -17,7 +17,7 @@
     .avatar-left
       - var title = user?getUserDescription(user):''
       a(href='/user_profile/#{uid}' title='#{title}')
-        img.ForumThreadAvatar(src='/avatar_small/#{uid}')
+        img.ForumThreadAvatar(src='/avatar/#{uid}')
     
     .content-right
       .ForumThreadTitle
