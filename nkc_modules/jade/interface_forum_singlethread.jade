@@ -8,6 +8,9 @@
 -var has_file = thread.has_file
 -var has_image = thread.has_image
 -var topped = thread.topped
+-var belong_forum = null; var pf=null
+-data.forumlist.map(group=>{group.forumgroup.map(f=>{if(f._key==thread.fid){belong_forum=f;pf=group.parentforum;}})})
+-var forumcolor = belong_forum.color||pf.color||'#aaa'
 
 .ForumThreadItem
   .CollectionCategoryThreadActions
@@ -36,6 +39,9 @@
           .tbl2(style='display:table-cell')
             - var brief = oc.c.replace(/\[.*?]/g,'').trim().slice(0,100)
             //span.f12.ForumThreadDigestText [精]
+            
+            if belong_forum
+              span.ForumThreadHasImage(style='background-color:#{forumcolor};') #{belong_forum.abbr||belong_forum.display_name}
             
             if topped
               span.ForumThreadHasImage.ForumThreadTopped 顶
