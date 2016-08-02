@@ -43,22 +43,23 @@ block content
             .row
               .col-xs-12
                 //img(src='http://bbs.kechuang.org/themes/site/dingzhi/images/logo.png')
-                .ForumNavigation1
-                  each group,index in data.forumlist
+                if(data.forum._key)
+                  .ForumNavigation1
+                    each group,index in data.forumlist
 
-                    -var gpf = group.parentforum
-                    if gpf._key == data.forum.parentid
-                    
                       -var gpf = group.parentforum
-                      -var name = gpf.display_name
-                      -var url = '/f/'+gpf._key
-                      a(href='#{url}' class='parentforum') #{name} /
+                      if gpf._key == data.forum.parentid
+                      
+                        -var gpf = group.parentforum
+                        -var name = gpf.display_name
+                        -var url = '/f/'+gpf._key
+                        a(href='#{url}' class='parentforum') #{name} /
+                      
+                        each f,findex in group.forumgroup
+                          -var name = f.display_name
+                          -var url = '/f/'+f._key
+                          a(href='#{url}' class='#{f._key==data.forum._key?"active":""}') #{name}
                     
-                      each f,findex in group.forumgroup
-                        -var name = f.display_name
-                        -var url = '/f/'+f._key
-                        a(href='#{url}' class='#{f._key==data.forum._key?"active":""}') #{name}
-                  
                 
                 -var forum = data.forum
                 .ForumTitleCircle(style='background-color:#{forum.color}')
@@ -207,8 +208,8 @@ block content
                 each thread,index in data.toppedThreads
                   include interface_forum_singlethread.jade
               //hr.hrNarrowSpace
-            
-          
+              .ForumToppedSplitter - 以上是置顶 -
+
             .ForumThreadList
               each thread,index in data.threads
                 if data.toppedThreads && (data.toppedThreads.map(item=>item._key).indexOf(thread._key)>=0)
