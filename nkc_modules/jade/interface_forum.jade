@@ -227,7 +227,8 @@ block content
           include forum_logo_wisdom.jade
         
         -var skipOtherParent = true
-        include interface_forums_list.jade
+        if data.forum._key
+          include interface_forums_list.jade
         -skipOtherParent=false
           
         .nkcpanel
