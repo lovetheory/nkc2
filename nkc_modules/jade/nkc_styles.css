@@ -625,6 +625,7 @@ line-height: 1.4;
   margin-top: 5px;
   margin-bottom: 5px;
 }
+.ThreadPostBody video{max-width: 100%;}
 
 .ThreadPostBody p+p{margin-top: 18px;/* margin-bottom: 11px; */}
 .ThreadPostBody p+*{}
