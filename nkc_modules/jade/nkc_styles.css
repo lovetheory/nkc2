@@ -536,10 +536,13 @@ blockquote {
 }
 
 .ThreadTitleForumLink{
-display: block;
-margin-bottom: 0;
-color: #656565;
-font-size: 14pt;
+display: inline-block;
+margin-bottom: 0;
+color: #e88e2d;
+font-size: 14pt;
+}
+.ThreadTitleForumLinkParent{
+    color: #b3b3b3;
 }
 
 .PostTitleAuxillaryLink{
@@ -555,7 +558,7 @@ blockquote {
   font-size: 20pt;
   margin-bottom: 5px;
   margin-top: 0;
-  display: inline-block;
+  display: block;
 }
 
 .ThreadTitleText:hover, .ThreadTitleText:focus{

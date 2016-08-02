@@ -24,16 +24,23 @@ block title
 block content
   .container
     .row
-      
+
       .col-sm-12.col-md-9.col-lg-9
         #fullwidthpanel.ThreadBox.nkcpanel
           - var thread = data.thread
           - var fid = thread.fid
           .ThreadTitle
             - var forumname = data.forum.display_name
+            - var parent = null
+            - if(data.forumlist)data.forumlist.map(item=>{item.forumgroup.map(f=>{if(f._key==data.forum._key){parent=item.parentforum}})})
+            
+            if parent
+              a.ThreadTitleForumLink.ThreadTitleForumLinkParent(href='/f/#{parent._key}') #{parent.display_name}
+              span  / 
+            
             a.ThreadTitleForumLink(href='/f/#{fid}') #{forumname} 
             
-            a.ThreadTitleText(href='/t/#{data.thread._key}') #{thread.oc.t}
+            span.ThreadTitleText(href='/t/#{data.thread._key}') #{thread.oc.t}
               
             //.ThreadTitleAuxillary.d-inline.lighttext
                               
@@ -62,6 +69,8 @@ block content
                 else
                   a(href="javascript:setTopped('#{data.thread._key}')") 设置置顶
                   
+              a(href='/t/#{data.thread._key}') 本帖地址
+              
               if po.moveThread
                 .form-inline
                   .form-group
