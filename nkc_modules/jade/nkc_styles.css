@@ -6,7 +6,7 @@
   text-align:right;
 }
 .lighttext {
-  color:#bbb;
+  color: #ccc;
   font-size: 9pt;
 }
 .f16 {
@@ -427,7 +427,7 @@ blockquote {
 
 .ForumThreadList{
 /* border-collapse: collapse; */
-padding-left: 6px;
+/* padding-left: 6px; */
 /* display: table; */
 /* background: #ecf1ef; */
 border-radius: 5px;
@@ -452,7 +452,7 @@ blockquote {
   color: #505c65;
 }
 .ForumThreadTitle{
-  margin-top: 1px;
+  margin-top: 2px;
   font-size: 17px;
   display: block;
 }
@@ -474,6 +474,7 @@ blockquote {
 .ForumThreadTitle a{
     vertical-align: middle;
     letter-spacing: 0.4px;
+    margin-right: 5px;
 }
 .ForumThreadItem>div {
   padding-top: 6px;
@@ -493,7 +494,7 @@ blockquote {
 
 .ForumThreadCreatorInfo{
 display: inline-block;
-margin-top: 3px;
+margin-top: 0px;
 /* margin-left: 10px; */
 /* width: 50%; */
 }
@@ -539,7 +540,7 @@ blockquote {
 font-size: 10px;
 font-weight: bold;
 color: #738394;
-margin-left: 7px;
+/* margin-left: 7px; */
 margin-right: 7px;
 }
 .ForumThreadItemCreationTime{
@@ -1158,12 +1159,16 @@ margin: 5px;
     /* left: 0; */
     /* display: inline-block; */
 }
+.CollectionCategoryThreadActions input{
+  width: 22px;
+  height: 22px;
+}
 .CollectionCategoryThreadActions{
-    display: inline-block;
+    /* display: inline-block; */
     position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
+    right: 25px;
+    top: 14px;
+    /* bottom: 0; */
     vertical-align: middle;
     z-index: 999;
 }

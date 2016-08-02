@@ -1268,7 +1268,12 @@ table.viewCollectionOfUser = {
     .then(arr=>{
       data.categoryThreads = arr
       data.category = params.category
-      return data
+
+      return getForumList(params)
+      .then(res=>{
+        data.forumlist = res
+        return data
+      })
     })
   }
 }

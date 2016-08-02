@@ -147,7 +147,7 @@ block content
           .nkcpanel#fullwidthpanel
             .row
               .col-xs-12
-                .form-group(style='margin-top:12px;margin-bottom:12px')
+                .form-group(style='margin-top:0px;margin-bottom:6px')
                   if data.replytarget
                     
                     a.btn.btn-default(href='/editor?target=#{data.replytarget}') 新帖
@@ -155,16 +155,13 @@ block content
                     button#enterManagementMode.btn.btn-default(onclick='enterManagementMode()') 管理
                     
                 .ForumManagement(style='display:none;margin-top:12px;margin-bottom:12px')
-                  
-                  if data.permittedOperations.addThreadToCollection
-                    .form-inline
-                      .form-group
-                        .input-group.input-group-sm
-                          input#category.form-control(type='text' placeholder='输入收藏夹名称' value='')
-                          span.input-group-btn
-                            button#addSelectedToMyCollection.btn-sm.btn.btn-default(onclick='addSelectedToMyCollection()') 添加选中帖子到我的收藏
 
                   .form-inline(style='margin-top:10px')
+                    
+                    if data.permittedOperations.addThreadToCollection
+                      .form-group
+                        button#addSelectedToMyCollection.btn-xs.btn.btn-default(onclick='addSelectedToMyCollection()') 添加到个人收藏
+                  
                     .form-group
                       button.btn.btn-xs.btn-default(onclick='selectbtn()') 全选/不选  
                     .form-group

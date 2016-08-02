@@ -23,10 +23,12 @@
       .ForumThreadTitle
         - var brief = oc.c.replace(/\[.*?]/g,'').trim().slice(0,100)
         //span.f12.ForumThreadDigestText [精]
-        
+        if belong_forum
+          a.ForumThreadHasImage(style='background-color:#{forumcolor};opacity:0.7;' href='/f/#{belong_forum._key}')
+            | #{belong_forum.abbr||belong_forum.display_name}
 
           
-        a(class='#{digest?"ForumThreadDigestText":"ForumThreadNormal"}' href="#{url}" title="#{brief}") #{oc.t} 
+        a(class='#{digest?"ForumThreadDigestText":"ForumThreadNormal"}' href="#{url}" title="#{brief}") #{oc.t}
         if topped
           span.ForumThreadHasImage.ForumThreadTopped 顶
         if has_image
@@ -37,9 +39,7 @@
           //帖子标题链接
     
       .ForumThreadCreatorInfo
-        if belong_forum
-          a.ForumThreadHasImage(style='background-color:#{forumcolor};opacity:0.7;' href='/f/#{belong_forum._key}')
-            | #{belong_forum.abbr||belong_forum.display_name}
+
         
         if 0
           span.lighttext.ForumThreadItemCreationTime #{dateTimeString(thread.toc)}
@@ -52,13 +52,17 @@
           span.lighttext #{fromNow(thread.tlm)} 
           //帖子最后回复时间和回复者
 
-        span.lighttext  - 最后回复自
+        span.lighttext(style='margin-right:7px;')  - 最后回复自
         a.ForumThreadItemUsername(href='/user_threads/#{lmuser._key}') #{lmuser.username}
       
       .ForumThreadStat
         span.ThreadCount #{thread.count}
         //span /
         //span.ThreadHits #{thread.hits}
+        
+      .CollectionCategoryThreadActions
+  
+        input.ThreadCheckboxes(id='#{(item?item._key:null)||thread._key}' type='checkbox' style="#{showTicks?'':'display:none;'}")
       
 if 0
   .ForumThreadItem
