@@ -10,7 +10,7 @@
 -var topped = thread.topped
 -var belong_forum = null; var pf=null
 -data.forumlist.map(group=>{group.forumgroup.map(f=>{if(f._key==thread.fid){belong_forum=f;pf=group.parentforum;}})})
--var forumcolor = belong_forum.color||pf.color||'#aaa'
+-var forumcolor = (belong_forum?belong_forum.color:null)||(pf?pf.color:null)||'#aaa'
 
 .ForumThreadItem
   .parent.clearfix(id='')
