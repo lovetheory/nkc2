@@ -24,7 +24,7 @@
         - var brief = oc.c.replace(/\[.*?]/g,'').trim().slice(0,100)
         //span.f12.ForumThreadDigestText [精]
         if belong_forum
-          a.ForumThreadHasImage(style='background-color:#{forumcolor};opacity:0.7;' href='/f/#{belong_forum._key}')
+          a.ForumThreadHasImage(style='background-color:#{forumcolor};' href='/f/#{belong_forum._key}')
             | #{belong_forum.abbr||belong_forum.display_name}
 
           
