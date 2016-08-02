@@ -9,7 +9,7 @@
 -var has_image = thread.has_image
 -var topped = thread.topped
 -var belong_forum = null; var pf=null
--data.forumlist.map(group=>{group.forumgroup.map(f=>{if(f._key==thread.fid){belong_forum=f;pf=group.parentforum;}})})
+-if(data.forum.type!='forum')data.forumlist.map(group=>{group.forumgroup.map(f=>{if(f._key==thread.fid){belong_forum=f;pf=group.parentforum;}})})
 -var forumcolor = (belong_forum?belong_forum.color:null)||(pf?pf.color:null)||'#aaa'
 
 .ForumThreadItem
@@ -52,7 +52,7 @@
           span.lighttext #{fromNow(thread.tlm)} 
           //帖子最后回复时间和回复者
 
-        span.lighttext(style='margin-right:7px;')  - 最后回复自
+        span.lighttext(style='margin-right:7px;')  - 最后回复由
         a.ForumThreadItemUsername(href='/user_threads/#{lmuser._key}') #{lmuser.username}
       
       .ForumThreadStat
