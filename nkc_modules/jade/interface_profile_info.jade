@@ -4,12 +4,12 @@
       -var uid = thatuid
       include interface_profile_avatar.jade
       
-      div(style='display:block')
-        .ForumTitleCircle(style='background-color:#{thatuser.color||"#bbb"}')
-        .ForumName #{thatuser.username}
-      
-      -var user = thatuser
-      include interface_profile_info_section2.jade
+      div(style='display:inline-block;margin-top:8px;')
+        //.ForumTitleCircle(style='background-color:#{user.color||"#bbb"}')
+        .ForumName #{user.username}
+        
+    -var user = thatuser
+    include interface_profile_info_section2.jade
           
   .col-xs-12.col-sm-6
     .UserProfileSection1(style='text-align:left')
