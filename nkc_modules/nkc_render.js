@@ -255,6 +255,8 @@ function chemFormulaReplacer(html){
       case 'png':
       case 'svg':
 
+      case 'bmp': //for S.D.P's post
+
       if(!allthumbnail)replaced =
       '<a href="/r/'+rid+'" target="_blank" title="'+oname_safe+'"><img class="PostContentImage" alt="'+rid+'" src="/r/'+rid+'" /></a><br/>'
 
