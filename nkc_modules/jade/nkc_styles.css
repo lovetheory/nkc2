@@ -452,7 +452,7 @@ blockquote {
   color: #505c65;
 }
 .ForumThreadTitle{
-  margin-top: 2px;
+  margin-top: 0px;
   font-size: 17px;
   display: block;
 }
