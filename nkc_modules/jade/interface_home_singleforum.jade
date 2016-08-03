@@ -19,7 +19,7 @@ if (forum!==null)
         .col-xs-12.col-sm-6.col-md-3
           .HomeForumTitle
             - var forumcolor = f.color||p.color||'#eee'
-            - var url = '/f/'+f._key; url = seo_reverse_rewrite(url)
+            - var url = '/f/'+f._key; //url = seo_reverse_rewrite(url)
             
             .HomeForumTitleCircle(style='background-color:#{forumcolor}')
             a.HomeForumTitlePrimary(href='#{url}') #{f.display_name}
@@ -41,8 +41,9 @@ if (forum!==null)
             .clearfix.visible-sm-block
           .col-xs-12.col-sm-6.col-md-3
             .HomeThreadItem
-              if 1||thread.count>1
-                span.HomeThreadReplyCount #{thread.count}
+              -var count = (thread.count_remain||thread.count)-1
+              if count
+                span.HomeThreadReplyCount #{count}
               //span.lighttext.rightalign #{fromNow(thread.lm.toc)}
               
               - var uid = thread.oc.uid
@@ -56,7 +57,7 @@ if (forum!==null)
               - var oc = thread.oc
               - var brief = de_hide(oc.c).replace(/\[.*?]/g,'').trim().slice(0,100)
               
-              - var url = '/f/'+f._key+'/'+thread._key; url = seo_reverse_rewrite(url)
+              - var url='/t/'+thread._key// = '/f/'+f._key+'/'+thread._key; //url = seo_reverse_rewrite(url)
               if !thread.digest
                 a.HomeThreadText(href='#{url}' title="#{brief}") #{thread.oc.t}  
               else

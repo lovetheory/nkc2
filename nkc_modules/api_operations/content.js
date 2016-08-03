@@ -387,9 +387,19 @@ table.updateAllThreads = {
       let thread = document(threads,tid)
       filter thread!=null
 
+      let t = thread
+
       let oc = (for p in posts filter p.tid==tid sort p.toc asc limit 1 return p)[0]
-      let lm = (for p in posts filter p.tid==tid sort p.toc desc limit 1 return p)[0]
+      let lm = (for p in posts filter p.tid==tid && !p.disabled sort p.toc desc limit 1 return p)[0]
       let count = pcount
+
+      let count_remain = ( //remaining, ignoring the disabled
+        for p in posts
+        filter p.tid == t._key && !p.disabled
+        COLLECT WITH COUNT INTO k
+        return k
+      )[0]
+
 
       let count_today = (
         for p in posts
@@ -411,6 +421,7 @@ table.updateAllThreads = {
 
       update thread with {
         count,
+        count_remain,
         count_today,
         oc:oc._key,
         lm:lm._key,
@@ -652,6 +663,12 @@ update_thread = (tid)=>{
     )[0]
     let count = (
       for p in posts
+      filter p.tid == t._key //&& !p.disabled
+      COLLECT WITH COUNT INTO k
+      return k
+    )[0]
+    let count_remain = ( //remaining, ignoring the disabled
+      for p in posts
       filter p.tid == t._key && !p.disabled
       COLLECT WITH COUNT INTO k
       return k
@@ -674,7 +691,7 @@ update_thread = (tid)=>{
     let has_image = length(iarr)?true:null
     let has_file = ((oc.r?length(oc.r):0) - length(iarr))?true:null
 
-    UPDATE t WITH {toc:oc.toc,tlm:lm.toc,lm:lm._key,oc:oc._key,uid:oc.uid,count,count_today,has_image,has_file} IN threads
+    UPDATE t WITH {toc:oc.toc,tlm:lm.toc,lm:lm._key,oc:oc._key,uid:oc.uid,count,count_today,count_remain,has_image,has_file} IN threads
     return NEW
     `
     ,
