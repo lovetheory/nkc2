@@ -399,6 +399,7 @@ function chemFormulaReplacer(html){
       break;
 
       case 'pwbb':
+      case 'bbcode':
       renderedHTML = pwbb_experimental(post,false)
       break;
 

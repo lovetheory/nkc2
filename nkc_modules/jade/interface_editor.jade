@@ -7,7 +7,9 @@ block title
   
 block content
   
-  #ife.container
+  -var mainContainer1400 = true
+  
+  #ife.container-fluid(style='max-width:1400px')
     if !data.user
       .row
         .col-xs-12.f12
@@ -27,18 +29,18 @@ block content
             input#title.form-control(type='text' placeholder='标题' value="#{data.original_post?data.original_post.t||'':''}")
             
           .form-group
-            textarea#content.form-control(rows='18' placeholder='内容' style='resize:none;') #{data.original_post?data.original_post.c:''}
+            textarea#content.form-control(placeholder='内容' style='height:300px;resize:none;') #{data.original_post?data.original_post.c:''}
             
-          .form-inline
+          .form-inline(style='margin-bottom:5px;')
             .form-group
               input#target.form-control(placeholder='发表至' value='#{(data.replytarget?data.replytarget:"")}')
             
             .form-group
               select#lang.form-control
-                if data.original_post
+                if data.original_post&&data.original_post.l
                   option #{data.original_post.l}
                 
-                option pwbb
+                option bbcode
                 option markdown
                 option plain
                 option html
@@ -49,30 +51,28 @@ block content
                 |处理URL
                 
             .form-group
-              button#post.btn.btn-default(type='submit' style='float:right;') 发表
+              button#post.btn.btn-default(type='submit' style='') 发表
           
-          br
-          
-          .panel.panel-default
-            .panel-body(id='file-uploading' target='resources/')
-              //uploader section
-              include interface_attachment_uploader_uploader.jade
+          .nkcpanel(id='file-uploading' target='resources/')
+            //uploader section
+            include interface_attachment_uploader_uploader.jade
               
           .panel.panel-default
-            .panel-heading.f12 点击插入附件
+            .panel-heading 我的附件（点击插入帖子）
             .panel-body(id='list-container')
                   
         .col-xs-12.col-sm-5.col-md-6
           h4 预览
-          .panel.panel-default
-            .panel-body(style="max-height: 700px;overflow-y: scroll;")
-              div
-                h4#parsedtitle
-              div#parsedcontent.ThreadPostBody
+          .nkcpanel#fullwidthpanel(style="max-height: 800px;overflow-y: scroll;")
+            div
+              h4#parsedtitle
+            div#parsedcontent.ThreadPostBody
           
           .form-group
-            button#mathfresh.btn.btn-default(onclick='mathfresh()') 渲染代码/数学公式
-          .form-group
+            button#mathfresh.btn.btn-sm.btn-default(onclick='mathfresh()') 渲染代码/数学公式
+            button.btn.btn-default.btn-sm(onclick='fitscreen()') 适配屏幕
+          
+          .form-group.hidden-xs
             .ThreadPostBody.lighttext
               :markdown
                 插入flash视频播放：

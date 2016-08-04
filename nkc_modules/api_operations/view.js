@@ -820,7 +820,12 @@ table.viewEditor = {
         return data
       })
     }
-    data.original_post = {c:params.content?decodeURI(params.content):'',l:'pwbb'}
+
+    data.original_post = {
+      c:params.content?decodeURI(params.content):'',
+      //l:'pwbb',
+    }
+
     return data
   }
 }

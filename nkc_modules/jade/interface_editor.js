@@ -94,6 +94,14 @@ var nkc_editor = function(){
     post.r = extract_resource_from_tag(post.c)
 
     var title = post.t||""
+    if(!title.length){
+      title='标题为空'
+      geid('parsedtitle').style.color='#ccc'
+    }
+    else{
+      geid('parsedtitle').style.color='initial'
+    }
+
     hset('parsedtitle',title); //XSS prone.
 
     var content = post.c
@@ -126,3 +134,13 @@ function mathfresh(){
 
 var editor = nkc_editor();
 window.onload = editor.update
+
+var screenfitted = false
+function fitscreen(){
+  var h = $(window).height().toString()+'px'
+
+  geid('content').style.height = !screenfitted?h:'300px';
+  geid('parsedcontent').style['max-height'] = !screenfitted?h:'800px';
+
+  screenfitted = !screenfitted
+}
