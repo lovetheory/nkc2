@@ -14,10 +14,10 @@ block content
           div.f12(style='line-height:1.8;')
             :markdown
               # 如果你是准备注册的新用户
+  
+              ### <s>方法一：手机验证</s>
               
-              ### 方法一：手机验证
-              
-              - 验证手机号码后可获得注册码。注册之后可以参与绝大多数板块的讨论，如需参与所有专业版块，届时可再参加测试。
+              - <s>验证手机号码后可获得注册码。注册之后可以参与绝大多数板块的讨论，如需参与所有专业版块，届时可再参加测试。</s>
               
               ### 方法二：参加测试
               
@@ -28,9 +28,9 @@ block content
             :markdown
               # 如果你是科创论坛的老用户
               
-              ### 方法一：手机验证
+              ### <s>方法一：手机验证</s>
               
-              - 验证手机号码后就可以开始发帖。
+              - <s>验证手机号码后就可以开始发帖。</s>
               
               ### 方法二：参加测试
               
@@ -39,33 +39,16 @@ block content
       hr
       .row
         
-        .col-sm-6
-          div.f12(style='line-height:1.8;')
-            :markdown
-              # 手机验证
-              
-              （仅支持大陆用户）请先发送任意短信至
-              <span style="color:orange;font-size:22pt">106905705811672</span>
-              
-              然后等10秒钟，待短信到达服务器。接着在下面输入您的手机号码，最后点击蓝色的按钮。
-              
-              
-              
-          .form-inline
-            .form-group
-              input#mobilenumber.form-control(type='text' placeholder='输入您的手机号码')
-            .form-group
-              button.btn.btn-primary(type='button' onclick='getRegcodeFromMobile()') 嗯，我已经发了短信
-          hr
-          p 如果不成功，可以等几秒钟再试试，没准短信还在路上呢。
-              
-        .col-sm-6
-          div.f12(style='line-height:1.8;')
-            :markdown
-              # 参加测试
-              
-              请在下面选择你最擅长的题目类别。测试题目来自论坛专家们的集体贡献。
 
+              
+        .col-sm-6
+          div.f12(style='line-height:1.8;')
+            :markdown
+              # 参加测试，获取验证码
+              
+              请在下面选择你最擅长的题目类别。
+              
+              ----
           
           -var categories = {'chem':'化学','phys':'物理学','aviation':'民航知识','agri':'农业技术','hedc':'高能材料','cs':'计算机科学','3dp':'3D打印','ham':'业余无线电','ee':'电子技术','electrical':'电气工程','dev':'软件开发','english':'英语'}
           -for(k in categories)
@@ -73,9 +56,34 @@ block content
               a(href='/exam?category=#{k}') 参加 【#{categories[k]}】 测试
               
           hr
-          p 试题版权归科创研究院所有，请勿转载。
+          p 测试题目来自论坛专家们的集体贡献。试题版权归科创研究院所有，请勿转载。
           
+        .col-sm-6
+          div.f12(style='line-height:1.8;')
+            if 1
+              :markdown
+                # <s>手机验证</s>
+                
+                不好意思，但我们取消了手机验证。请参加测试。
+            
+            if 0
+              :markdown
+                # 手机验证
+                
+                （仅支持大陆用户）请先发送任意短信至
+                <span style="color:orange;font-size:22pt">106905705811672</span>
+                
+                然后等10秒钟，待短信到达服务器。接着在下面输入您的手机号码，最后点击蓝色的按钮。
               
+              
+              
+              .form-inline
+                .form-group
+                  input#mobilenumber.form-control(type='text' placeholder='输入您的手机号码')
+                .form-group
+                  button.btn.btn-primary(type='button' onclick='getRegcodeFromMobile()') 嗯，我已经发了短信
+              hr
+              p 如果不成功，可以等几秒钟再试试，没准短信还在路上呢。
   
   if !data.getcode
     .container
