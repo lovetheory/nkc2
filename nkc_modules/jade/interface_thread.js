@@ -59,7 +59,8 @@ function assemblePostObject(){
 function disablePost(pid){
   nkcAPI('disablePost',{pid:pid})
   .then(function(res){
-    location.reload()
+    screenTopAlert(pid+' 已屏蔽，请刷新')
+    //location.reload()
   })
   .catch(jwarning)
 }
