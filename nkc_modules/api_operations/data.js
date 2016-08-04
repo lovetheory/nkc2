@@ -24,18 +24,20 @@ var api = (apiName,op,rp)=>{
   }
 }
 
-var getCountFromDayRanges = (dayranges)=>{
+var getCountFromDayRanges = function(dayranges){
   return AQL(`
     for r in @dayranges
     let count = (
-    for p in posts
-    filter p.toc>r.start && p.toc<r.end
-    collect with count into k return k)[0]
+      for p in posts
+      filter p.toc>r.start && p.toc<r.end
+      collect with count into k return k
+    )[0]
 
     let count_disabled = (
-    for p in posts
-    filter p.toc>r.start && p.toc<r.end && p.disabled
-    collect with count into k return k)[0]
+      for p in posts
+      filter p.toc>r.start && p.toc<r.end && p.disabled
+      collect with count into k return k
+    )[0]
 
     let user_registered = (
       for u in users
@@ -71,6 +73,8 @@ queryfunc.createIndex('users',{
   sparse:'false',
 })
 
+var tlv = 0
+var buffer = []
 api('getStatDaily',params=>{
   var daystamps = []
   var today = Date.now()
@@ -81,5 +85,17 @@ api('getStatDaily',params=>{
     daystamps.push(today-i*86400000)
   }
 
-  return getCountFromTimeStamps(daystamps)
+  if(tlv>Date.now()-10000)//within 10s
+  {
+    return buffer
+  }
+  else{
+    return getCountFromTimeStamps(daystamps)
+    .then(res=>{
+      buffer=res
+      tlv=Date.now()
+      return res
+    })
+  }
+
 })
