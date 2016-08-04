@@ -53,6 +53,7 @@ var loadChart = function(){
     var dailyDataset = []
     var dailyDisabled = []
     var dailyRegister = []
+    var qualityFactor = []
 
     for(i in list){
       var l = list[i]
@@ -61,12 +62,15 @@ var loadChart = function(){
       dailyDataset.push(l.count)
       dailyDisabled.push(l.count_disabled)
       dailyRegister.push(l.user_registered)
+
+      qualityFactor.push(Math.pow((l.count-l.count_disabled)/(l.count||1),4)*100)
     }
 
     loadDataCreateChart(ctx,labels,[
       datasetGen('日帖量',dailyDataset,{borderColor:'rgb(150,180,220)'}),
       datasetGen('日帖量（被屏蔽）',dailyDisabled,{borderColor:'rgb(255,128,0)'}),
       datasetGen('日注册',dailyRegister,{borderColor:'rgb(120,180,120)'}),
+      datasetGen('发帖质量 (( 未屏蔽 / 总帖数 ) ^ 4 * 100% )',qualityFactor,{borderColor:'rgb(200,100,140)'})
     ])
   })
 }
