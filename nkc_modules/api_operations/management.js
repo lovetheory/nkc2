@@ -258,6 +258,26 @@ table.pullNewPosts24h = {
   }
 }
 
+table.unbanUser = {
+  operation:function(params) {
+    var u = new layer.User(params.uid)
+    return u.load()
+    .then(u=>{
+      var certs = (u.model.certs||[])
+
+      certs = certs.filter(c=>c!='banned')
+
+      return u.update({certs})
+    })
+    .then(u=>{
+      return 'success'
+    })
+  },
+  requiredParams:{
+    uid:String,
+  }
+}
+
 table.banUser = {
   operation:function(params){
     var u = new layer.User(params.uid)

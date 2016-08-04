@@ -46,6 +46,7 @@ var certificates={
       kamikaze:true,
 
       banUser:true,
+      unbanUser:true,
     }
   },
 
