@@ -141,6 +141,8 @@ var certificates={
       selfModifyTimeLimit:timeMonth*3, //3m
       //elseModifyTimeLimit:timeHour*4,//4h
 
+      getStatDaily:true,
+
     }
   },
 
