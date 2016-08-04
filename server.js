@@ -283,3 +283,5 @@ process.openStdin().addListener('data',function(d){
   if(d.toString().trim()=='')
   process.exit();
 });
+
+require('my_cron.js').startAllJobs();
