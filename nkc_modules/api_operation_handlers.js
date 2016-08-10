@@ -78,10 +78,22 @@ api.use((err,req,res,next)=>{
       res.status(500).send(
         jaderender('nkc_modules/jade/500.jade',data)
       );
+      return
     }
   }
 
   if(typeof err ==='number')return res.status(err).end()
+
+  if(req.accepts('html')){
+    res.status(500).send(
+      jaderender('nkc_modules/jade/500.jade',{
+        url:req.originalUrl,
+        err:err.stack?err.stack:JSON.stringify(err),
+      })
+    )
+    return
+  }
+
   res.status(500).json(report('error within /api/operation',err));
 
   //all errors should be handled here.
