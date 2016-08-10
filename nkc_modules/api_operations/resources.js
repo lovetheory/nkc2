@@ -38,10 +38,31 @@ function accumulateCountHit(id,collname){
 
 table.getResource={
   operation:function(params){
+    var po = params.permittedOperations
+    var cc = params.contentClasses
 
-    var rid = params.rid;
-    //load from db
-    return queryfunc.doc_load(rid,'resources')
+    return queryfunc.doc_load(params.rid,'resources')
+    .then(function(robject){
+      if(['jpg','jpeg','gif','png','svg'].indexOf(robject.ext)>=0){
+        if(cc['images']){
+          return
+        }
+      } //if image
+      else{
+       //if non_image
+       if(cc['non_images']){
+         return
+       }
+      }
+
+      throw '只有登录用户可以下载附件，请先登录或者注册。'
+    })
+    .then(()=>{
+      var rid = params.rid;
+      //load from db
+      return queryfunc.doc_load(rid,'resources')
+    })
+
     .then(function(robject){
       var destination_path = settings.upload_path;
       var destFile = destination_path + '/' + robject.path
@@ -61,27 +82,6 @@ table.getResource={
   requiredParams:{
     rid:String,
   },
-  testPermission:function(params){
-   var po = params.permittedOperations
-   var cc = params.contentClasses
-
-   return queryfunc.doc_load(params.rid,'resources')
-   .then(function(robject){
-     if(['jpg','jpeg','gif','png','svg'].indexOf(robject.ext)>=0){
-       if(cc['images']){
-         return
-       }
-     } //if image
-     else{
-      //if non_image
-      if(cc['non_images']){
-        return
-      }
-     }
-
-     throw 401
-   })
-  }
 }
 
 function getThumbnailPathFor(robject){
