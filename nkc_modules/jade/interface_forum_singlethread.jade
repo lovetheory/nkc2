@@ -9,8 +9,12 @@
 -var has_image = thread.has_image
 -var topped = thread.topped
 -var belong_forum = null; var pf=null
--if(data.forum&&data.forum.type!='forum'&&data.forumlist)data.forumlist.map(group=>{group.forumgroup.map(f=>{if(f._key==thread.fid){belong_forum=f;pf=group.parentforum;}})})
+-if(data.forum&&data.forum.type!='forum'&&data.forumlist)
+-data.forumlist.map(group=>{group.forumgroup.map(f=>{if(f._key==thread.fid){belong_forum=f;pf=group.parentforum;}})})
+-belong_forum==belong_forum||data.forum
 -var forumcolor = (belong_forum?belong_forum.color:null)||(pf?pf.color:null)||'#aaa'
+
+-var threadtype = data.threadtypes?data.threadtypes.filter(k=>k._key==thread.category)[0]:null;
 
 .ForumThreadItem
   .parent.clearfix(id='')
@@ -23,12 +27,15 @@
       .ForumThreadTitle
         - var brief = oc.c.replace(/\[.*?]/g,'').trim().slice(0,100)
         //span.f12.ForumThreadDigestText [精]
-        if belong_forum
+        if belong_forum._key!==data.forum._key
           a.ForumThreadHasImage(style='background-color:#{forumcolor};' href='/f/#{belong_forum._key}')
             | #{belong_forum.abbr||belong_forum.display_name}
 
+        if threadtype
+          span.ForumThreadHasImage(style='background-color:#{forumcolor};') #{threadtype.name}
           
         a(class='#{digest?"ForumThreadDigestText":"ForumThreadNormal"}' href="#{url}" title="#{brief}") #{oc.t}
+        
         if topped
           span.ForumThreadHasImage.ForumThreadTopped 顶
         if has_image
@@ -36,7 +43,9 @@
         if has_file
           span.ForumThreadHasImage.ForumThreadHasFile 附
           
-          //帖子标题链接
+        //span.lighttext cat#{thread.category}
+          
+        //帖子标题链接
         //span.hidden-xs.lighttext (#{oc.c.length} 字节，#{thread.hits} 点击)
     
       .ForumThreadCreatorInfo

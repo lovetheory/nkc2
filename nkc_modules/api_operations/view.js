@@ -578,6 +578,19 @@ table.viewForum = {
     })
     .then(res=>{
       data.forums = res
+      //return data
+
+      return AQL(`
+        let tt = (for i in threadtypes return i)
+        let ftt = (for i in threadtypes filter i.fid==@fid return i)
+        return {tt,ftt}
+        `,{fid}
+      )
+    })
+    .then(res=>{
+      data.threadtypes = res[0].tt
+      data.forumthreadtypes = res[0].ftt
+
       return data
     })
   },
