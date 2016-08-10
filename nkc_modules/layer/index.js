@@ -16,12 +16,12 @@ db.useDatabase(settings.server.database_name);
 var permission = require('permissions')
 var crypto =require('crypto')
 
+var BaseDao = require('./BaseDao')
+
 var layer = (function(){
   'use strict';
 
   var layer = {}
-
-  var BaseDao = require('./BaseDao')
 
   class ShortMessage extends BaseDao{
     constructor(key){
@@ -165,7 +165,6 @@ var layer = (function(){
       if(contentClasses[forum.class]){ // if user have enough class
         return this;
       }else{
-        //var perm = require('../permissions')
 
         throw `浏览权限不足. 要浏览这部分内容 (位于：${forum.display_name})，你需要一个叫做 [${forum.class}] 的权限级别. 可尝试登陆或者注册一个账号. 目前你拥有[${Object.keys(contentClasses).filter(i=>contentClasses[i]).join(',')}]权限级别。`
       }
