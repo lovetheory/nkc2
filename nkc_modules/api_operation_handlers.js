@@ -62,6 +62,11 @@ api.use((req,res,next)=>{
 
 //unhandled error handler
 api.use((err,req,res,next)=>{
+  if(res.sent){
+    report('possible transmission err',err)
+    return;
+  }
+
   if(req.file)
   {
     //delete uploaded file when error happens

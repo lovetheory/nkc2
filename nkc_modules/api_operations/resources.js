@@ -20,6 +20,12 @@ function sendFile(_res,destFile,opt){
   .then(()=>{
     report(destFile);
     _res.sent = true
+
+    return 'sent'
+  })
+  .catch(err=>{
+    console.log(err);
+    throw err
   })
 }
 
@@ -73,9 +79,9 @@ table.getResource={
         headers:{'Content-Disposition':'inline; filename=' + encodeURI(robject.oname)},
       })
       .then(res=>{
-        accumulateCountHit(rid,'resources')
+        accumulateCountHit(params.rid,'resources')
 
-        return res
+        return 'success'
       })
     })
   },
