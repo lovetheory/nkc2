@@ -33,7 +33,7 @@ api.all('/operation',function(req,res,next){
   })
   .then((result)=>{
     res.obj = result
-    return
+    return undefined
   })
   .then(next)
   .catch(next)
@@ -62,11 +62,7 @@ api.use((req,res,next)=>{
 
 //unhandled error handler
 api.use((err,req,res,next)=>{
-  if(res.sent){
-    report('possible transmission err',err)
-    return;
-  }
-
+  
   if(req.file)
   {
     //delete uploaded file when error happens
@@ -75,28 +71,24 @@ api.use((err,req,res,next)=>{
     });
   }
 
-  if(res.obj){
-    if(res.obj.template){ //if html output is chosen
-      var data = {};
-      data.url = req.originalUrl;
-      data.err = err.stack?err.stack:JSON.stringify(err);
-      res.status(500).send(
-        jaderender('nkc_modules/jade/500.jade',data)
-      );
-      return
-    }
+  if(res.sent){
+    report('possible transmission err',err)
+    return;
   }
 
-  if(typeof err ==='number')return res.status(err).end()
+  if(typeof err ==='number'){
+    return res.status(err).end()
+  }
 
-  if(req.accepts('html')){
+  if((res.obj&&res.obj.template)||req.accepts('html')&&(!req.is('json'))){
+
     res.status(500).send(
       jaderender('nkc_modules/jade/500.jade',{
         url:req.originalUrl,
         err:err.stack?err.stack:JSON.stringify(err),
       })
-    )
-    return
+    );
+    return undefined;
   }
 
   res.status(500).json(report('error within /api/operation',err));
