@@ -69,14 +69,14 @@ block content
                   div!=markdown_safe(data.forum.description)
               
               
-                
-                span(style='margin-right:20px;') 今日: #{data.forum.count_posts_today} 主题: #{data.forum.count_threads} 回复: #{data.forum.count_posts}
-      
-                if data.forum.moderators && data.forum.moderators.length
-                  span 版主：
-                    - var moderators = data.forum.moderators
-                    each k in moderators
-                      a.d-inline.margin-right(href='/user_profile_byname/#{k}') #{k}
+                div
+                  span(style='margin-right:20px;') 今日: #{data.forum.count_posts_today} 主题: #{data.forum.count_threads} 回复: #{data.forum.count_posts}
+        
+                  if data.forum.moderators && data.forum.moderators.length
+                    span 版主：
+                      - var moderators = data.forum.moderators
+                      each k in moderators
+                        a.d-inline.margin-right(href='/user_profile_byname/#{k}') #{k}
                       
                 if data.forumthreadtypes && data.forumthreadtypes.length
                   div
