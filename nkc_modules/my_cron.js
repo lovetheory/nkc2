@@ -15,6 +15,14 @@ var AQL = queryfunc.AQL
     })
   })
 
+  cron.schedule('*/20 * * * *',function(){
+    setTimeout(function(){
+      process.exit()
+    }
+    ,1000)
+    console.log('sched restart at',Date.now());
+  })
+
 }
 
 module.exports = mycron
