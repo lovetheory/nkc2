@@ -171,8 +171,8 @@ function moveThreadTo(tid){
 function moveThreadToForum(tid,fid){
   nkcAPI('moveThread',{tid:tid,fid:fid})
   .then(function(){
-    screenTopAlert(tid+' moved to '+fid)
-    window.location.reload()
+    screenTopAlert(tid+' moved to '+fid+' 请刷新')
+    //window.location.reload()
   })
   .catch(jwarning)
 }
