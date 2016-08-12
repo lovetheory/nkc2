@@ -704,18 +704,18 @@ table.viewUserThreads = {
 
     var uid = params.uid
 
-    if(params.digest){
-      var filter = `
-      sort t.uid desc,t.disabled desc,t.tlm desc
-      filter t.uid == @uid && t.digest==true
-      `
-      data.digest = true
-    }else{
-      var filter = `
-      sort t.uid desc,t.disabled desc,t.tlm desc
-      filter t.uid == @uid && t.disabled==null
-      `
-    }
+    data.sortby = params.sortby
+    data.digest = params.digest
+
+    var filter = `
+    filter
+    t.uid == @uid
+    ${params.digest?'&& t.digest==true':''}
+
+    sort
+    ${params.sortby?'t.toc':'t.tlm'} desc
+
+    `
 
     var userclass = new layer.User(uid)
     return userclass.load()
