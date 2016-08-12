@@ -184,7 +184,7 @@ var layer = (function(){
         `
       }
 
-      var sortbywhattime = 'tlm'
+      var sortbywhattime = params.sortby?'toc':'tlm'
 
       var filter = `
       filter t.fid == @fid

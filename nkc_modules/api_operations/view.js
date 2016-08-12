@@ -510,6 +510,7 @@ table.viewForum = {
       data.digest = true
     }
     data.cat = params.cat
+    data.sortby = params.sortby
 
     var fid = params.fid;
     var forum = new layer.Forum(fid)

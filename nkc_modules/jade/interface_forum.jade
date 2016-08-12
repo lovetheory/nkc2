@@ -188,7 +188,11 @@ block content
                   - var digest = data.digest
                   - var class_str_all = digest?'':'active'
                   - var class_str_digest = digest?'active':''
+                  
                   - var cat = data.cat
+                  - var sortby = data.sortby
+                  - var class_str_sortby_toc = sortby?'active':''
+                  - var class_str_sortby_tlm = sortby?'':'active'
                   
                   ul.pagination.NavigationPaging
                     - var page = paging?paging.page:null
@@ -199,13 +203,11 @@ block content
                       a(href='#{toQueryString({cat,digest:true})}') 精
               
                   ul.pagination.NavigationPaging
-                    each val,index in ['復序','帖序','施工中']
-                      if index==0
-                        li.active
-                          a(href='#')=val
-                      else
-                        li
-                          a(href='#')=val
+                    li(class='#{class_str_sortby_tlm}')
+                      a(href='#{toQueryString({cat,digest})}') 复序
+                    li(class='#{class_str_sortby_toc}')
+                      a(href='#{toQueryString({cat,digest,sortby:"toc"})}') 帖序
+                      
                   
                 hr.hrNarrowSpace  
                   
