@@ -72,11 +72,19 @@ block content
                 
                 span(style='margin-right:20px;') 今日: #{data.forum.count_posts_today} 主题: #{data.forum.count_threads} 回复: #{data.forum.count_posts}
       
-                if data.forum.moderators
+                if data.forum.moderators && data.forum.moderators.length
                   span 版主：
                     - var moderators = data.forum.moderators
                     each k in moderators
                       a.d-inline.margin-right(href='/user_profile_byname/#{k}') #{k}
+                      
+                if data.forumthreadtypes && data.forumthreadtypes.length
+                  div
+                    hr.hrNarrowSpace
+                    span 分类: 
+                    a(href='/f/#{data.forum._key}' style='margin-right:10px;') 所有帖子
+                    each ftt in data.forumthreadtypes
+                      a(href='/f/#{data.forum._key}?cat=#{ftt._key}' style='margin-right:10px;') #{ftt.name}
           
           if forumIsParent
             //if forum is category

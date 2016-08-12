@@ -487,6 +487,20 @@ table.viewForum = {
         unique:'false',
         sparse:'true',
       })
+
+      queryfunc.createIndex('threads',{
+        fields:['fid','category','toc'],
+        type:'skiplist',
+        unique:'false',
+        sparse:'true',
+      })
+
+      queryfunc.createIndex('threads',{
+        fields:['fid','category','tlm'],
+        type:'skiplist',
+        unique:'false',
+        sparse:'true',
+      })
     })
   },
   operation:params=>{
@@ -495,6 +509,7 @@ table.viewForum = {
     if(params.digest){
       data.digest = true
     }
+    data.cat = params.cat
 
     var fid = params.fid;
     var forum = new layer.Forum(fid)
@@ -582,7 +597,7 @@ table.viewForum = {
 
       return AQL(`
         let tt = (for i in threadtypes return i)
-        let ftt = (for i in threadtypes filter i.fid==@fid return i)
+        let ftt = (for i in threadtypes filter i.fid==@fid sort i.order return i)
         return {tt,ftt}
         `,{fid}
       )
@@ -590,6 +605,9 @@ table.viewForum = {
     .then(res=>{
       data.threadtypes = res[0].tt
       data.forumthreadtypes = res[0].ftt
+
+    })
+    .then(res=>{
 
       return data
     })
@@ -641,6 +659,8 @@ table.viewThread = {
 
       if (!posts.length) {
         params._res.redirect('/t/'+params.tid)
+        params._res.sent = true
+        //if no posts exist on that page, goto 1th page
       }
 
       data.posts = posts

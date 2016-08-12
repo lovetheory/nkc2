@@ -171,6 +171,7 @@ var layer = (function(){
     }
 
     listThreadsOfPage(params){
+
       if(params.digest){
         var filter = `
         filter t.fid == @fid && t.digest == true
@@ -183,6 +184,21 @@ var layer = (function(){
         `
       }
 
+      var sortbywhattime = 'tlm'
+
+      var filter = `
+      filter t.fid == @fid
+
+      ${params.cat?'&& t.category == @cat':''}
+      ${params.digest?'&& t.digest==true':''}
+
+      sort
+      t.fid desc,
+
+      ${params.digest?'t.digest desc,':''}
+      t.${sortbywhattime} desc
+      `
+
       var count_result
 
       return AQL(`
@@ -193,6 +209,7 @@ var layer = (function(){
         `,
         {
           fid:this.key,
+          cat:params.cat||undefined,
         }
       )
       .then(res=>{
@@ -218,6 +235,7 @@ var layer = (function(){
             fid:this.key,
             start:paging.start,
             count:paging.count,
+            cat:params.cat||undefined,
           }
         )
         .then(threads=>{
