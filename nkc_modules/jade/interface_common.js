@@ -132,13 +132,12 @@ function screenTopAlertOfStyle(text,stylestring){
   //rely on bootstrap styles
 
   var objtext = $('<div/>').text(text).html();
-  _alertcount++;
-  var itemID = 'alert' + _alertcount.toString()
+  var itemID = getID()
 
   return new Promise(function(resolve,reject){
     $('#alertOverlay').append(
       '<div class="alert alert-'+ stylestring +'" id="' + itemID +
-      '" role="alert" style="opacity:0.9;text-align:center;display:block; position:relative;margin:auto; top:0;max-width:500px; width:100%; margin-bottom:3px">'
+      '" role="alert" style="opacity:0.9;text-align:center;display:block; pointer-events:none; position:relative;margin:auto; top:0;max-width:500px; width:100%; margin-bottom:3px">'
       + objtext +'</div>'
     );
 
@@ -152,10 +151,54 @@ function screenTopAlertOfStyle(text,stylestring){
     },2000)
   })
 }
+function getID(){
+  _alertcount++;
+  var itemID = 'alert'+_alertcount.toString()
+  return itemID
+}
+
+function screenTopQuestion(title,choices){
+  title = $('<div/>').text(title).html();
+
+  var itemID = getID()
+  var selectID = getID()
+  var selector = '<select id="'+ selectID +'">'+choices.map(function(c){return '<option>'+c+'</option>'}).join('')+'</select>'
+
+  var buttonYesID = getID()
+  var buttonYes = '<button id="'+buttonYesID+'">确认</button>'
+
+  var buttonNoID = getID()
+  var buttonNo = '<button id="'+buttonNoID+'">取消</button>'
+
+  return new Promise(function(resolve,reject){
+    $('#alertOverlay').append(
+      '<div style="padding:10px;background-color:#cef;opacity:0.9;text-align:center;display:block;margin:auto;" id="'+itemID+'"><p>'+ title +'</p>'+
+      selector
+      +'<p>'+
+      buttonYes+buttonNo
+      +'</p>'
+      +'</div>'
+    )
+
+    function disappear(){
+      $('#'+itemID).remove()
+    }
+
+    $('#'+buttonYesID).click(function(){
+      resolve(geid(selectID).value)
+      disappear()
+    })
+
+    $('#'+buttonNoID).click(function(){
+      reject()
+      disappear()
+    })
+  })
+}
 
 function screenTopAlertInit(){
   $("body").prepend(
-    '<div id="alertOverlay" style="z-index:999; pointer-events:none; display:block; position:fixed; top:0; width:100%;">'
+    '<div id="alertOverlay" style="z-index:999; display:block; position:fixed; top:0; width:100%;">'
     +'</div>'
   );
 }

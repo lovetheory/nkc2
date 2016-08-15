@@ -174,7 +174,7 @@ block content
                       button.btn.btn-xs.btn-default(onclick='selectbtn()') 全选/不选  
                     .form-group
                       include forumlist_dropdown.jade
-                      button(onclick="javascript:moveThreadTo()") 移动
+                      button#moveThreadTo(onclick="javascript:moveThreadTo()") 移动
                     
                     .form-group
                       button#recyclebtn.btn.btn-xs.btn-danger(style='margin-left:20px;' onclick='recyclebtn()') 送回收站

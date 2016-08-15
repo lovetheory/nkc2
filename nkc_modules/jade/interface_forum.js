@@ -7,10 +7,11 @@ function applyAll(f){
   return common.mapWithPromise(extractCidArray(),f)
 }
 
-function moveThread(tid,fid){
+function moveThread(tid,fid,cid){
   return nkcAPI('moveThread',{
     tid:tid,
     fid:fid,
+    cid:cid,
   })
   .then(function(){
     screenTopAlert(tid + ' 已送 ' + fid)
@@ -41,13 +42,30 @@ function extractfid(){
 
 function moveThreadTo(){
   var fid = extractfid()
-  if(moveThreadToForum(fid))geid('moveThreadTo').disabled=true
+  if(moveThreadToForum(fid)){
+    geid('moveThreadTo').disabled=true
+  }
+}
+
+function askCategoryOfForum(fid){
+  fid = fid.toString()
+  return nkcAPI('getForumCategories',{fid:fid})
+  .then(function(arr){
+    if(!arr.length)return null
+    return screenTopQuestion('请选择一个分类：',arr.map(function(i){return i._key+':'+i.name}))
+  })
+  .then(function(str){
+    if(!str)return null
+    return str.split(':')[0]
+  })
 }
 
 function moveThreadToForum(fid){
-
-  applyAll(function(tid){
-    return moveThread(tid,fid)
+  askCategoryOfForum(fid)
+  .then(function(cid){
+    return applyAll(function(tid){
+      return moveThread(tid,fid,cid)
+    })
   })
   .then(function(){
     window.location.reload()
