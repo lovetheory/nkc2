@@ -1311,6 +1311,7 @@ table.viewCollectionOfUser = {
       return getForumList(params)
       .then(res=>{
         data.forumlist = res
+        data.forum = {}
         return data
       })
     })
