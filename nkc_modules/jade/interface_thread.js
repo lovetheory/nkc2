@@ -179,7 +179,7 @@ function askCategoryOfForum(fid){
   return nkcAPI('getForumCategories',{fid:fid})
   .then(function(arr){
     if(!arr.length)return null
-    return screenTopQuestion('请选择一个分类：',arr.map(function(i){return i._key+':'+i.name}))
+    return screenTopQuestion('请选择一个分类：',['0:（无分类）'].concat(arr.map(function(i){return i._key+':'+i.name})))
   })
   .then(function(str){
     //console.log('selected:',str.split(':')[0]);
