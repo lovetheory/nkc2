@@ -52,13 +52,21 @@ block content
                       
                         -var gpf = group.parentforum
                         -var name = gpf.display_name
+                        -gpf.color = gpf.color||'#aaa'
                         -var url = '/f/'+gpf._key
-                        a(href='#{url}' class='parentforum') #{name} /
+                        
+                        -var stylestr = 'color:'+gpf.color
+                        
+                        a(href='#{url}' class='parentforum' style='#{stylestr}') #{name} /
                       
                         each f,findex in group.forumgroup
+                          -var backcolor=f.color||gpf.color
                           -var name = f.display_name
                           -var url = '/f/'+f._key
-                          a(href='#{url}' class='#{f._key==data.forum._key?"active":""}') #{name}
+                          
+                          -var active = f._key==data.forum._key
+                          -var stylestr = active?'background-color:'+backcolor:''
+                          a(href='#{url}' style='#{stylestr}' class='#{active?"active":""}') #{name}
                     
                 
                 -var forum = data.forum
@@ -93,7 +101,12 @@ block content
                 -var gpf = group.parentforum
                 -var name = gpf.display_name
                 -var url = '/f/'+gpf._key
-                a(href='#{url}' class='#{gpf._key==data.forum._key?"active":""}') #{name}
+                
+                -var color = gpf.color||'#aaa'
+                -var active = gpf._key==data.forum._key
+                
+                -var stylestr = active?'background-color:'+color:''
+                a(href='#{url}' style='#{stylestr}' class='#{active?"active":""}') #{name}
               
             .ForumNavigation2.row
               each forum,index in data.forums
