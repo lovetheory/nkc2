@@ -87,12 +87,13 @@ block content
                         a.d-inline.margin-right(href='/user_profile_byname/#{k}') #{k}
                       
                 if data.forumthreadtypes && data.forumthreadtypes.length
-                  div
+                  .ForumNavigation1
                     hr.hrNarrowSpace
                     span 分类: 
-                    a(href='/f/#{data.forum._key}' style='margin-right:10px;') 所有帖子
+                    a(href='/f/#{data.forum._key}' class='#{data.cat?"":"active"}') 所有帖子
                     each ftt in data.forumthreadtypes
-                      a(href='/f/#{data.forum._key}?cat=#{ftt._key}' style='margin-right:10px;') #{ftt.name}
+                      -var active = ftt._key==data.cat
+                      a(href='/f/#{data.forum._key}?cat=#{ftt._key}' class='#{active?"active":""}' ) #{ftt.name}
           
           if forumIsParent
             //if forum is category
@@ -224,7 +225,7 @@ block content
                   
                 hr.hrNarrowSpace  
                   
-            if data.toppedThreads && data.toppedThreads.length>0
+            if data.toppedThreads && data.toppedThreads.length>0 && !data.cat
               .ForumThreadList
                 each thread,index in data.toppedThreads
                   include interface_forum_singlethread.jade
