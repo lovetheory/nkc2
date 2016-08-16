@@ -162,19 +162,44 @@ function extractfid(){
   return targetforum
 }
 
-
 function moveThreadTo(tid){
   var fid = extractfid()
-  moveThreadToForum(tid,fid);
-}
-
-function moveThreadToForum(tid,fid){
-  nkcAPI('moveThread',{tid:tid,fid:fid})
+  askCategoryOfForum(fid)
+  .then(function(cid){
+    return moveThread(tid,fid,cid)
+  })
   .then(function(){
-    screenTopAlert(tid+' moved to '+fid+' 请刷新')
-    //window.location.reload()
+    screenTopAlert('请刷新')
   })
   .catch(jwarning)
+}
+
+function askCategoryOfForum(fid){
+  fid = fid.toString()
+  return nkcAPI('getForumCategories',{fid:fid})
+  .then(function(arr){
+    if(!arr.length)return null
+    return screenTopQuestion('请选择一个分类：',arr.map(function(i){return i._key+':'+i.name}))
+  })
+  .then(function(str){
+    //console.log('selected:',str.split(':')[0]);
+    if(!str)return null
+    return str.split(':')[0]
+  })
+}
+
+function moveThread(tid,fid,cid){
+  return nkcAPI('moveThread',{
+    tid:tid,
+    fid:fid,
+    cid:cid,
+  })
+  .then(function(){
+    screenTopAlert(tid + ' 已送 ' + fid + (cid?' 的 '+cid:''))
+  })
+  .catch(function(){
+    screenTopWarning(tid+ ' 无法送 ' + fid+ (cid?' 的 '+cid:''))
+  })
 }
 
 function recycleThread(tid){
