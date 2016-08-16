@@ -252,7 +252,7 @@ block content
                   include interface_navigation_paging.jade
               
                 if data.replytarget
-                  a.btn.btn-default(style="margin-top:13px" href='/editor?target=#{data.replytarget}') 新帖
+                  a.btn.btn-default(style="margin-top:13px" href='/editor?target=#{data.replytarget}') 发表新帖
               
       .col-md-3.hidden-xs.hidden-sm
         .nkcpanel
@@ -268,12 +268,17 @@ block content
           -var p = data.forum
           include interface_forumprofile2.jade
           
+          if forumIsParent
+            hr.hrNarrowSpace
+            button.btn.btn-primary(onclick="newPostDirector('#{data.forum._key}')") 发表新帖
+          
         .nkcpanel
           ul.HomeFriendlyLink
             include nkc_footer_links.jade
         
         if !forumIsParent
-          include interface_forums_list.jade
+          //include interface_forums_list.jade
+          
   include debug_output.jade
 
 block scripts

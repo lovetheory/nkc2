@@ -134,3 +134,20 @@ function addForumCategory(fid){
     })
   }
 }
+
+function askForumOfZone(fid){
+  return nkcAPI('getForumsOfZone',{fid:fid})
+  .then(function(arr){
+    return screenTopQuestion('请选择一个版块：',arr.map(function(item){return item._key+':'+item.display_name}))
+    .then(function(ans){
+      return ans.split(':')[0]
+    })
+  })
+}
+
+function newPostDirector(fid){
+  askForumOfZone(fid)
+  .then(function(selectedfid){
+    redirect('/editor?target=f/'+selectedfid)
+  })
+}

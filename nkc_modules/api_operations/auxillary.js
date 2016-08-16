@@ -170,3 +170,13 @@ table.createReplyRelation = {
     topid:String,
   }
 }
+
+table.getForumsOfZone = {
+  operation:function(params){
+    var fid = params.fid
+    return AQL(`for f in forums filter f.parentid==@fid sort f.order return f`,{fid})
+  },
+  requiredParams:{
+    fid:String,
+  }
+}

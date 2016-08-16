@@ -210,6 +210,7 @@ var certificates={
       moveCollectionItemToCategory:true,
 
       getForumCategories:true,
+      getForumsOfZone:true,
     },
   },
 
