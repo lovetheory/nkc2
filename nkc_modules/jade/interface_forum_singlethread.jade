@@ -32,7 +32,7 @@
             | #{belong_forum.abbr||belong_forum.display_name}
 
         if threadtype
-          span.ForumThreadHasImage(style='background-color:#{forumcolor};') #{threadtype.name}
+          a.ForumThreadHasImage(href='/f/#{thread.fid}?cat=#{threadtype._key}' style='background-color:#{forumcolor};') #{threadtype.name}
           
         a(class='#{digest?"ForumThreadDigestText":"ForumThreadNormal"}' href="#{url}" title="#{brief}") #{oc.t}
         
