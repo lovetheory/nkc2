@@ -489,14 +489,14 @@ table.viewForum = {
       })
 
       queryfunc.createIndex('threads',{
-        fields:['fid','category','toc'],
+        fields:['fid','cid','toc'],
         type:'skiplist',
         unique:'false',
         sparse:'true',
       })
 
       queryfunc.createIndex('threads',{
-        fields:['fid','category','tlm'],
+        fields:['fid','cid','tlm'],
         type:'skiplist',
         unique:'false',
         sparse:'true',

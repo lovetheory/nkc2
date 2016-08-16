@@ -365,10 +365,10 @@ var common=(function(){
     k = k||0
     return Promise.resolve()
     .then(function(){
-      if(!arr.length||k==arr.length){
-        throw 0
+      if(!arr.length||k===arr.length){
+        throw 'mapping ended'
       }else{
-        console.log('run func on ',k);
+        console.log('run func on #'+k+' element');
         return func(arr[k])
       }
     })
@@ -376,7 +376,7 @@ var common=(function(){
       return mapWithPromise(arr,func,k+1)
     })
     .catch(function(err){
-      console.log(err);
+      console.error(err);
       return err
     })
   }

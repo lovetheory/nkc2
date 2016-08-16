@@ -13,11 +13,12 @@
 -data.forumlist.map(group=>{group.forumgroup.map(f=>{if(f._key==thread.fid){belong_forum=f;pf=group.parentforum;}})})
 -var forumcolor = (belong_forum?belong_forum.color:null)||(pf?pf.color:null)||'#aaa'
 
--var threadtype = data.threadtypes?data.threadtypes.filter(k=>k._key==thread.category)[0]:null;
+-var threadtype = data.threadtypes?data.threadtypes.filter(k=>k._key==thread.cid)[0]:null;
 
 .ForumThreadItem
   .parent.clearfix(id='')
     .avatar-left
+      - var user = ocuser
       - var title = user?getUserDescription(user):''
       a(href='/user_profile/#{uid}' title='#{title}')
         img.ForumThreadAvatar(src='/avatar/#{uid}')

@@ -4,7 +4,7 @@ function enterManagementMode(){
 }
 
 function applyAll(f){
-  return common.mapWithPromise(extractCidArray(),f)
+  return common.mapWithPromise(extractSelectedCheckboxArrayOfID(),f)
 }
 
 function moveThread(tid,fid,cid){
@@ -14,10 +14,10 @@ function moveThread(tid,fid,cid){
     cid:cid,
   })
   .then(function(){
-    screenTopAlert(tid + ' 已送 ' + fid)
+    screenTopAlert(tid + ' 已送 ' + fid + (cid?' 的 '+cid:''))
   })
   .catch(function(){
-    screenTopWarning(tid+ ' 无法送 ' + fid)
+    screenTopWarning(tid+ ' 无法送 ' + fid+ (cid?' 的 '+cid:''))
   })
 }
 
@@ -55,6 +55,7 @@ function askCategoryOfForum(fid){
     return screenTopQuestion('请选择一个分类：',arr.map(function(i){return i._key+':'+i.name}))
   })
   .then(function(str){
+    //console.log('selected:',str.split(':')[0]);
     if(!str)return null
     return str.split(':')[0]
   })

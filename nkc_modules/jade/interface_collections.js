@@ -5,7 +5,7 @@ function select(cid){
   cidbox.value = cidbox.value+cid+','
 }
 
-function extractCidArray(){
+function extractSelectedCheckboxArrayOfID(){
   var k=[]
   $('.ThreadCheckboxes').each(function(){
     if(this.checked){
@@ -19,7 +19,7 @@ function extractCidArray(){
 
 function selectbtn(){
   //select all or deselect all
-  if(extractCidArray().length==0){
+  if(extractSelectedCheckboxArrayOfID().length==0){
     $('.ThreadCheckboxes').each(function(){
       this.checked = true
     })
@@ -41,7 +41,7 @@ function movebtn(){
 
   movebutton.disabled = true
 
-  common.mapWithPromise(extractCidArray(),function(item){
+  common.mapWithPromise(extractSelectedCheckboxArrayOfID(),function(item){
     return nkcAPI('moveCollectionItemToCategory',{cid:item,category:targetCategory})
     .then(function(){
       screenTopAlert(item + '移动到' +targetCategory)
@@ -62,7 +62,7 @@ function moveTo(targetCategory){
 
 function deletebtn(){
   geid('deletebutton').disabled = true
-  common.mapWithPromise(extractCidArray(),function(item){
+  common.mapWithPromise(extractSelectedCheckboxArrayOfID(),function(item){
 
     return nkcAPI('removeCollectionItem',{
       cid:item

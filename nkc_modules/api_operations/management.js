@@ -20,6 +20,8 @@ table.moveThread = {
 
     var fid = params.fid
     var tid = params.tid
+    var cid = params.cid
+
     var thread = new layer.Thread(tid)
     var destforum = new layer.Forum(fid)
     var origforum
@@ -44,7 +46,7 @@ table.moveThread = {
     })
     .then(destforum=>{
       //test existence
-      return thread.update({fid})
+      return thread.update({fid,cid})
     })
     .then(thread=>{
       return `successfully moved ${tid} to ${fid}`

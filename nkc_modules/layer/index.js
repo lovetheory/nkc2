@@ -189,7 +189,7 @@ var layer = (function(){
       var filter = `
       filter t.fid == @fid
 
-      ${params.cat?'&& t.category == @cat':''}
+      ${params.cat?'&& t.cid == @cat':''}
       ${params.digest?'&& t.digest==true':''}
 
       sort

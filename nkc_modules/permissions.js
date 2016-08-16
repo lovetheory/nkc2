@@ -206,6 +206,8 @@ var certificates={
       listMyCategories:true,
       removeCollectionItem:true,
       moveCollectionItemToCategory:true,
+
+      getForumCategories:true,
     },
   },
 
