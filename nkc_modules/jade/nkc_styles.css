@@ -359,11 +359,11 @@ color: #929292;
 }
 
 .ForumNavigation1{
-    border-bottom-style: solid;
-    border-bottom-width: 1px;
-    border-bottom-color: #eaeaea;
-    padding-bottom: 6px;
-    margin-bottom: 4px;
+    /* border-bottom-style: solid; */
+    /* border-bottom-width: 1px; */
+    /* border-bottom-color: #eaeaea; */
+    /* padding-bottom: 6px; */
+    /* margin-bottom: 4px; */
 }
 .ForumNavigation1 a{
     display: inline-block;

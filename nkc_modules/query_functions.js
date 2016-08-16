@@ -121,26 +121,19 @@ var AQL = function(querystring,parameter){
 queryfunc.AQL = AQL
 
 queryfunc.incr_counter = function(countername){
-  var aqlobj = {
-    query:`
+  return AQL(`
     FOR c IN counters
     FILTER c._key == @countername
     UPDATE c WITH {count:c.count+1} IN counters
     RETURN NEW.count
-    `,
-    params:{
-      'countername':countername
-    },
-  };
-
-  return aqlall(aqlobj)
+    `,{'countername':countername}
+  )
   .then(vals=>{
     if(vals.length==1){
       return vals[0].toString()
     }
     throw ('counter '+countername.toString()+' may not be available')
   })
-
 };
 
 //standardrize the result retrieved from Arangodb

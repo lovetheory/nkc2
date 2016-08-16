@@ -25,3 +25,37 @@ table.getForumCategories = {
     fid:String,
   }
 }
+
+table.modifyThreadType = {
+  operation:function(params){
+
+    var op = params.op
+    var cid = params.cid
+    var fid = params.fid
+    var name = params.name
+
+    var selector = `let t = document(threadtypes,@cid)`
+
+    switch (op) {
+      case 'rename':
+      return AQL(`${selector} update t with {name:@name} in threadtypes`,{cid,name})
+
+      case 'remove':
+      return AQL(`${selector} remove t in threadtypes`,{cid})
+
+      case 'add':
+      return queryfunc.incr_counter('threadtypes')
+      .then(newcid=>{
+        return AQL(`insert {_key:@cid, fid:@fid, name:@name} in threadtypes`,{fid, cid:newcid,name})
+      })
+
+      default:
+      throw 'please specify valid option for `op`.'
+    }
+
+  },
+  requiredParams:{
+    //cid:String,
+    op:String,
+  }
+}

@@ -87,3 +87,50 @@ function addSelectedToMyCollection(){
   })
   .catch(jwarning)
 }
+
+function renameForumCategory(fid){
+  askCategoryOfForum(fid)
+  .then(function(cid){
+    var newname = prompt('请为这个分类输入新的名称：')
+    if(!newname){
+      return
+    }
+    else{
+      return nkcAPI('modifyThreadType',{op:'rename',cid:cid,name:newname})
+      .then(function(){
+        screenTopAlert('修改成功')
+        location.reload();
+      })
+    }
+  })
+}
+
+function deleteForumCategory(fid){
+  askCategoryOfForum(fid)
+  .then(function(cid){
+    var okay = confirm('确认要删除这个分类吗？')
+    if(!okay){
+      return
+    }
+    else{
+      return nkcAPI('modifyThreadType',{op:'remove',cid:cid})
+      .then(function(){
+        screenTopAlert('已经删除。')
+        location.reload();
+      })
+    }
+  })
+}
+
+function addForumCategory(fid){
+  var newcatname = prompt('请输入新的分类的名称：')
+  if(!newcatname){
+    return
+  }
+  else{
+    return nkcAPI('modifyThreadType',{op:'add',name:newcatname,fid:fid})
+    .then(function(){
+      location.reload()
+    })
+  }
+}

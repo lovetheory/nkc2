@@ -47,6 +47,8 @@ var certificates={
 
       banUser:true,
       unbanUser:true,
+
+      modifyThreadType:true,
     }
   },
 
