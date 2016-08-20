@@ -105,7 +105,7 @@ block content
             a.HomeSEOLink(href='#{fr}') #{display_name}
       
         if data.answersheet_count
-          span(style='color:#ccc;display:inline-block;') - [ 学术委员会 ] 已经有 #{'0b'+data.answersheet_count.toString(2).toUpperCase()} 人次通过了测试
+          span(style='color:#ccc;display:inline-block;') - [ 学术委员会 ] 已经有 #{data.answersheet_count.toString(10)} 人次通过了测试
     
     .row
       .col-md-12
