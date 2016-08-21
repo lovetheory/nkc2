@@ -55,10 +55,10 @@ table.getResource={
         }
       } //if image
       else{
-       //if non_image
-       if(cc['non_images']){
-         return
-       }
+        //if non_image
+        if(cc['non_images']){
+          return
+        }
       }
 
       throw '只有登录用户可以下载附件，请先登录或者注册。'
@@ -73,10 +73,21 @@ table.getResource={
       var destination_path = settings.upload_path;
       var destFile = destination_path + '/' + robject.path
 
+      function encodeRFC5987ValueChars (str) {
+        return encodeURIComponent(str).
+        // 注意，仅管 RFC3986 保留 "!"，但 RFC5987 并没有
+        // 所以我们并不需要过滤它
+        replace(/['()]/g, escape). // i.e., %27 %28 %29
+        replace(/\*/g, '%2A').
+        // 下面的并不是 RFC5987 中 URI 编码必须的
+        // 所以对于 |`^ 这3个字符我们可以稍稍提高一点可读性
+        replace(/%(?:7C|60|5E)/g, unescape);
+      }
+
       return sendFile(params._res,destFile,{
         maxAge:1000*86400, //cache everything for 1d
         lastModified:true,
-        headers:{'Content-Disposition':'inline; filename=' + encodeURI(robject.oname)},
+        headers:{'Content-Disposition':`inline; filename=${encodeRFC5987ValueChars(robject.oname)}; filename*=utf-8''${encodeRFC5987ValueChars(robject.oname)}`},
       })
       .then(res=>{
         accumulateCountHit(params.rid,'resources')
