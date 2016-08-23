@@ -649,6 +649,9 @@ font-size: 14pt;
 
 .ThreadPostBody blockquote {
   font-size: 10pt;
+max-height: 200px;
+overflow-y: scroll;
+overflow-x: hidden;
 }
 
 .ThreadPostBody span.xbbcode-code, pre code{
