@@ -34,7 +34,7 @@ block content
             - var parent = null
             - if(data.forumlist)data.forumlist.map(item=>{item.forumgroup.map(f=>{if(f._key==data.forum._key){parent=item.parentforum}})})
             
-            div
+            div#pagetop
               if parent
                 a.ThreadTitleForumLink.ThreadTitleForumLinkParent(href='/f/#{parent._key}') #{parent.display_name}
                 span  / 
@@ -50,7 +50,7 @@ block content
             .ThreadTitleAuxillaryLink
               - var po = data.permittedOperations
               
-              a(href='#bottom') 底部
+              a(href='#bottom') 本页底部
               
               if po.addThreadToCollection
                 a(href="javascript:addColl('#{thread._key}')") 收藏
@@ -102,7 +102,10 @@ block content
           span.lighttext 返回 
             a(href='/f/#{fid}') #{forumname} 
             //link back to forum
-            
+          br
+          span.lighttext 返回 
+            a(href='#pagetop') 本页顶部
+          
           hr.hrNarrowSpace
             
           if data.permittedOperations
