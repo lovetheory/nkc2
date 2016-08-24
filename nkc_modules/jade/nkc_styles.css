@@ -594,7 +594,7 @@ font-size: 14pt;
   font-size: 20pt;
   margin-bottom: 5px;
   margin-top: 0;
-  display: block;
+  /* display: block; */
 }
 
 .ThreadTitleText:hover, .ThreadTitleText:focus{
