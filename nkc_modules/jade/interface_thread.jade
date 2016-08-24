@@ -43,7 +43,7 @@ block content
             
             span.ThreadTitleText(href='/t/#{data.thread._key}') #{thread.oc.t}
             
-            span(style='margin-left:20px;') #{thread.count} 回复 / #{thread.hits} 浏览
+            span(style='margin-left:20px;') #{(thread.count-1)?(thread.count-1)+' 回复 /':''} #{thread.hits} 浏览
               
             //.ThreadTitleAuxillary.d-inline.lighttext
                               
