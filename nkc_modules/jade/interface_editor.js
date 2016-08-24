@@ -25,7 +25,7 @@ var nkc_editor = function(){
       if(post.l=='markdown'){
         post.c = common.URLifyMarkdown(post.c)
       }
-      if(post.l=='pwbb'){
+      if(post.l=='bbcode'||post.l=='pwbb'){
         post.c = common.URLifyBBcode(post.c)
       }
     }
