@@ -203,5 +203,5 @@ function moveThread(tid,fid,cid){
 }
 
 function recycleThread(tid){
-  moveThreadToForum(tid,'recycle')
+  moveThread(tid,'recycle')
 }
