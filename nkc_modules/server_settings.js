@@ -313,11 +313,11 @@ settings.exam = {
   succeed_interval:3600*1000*12, //12h
   //dont try within given amount of time after succeeded once.
 
-  pass_score:6,
-  number_of_questions:10,
+  pass_score:4,
+  number_of_questions:7,
 
-  number_of_questions_subjective:7,
-  number_of_questions_common:3,
+  number_of_questions_subjective:6,
+  number_of_questions_common:1,
 
   time_before_register:3600*1000*1, //1h
 }
