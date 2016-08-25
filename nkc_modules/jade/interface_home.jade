@@ -14,9 +14,11 @@ block content
   -var mainContainer1400 = true
   .container-fluid(style='max-width:1400px;')
     .row
-      .col-md-12
-        div(style='max-width:207px')
+      .col-md-12(style='margin-bottom:10px;')
+        div(style='display:inline-block;max-width:207px')
           include forum_logo_wisdom.jade
+          
+        span(style='color: #e89769;margin-left:10px;') 科技爱好者交流社区
     //include interface_home_newest.jade
     
     if data.user
