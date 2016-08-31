@@ -57,6 +57,8 @@ table.forgotPassword = {
       var email=p.model.email
       if(!email||!email.length)throw '该账户没有记录有效的邮件信息。'
 
+      if(email!==params.email)throw '邮箱地址和账户无法对应。可能拼写有误，或者不是这个邮箱。'
+
       //generate a random token and save it
       var token = Math.floor((Math.random()*(65536*65536))).toString(16)
       var mc = new layer.BaseDao('mailcodes')
@@ -69,16 +71,25 @@ table.forgotPassword = {
       })
       .then(()=>{
 
+        var text =
+        `有人在 ${(new Date).toLocaleString()} 请求重置账户 ${u.model.username} 的密码。`+
+        '如果这不是你的操作，请忽略。 '
+
+        var href = 'http://bbs.kechuang.org/forgotPassword?token='+token
+
+        var link =
+        '<a href="'
+        +href
+        +'">'
+        +href
+        +'</a>'
+
         return sendMail({
           from:exampleMailOptions.from,
           to:email,
           subject:'请求重置密码',
-          text:`有人在 ${(new Date).toLocaleString()} 请求重置账户 ${u.model.username} 的密码。`+
-          '如果这不是你的操作，请忽略。<a href="http://bbs.kechuang.org/forgotPassword?token='
-          +token
-          +'">http://bbs.kechuang.org/forgotPassword?token='
-          +token
-          +'</a>',
+          text:text+href,
+          html:text+link,
         })
       })
     })
@@ -88,5 +99,6 @@ table.forgotPassword = {
   },
   requiredParams:{
     username:String,
+    email:String,
   }
 }
