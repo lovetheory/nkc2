@@ -381,12 +381,19 @@ table.newPasswordWithToken = {
     )
     .then(res=>{
       if(!res.length) throw 'token过期或不存在。请尝试重新发送邮件'
+      mc=res[0] //mailcode Object
+      if(mc.used) throw '此token之前已经被使用过了。'
 
-      mc=res[0]
-      var p = new layer.Personal(mc.uid)
-      return p.update(newPasswordObject(params.password))
-      .then(p=>{
-        return 'done'
+      //mark as used
+      return AQL(`let c = document(mailcodes,@id)
+      update c with {used:true} in mailcodes`,{id:mc._key})
+
+      .then(()=>{
+        var p = new layer.Personal(mc.uid)
+        return p.update(newPasswordObject(params.password))
+        .then(p=>{
+          return 'done'
+        })
       })
     })
   },
