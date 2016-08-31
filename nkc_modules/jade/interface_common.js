@@ -7,7 +7,7 @@ function display(id){geid(id).style = 'display:inherit;'}
 
 function jalert(obj){
   if(screenTopAlert){
-    screenTopAlert(JSON.stringify(obj))
+    return screenTopAlert(JSON.stringify(obj))
   }
   else {
     alert(JSON.stringify(obj))
@@ -16,7 +16,7 @@ function jalert(obj){
 
 function jwarning(obj){
   if(screenTopWarning){
-    screenTopWarning(JSON.stringify(obj))
+    return screenTopWarning(JSON.stringify(obj))
   }
   else {
     alert(JSON.stringify(obj))
