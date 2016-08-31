@@ -259,6 +259,10 @@ var certificates={
 
       receiveMobileMessage:true,
       getRegcodeFromMobile:true,
+
+      forgotPassword:true,
+      newPasswordWithToken:true,
+      viewForgotPassword:true,
     }
   },
 

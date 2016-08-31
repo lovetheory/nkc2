@@ -1317,3 +1317,15 @@ table.viewCollectionOfUser = {
     })
   }
 }
+
+table.viewForgotPassword={
+  operation:function(params){
+    var data = defaultData(params)
+    data.template = jadeDir + 'interface_viewForgotPassword.jade'
+
+    data.token = params.token
+    data.sent = params.sent
+
+    return data
+  }
+}

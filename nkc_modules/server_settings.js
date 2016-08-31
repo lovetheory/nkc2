@@ -119,6 +119,8 @@ settings.urlrewrite = [ //happens before serve_static
   urlrewriteGen('self','viewSelf'),
   urlrewriteGen('receiveMobileMessage','receiveMobileMessage'),
 
+  urlrewriteGen('forgotPassword','viewForgotPassword'),
+
   // {map:/^\/logout\?{0,1}(.*)/,to:'/api/operation?&operation=viewLogout&$1'},
   // {map:/^\/login\?{0,1}(.*)/,to:'/api/operation?&operation=viewLogin&$1'},
   // {map:/^\/experimental\?{0,1}(.*)/,to:'/api/operation?&operation=viewExperimental&$1'},

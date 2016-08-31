@@ -362,6 +362,41 @@ table.changePassword = {
   }
 }
 
+table.newPasswordWithToken = {
+  //if user forgot his password, and received a token via email verification
+  operation:function(params){
+    regex_validation.validate({
+      password:params.password
+    })
+
+    if(params.password!==params.password2)throw '两次密码不一致'
+
+    var mc
+    return AQL(`for c in mailcodes
+      filter c.token == @token &&
+      c.toc > (date_now()-86400000)
+      //1d
+      return c
+      `,{token:params.token}
+    )
+    .then(res=>{
+      if(!res.length) throw 'token过期或不存在。请尝试重新发送邮件'
+
+      mc=res[0]
+      var p = new layer.Personal(mc.uid)
+      return p.update(newPasswordObject(params.password))
+      .then(p=>{
+        return 'done'
+      })
+    })
+  },
+  requiredParams:{
+    password:String,
+    password2:String,
+    token:String,
+  }
+}
+
 table.userLogout = {
   operation:function(params){
 
