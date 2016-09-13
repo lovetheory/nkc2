@@ -701,6 +701,7 @@ table.viewUserThreads = {
   operation:function(params){
     var data=defaultData(params)
     data.template = jadeDir + 'interface_forum.jade'
+    data.operation='viewUserThreads'
 
     var uid = params.uid
 

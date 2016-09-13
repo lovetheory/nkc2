@@ -78,7 +78,7 @@ block content
               
               
                 div
-                  span(style='margin-right:20px;') 今日: #{data.forum.count_posts_today} 主题: #{data.forum.count_threads} 回复: #{data.forum.count_posts}
+                  span(style='margin-right:20px;') 今日: #{data.forum.count_posts_today||0} 主题: #{data.forum.count_threads||0} 回复: #{data.forum.count_posts||0}
         
                   if data.forum.moderators && data.forum.moderators.length
                     span 版主：
@@ -263,14 +263,15 @@ block content
           include interface_forums_list.jade
         -skipOtherParent=false
           
-        .nkcpanel
-          -var f = data.forum
-          -var p = data.forum
-          include interface_forumprofile2.jade
-          
-          if forumIsParent
-            hr.hrNarrowSpace
-            button.btn.btn-primary(onclick="newPostDirector('#{data.forum._key}')") 发表新帖
+        if data.operation == 'viewUserThreads'
+          .nkcpanel
+            -var f = data.forum
+            -var p = data.forum
+            include interface_forumprofile2.jade
+            
+            if forumIsParent
+              hr.hrNarrowSpace
+              button.btn.btn-primary(onclick="newPostDirector('#{data.forum._key}')") 发表新帖
           
         .nkcpanel
           ul.HomeFriendlyLink
