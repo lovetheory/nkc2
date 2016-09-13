@@ -263,7 +263,7 @@ block content
           include interface_forums_list.jade
         -skipOtherParent=false
           
-        if data.operation == 'viewUserThreads'
+        if data.operation !== 'viewUserThreads'
           .nkcpanel
             -var f = data.forum
             -var p = data.forum
