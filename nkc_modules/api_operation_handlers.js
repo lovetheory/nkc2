@@ -62,7 +62,7 @@ api.use((req,res,next)=>{
 
 //unhandled error handler
 api.use((err,req,res,next)=>{
-  
+
   if(req.file)
   {
     //delete uploaded file when error happens
@@ -162,11 +162,11 @@ function executeOperation(params)
 }
 
 function isEmpty(obj) {
-    for(var prop in obj) {
-        if(obj.hasOwnProperty(prop)&&obj[prop]!==null&&obj[prop]!==undefined)
-          return false;
-    }
-    return true && JSON.stringify(obj) === JSON.stringify({});
+  for(var prop in obj) {
+    if(obj.hasOwnProperty(prop)&&obj[prop]!==null&&obj[prop]!==undefined)
+    return false;
+  }
+  return true && JSON.stringify(obj) === JSON.stringify({});
 }
 
 //requires:
@@ -209,15 +209,17 @@ function APIroutine(context){
     var endTimeStamp = Date.now()
     var duration = endTimeStamp - initTimeStamp
 
-    queryfunc.doc_save({
-      ip:params._req.iptrim,
-      op:params.operation,
-      uid:params.user?params.user._key:'visitor',
-      t0:initTimeStamp,
-      t1:duration,
-      params:params._copy,
-    },'logs')
-
+    //check: only save user requests, ignore visitors
+    if(params.user||(params.operation=='userLogin')){
+      queryfunc.doc_save({
+        ip:params._req.iptrim,
+        op:params.operation,
+        uid:params.user?params.user._key:'visitor',
+        t0:initTimeStamp,
+        t1:duration,
+        params:params._copy,
+      },'logs')
+    }
     return result
   })
   .catch(err=>{
@@ -226,15 +228,17 @@ function APIroutine(context){
     var endTimeStamp = Date.now()
     var duration = endTimeStamp - initTimeStamp
 
-    queryfunc.doc_save({
-      ip:params._req.iptrim,
-      op:params.operation,
-      uid:params.user?params.user._key:'visitor',
-      t0:initTimeStamp,
-      t1:duration,
-      params:params._copy,
-      error:err.toString(),
-    },'logs')
+    if(params.user||(params.operation=='userLogin')){
+      queryfunc.doc_save({
+        ip:params._req.iptrim,
+        op:params.operation,
+        uid:params.user?params.user._key:'visitor',
+        t0:initTimeStamp,
+        t1:duration,
+        params:params._copy,
+        error:err.toString(),
+      },'logs')
+    }
 
     throw err
   })
