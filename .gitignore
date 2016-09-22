@@ -27,3 +27,5 @@ external_pkgs/MathJax-2.6-latest
 test.js
 
 nkc_modules/mailSecrets.js
+
+npm-debug.log
