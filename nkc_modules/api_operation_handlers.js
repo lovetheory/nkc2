@@ -210,7 +210,7 @@ function APIroutine(context){
     var duration = endTimeStamp - initTimeStamp
 
     //check: only save user requests, ignore visitors
-    if(params.user||(params.operation=='userLogin')){
+    if(params.user||isSpecialOperation(params.operation)){
       queryfunc.doc_save({
         ip:params._req.iptrim,
         op:params.operation,
@@ -228,7 +228,7 @@ function APIroutine(context){
     var endTimeStamp = Date.now()
     var duration = endTimeStamp - initTimeStamp
 
-    if(params.user||(params.operation=='userLogin')){
+    if(params.user||isSpecialOperation(params.operation)){
       queryfunc.doc_save({
         ip:params._req.iptrim,
         op:params.operation,
@@ -243,3 +243,28 @@ function APIroutine(context){
     throw err
   })
 }
+
+function isSpecialOperation(str){
+  return existInArr(str,[
+    'userLogin',
+    'submitExam',
+    'userRegister'
+  ])
+}
+
+function existInArr(thing,arr){
+  for(var i in arr){
+    if(arr[i]===thing){
+      return true
+    }
+  }
+  return false
+}
+
+function unittest(){
+  console.log(isSpecialOperation('userLogin'));
+  console.log(isSpecialOperation('userlogin'));
+  console.log(isSpecialOperation('submitExam'));
+}
+
+if(development)unittest();
