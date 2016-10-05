@@ -114,7 +114,7 @@ block content
                 //a.f12(href='/editor?target=#{data.replytarget}') 回复（去编辑器）
 
               .form-group
-                textarea#ReplyContent.form-control(rows='4' placeholder='快速回复（bbcode语法）' style='resize:none;')
+                textarea#ReplyContent.form-control(rows='4' placeholder='快速回复（bbcode语法）' style='resize:vertical')
               
               .form-inline
                 .form-group
@@ -125,8 +125,9 @@ block content
                     input#ParseURL(type='checkbox' checked)
                     |处理URL
             
-                .form-group
-                  button#WiderArea.hidden-xs.btn.btn-default(onclick='widerArea()') 拓展
+                if 0
+                  .form-group
+                    button#WiderArea.hidden-xs.btn.btn-default(onclick='widerArea()') 拓展
                   
                 .form-group
                   button#GoEditor.btn.btn-default(onclick='goEditor()') 去编辑器
