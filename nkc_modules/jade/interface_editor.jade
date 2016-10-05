@@ -29,7 +29,7 @@ block content
             input#title.form-control(type='text' placeholder='标题' value="#{data.original_post?data.original_post.t||'':''}")
             
           .form-group
-            textarea#content.form-control(placeholder='内容' style='height:300px;resize:none;') #{data.original_post?data.original_post.c:''}
+            textarea#content.form-control(placeholder='内容' style='height:300px;resize:vertical;') #{data.original_post?data.original_post.c:''}
             
           .form-inline(style='margin-bottom:5px;')
             .form-group
@@ -63,7 +63,7 @@ block content
                   
         .col-xs-12.col-sm-5.col-md-6
           h4 预览
-          .nkcpanel#fullwidthpanel(style="max-height: 800px;overflow-y: scroll;")
+          .nkcpanel#fullwidthpanel(style="max-height: 800px;overflow-y: scroll;resize:vertical;")
             div
               h4#parsedtitle
             div#parsedcontent.ThreadPostBody
