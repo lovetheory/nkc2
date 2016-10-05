@@ -118,23 +118,26 @@ block content
               
               .form-inline
                 .form-group
-                  button#ButtonReply.btn.btn-default(onclick='submit()') 快速回复
+                  button#ButtonReply.btn.btn-primary(onclick='submit()') 回复
                   
-                
                 .checkbox-inline
                   label
                     input#ParseURL(type='checkbox' checked)
                     |处理URL
             
                 .form-group
+                  button#WiderArea.hidden-xs.btn.btn-default(onclick='widerArea()') 拓展
+                  
+                .form-group
                   button#GoEditor.btn.btn-default(onclick='goEditor()') 去编辑器
+
           include exam_notification.jade
           
           if !data.user
             :markdown
               想参与大家的讨论？现在就 [注册](/register)。
 
-                
+          
       .col-md-3.col-lg-3.hidden-xs.hidden-sm
         
         //user_profile section

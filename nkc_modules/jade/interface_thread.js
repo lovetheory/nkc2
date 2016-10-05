@@ -205,3 +205,10 @@ function moveThread(tid,fid,cid){
 function recycleThread(tid){
   moveThread(tid,'recycle')
 }
+
+function widerArea(){
+  var rc = geid('ReplyContent')
+  rc.rows = 10
+  rc.style.resize='vertical'
+  geid('WiderArea').style.display = 'none'
+}
