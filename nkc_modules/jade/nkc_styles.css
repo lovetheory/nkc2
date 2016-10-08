@@ -1198,3 +1198,11 @@ margin: 5px;
 }
 
 .nkcshade{box-shadow: rgba(0, 0, 0, 0.14) 0px 3px 10px;}
+
+/* Lets add an arrow after each link */
+.ThreadPostBody a[href]:after {
+    position: relative; /* Prevent underline of arrow */
+    margin-left: 2px; /* Add a little space between text and arrow */
+    margin-right: 5px;
+    content: "\00bb"; /* Unicode hex for &raquo; */
+}
