@@ -34,7 +34,33 @@ function nkc_render(options){
     //default_whitelist.iframe = ['height','width','src','frameborder','allowfullscreen']
   }
 
-  var xssoptions = {whiteList:default_whitelist}
+  var xssoptions = {
+    whiteList:default_whitelist
+  }
+
+  //according to liuhu's blame for inconvenience
+  function linkAlienate(html){
+    if(in_browser){
+      return html
+    }else{
+      var cheerio = require('cheerio')
+      var $ = cheerio.load(html)
+
+      //for all <a> s
+      $('a').each(function(i,elem){
+        var href = $(elem).attr('href')
+        //check its href
+        var isExternalLink =
+        !(href.match(/kechuang\.org/i)||href.match(/^\/[^\/]/))
+        //open in new window
+        if(isExternalLink){
+          $(elem).attr('target','_blank')
+        }
+      })
+      return $.html()
+    }
+  }
+
   var custom_xss = new xss.FilterXSS(xssoptions)
   var custom_xss_process = function(str){
     return custom_xss.process(str)
@@ -154,68 +180,68 @@ function nkc_render(options){
   // now modified by novakon for nkc project
   function chemFormulaConverter(inputString)
   {
-  	// 初始化临时字符串
-  	newString=inputString
-  	// 检验是否转换过
-  	// 替换点号
+    // 初始化临时字符串
+    newString=inputString
+    // 检验是否转换过
+    // 替换点号
     newString=newString.replace(/\&/g,'·')
     .replace(/\~/g,'↑')
     .replace(/\!/g,'↓')
 
-  	// 插入下标代码
-  	oldString=newString;
-  	newString="";
-  	index=0;
-  	while(oldString!="")
-  	{
-  		index1=oldString.search(/[a-z\)]\d+/i)+1;
-  		if(index1<=0)
-  		{
-  			break;
-  		}
-  		index2=index1+oldString.substring(index1).search(/\D/);
-  		if(index2-index1<=0)
-  		{
-  			index2=oldString.length
-  		}
-  		newString+=oldString.substring(0,index1);
-  		newString+="[sub]"
-  		newString+=oldString.substring(index1,index2);
-  		newString+="[/sub]"
-  		oldString=oldString.substring(index2);
-  	}
-  	newString+=oldString;
-  	// 插入上标代码
-  	oldString=newString;
-  	newString="";
-  	while(oldString!="")
-  	{
-  		index1=oldString.search(/\^/);
-  		if(index1<0)
-  		{
-  			break;
-  		}
-  		index2=index1+oldString.substring(index1).search(/[\+\-]/);
-  		if(index2-index1<=0)
-  		{
-  			index2=oldString.length
-  		}
-  		newString+=oldString.substring(0,index1);
-  		newString+="[sup]";
-  		newString+=oldString.substring(index1+1,index2+1);
-  		newString+="[/sup]"
-  		oldString=oldString.substring(index2+1);
-  	}
-  	newString+=oldString
+    // 插入下标代码
+    oldString=newString;
+    newString="";
+    index=0;
+    while(oldString!="")
+    {
+      index1=oldString.search(/[a-z\)]\d+/i)+1;
+      if(index1<=0)
+      {
+        break;
+      }
+      index2=index1+oldString.substring(index1).search(/\D/);
+      if(index2-index1<=0)
+      {
+        index2=oldString.length
+      }
+      newString+=oldString.substring(0,index1);
+      newString+="[sub]"
+      newString+=oldString.substring(index1,index2);
+      newString+="[/sub]"
+      oldString=oldString.substring(index2);
+    }
+    newString+=oldString;
+    // 插入上标代码
+    oldString=newString;
+    newString="";
+    while(oldString!="")
+    {
+      index1=oldString.search(/\^/);
+      if(index1<0)
+      {
+        break;
+      }
+      index2=index1+oldString.substring(index1).search(/[\+\-]/);
+      if(index2-index1<=0)
+      {
+        index2=oldString.length
+      }
+      newString+=oldString.substring(0,index1);
+      newString+="[sup]";
+      newString+=oldString.substring(index1+1,index2+1);
+      newString+="[/sup]"
+      oldString=oldString.substring(index2+1);
+    }
+    newString+=oldString
 
-  	return newString;
+    return newString;
   }
 
-function chemFormulaReplacer(html){
-  return html.replace(/\[cf]([^]+?)\[\/cf]/g,function(match,p1) {
-    return chemFormulaConverter(p1)
-  })
-}
+  function chemFormulaReplacer(html){
+    return html.replace(/\[cf]([^]+?)\[\/cf]/g,function(match,p1) {
+      return chemFormulaConverter(p1)
+    })
+  }
 
   render.hiddenReplaceHTML = function(text){
     return text.replace(/\[hide=([0-9]{1,3}).*?]([^]*?)\[\/hide]/gm, //multiline match
@@ -411,6 +437,7 @@ function chemFormulaReplacer(html){
       renderedHTML = plain_escape(content)
     }
 
+    renderedHTML = linkAlienate(renderedHTML) //please check linkAlienate()
     return renderedHTML
   }
 
