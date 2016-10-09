@@ -1,22 +1,25 @@
 //refer to forum object as f, count as index..
 if (forum!==null)
-  if 0
+  if 1
     if index%4==0
       .clearfix.visible-lg-block
-    if index%3==0
+    if index%4==0
       .clearfix.visible-md-block
     if index%2==0
       .clearfix.visible-sm-block
-    if index%2==0
+    if index%1==0
       .clearfix.visible-xs-block
     //above are necessary when some columns are shorter than others
   - var f = forum
   - var p = parent
   //.col-lg-3.col-md-4.col-sm-6.col-xs-12
-  .col-xs-12(style='margin-bottom:6px')
-    .row
+  //.col-xs-12(style='margin-bottom:6px')
+  .col-xs-12.col-sm-6.col-md-3(style='margin-bottom:6px')    
+    .kb
       .HomeForumContainer
-        .col-xs-12.col-sm-6.col-md-3
+      
+        //.col-xs-12.col-sm-6.col-md-3
+        .kb
           .HomeForumTitle
             - var forumcolor = f.color||p.color||'#eee'
             - var url = '/f/'+f._key; //url = seo_reverse_rewrite(url)
@@ -41,13 +44,15 @@ if (forum!==null)
               
           .HomeForumDescription
             span #{f.description}
-        
-        
+    
+
+    
         //hr.hrNarrowSpace
         each thread,index in f.threads
           if (index+1)%2==0
-            .clearfix.visible-sm-block
-          .col-xs-12.col-sm-6.col-md-3
+            //.clearfix.visible-sm-block
+          //.col-xs-12.col-sm-6.col-md-3
+          .kb
             .HomeThreadItem
               -var count = (thread.count_remain||thread.count)-1
               if count
@@ -76,4 +81,8 @@ if (forum!==null)
                   span.reddish #{fromNowAbbr(thread.tlm)} 
                 else
 
-            
+        if children && children.length
+          .HomeChildrenArea
+            -for(i in children)
+              -var cf = children[i]
+              a(href='/f/#{cf._key}' style='color:#{"white"};background-color:#{cf.color||forumcolor}') #{cf.abbr||cf.display_name}

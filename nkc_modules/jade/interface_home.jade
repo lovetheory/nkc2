@@ -69,30 +69,32 @@ block content
           - cindex += group.forumgroup.length
       
     if 1
-      .ka
+      .row
         - var cindex = 0
         each group,gindex in data.grouparray
           -var p = group.parentforum
-          .row
+          
 
-            -var parent = group.parentforum
-            -var forum = parent
-            -var ts = []; group.forumgroup.map(item=>{ts=ts.concat(item.threads)})
-            -ts = ts.sort((a,b)=>b.tlm-a.tlm).slice(0,3)
-            -forum.threads = ts
-            -var sum = (tot,cur)=>tot+cur
-            -var sfk = (key)=>group.forumgroup.map(k=>k[key]).reduce(sum,0)
-            
-            -var count_posts_today = sfk('count_posts_today')
-            -var count_threads = sfk('count_threads')
-            -var count_posts = sfk('count_posts')
-            
-            -Object.assign(forum,{count_posts_today,count_posts,count_threads})
-            -var index = 0
-            
-              //each forum,findex in group.forumgroup 
-              //- var index = cindex + findex
-              include interface_home_singleforum.jade
+          -var parent = group.parentforum
+          -var forum = parent
+          -var ts = []; group.forumgroup.map(item=>{ts=ts.concat(item.threads)})
+          -ts = ts.sort((a,b)=>b.tlm-a.tlm).slice(0,3)
+          -forum.threads = ts
+          -var sum = (tot,cur)=>tot||0+cur||0
+          -var sfk = (key)=>group.forumgroup.map(k=>k[key]).reduce(sum,0)
+          
+          -var count_posts_today = sfk('count_posts_today')
+          -var count_threads = sfk('count_threads')
+          -var count_posts = sfk('count_posts')
+          
+          -var children = group.forumgroup
+          
+          -Object.assign(forum,{count_posts_today,count_posts,count_threads})
+          -var index = gindex
+          
+            //each forum,findex in group.forumgroup 
+            //- var index = cindex + findex
+            include interface_home_singleforum.jade
           
           - cindex += group.forumgroup.length
     

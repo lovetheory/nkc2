@@ -180,11 +180,20 @@ color: #929292;
 margin-right: 10px;
 }
 
-
-
+.HomeChildrenArea{
+    padding: 5px 0 5px 0;
+}
+.HomeChildrenArea a{
+    font-size: 10px;
+    display: inline-block;
+    margin-right: 5px;
+    padding: 0 3px 0 3px;
+    border-radius: 4px;
+}
+  
 .HomeForumContainer{
 margin-bottom: 20px;
-padding: 6px;
+/* padding: 6px; */
 /* background-color: #ecf1ef; */
 /* height: 135px; */
 /* overflow-y: hidden; */
