@@ -99,3 +99,53 @@ api('getStatDaily',params=>{
   }
 
 })
+
+var xsflimit = require('../misc/xsflimit')
+
+var getRateLimiter = function(milliseconds){
+  var hashtable = {}
+
+  function testLimit(entryKey){
+    var dn = Date.now()
+    var tooFrequent = hashtable[entryKey]>dn-milliseconds
+    hashtable[entryKey] = dn
+
+    if(tooFrequent){
+      //too frequent
+      throw 'requesting too frequent'
+    }
+  }
+
+  return testLimit
+}
+
+var checklimit = getRateLimiter(3000)
+
+api('getLatestPosts',params=>{
+  checklimit(params.user._key)
+
+  return AQL(`
+    for p in posts
+    sort p.toc desc
+    let u = document(users,p.uid)
+    let t = document(threads,p.tid)
+    filter t
+    let f = document(forums,t.fid)
+    filter f
+    let class = f.class
+    filter has(@contentClasses,TO_STRING(class)) /*content ctrl*/
+
+    limit 30
+    return {post:p,thread:t,forum:f,user:u}
+    `,{contentClasses:params.contentClasses}
+  )
+  .then(res=>{
+    for(var i in res){
+      var doc = res[i]
+      doc.post.ipoc = undefined
+      doc.post.iplm = undefined
+      xsflimit(doc.post,params)
+    }
+    return res
+  })
+})

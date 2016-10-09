@@ -145,6 +145,7 @@ var certificates={
 
       getStatDaily:true,
 
+      getLatestPosts:true,
     }
   },
 

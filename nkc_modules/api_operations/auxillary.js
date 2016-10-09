@@ -17,25 +17,7 @@ var permissions = require('permissions')
 var table = {};
 module.exports = table;
 
-function xsflimit(p,params){
-  //xsf limiting on post content
-  p.c =
-  p.c.replace(/\[hide=([0-9]{1,3}).*?]([^]*?)\[\/hide]/gm, //multiline match
-  function(match,p1,p2,offset,string){
-    var specified_xsf = parseInt(p1)
-    var hidden_content = p2
-
-    var xsf = params.user?params.user.xsf||0:0
-    var canShowHiddenContent = (xsf >= specified_xsf)||params.contentClasses['classified']
-
-    if(!canShowHiddenContent){
-      hidden_content = ''
-    }
-    return '[hide='+specified_xsf+']'+hidden_content+'[/hide]'
-  })
-
-  return p
-}
+var xsflimit = require('../misc/xsflimit')
 
 table.getPostContent = {
   operation:function(params){
