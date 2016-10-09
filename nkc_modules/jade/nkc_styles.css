@@ -592,8 +592,9 @@ font-size: 14pt;
 .ThreadTitleText, .ThreadTitleText:visited{
   color: black;
   font-size: 20pt;
-  margin-bottom: 5px;
+  /* margin-bottom: 5px; */
   margin-top: 0;
+  margin-right: 10px;
   /* display: block; */
 }
 

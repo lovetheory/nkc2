@@ -30,20 +30,31 @@ block content
           - var thread = data.thread
           - var fid = thread.fid
           .ThreadTitle
-            - var forumname = data.forum.display_name
+            - var forum = data.forum
+            - var forumname = forum.display_name
             - var parent = null
             - if(data.forumlist)data.forumlist.map(item=>{item.forumgroup.map(f=>{if(f._key==data.forum._key){parent=item.parentforum}})})
             
-            div#pagetop
-              if parent
-                a.ThreadTitleForumLink.ThreadTitleForumLinkParent(href='/f/#{parent._key}') #{parent.display_name}
-                span  / 
-              
-              a.ThreadTitleForumLink(href='/f/#{fid}') #{forumname} 
+            if 0 
+              //this part is replaced by the else part
+              div#pagetop
+                if parent
+                  a.ThreadTitleForumLink.ThreadTitleForumLinkParent(href='/f/#{parent._key}') #{parent.display_name}
+                  span  / 
+                
+                a.ThreadTitleForumLink(href='/f/#{fid}') #{forumname} 
+            else
+              .ForumNavigation1(style='margin-bottom:6px')
+                if parent
+                  -var parentcolor = parent.color
+                  a.active(href='/f/#{parent._key}' style='background-color:#{parentcolor}') #{parent.display_name}
+                  //span(style='margin-right:7px') /
+                -var forumcolor = forum.color||parentcolor
+                a.active(href='/f/#{fid}' style='background-color:#{forumcolor}') #{forumname} 
             
             span.ThreadTitleText(href='/t/#{data.thread._key}') #{thread.oc.t}
             
-            span(style='margin-left:20px;') #{(thread.count-1)?(thread.count-1)+' 回复 /':''} #{thread.hits} 浏览
+            span(style='display:inline-block') #{(thread.count-1)?(thread.count-1)+' 回复 /':''} #{thread.hits} 浏览
               
             //.ThreadTitleAuxillary.d-inline.lighttext
                               
