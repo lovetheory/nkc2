@@ -210,18 +210,17 @@ color: #929292;
 }
 
 .HomeForumTitleCircle{
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 7px;
+    overflow: hidden;
+}
 
-  width: 24px;
-
-  height: 24px;
-
-  border-radius: 50%;
-
-  display: inline-block;
-
-  vertical-align: middle;
-
-  margin-right: 7px;
+.HomeForumTitleCircle img{
+  width: 100%;
 }
 
 .HomeForumTitlePrimary{

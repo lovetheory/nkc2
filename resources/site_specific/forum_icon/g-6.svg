@@ -8,7 +8,7 @@ viewBox="0 0 1000 1000"
   <style type="text/css">
    <![CDATA[
     .fil1 {fill:#FEFEFE}
-    .fil0 {fill:#4C97C9}
+    .fil0 {fill:transparent}
     .fil2 {fill:white}
    ]]>
   </style>

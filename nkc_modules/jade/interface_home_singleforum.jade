@@ -21,7 +21,15 @@ if (forum!==null)
             - var forumcolor = f.color||p.color||'#eee'
             - var url = '/f/'+f._key; //url = seo_reverse_rewrite(url)
             
+            //colored circle
             .HomeForumTitleCircle(style='background-color:#{forumcolor}')
+            
+              //if icon file set
+              if f.icon_filename
+                - f.icon_filename = f.icon_filename
+                  //image if present
+                  img(src='/resources/site_specific/forum_icon/#{f.icon_filename}.svg')
+              
             a.HomeForumTitlePrimary(href='#{url}') #{f.display_name}
               
             .HomeForumTitleSecondary
