@@ -220,7 +220,8 @@ color: #929292;
 }
 
 .HomeForumTitleCircle img{
-  width: 100%;
+  width: 90%;
+  margin: 5%;
 }
 
 .HomeForumTitlePrimary{
