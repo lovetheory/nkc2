@@ -1,27 +1,18 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 16.0.3, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<!-- Creator: CorelDRAW X6 -->
-<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="10mm" height="10mm" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
-viewBox="0 0 1000 1000"
- xmlns:xlink="http://www.w3.org/1999/xlink">
- <defs>
-  <style type="text/css">
-   <![CDATA[
-    .fil0 {fill:transparent}
-    .fil1 {fill:white}
-   ]]>
-  </style>
- </defs>
- <g id="图层_x0020_1">
-  <metadata id="CorelCorpID_0Corel-Layer"/>
-  <g id="_638440304">
-   <rect class="fil0" width="1000" height="1000" rx="186" ry="200"/>
-   <g>
-    <polygon class="fil1" points="500,96 675,197 850,298 850,500 850,702 675,803 500,904 325,803 150,702 150,500 150,298 325,197 "/>
-    <polygon class="fil0" points="500,177 640,258 780,338 780,500 780,662 640,742 500,823 360,742 220,662 220,500 220,338 360,258 "/>
-    <circle class="fil1" cx="500" cy="500" r="242"/>
-    <circle class="fil0" cx="500" cy="500" r="202"/>
-   </g>
-  </g>
- </g>
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="28.347px" height="28.346px" viewBox="0 0 28.347 28.346" enable-background="new 0 0 28.347 28.346" xml:space="preserve">
+<g id="图层_x0020_1">
+	<g id="_638440304">
+		<path fill="none" d="M5.272,0h17.801c2.912,0,5.273,2.538,5.273,5.669v17.008c0,3.131-2.361,5.669-5.273,5.669H5.272
+			C2.36,28.346,0,25.808,0,22.677V5.669C0,2.538,2.36,0,5.272,0z"/>
+		<g>
+			<polygon fill="none" stroke="#FFFFFF" stroke-width="1.5" stroke-miterlimit="10" points="14.173,4.475 18.377,6.907 
+				22.581,9.309 22.581,14.173 22.581,19.036 18.377,21.44 14.173,23.871 9.97,21.44 5.767,19.036 5.767,14.173 5.767,9.309 
+				9.97,6.907 			"/>
+			<circle fill="none" stroke="#FFFFFF" stroke-width="1.5" stroke-miterlimit="10" cx="14.173" cy="14.173" r="5.083"/>
+		</g>
+	</g>
+</g>
 </svg>
