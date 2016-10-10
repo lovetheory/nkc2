@@ -364,7 +364,8 @@ table.viewHome = {
         limit ${threadPerForum}
 
         let oc = document(posts,t.oc)
-        return merge(t,{oc})
+        let lm = document(posts,t.lm)
+        return merge(t,{oc,lm})
       )
       let nf = merge(f,{threads})
 

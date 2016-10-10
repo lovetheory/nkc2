@@ -55,8 +55,8 @@ if (forum!==null)
           .kb
             .HomeThreadItem
               -var count = (thread.count_remain||thread.count)-1
-              if count
-                span.HomeThreadReplyCount #{count}
+              if count || true
+                span.HomeThreadReplyCount #{count||""}
               //span.lighttext.rightalign #{fromNow(thread.lm.toc)}
               
               - var uid = thread.oc.uid
@@ -80,6 +80,11 @@ if (forum!==null)
                 if Date.now()-thread.tlm<86400000
                   span.reddish #{fromNowAbbr(thread.tlm)} 
                 else
+              
+              .HomeThreadInfo
+                span #{shortDateTimeString(thread.tlm)}&nbsp;
+                a.HomeThreadInfoUsername(href='/user_profile/#{thread.lm.uid}') #{thread.lm.username}
+                
 
         if children && children.length
           .HomeChildrenArea

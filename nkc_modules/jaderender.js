@@ -40,6 +40,15 @@ function dateTimeString(t){
   return moment(t).format('YYYY-MM-DD HH:mm')
 }
 
+function shortDateTimeString(t){
+  var past = Date.now()-t
+  if(past<18*3600000){
+    return moment(t).format('HH:mm')
+  }//12h
+  else{
+    return moment(t).format('M-D HH:mm')
+  }
+}
 
 function getCertsInText(user){
   var perm = require('permissions')
@@ -79,6 +88,7 @@ var jadeoptions = {
   plain:render.plain_render,
   experimental_render:render.experimental_render,
   dateString:dateString,
+  shortDateTimeString,
   dateTimeString,
   fromNow:fromNow,
   htmlDiff,

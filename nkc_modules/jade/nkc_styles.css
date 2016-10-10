@@ -190,9 +190,20 @@ color: #929292;
     padding: 0 3px 0 3px;
     border-radius: 4px;
 }
-  
+.HomeThreadInfo{
+    font-size: 10px;
+    margin-left: 30px;
+}
+.HomeThreadInfo span{
+    color: #dadada;
+}
+.HomeThreadInfoUsername{
+    color: #afc3d4;
+}
+
 .HomeForumContainer{
 margin-bottom: 20px;
+margin-top: 20px;
 /* padding: 6px; */
 /* background-color: #ecf1ef; */
 /* height: 135px; */
@@ -279,7 +290,7 @@ color: #929292;
   position: relative;
   display: block;
   width: 100%;
-  height: 23px;
+  /* height: 23px; */
 }
 
 .HomeThreadAvatarPosition {
