@@ -5,7 +5,7 @@ var mycron = {}
 mycron.startAllJobs = ()=>{
   var cron = require('node-cron')
   var queryfunc = require('query_functions')
-var AQL = queryfunc.AQL
+  var AQL = queryfunc.AQL
 
   cron.schedule('0 0 0 * * *',()=>{
 
@@ -15,13 +15,13 @@ var AQL = queryfunc.AQL
     })
   })
 
-  cron.schedule('*/20 * * * *',function(){
-    setTimeout(function(){
-      process.exit()
-    }
-    ,1000)
-    console.log('sched restart at',Date.now());
-  })
+  // cron.schedule('*/20 * * * *',function(){
+  //   setTimeout(function(){
+  //     process.exit()
+  //   }
+  //   ,1000)
+  //   console.log('sched restart at',Date.now());
+  // })
 
 }
 
