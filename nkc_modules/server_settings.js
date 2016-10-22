@@ -257,7 +257,7 @@ settings.get_relative_path = function(){
   //into /YEAR/MONTH/ for ease of manangement
 }
 
-settings.attachment_image_width = 960;
+settings.attachment_image_width = 1280;
 settings.attachment_image_height = 16384;
 
 //where is default watermark

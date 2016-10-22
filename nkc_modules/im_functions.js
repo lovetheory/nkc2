@@ -133,8 +133,8 @@ im.attachify = function(path,callback){
     '-define',
     'compose:args=50',
     '-composite',
-    //'-quality',
-    //'90',
+    '-quality',
+    '85',
     path,
 
   ])
