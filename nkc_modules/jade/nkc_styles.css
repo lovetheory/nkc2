@@ -773,15 +773,18 @@ font-weight: bold;
   display: inline;
 }
 .PostResourceFileSize{
-
-  font-size: 10pt;
-
-  display: inline;
-
-  margin-left: 3px;
-
-  color: #d66;
+font-size: 10pt;
+display: inline-block;
+margin-left: 3px;
+color: #d66;
 }
+.PostResourceCounter{
+    font-size: 10pt;
+    display: inline-block;
+    margin-left: 3px;
+    color: #adcede;
+}
+
 .ResourceList{
 
 }

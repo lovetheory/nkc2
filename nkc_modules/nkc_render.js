@@ -268,6 +268,8 @@ function nkc_render(options){
       return number.toPrecision(3)
     }
 
+    var hits = r.hits?r.hits.toString()+'次':'';
+
     var fileSizeString = (filesize>1024)?((filesize>1048576)?k(filesize/1048576)+'M':k(filesize/1024)+'k'):k(filesize)+'b'
 
     var extension = r.ext
@@ -318,7 +320,7 @@ function nkc_render(options){
       '<div class="PostResourceDownload">'
       +'<a class="PostResourceDownloadLink" href="/r/'+rid+'" >'
       +'<img class="PostResourceDownloadThumbnail" src="/default/default_thumbnail.png"/>'+oname_safe+'</a>'
-      +'<span class="PostResourceFileSize">'+fileSizeString+'</span>'
+      +'<span class="PostResourceFileSize">'+fileSizeString+'</span>' + '<span class="PostResourceCounter">'+hits+'</span>'
       +'</div>'
     }
 
