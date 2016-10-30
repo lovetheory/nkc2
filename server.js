@@ -133,6 +133,9 @@ nkc.use('/recruit',express.static('../ikc')); //serve company pages
 //toolz statics
 nkc.use('/static',serveIndex('static/',{view:'details'}))
 
+//test 20161030: ACME https certificate
+nkc.use('/.well-known',express.static(settings.server.ACME_path));
+
 
 var requestID = 0
 //4. log request, if not static resources

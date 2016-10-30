@@ -14,6 +14,8 @@ settings.server={
   use_https:false,
   //use_https:true,
 
+  ACME_path:'F:/KC2016/.well-known',
+  
   database_name:'test',
 };
 
