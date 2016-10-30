@@ -23,6 +23,7 @@ context.wait = wait
 
 context.setupIndex= ()=>{
   return client.indices.delete({index:'test'})
+  .catch(console.error)
   .then(res=>{
     return client.indices.create({index:'test'})
   })
