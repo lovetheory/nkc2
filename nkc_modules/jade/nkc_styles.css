@@ -27,6 +27,23 @@
   margin-bottom: 9px;
 }
 
+.SearchResultList{}
+.SearchResultItem{
+    margin-bottom: 10px;
+}
+.SearchResultItem a{}
+.SearchResultItem span{}
+.SearchStatistics{
+    margin-bottom: 10px;
+}
+.SearchStatistics span{
+    color: #b7b7b7;
+}
+.SearchStatistics span span{
+    color: #ea9696;
+    margin: 5px;
+}
+  
 .HomeSEOLink{
 
 font-size: 10px;

@@ -36,3 +36,21 @@ table.useSearch = {
 
   }
 }
+
+var elastic = require('../../elastic.js')
+
+table.localSearch = {
+  operation:params=>{
+    var ss = params.searchstring
+    if(ss.trim().length<2){
+      throw '输入太短'
+    }
+    return elastic.searchAdvanced(ss,params.start,params.count)
+    .then(res=>{
+      return res
+    })
+  },
+  requiredParams:{
+    searchstring:String,
+  }
+}

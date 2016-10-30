@@ -1313,3 +1313,25 @@ table.viewForgotPassword={
     return data
   }
 }
+
+table.viewLocalSearch = {
+  operation:function(params) {
+    var data = defaultData(params)
+    data.template = jadeDir + 'interface_localSearch.jade'
+
+    params.start = params.start||0
+    params.count = params.count||20
+
+    var operations = require('api_operations')
+    return operations.table.localSearch.operation(params)
+    .then(res=>{
+      data.searchresult = res
+      data.start = params.start
+      data.count = params.count
+
+      data.searchstring = params.searchstring
+
+      return data
+    })
+  },
+}
