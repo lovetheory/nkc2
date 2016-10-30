@@ -233,6 +233,7 @@ var certificates={
       //move to visitor afterwards
 
       useSearch:true,
+      viewLocalSearch:true,
 
       viewExam:true,
       submitExam:true,
