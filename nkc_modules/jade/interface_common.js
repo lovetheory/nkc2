@@ -252,7 +252,7 @@ var NavBarSearch = {
   search:function(){
     var searchstr = NavBarSearch.box.value.trim()
 
-    var onSearchResultPage = (geid('stringToSearch').value)?true:false
+    var onSearchResultPage = geid('stringToSearch')?true:false
 
     var openInNewWindow = null
     if(!onSearchResultPage){
