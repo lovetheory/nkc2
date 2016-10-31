@@ -67,7 +67,7 @@ block scripts
     }
     geid('next').addEventListener('click',function(){
       window.location.href = '/api/operation?operation=viewLocalSearch'
-      +'&start=#{data.start+data.count}&searchstring='+getss()
+      +'&start=#{data.start+data.count}&count=#{data.count}&searchstring='+getss()
     })
     geid('research').addEventListener('click',function(){
       window.location.href = '/api/operation?operation=viewLocalSearch'
