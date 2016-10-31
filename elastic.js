@@ -235,28 +235,46 @@ context.batchIndex = ()=>{
   return AQL(`
     for t in threads
     filter t.esi!=true
-    let p = merge(document(posts,t.oc),{
-      count:t.count
-    })
     limit 500
     update t with {esi:true} in threads
-    return unset(p,['_id'])
+	return NEW
+    
     `
   )
   .then(res=>{
-    console.log('got AQL resp');
-    var filtered = res.map(doc=>{
+	return AQL(`
+		for t in @res
+		filter t.fid!='137' && t.fid!='recycled'
+		let p = merge(document(posts,t.oc),{
+			count:t.count
+		})
+		return unset(p,['_id'])
+	`,{res}
+	)
+  })
+  .then(res=>{
+    console.log('got AQL resp',res.length);
+    var filtered = res.filter(doc=>(doc?true:false)).map(doc=>{
       if(doc.credits){
         doc.creditvalue =
          doc.credits.map(c=>{
+		 c.q = Number(c.q)
           return (c.type=='xsf')?c.q*5000:c.q
         })
         .reduce((a,b)=>a+b,0)
       }
+	  
+	  doc.r = undefined
+	  doc.credits = undefined
       return doc
     })
     console.log('AQL got:',filtered.length);
+	console.log(filtered[0]);
     return mapWithPromise(filtered,context.indexThread)
+  })
+  .catch(err=>{
+	console.error(err)
+	throw err
   })
 }
 
