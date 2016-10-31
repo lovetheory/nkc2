@@ -59,18 +59,32 @@ block scripts
   
   script(src='/interface_common.js')
   script.
-    function getss(){
-      var ss = geid('stringToSearch').value.trim()
-      if(ss.length<2){throw 'too short'}
-      else 
-      {return ss}
-    }
-    geid('next').addEventListener('click',function(){
-      window.location.href = '/api/operation?operation=viewLocalSearch'
-      +'&start=#{data.start+data.count}&count=#{data.count}&searchstring='+getss()
-    })
-    geid('research').addEventListener('click',function(){
-      window.location.href = '/api/operation?operation=viewLocalSearch'
-      +'&searchstring='+getss()
-    })
-    geid('SearchBox').value = getss()
+    (function(){
+      function getss(){
+        var ss = geid('stringToSearch').value.trim()
+        if(ss.length<2){throw 'too short'}
+        else 
+        {return ss}
+      }
+      geid('next').addEventListener('click',function(){
+        window.location.href = '/api/operation?operation=viewLocalSearch'
+        +'&start=#{data.start+data.count}&count=#{data.count}&searchstring='+getss()
+      })
+      geid('research').addEventListener('click',function(){
+        nkcAPI('useSearch',{searchstring:getss()})
+        .catch(function(err){
+          console.error(err)
+        })
+        
+        window.location.href = '/api/operation?operation=viewLocalSearch'
+        +'&searchstring='+getss()
+      })
+      geid('SearchBox').value = getss()
+      geid('stringToSearch').addEventListener('keypress', onkeypress);
+      
+      function onkeypress(){
+        e = event ? event :(window.event ? window.event : null);
+        if(e.keyCode===13||e.which===13)
+        geid('research').click()
+      }
+    })()
