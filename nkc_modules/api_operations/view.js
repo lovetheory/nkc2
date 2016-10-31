@@ -601,16 +601,11 @@ table.viewForum = {
       data.forums = res
       //return data
 
-      return AQL(`
-        let tt = (for i in threadtypes return i)
-        let ftt = (for i in threadtypes filter i.fid==@fid sort i.order return i)
-        return {tt,ftt}
-        `,{fid}
-      )
+      return getThreadTypes(fid)
     })
     .then(res=>{
-      data.threadtypes = res[0].tt
-      data.forumthreadtypes = res[0].ftt
+      data.threadtypes = res.tt
+      data.forumthreadtypes = res.ftt
 
     })
     .then(res=>{
@@ -621,6 +616,18 @@ table.viewForum = {
   requiredParams:{
     fid:String,
   }
+}
+
+function getThreadTypes(fid){
+  return AQL(`
+    let tt = (for i in threadtypes return i)
+    let ftt = (for i in threadtypes filter i.fid==@fid sort i.order return i)
+    return {tt,ftt}
+    `,{fid:fid||null}
+  )
+  .then(res=>{
+    return res[0]
+  })
 }
 
 table.viewThread = {
@@ -1371,6 +1378,12 @@ table.viewLocalSearch = {
     })
     .then(res=>{
       data.forumlistkv = res
+      return getThreadTypes()
+    })
+    .then(res=>{
+      data.threadtypes = res.tt
+      data.forumthreadtypes = res.ftt
+
       return data
     })
   },
