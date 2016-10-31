@@ -10,8 +10,14 @@
 -var topped = thread.topped
 -var belong_forum = null; var pf=null
 -if(data.forum&&data.forum.type!='forum'&&data.forumlist)
--data.forumlist.map(group=>{group.forumgroup.map(f=>{if(f._key==thread.fid){belong_forum=f;pf=group.parentforum;}})})
--var forumcolor = (belong_forum?belong_forum.color:null)||(pf?pf.color:null)||'#aaa'
+  -data.forumlist.map(group=>{group.forumgroup.map(f=>{if(f._key==thread.fid){belong_forum=f;pf=group.parentforum;}})})
+  -var forumcolor = (belong_forum?belong_forum.color:null)||(pf?pf.color:null)||'#aaa'
+
+-if(data.forumlistkv)
+  -var v = data.forumlistkv[thread.fid]||{}
+  -belong_forum = v.belong_forum;pf = v.pf; var forumcolor = v.color;
+  //span #{belong_forum._key}
+  //span #{thread.fid}
 
 -var threadtype = data.threadtypes?data.threadtypes.filter(k=>k._key==thread.cid)[0]:null;
 
@@ -27,7 +33,7 @@
       .ForumThreadTitle
         - var brief = oc.c.replace(/\[.*?]/g,'').trim().slice(0,100)
         //span.f12.ForumThreadDigestText [精]
-        if belong_forum && belong_forum._key!==data.forum._key
+        if belong_forum && (belong_forum._key!==(data.forum?data.forum._key:null))
           a.ForumThreadHasImage(style='background-color:#{forumcolor};' href='/f/#{belong_forum._key}')
             | #{belong_forum.abbr||belong_forum.display_name}
 
@@ -63,7 +69,7 @@
           //帖子最后回复时间和回复者
 
         span.lighttext(style='margin-right:7px;')   by
-        a.ForumThreadItemUsername(href='/user_threads/#{lmuser._key}') #{lmuser.username}
+        a.ForumThreadItemUsername(href='/user_profile/#{lmuser._key}') #{lmuser.username}
         
       
       -var count = (thread.count_remain||thread.count)-1

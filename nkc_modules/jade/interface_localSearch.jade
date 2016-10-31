@@ -7,32 +7,70 @@ block content
   -var sr = data.searchresult
   .container
     .row
-      .col-xs-12.col-sm-7.col-md-6
+      .col-xs-12
+        //.col-sm-7.col-md-6
         .SearchStatistics
           span 搜索字符串
             span #{data.searchstring}
           span 共耗时
             span #{sr.took}
-            | 毫秒
+            | 毫秒，
             
           span 得到结果
             span #{sr.hits.total}
+            | 个，
+          
+          span 显示第
+            span #{data.start+1} - #{Math.min(sr.hits.total,data.start+sr.hits.hits.length)}
             | 个
           
-        .SearchResultList
-          each doc,index in sr.hits.hits
-            .SearchResultItem
-              - doc = doc._source
-              
-              a(href='/t/#{doc.tid}') #{doc.t}
-              br
-              span.lighttext #{dateTimeString(doc.toc)}
-              //span 作者: #{doc.username||doc.uid}
-              span.lighttext #{doc.count}个回复
-      
-    
+        .ForumThreadList
+          each thread,index in data.threads
+            if data.toppedThreads && (data.toppedThreads.map(item=>item._key).indexOf(thread._key)>=0)
+              //exclude threads that are shown in topped area.
+            else
+              include interface_forum_singlethread.jade
+        
+        if 0
+          .SearchResultList
+            each doc,index in sr.hits.hits
+              .SearchResultItem
+                - doc = doc._source
+                
+                a(href='/t/#{doc.tid}') #{doc.t}
+                br
+                span.lighttext #{dateTimeString(doc.toc)}
+                //span 作者: #{doc.username||doc.uid}
+                span.lighttext #{doc.count}个回复
+        br
+        //.form-inline
+        if Math.min(sr.hits.total,data.start+sr.hits.hits.length) !== sr.hits.total
+          .form-group
+            button#next.btn.btn-success() 下一页
+        
+        .form-inline
+          .form-group
+            input#stringToSearch.form-control(type='text' value='#{data.searchstring}')
+          .form-group
+            button#research.btn.btn-primary() 搜索
   
   include debug_output.jade
 block scripts
   
   script(src='/interface_common.js')
+  script.
+    function getss(){
+      var ss = geid('stringToSearch').value.trim()
+      if(ss.length<2){throw 'too short'}
+      else 
+      {return ss}
+    }
+    geid('next').addEventListener('click',function(){
+      window.location.href = '/api/operation?operation=viewLocalSearch'
+      +'&start=#{data.start+data.count}&searchstring='+getss()
+    })
+    geid('research').addEventListener('click',function(){
+      window.location.href = '/api/operation?operation=viewLocalSearch'
+      +'&searchstring='+getss()
+    })
+    geid('SearchBox').value = getss()

@@ -116,6 +116,28 @@ function getForumList(params) {
   )
 }
 
+function getForumListKv(params){
+  return getForumList(params)
+  .then(res=>{
+    var forumlist = res
+    var kv = {}
+    forumlist.map(group=>{
+      group.forumgroup.map(f=>{
+        var belong_forum = f
+        var pf = group.parentforum
+        kv[f._key] = {
+          belong_forum,
+          pf,
+          color:(f?f.color:null)||(pf?pf.color:null)||'#aaa',
+        }
+      })
+    })
+
+    return kv
+  })
+}
+
+
 table.viewPanorama = {
   init:function(){
     queryfunc.createIndex('threads',{
@@ -1319,8 +1341,8 @@ table.viewLocalSearch = {
     var data = defaultData(params)
     data.template = jadeDir + 'interface_localSearch.jade'
 
-    params.start = params.start||0
-    params.count = params.count||20
+    params.start = Number(params.start)||0
+    params.count = Number(params.count)||30
 
     var operations = require('api_operations')
     return operations.table.localSearch.operation(params)
@@ -1331,6 +1353,24 @@ table.viewLocalSearch = {
 
       data.searchstring = params.searchstring
 
+      return AQL(`
+        for h in @hits
+        let t = document(threads,h._source.tid)
+        let oc = document(posts,t.oc)
+        let ocuser = document(users,oc.uid)
+        let lm = document(posts,t.lm)
+        let lmuser = document(users,lm.uid)
+        return merge(t,{oc,lm,ocuser,lmuser})
+        `,{hits:res.hits.hits}
+      )
+    })
+    .then(res=>{
+      data.threads = res
+
+      return getForumListKv(params)
+    })
+    .then(res=>{
+      data.forumlistkv = res
       return data
     })
   },

@@ -41,6 +41,9 @@ var elastic = require('../../elastic.js')
 
 table.localSearch = {
   operation:params=>{
+    params.start = Number(params.start)||0
+    params.count = Number(params.count)||10
+
     var ss = params.searchstring
     if(ss.trim().length<2){
       throw '输入太短'
