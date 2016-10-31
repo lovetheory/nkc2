@@ -42,7 +42,7 @@ var elastic = require('../../elastic.js')
 table.localSearch = {
   operation:params=>{
     params.start = Number(params.start)||0
-    params.count = Number(params.count)||10
+    params.count = Math.min(100,Number(params.count)||10) //shall not exceed 100, for performance considerations
 
     var ss = params.searchstring
     if(ss.trim().length<2){
