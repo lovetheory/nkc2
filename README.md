@@ -13,7 +13,7 @@ We are no longer recruiting. @ctmakro If you wanna make friend with me. Leave me
 
 说相同语言的人能够更好地相互沟通，形成更高的生产力，所以人总是倾向于与说相同语言的人组成联盟。秦始皇统一文字，近代中国推行普通话，皆是维护国家统一的良策。
 
-当今世界，国国之间是友好还是敌对，首先取决于语言，其次才是国力。从苏联VS美国，到今天的俄罗斯VS北约，究其原因，是两派民众语言不通，加上双方对各类媒体的审查监管，使得两派民众无法互通情感，更无法实现互相理解，皆以动刀动枪为行事准则。这方面的集大成者，是北朝鲜的金氏家族，其民众对外部世界毫无觉察，对金氏家族万般支持，使其得以闭门练武。反观日本，专注西化100年，科技先进，国力强盛，人民幸福。
+当今世界，国国之间是友好还是敌对，首先取决于语言，其次才是资源。从苏联VS美国，到今天的俄罗斯VS北约，究其原因，是两派民众语言不通，加上双方对各类媒体的审查监管，使得两派民众无法互通情感，更无法实现互相理解，皆以动刀动枪为荣。北朝鲜民众对外部世界充满敌视，对金氏家族万般支持，使其得以穷兵黩武，装疯卖拐，人民水深火热。反观日本，专注西化100年，文化发达，科技进步，国力强盛，人民幸福。
 
 学习英文，既非崇洋媚外，亦非卖国求荣。只求与世界最富强之国民互相理解，以助推中华崛起；与世界最先进之科学技术并驾齐驱，以造福炎黄子孙。
 
@@ -23,9 +23,9 @@ You are allowed to use these files for any purpose.
 The author of these files shall not be held responsible for any terrorist attacks or global climate changes caused by the use of these files.
 
 ## Reading list
-- Framework: **Express 4** (if you want to implement framework level features)
+- Web Framework: **Express 4**
 - Template Language: **Jade** (now called Pug. Best template language, ever)
-- Database: **ArangoDB** (best of NoSQL)
+- Database: **ArangoDB 3.0+** (best of NoSQL)
 - Image Processing: **ImageMagick** (one and only)
 - Frontend Framework: Raw JavaScript + **React** (Admin Panel), need `Promise` support in browser (supports IE after Polyfilling)
 - Search: **ElasticSearch 5.0.0**
