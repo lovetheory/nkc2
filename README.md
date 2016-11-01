@@ -1,34 +1,34 @@
-# Volatile
-
-The repository is currently in a volatile state(deadline approaching). Don't pull from it before July...
-
 # nkc2
 
 ![bannerlogo](/resources/site_specific/kclogo_umaru1_nc.png)
 
 nkc community project, version 2.
-Currently under dev.
+Will always be under development.
 
 ## Recruitment
 
-Join our company. We expect applicants:
+We are no longer recruiting. @ctmakro If you wanna make friend with me. Leave me alone if you have an idea for the next Facebook.
 
-1. Have good understanding of Promise in JavaScript.
-2. Have no problem reading ArangoDB's documentation.
-3. Can read/ write/ speak Chinese fluently.
+## Why this is written in English
+
+说相同语言的人能够更好地相互沟通，形成更高的生产力，所以人总是倾向于与说相同语言的人组成联盟。秦始皇统一文字，近代中国推行普通话，皆是维护国家统一的良策。
+
+当今世界，国国之间是友好还是敌对，首先取决于语言，其次才是国力。从苏联VS美国，到今天的俄罗斯VS北约，究其原因，是两派民众语言不通，加上双方对各类媒体的审查监管，使得两派民众无法互通情感，更无法实现互相理解，皆以动刀动枪为行事准则。这方面的集大成者，是北朝鲜的金氏家族，其民众对外部世界毫无觉察，对金氏家族万般支持，使其得以闭门练武。反观日本，专注西化100年，科技先进，国力强盛，人民幸福。
+
+学习英文，既非崇洋媚外，亦非卖国求荣。只求与世界最富强之国民互相理解，以助推中华崛起；与世界最先进之科学技术并驾齐驱，以造福炎黄子孙。
 
 ## License
-You are allowed to use these files for any purpose, as long as you admit that they are useful[1].
-The author of these files shall not be held responsible for any terrorist attacks or global climate changes caused by the use of these files.
 
-[1] Before we change our mind.
+You are allowed to use these files for any purpose.
+The author of these files shall not be held responsible for any terrorist attacks or global climate changes caused by the use of these files.
 
 ## Reading list
 - Framework: **Express 4** (if you want to implement framework level features)
 - Template Language: **Jade** (now called Pug. Best template language, ever)
 - Database: **ArangoDB** (best of NoSQL)
 - Image Processing: **ImageMagick** (one and only)
-- Frontend Framework: Raw JavaScript + **React** (Admin Panel), need `Promise` support in browser (Does not support IE before Polyfilling)
+- Frontend Framework: Raw JavaScript + **React** (Admin Panel), need `Promise` support in browser (supports IE after Polyfilling)
+- Search: **ElasticSearch 5.0.0**
 
 ## Security Updates
 
@@ -62,8 +62,6 @@ The author of these files shall not be held responsible for any terrorist attack
 
 ## How to implement an API
 
-We are currently refactoring. To help, read the following carefully.
-
 1. (If the API is for data modification/retrieval) Visit __localhost:8529__. Learn AQL basics from ArangoDB Official Documentation. Write AQL. Test to see if your query works.
 2. Implement the API function in JavaScript. Please refer to `nkc_modules/api_operations/example.js`.
 3. Make sure the current user has `'dev'` certificate (can call every API once implemented). To allow users with other certificates to call that API, Modify `permissions.js`.
@@ -90,6 +88,9 @@ We are currently refactoring. To help, read the following carefully.
   }
   ````
 
+## Future plans
+- dedicated API engine with key authentication(currently by cookies)
+
 ## To Get Started
 1. Install Node.js, ImageMagick for your system and make sure `npm` and `magick` are available as commands from CLI.
 2. `git clone` this project, or extract from zip, to somewhere nice
@@ -113,7 +114,6 @@ We are currently refactoring. To help, read the following carefully.
 2. Bash: `sh run_as_production.sh` Windows CMD: `run_as_production.sh`(or doubleclick)
 3. Report bugs when necessary.
 
-
 ## For your convenience
 - `scripts` directory contains various scripts to accelerate deployment
 - by default listens on __localhost:1086__
@@ -123,3 +123,8 @@ We are currently refactoring. To help, read the following carefully.
 - `query_functions.js` is the database wrapper
 - `api_functions.js` contains all the API functions. They are called before serving API/HTML requests
 - `im_functions.js` contains wrapper for ImageMagick binaries.
+
+## On ElasticSearch
+- `node elasticDaemon.js` to start a REPL
+- setupIndex() to delete all indexed documents from ES, then recreate the index, then mark all threads in ArangoDB as unindexed
+- enableIndexing() to start copying documents from ArangoDB into ES
