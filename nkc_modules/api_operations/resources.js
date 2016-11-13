@@ -32,7 +32,7 @@ function sendFile(_res,destFile,opt){
 function accumulateCountHit(id,collname){
   return AQL(`
     let t = document(${collname},@id)
-    update t with {hits:t.hits+1} in threads
+    update t with {hits:t.hits+1} in ${collname}
     return NEW.hits
     `,{id}
   )
@@ -90,9 +90,12 @@ table.getResource={
         headers:{'Content-Disposition':`inline; filename=${encodeRFC5987ValueChars(robject.oname)}; filename*=utf-8''${encodeRFC5987ValueChars(robject.oname)}`},
       })
       .then(res=>{
-        accumulateCountHit(params.rid,'resources')
+        return accumulateCountHit(params.rid,'resources')
+        .then(res=>{
+          return 'success'
+        })
 
-        return 'success'
+
       })
     })
   },
