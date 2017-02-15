@@ -70,7 +70,7 @@ im.npminstall = function(){
   })
 }
 
-//resize and crop to produce rectangular avatar.
+//调整大小来产生矩形头像
 im.avatarify = function(path,callback){
   //avatar square width
   const size = settings.avatar_size||192;
@@ -90,7 +90,7 @@ im.avatarify = function(path,callback){
   ])
 };
 
-//resize and crop to produce rectangular avatar.
+//调整大小来产生更小的矩形头像
 im.avatarify_small = function(path,callback){
   //avatar square width
   const size = settings.avatar_size_small||40;
@@ -110,10 +110,9 @@ im.avatarify_small = function(path,callback){
   ])
 };
 
-//resize if image file too large, then watermark.
+//调整过大的图片，并添加水印
 im.attachify = function(path,callback){
-
-  const maxwidth = settings.attachment_image_width||1280;
+  const maxwidth = settings.attachment_image_width||1920;  //最大的宽高限制
   const maxheight = settings.attachment_image_height||16384;
 
   return run_async('magick',[ //please make sure ImageMagick exists in PATH

@@ -18,6 +18,8 @@ db.useDatabase(settings.server.database_name);
 var permission = require('permissions');
 var crypto = require('crypto');
 var BaseDao = require('./BaseDao');
+
+
 var layer = (function () {
     var layer = {};
     var ShortMessage = (function (_super) {
@@ -37,6 +39,7 @@ var layer = (function () {
         };
         return ShortMessage;
     }(BaseDao));
+
     var Personal = (function (_super) {
         __extends(Personal, _super);
         function Personal(key) {
@@ -44,6 +47,7 @@ var layer = (function () {
         }
         return Personal;
     }(BaseDao));
+
     var User = (function (_super) {
         __extends(User, _super);
         function User(key) {
@@ -54,8 +58,9 @@ var layer = (function () {
             return apifunc.get_user_by_name(username)
                 .then(function (reslist) {
                 if (reslist.length == 0)
-                    throw 'user not found by name';
+                    throw '没有找到用户名';
                 _this.model = reslist[0];
+                //console.log(_this.model)
                 return _this;
             });
         };

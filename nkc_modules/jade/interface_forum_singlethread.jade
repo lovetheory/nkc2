@@ -31,31 +31,52 @@
     
     .content-right
       .ForumThreadTitle
-        - var brief = oc.c.replace(/\[.*?]/g,'').trim().slice(0,100)
-        //span.f12.ForumThreadDigestText [精]
-        if belong_forum && (belong_forum._key!==(data.forum?data.forum._key:null))
-          a.ForumThreadHasImage(style='background-color:#{forumcolor};' href='/f/#{belong_forum._key}')
-            | #{belong_forum.abbr||belong_forum.display_name}
+        .ForumThreadTitle1(style="float:left;width:77%;")
+          - var brief = oc.c.replace(/\[.*?]/g,'').trim().slice(0,100)
+          //span.f12.ForumThreadDigestText [精]
+          if belong_forum && (belong_forum._key!==(data.forum?data.forum._key:null))
+            a.ForumThreadHasImage(style='background-color:#{forumcolor};' href='/f/#{belong_forum._key}')
+              | #{belong_forum.abbr||belong_forum.display_name}
 
-        if threadtype
-          a.ForumThreadHasImage(href='/f/#{thread.fid}?cat=#{threadtype._key}' style='background-color:#{forumcolor};') #{threadtype.name}
+          if threadtype
+            a.ForumThreadHasImage(href='/f/#{thread.fid}?cat=#{threadtype._key}' style='background-color:#{forumcolor};') #{threadtype.name}
+            
+          a(class='#{digest?"ForumThreadDigestText":"ForumThreadNormal"}' href="#{url}" title="#{brief}") #{oc.t}
           
-        a(class='#{digest?"ForumThreadDigestText":"ForumThreadNormal"}' href="#{url}" title="#{brief}") #{oc.t}
+          if topped
+            span.ForumThreadHasImage.ForumThreadTopped 顶
+          if has_image
+            span.ForumThreadHasImage 图
+          if has_file
+            span.ForumThreadHasImage.ForumThreadHasFile 附
+            
+        .ForumThreadTitle2(style="float:right;width:21%;")
+          .ForumThreadTitle22(style="float:right;")
+            -var count = (thread.count_remain||thread.count)-1
+            -var hits = thread.hits
+            if hits
+              .ForumThreadStat
+                span.ThreadHits 浏览:#{thread.hits} 
+            if count
+              .ForumThreadStat
+                span.ThreadCount 回复:#{count}
+            else
+              .ForumThreadStat
+                span.ThreadCount 回复:0
+          
+            .ForumThreadTitle3(style="display:inline-block;")
+              input.ThreadCheckboxes(id='#{(item?item._key:null)||thread._key}' type='checkbox' style="#{showTicks?'':'display:none;'}")
         
-        if topped
-          span.ForumThreadHasImage.ForumThreadTopped 顶
-        if has_image
-          span.ForumThreadHasImage 图
-        if has_file
-          span.ForumThreadHasImage.ForumThreadHasFile 附
           
-        //span.lighttext cat#{thread.category}
           
-        //帖子标题链接
-        //span.hidden-xs.lighttext (#{oc.c.length} 字节，#{thread.hits} 点击)
+            
+          //span.lighttext cat#{thread.category}
+            
+          //帖子标题链接
+          //span.hidden-xs.lighttext (#{oc.c.length} 字节，#{thread.hits} 点击)
     
-      .ForumThreadCreatorInfo
-
+    
+      .ForumThreadCreatorInfo(style="width:50%!important;")
         
         if 1
           span.hidden-xs.lighttext.ForumThreadItemCreationTime #{dateTimeString(thread.toc).split(' ')[0]} from
@@ -72,17 +93,10 @@
         a.ForumThreadItemUsername(href='/user_profile/#{lmuser._key}') #{lmuser.username}
         
       
-      -var count = (thread.count_remain||thread.count)-1
-      if count
-        .ForumThreadStat
-          span.ThreadCount #{count}
-          
-        //span /
-        //span.ThreadHits #{thread.hits}
+    
+    
         
-      .CollectionCategoryThreadActions
-  
-        input.ThreadCheckboxes(id='#{(item?item._key:null)||thread._key}' type='checkbox' style="#{showTicks?'':'display:none;'}")
+        
       
 if 0
   .ForumThreadItem

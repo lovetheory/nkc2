@@ -34,6 +34,10 @@ context.setupIndex= ()=>{
       body:{
         threads:{ // post 字段
           properties:{
+            _key:{
+              type:'integer',
+              analyzer:'smartcn',
+            },
             c:{ //content 内容
               type:'string',
               analyzer:'smartcn',
@@ -95,6 +99,8 @@ function mapWithPromise(arr,func,k){
   })
 }
 
+
+
 context.indexThread = (doc)=>{
   return client.index({
     index:'test',
@@ -103,6 +109,8 @@ context.indexThread = (doc)=>{
     body:doc,
   })
 }
+
+
 
 context.search = (q)=>{
   return client.search({
@@ -120,10 +128,15 @@ context.search = (q)=>{
   })
 }
 
+
+
 context.s = (k)=>{
   return context.searchAdvanced(k)
   .catch(console.error)
 }
+
+
+
 
 context.searchAdvanced =(q,start,count)=>{
 
@@ -133,7 +146,7 @@ context.searchAdvanced =(q,start,count)=>{
         fields:[fieldname],
         query:q,
         boost:boost||1,
-        default_operator:'OR',
+        default_operator:'AND',
         minimum_should_match:msm||'25%',
       }
     }
@@ -151,8 +164,10 @@ context.searchAdvanced =(q,start,count)=>{
     dis_max:{
       tie_breaker:0.3,
       queries:[
-        simpleq('t','50%',6),
-        simpleq('c','90%',1),
+        simpleq('t','50%',6),  //按标题
+        simpleq('c','90%',1),  //按帖子内容
+        simpleq('username','50%',2),  //按用户名
+        simpleq('_key','50%',2),  //按文号
         {
           term:{
             username:q.split(' ')[0]
@@ -173,6 +188,7 @@ context.searchAdvanced =(q,start,count)=>{
       query:{
         function_score:{
           query:dismaxq,
+          //query:matchq,
           score_mode:'sum',
 
           functions:[
@@ -207,7 +223,8 @@ context.searchAdvanced =(q,start,count)=>{
       },
 
       highlight:{
-        pre_tags:['<span class="ResultHighLight">'],
+        //pre_tags:['<span class="ResultHighLight">'],
+        pre_tags:['<span style="background-color:red;">'],
         post_tags:['</span>'],
         fields:{
           t:{},
@@ -226,9 +243,14 @@ context.searchAdvanced =(q,start,count)=>{
         console.log(li._source.t,li._source.count,li._source.creditvalue);
       })
     }
+    //console.log(res)
     return res
   })
 }
+
+
+
+
 
 context.batchIndex = ()=>{
   console.log('begin AQL');
@@ -237,14 +259,13 @@ context.batchIndex = ()=>{
     filter t.esi!=true
     limit 500
     update t with {esi:true} in threads
-	return NEW
-    
+	  return NEW
     `
   )
-  .then(res=>{
+  .then(res=>{ //158发展专区，recycle回收站
 	return AQL(`
 		for t in @res
-		filter t.fid!='137' && t.fid!='recycled'
+		filter t.fid!='158' && t.fid!='recycle'
 		let p = merge(document(posts,t.oc),{
 			count:t.count
 		})
@@ -258,18 +279,18 @@ context.batchIndex = ()=>{
       if(doc.credits){
         doc.creditvalue =
          doc.credits.map(c=>{
-		 c.q = Number(c.q)
+		      c.q = Number(c.q)
           return (c.type=='xsf')?c.q*5000:c.q
         })
         .reduce((a,b)=>a+b,0)
       }
-	  
-	  doc.r = undefined
-	  doc.credits = undefined
+
+	    doc.r = undefined
+	    doc.credits = undefined
       return doc
     })
     console.log('AQL got:',filtered.length);
-	console.log(filtered[0]);
+	  console.log(filtered[0]);
     return mapWithPromise(filtered,context.indexThread)
   })
   .catch(err=>{
@@ -277,6 +298,10 @@ context.batchIndex = ()=>{
 	throw err
   })
 }
+
+
+
+
 
 var isIndexing = true
 

@@ -59,7 +59,7 @@ function evaluateExam(params){
       }else{
         switch (questions[i].type) {
           case 'ch4':
-          correctness = (exam.qarr[i].choices[sheet[i]]==questions[i].answer[0])
+          correctness = (exam.qarr[i].choices[sheet[i]]==questions[i].answer[0])  //第一个是答案
 
           break;
           case 'ans':
@@ -77,7 +77,7 @@ function evaluateExam(params){
     }
     report(records);
 
-    if(score<settings.exam.pass_score)throw('test failed');
+    if(score<settings.exam.pass_score)throw('测试没有通过哦，别气馁，请继续努力！');
     //passed the test.
 
     return queryfunc.doc_answersheet_from_ip(params._req.iptrim)
@@ -88,7 +88,7 @@ function evaluateExam(params){
       if(Date.now() - back[0].tsm < settings.exam.succeed_interval)
       //if re-succeed an exam within given amount of time
       {
-        throw 'You (or someone with the same IP address) succeeded too often. You don\'t really have to.'
+        throw '您之前测试通过的次数有点多哦，不应该再进行测试了！'
       }
     }
 

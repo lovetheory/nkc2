@@ -156,7 +156,20 @@ var certificates={
 
     },
     permittedOperations:{
-      postTo:true,
+      postTo:true,  //发帖
+      getPostContent:true,
+      selfModifyTimeLimit:timeHour*1,
+    }
+  },
+
+  mail:{
+    display_name:'笔友',
+    inheritFrom:['default'],
+    contentClasses:{
+
+    },
+    permittedOperations:{
+      postTo:true,  //发帖
       getPostContent:true,
       selfModifyTimeLimit:timeHour*1,
     }
@@ -174,7 +187,6 @@ var certificates={
       non_broadcast:true,
     },
     permittedOperations:{
-
       viewSMS:true,
       sendShortMessageByUsername:true,
 
@@ -198,6 +210,7 @@ var certificates={
       getResourceOfCurrentUser:true,
 
       changePassword:true,
+
       viewPersonal:true,
 
       submitPersonalSetting:true,
@@ -234,11 +247,13 @@ var certificates={
 
       useSearch:true,
       viewLocalSearch:true,
+      //localSearch:true,  //搜索
 
       viewExam:true,
       submitExam:true,
 
       viewRegister:true,
+      viewRegister2:true,  //访问邮箱注册页面
       userRegister:true,
 
       userLogin:true,
@@ -264,7 +279,17 @@ var certificates={
 
       forgotPassword:true,
       newPasswordWithToken:true,
+      pchangePassword:true,  //手机号修改密码
       viewForgotPassword:true,
+      viewForgotPassword2:true,  //手机找回密码
+
+      getMcode:true,  //注册获取手机验证码
+      getMcode2:true,  //找回密码的手机验证码
+      userPhoneRegister:true,  //手机用户注册
+      userMailRegister:true,  //邮箱注册
+      refreshicode:true,  //刷新图片验证码
+      refreshicode3:true,  //刷新图片验证码
+      viewActiveEmail:true,  //邮箱激活
     }
   },
 

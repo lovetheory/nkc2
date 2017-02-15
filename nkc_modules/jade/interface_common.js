@@ -23,11 +23,9 @@ function jwarning(obj){
   }
 }
 
-function post_api(target,body,callback)
-{
+function post_api(target,body,callback){
   var xhr = new XMLHttpRequest();
-  xhr.onreadystatechange=function()
-  {
+  xhr.onreadystatechange=function(){
     if (xhr.readyState==4)
     {
       if(xhr.status==200){
@@ -45,8 +43,7 @@ function post_api(target,body,callback)
 function generalRequest(obj,opt,callback){
   var xhr = new XMLHttpRequest();
   xhr.onreadystatechange=function(){
-    if (xhr.readyState==4)
-    {
+    if (xhr.readyState==4){
       try{
         var res;
         res = JSON.parse(xhr.responseText);
@@ -81,13 +78,10 @@ function nkcOperationAPI(obj){
   })
 }
 
-function get_api(target,callback)
-{
+function get_api(target,callback){
   var xhr = new XMLHttpRequest();
-  xhr.onreadystatechange=function()
-  {
-    if (xhr.readyState==4)
-    {
+  xhr.onreadystatechange=function(){
+    if (xhr.readyState==4){
       if(xhr.status>=200||xhr.status<400){
         callback(null,xhr.responseText);
       }else {
@@ -99,13 +93,10 @@ function get_api(target,callback)
   xhr.send();
 };
 
-function delete_api(target,callback)
-{
+function delete_api(target,callback){
   var xhr = new XMLHttpRequest();
-  xhr.onreadystatechange=function()
-  {
-    if (xhr.readyState==4)
-    {
+  xhr.onreadystatechange=function(){
+    if (xhr.readyState==4){
       if(xhr.status>=200||xhr.status<400){
         callback(null,xhr.responseText);
       }else {
@@ -117,13 +108,11 @@ function delete_api(target,callback)
   xhr.send();
 };
 
-function screenTopAlert(text)
-{
+function screenTopAlert(text){
   return screenTopAlertOfStyle(text,'success')
 }
 
-function screenTopWarning(text)
-{
+function screenTopWarning(text){
   return screenTopAlertOfStyle(text,'warning')
 }
 
@@ -222,7 +211,7 @@ function redirect(url){
   }
 }
 
-function nkcAPI(operationName,remainingParams){
+function nkcAPI(operationName,remainingParams){  //操作名，参数
   if(!remainingParams){
     var remainingParams={}
   }

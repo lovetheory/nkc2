@@ -10,17 +10,21 @@ block content
   -var isViewingSelf = data.user && data.user._key===thatuser._key //lazy evaluation
   
   .container
+    if (data.user == undefined)
+      h2 请先登录后查看，谢谢~
+    else 
+      if isViewingSelf
+        include interface_profile_recent.jade
+        hr
+        include interface_profile_info.jade
+      else
+        include interface_profile_info.jade
+        hr
+        include interface_profile_recent.jade
+    
+      include debug_output.jade
+    
   
-    if isViewingSelf
-      include interface_profile_recent.jade
-      hr
-      include interface_profile_info.jade
-    else
-      include interface_profile_info.jade
-      hr
-      include interface_profile_recent.jade
   
-  include debug_output.jade
 block scripts
-  
   script(src='/interface_common.js')

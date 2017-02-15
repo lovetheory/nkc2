@@ -21,6 +21,8 @@ var rewrite = require('express-urlrewrite');
 var serveIndex = require('serve-index');
 
 var cookieparser = require('cookie-parser');
+var session = require('express-session');
+var RedisStore = require('connect-redis')(session);
 
 var apifunc = require('api_functions');
 var queryfunc = require('query_functions');
@@ -56,6 +58,16 @@ if(use_https){
 //-------------------------------
 //3. gzip
 nkc.use(compression({level:9}));//enable compression
+
+nkc.use(session({  //session用于存储图片验证码
+  secret: '123456',
+  store: new RedisStore({
+    port: 6379,
+    host: '127.0.0.1',
+  }),
+  resave: true,
+  saveUninitialized: true
+}));
 
 nkc.use(require('serve-favicon')(__dirname+'/resources/site_specific/favicon.ico'));
 
@@ -94,8 +106,7 @@ for(i in settings.urlrewrite){
 }
 
 //2. static file serves
-for(i in settings.root_serve_static)
-{
+for(i in settings.root_serve_static){
   var to = settings.root_serve_static[i].to
   var st = settings.root_serve_static[i].st||settings.static_settings
 

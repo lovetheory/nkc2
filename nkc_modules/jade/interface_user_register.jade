@@ -1,5 +1,6 @@
 extends bootstrap_base.jade
 
+
 block title
   title 注册
 
@@ -13,26 +14,13 @@ block content
         .col-sm-6
           div.f12(style='line-height:1.8;')
             :markdown
-              # 如果你是准备注册的新用户
+              # 参与考试获得高级证书
   
-              ### 参加测试
-              
-              - 通过测试之后就可以获得注册码，可以参与所有专业版块的讨论。
-              
-        .col-sm-6
-          div.f12(style='line-height:1.8;')
-            :markdown
-              # 如果你是科创论坛的老用户
-              
-              ### 参加测试
-              
-              - 通过测试之后就可以开始发帖，可以参与所有专业版块的讨论。
-              
+              ### 说明
+              - 此前未获得[进士]证书的用户可以参加测试。
+              - 通过测试之后就可以参与所有专业版块的讨论。
       hr
       .row
-        
-
-              
         .col-sm-6
           div.f12(style='line-height:1.8;')
             :markdown
@@ -50,93 +38,85 @@ block content
           hr
           p 测试题目来自论坛专家们的集体贡献。试题版权归科创研究院所有，请勿转载。
           
-        .col-sm-6
-          div.f12(style='line-height:1.8;')
-            if 1
-              :markdown
-                # <s>手机验证</s>
-                
-                不好意思，但我们取消了手机验证。请参加测试。
-            
-            if 0
-              :markdown
-                # 手机验证
-                
-                （仅支持大陆用户）请先发送任意短信至
-                <span style="color:orange;font-size:22pt">106905705811672</span>
-                
-                然后等10秒钟，待短信到达服务器。接着在下面输入您的手机号码，最后点击蓝色的按钮。
-              
-              
-              
-              .form-inline
-                .form-group
-                  input#mobilenumber.form-control(type='text' placeholder='输入您的手机号码')
-                .form-group
-                  button.btn.btn-primary(type='button' onclick='getRegcodeFromMobile()') 嗯，我已经发了短信
-              hr
-              p 如果不成功，可以等几秒钟再试试，没准短信还在路上呢。
+        
   
   if !data.getcode
     .container
       .row
         .col-sm-12
-          h1 注册
-          p 欲于科创论坛交流，请先注册一个账号。
-          p 注册之前，请务必通读  
-            a(href='/t/66350') 禁止事项
-            |  以及下方的注册协议。
-          br
-          img(src='/resources/site_specific/kclogo_umaru1_nc.png')
+          if data.user && data.user.username
+            script.
+              location.href='/'
+          else
+            h1 注册
+            p 欲于科创论坛交流，请先用手机注册一个账号。
+            p 注册之前，请务必通读  
+              a(href='/t/66350') 禁止事项
+              |  以及下方的注册协议。
+            br
+            img(src='/resources/site_specific/kclogo_umaru1_nc.png')
 
-          
-          hr
-          .form-horizontal.f12
-          
-            .form-group
-              label.control-label.col-sm-3 注册码
-              .col-sm-6
-                input#regcode.form-control(type='text' placeholder='必须有' value='#{data.code||""}')
-              .col-sm-3.control-label(style='text-align:left')
-                a(href='/register?getcode=true') 获取注册码
+            hr
+            .form-horizontal.f12
+              .form-group
+                label.control-label.col-sm-3 用户名
+                .col-sm-4
+                  input#username.form-control(type='text' placeholder='字母、数字、汉字，不区分大小写')
+      
+              .form-group
+                label.control-label.col-sm-3 密码
+                .col-sm-4
+                  input#password.form-control(type='password' placeholder='至少8位')
                 
-            .form-group
-              label.control-label.col-sm-3 用户名
-              .col-sm-6
-                input#username.form-control(type='text' placeholder='字母、数字、汉字，区分大小写' onkeydown='username_keypress()')
-                
-            .form-group
-              label.control-label.col-sm-3 邮箱
-              .col-sm-6
-                input#email.form-control(type='email' placeholder='john@example.com' onkeydown='email_keypress()')
-                
-            .form-group
-              label.control-label.col-sm-3 密码
-              .col-sm-6
-                input#password.form-control(type='password' placeholder='至少6位' onkeydown='password_keypress()')
+              .form-group
+                label.control-label.col-sm-3 再次输入密码
+                .col-sm-4
+                  input#password2.form-control(type='password' placeholder='重复一次')
+                    
+              .form-group
+                label.control-label.col-sm-3 手机号码
+                .col-sm-4
+                  input#phone.form-control(type='text' placeholder='请输入手机号码')
+                  
+              .form-group
+                label.control-label.col-sm-3 短信验证码
+                .col-sm-2
+                  input#mcode.form-control(type='text' placeholder='请输入短信验证码') 
+                .col-sm-2
+                  button#getMcode.btn.btn-default(onclick="getMcode()") 获取手机验证码
+                    
+              .form-group
+                label.control-label.col-sm-3 图片验证码
+                .col-sm-2
+                  input#icode.form-control(type='text' placeholder='验证码不分大小写')
+                .col-sm-3
+                  img#icodeImg(src="/static/captcha/captcha.svg" style="width:120px;height:40px;" 
+                  type="image/svg+xml" title="点击图片可刷新")
+                  
+              .form-group
+                .col-sm-offset-3.col-sm-10
+                  //offset 2 grids
+                  button.btn.btn-primary(onclick='register_submit()') 提交
+                .col-sm-offset-3.col-sm-10(style="margin-top:1%;")
+                  a(href="/register2").lighttext 遇到问题？
+            
               
-            .form-group
-              label.control-label.col-sm-3 再次输入密码
-              .col-sm-6
-                input#password2.form-control(type='password' placeholder='重复一次' onkeydown='password2_keypress()')
-          
-            .form-group
-              .col-sm-offset-3.col-sm-10
-                //offset 2 grids
-                button.btn.btn-default(onclick='register_submit()') 提交
-                
-            .form-group
-              .col-sm-offset-3.col-sm-6
-                #error_info_panel.panel.panel-default(style='display:none;')
-                  .panel-body
-                    div#error_info.d-inline.lighttext() 
+              .form-group
+                .col-sm-offset-3.col-sm-6
+                  #error_info_panel.panel.panel-default(style='display:none;')
+                    .panel-body
+                      div#error_info.d-inline.lighttext() 
 
-          hr
-          
-          div.f12(style='line-height: 1.8;')
-            include:markdown EULA.md
+            hr
+            
+            div.f12(style='line-height: 1.8;')
+              include:markdown EULA.md
+            
+            
   include debug_output.jade
-    
+
+
+
 block scripts
   script(src='/interface_common.js')
   script(src='/nkc_regex_validation.js')

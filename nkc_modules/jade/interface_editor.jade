@@ -17,7 +17,6 @@ block content
           :markdown
             请先[登录](/login)。
     else
-    
       .row
         .col-md-12
           include exam_notification.jade
@@ -30,11 +29,26 @@ block content
             
           .form-group
             textarea#content.form-control(placeholder='内容' style='height:300px;resize:vertical;') #{data.original_post?data.original_post.c:''}
-            
+          
+          .form-group
+            if data.threadtypes
+                if data.threadtypes.length > 0
+                  .div1(style="display:table;")
+                    .div2(style="display:table-cell;")
+                      label 请选择帖子的分类：
+                    .div3(style="display:table-cell;")
+                      select#cat.form-control 
+                        each t in data.threadtypes
+                          option(value='#{t._key}') #{t.name}
+                else
+                  input(type='hidden')#cat
+            else
+              input(type='hidden')#cat
+          
           .form-inline(style='margin-bottom:5px;')
             .form-group
               input#target.form-control(placeholder='发表至' value='#{(data.replytarget?data.replytarget:"")}')
-            
+                    
             .form-group
               select#lang.form-control
                 if data.original_post&&data.original_post.l

@@ -36,15 +36,16 @@ block content
       .col-xs-12
         .nkcpanel
           h4 短消息
-          .row
-            .form-group.col-sm-3
-              input#username.form-control(type='text' placeholder='收信人用户名' value="#{data.receiver||''}")
-          
-            .form-group.col-sm-7
-              input#content.form-control(type='text' placeholder='消息内容')
-              
-            .form-group.col-sm-2
-              button#send.btn.btn-default() 发送
+          -if(data.user.certs.indexOf('mobile') == -1 && data.user.certs.indexOf('mail') == -1 )
+            .row
+              .form-group.col-sm-3
+                input#username.form-control(type='text' placeholder='收信人用户名' value="#{data.receiver||''}")
+            
+              .form-group.col-sm-7
+                input#content.form-control(type='text' placeholder='消息内容')
+                
+              .form-group.col-sm-2
+                button#send.btn.btn-default() 发送
               
 
           -var smslist = data.smslist

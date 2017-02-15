@@ -1,5 +1,6 @@
 var in_browser = (typeof document !== 'undefined');
 
+
 //render source to HTML.
 function nkc_render(options){
   var render = {};
@@ -291,7 +292,7 @@ function nkc_render(options){
 
       if(allthumbnail){
         replaced =
-        '<div class="PostResourceDownload">'
+        '<div class="PostResourceDownload" style="width:100%;display:block;word-break:break-all;word-wrap:break-word;">'
         +'<a class="PostResourceDownloadLink" href="/r/'+rid+'" >'
         +'<img class="PostResourceDownloadThumbnail" src="/rt/'+rid+'"/>'+oname_safe+'</a>'
         +'<span class="PostResourceFileSize">'+fileSizeString+'</span>'
@@ -318,7 +319,7 @@ function nkc_render(options){
       break;
 
       default: replaced =
-      '<div class="PostResourceDownload">'
+      '<div class="PostResourceDownload" style="width:100%;display:block;word-break:break-all;word-wrap:break-word;">'
       +'<a class="PostResourceDownloadLink" href="/r/'+rid+'" >'
       +'<img class="PostResourceDownloadThumbnail" src="/default/default_thumbnail.png"/>'+oname_safe+'</a>'
       +'<span class="PostResourceFileSize">'+fileSizeString+'</span>' + '<span class="PostResourceCounter">'+hits+'</span>'
@@ -332,6 +333,7 @@ function nkc_render(options){
 
   //replace attachment tags in text to their appropriate HTML representation
   var attachment_filter = function(stringToFilter,post){
+    //console.log(stringToFilter);
     return stringToFilter.replace(render.resource_extractor,function(match,p1,offset,string){
       var rid = p1
       for(i in post.r){
@@ -351,27 +353,26 @@ function nkc_render(options){
     var html = ''
 
     if(!isHTML){  //bbcode
-
       html = chemFormulaReplacer(content)
       html =
       XBBCODE.process({
         text:html,
         escapeHtml:false,
       })
+
       .html
       .replace(/&#91;/g,'[')
       .replace(/&#93;/g,']')
       .replace(/\[[/]{0,1}backcolor[=#a-zA-Z0-9]{0,16}]/g,'')
 
-      // for history reasons...
-
+      // for history reasons..
       .replace(/\n/g,'<br>')
       .replace(/\{#newline#}/g,'\n')
-
       .replace(/\[attachment=([0-9]{1,16})\]/g,'#{r=$1}')
+      //.replace('http:','')
       .replace(/\[flash.*?](.+.*?)\[\/flash]/gi,
-      '<embed class="PostEmbedFlash" src="$1" allowFullScreen="true" quality="high" allowScriptAccess="always" type="application/x-shockwave-flash"></embed>')
-
+      //'<embed class="PostEmbedFlash" src="$1" allowFullScreen="true" quality="high" allowScriptAccess="always" type="application/x-shockwave-flash"></embed>')
+      '<a href="$1" target="_blank" style="font-size:20px;">点击此处查看视频</a>')
       .replace(/\[(\/?)strike]/g,'<$1s>')
       .replace(/  /g,'&nbsp&nbsp')
 

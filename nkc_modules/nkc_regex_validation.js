@@ -11,7 +11,7 @@ function nkc_validate_fields(input){
   for(i in nkc_validate_rules){
     if(input[i]!==undefined&&input[i]!==null) //if field exists
     if(nkc_validate_rules[i].test(input[i])==false)
-    throw i.toString() +' not in correct format';
+    throw {detail:i.toString() +' 格式不正确'};  //抛出错误 err.detail
   }
   return true;
 }

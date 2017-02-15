@@ -48,6 +48,7 @@ table.testMail = {
 table.forgotPassword = {
   operation:function(params){
     var u = new layer.User()
+    //console.log(params.username)
     return u.loadByName(params.username)
     .then(u=>
       (new layer.Personal(u.model._key)).load()
@@ -76,6 +77,7 @@ table.forgotPassword = {
         '如果这不是你的操作，请忽略。 '
 
         var href = 'http://bbs.kechuang.org/forgotPassword?token='+token
+        //var href = 'http://127.0.0.1:1086/forgotPassword?token='+token
 
         var link =
         '<a href="'
@@ -94,7 +96,7 @@ table.forgotPassword = {
       })
     })
     .then(res=>{
-      return '邮件发送成功'
+      return '邮件发送成功，请查收'
     })
   },
   requiredParams:{

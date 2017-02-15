@@ -1,6 +1,20 @@
-var replyTarget = ga('replytarget','value');
 
-var screenTopAlert = screenTopAlert
+//移动端，文号改变样式
+$(document).ready(function(){
+  if($(window).width()<750){
+    $('.ThreadTitleText').css('font-size','20px');
+    $('.ThreadTitle1').css('width','80%');
+    $('.ThreadTitle2').css('width','18%');
+    $('#airnum1').css('font-size','16px');
+    $('#airnum2').css('font-size','16px');
+    $('#airnum3').css('font-size','10px');
+  }
+})
+
+
+var replyTarget = ga('replytarget','value');
+var screenTopAlert = screenTopAlert;
+
 
 function cartThread(tid){
   nkcAPI('addThreadToCart',{tid:tid})
@@ -34,7 +48,7 @@ function setTopped(tid){
   .catch(jwarning)
 }
 
-function assemblePostObject(){
+function assemblePostObject(){  //bbcode , markdown
   var post = {
     //t:gv('title').trim(),
 
@@ -74,7 +88,6 @@ function enablePost(pid){
 }
 
 function submit(){
-
   var post = assemblePostObject()
   var target = replyTarget.trim();
 
@@ -88,11 +101,11 @@ function submit(){
   })
   .then(function(result){
     var redirectTarget = result.redirect;
-    redirect(redirectTarget?redirectTarget:'/'+target)
+    redirect(redirectTarget?redirectTarget:'/'+target);
   })
   .catch(function(err){
-    jwarning(err)
-    geid('ButtonReply').disabled=false
+    jwarning(err.detail);
+    geid('ButtonReply').disabled=false;
   })
 }
 
@@ -211,4 +224,16 @@ function widerArea(){
   rc.rows = 10
   rc.style.resize='vertical'
   geid('WiderArea').style.display = 'none'
+}
+
+window.onscroll = function () {
+  var top =  $(this).scrollTop();
+  if(top>700){
+    $("#topB").css("display","block");
+    $("#topB").css("position","fixed"); //固定div的位置
+    $("#topB").css("top","40%");
+  }else{
+    //$("#topB").css("position","relative");
+    $("#topB").css("display","none");
+  }
 }

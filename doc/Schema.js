@@ -1,8 +1,7 @@
 
 //每个文档都有一个_key属性，即主键，可用于直接访问文档。
 
-var user=
-{
+var user = {
   toc:Number, //创建时间
   tlv:Number, //最后访问（登陆）时间
   username:String, //用户名
@@ -10,7 +9,7 @@ var user=
   count_posts:5,
   count_threads:0,
 
-  kcb:300,
+  kcb:300,  //科创币
   xsf:1, //or null
 
   certs:['default','moderator'] //证书，即权限组
@@ -62,7 +61,7 @@ var post={ //post 表示楼
 var thread= //thread表示帖
 {
   fid:String, //所属的forum的_key属性
-  category:'94', //why is this even important
+  category:'94', //板块下帖子的分类
 
   //以下属性是发布时或者回帖时更新的。
   toc:Number,

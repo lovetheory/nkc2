@@ -8,8 +8,8 @@ module.exports = {
     port: 465,
     secure: true, // use SSL
     auth: {
-      user: 'it@kc.ac.cn',
-      pass: 'redacted'
+      user: 'mailusername',
+      pass: 'mailpassword'
     }
   },
 

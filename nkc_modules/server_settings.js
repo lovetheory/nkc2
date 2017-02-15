@@ -15,8 +15,8 @@ settings.server={
   //use_https:true,
 
   ACME_path:'F:/KC2016/.well-known',
-  
-  database_name:'test',
+
+  database_name:'nkc',  //数据库名称
 };
 
 report('database_name: '+settings.server.database_name)
@@ -107,7 +107,9 @@ settings.urlrewrite = [ //happens before serve_static
   //{map:/^\/home\?{0,1}(.*)/,to:'/api/operation?&operation=viewHome&$1'},
 
   urlrewriteGen('home','viewHome'),
-  urlrewriteGen('register','viewRegister'),
+  urlrewriteGen('register','viewRegister'),  //手机注册
+  urlrewriteGen('register2','viewRegister2'),  //邮箱注册
+  urlrewriteGen('activeEmail','viewActiveEmail'),  //邮箱激活
   urlrewriteGen('exam','viewExam'),
 
   urlrewriteGen('logout','viewLogout'),
@@ -121,7 +123,8 @@ settings.urlrewrite = [ //happens before serve_static
   urlrewriteGen('self','viewSelf'),
   urlrewriteGen('receiveMobileMessage','receiveMobileMessage'),
 
-  urlrewriteGen('forgotPassword','viewForgotPassword'),
+  urlrewriteGen('forgotPassword','viewForgotPassword'),   //邮箱找回密码
+  urlrewriteGen('forgotPassword2','viewForgotPassword2'),  //手机找回密码
 
   // {map:/^\/logout\?{0,1}(.*)/,to:'/api/operation?&operation=viewLogout&$1'},
   // {map:/^\/login\?{0,1}(.*)/,to:'/api/operation?&operation=viewLogin&$1'},
@@ -245,7 +248,7 @@ settings.upload_options = {
   limits:
   {
     fields:20, //max number of file fields
-    fileSize:1024*1024*30, //30MB
+    fileSize:1024*1024*60, //60MB
     files:1,//1 part/file a time please.
     headerPairs:20, //kv pairs in header
   }
@@ -259,7 +262,7 @@ settings.get_relative_path = function(){
   //into /YEAR/MONTH/ for ease of manangement
 }
 
-settings.attachment_image_width = 1280;
+settings.attachment_image_width = 1920;  //附件宽度1920px
 settings.attachment_image_height = 16384;
 
 //where is default watermark
@@ -317,7 +320,7 @@ settings.exam = {
   succeed_interval:3600*1000*12, //12h
   //dont try within given amount of time after succeeded once.
 
-  pass_score:6,
+  pass_score:6,  //10道测试题合格的条数设置
   number_of_questions:10,
 
   number_of_questions_subjective:8,

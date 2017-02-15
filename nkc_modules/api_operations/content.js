@@ -114,13 +114,15 @@ var postToThread = function(params,tid,user){
   })
 };
 
-var postToForum = function(params,fid,user){
+
+
+var postToForum = function(params,fid,user,cat){
   var post = params.post
 
-  if(typeof post.t !=='string')throw '标题炸了'
+  if(typeof post.t !=='string')throw '请填写标题！'
 
   post.t = post.t.trim();
-  if(post.t.length<3)throw 'title too short. write something would you?'
+  if(post.t.length<3)throw '标题太短啦！'
 
   var newtid;
   var forum;
@@ -148,6 +150,8 @@ var postToForum = function(params,fid,user){
       _key:newtid.toString(),//key must be string.
       uid:user._key,
       fid:fid.toString(),
+      category:cat,
+      cid:cat,
     };
 
     //save this new thread
@@ -160,6 +164,9 @@ var postToForum = function(params,fid,user){
     return postToThread(params,newtid,user)
   })
 }
+
+
+
 
 var postToPost = function(params,pid,user){ //modification.
   var post = params.post
@@ -265,6 +272,7 @@ table.postTo = {
     //0. object extraction
     var user = params.user
     var post = params.post
+    var cat = post.cat
 
     //1. validation
     validation.validatePost(post);
@@ -273,13 +281,14 @@ table.postTo = {
     var target = params.target.split('/')
     if(target.length!=2)throw 'Bad target format, expect "targetType/targetKey"'
     var targetType = target[0]; var targetKey = target[1];
+    console.log(target)
 
     //3. switch according to targetType
     return Promise.resolve()
     .then(()=>{
       switch (targetType) {
         case 'f':
-        return postToForum(params,targetKey,user) //throws if notexist
+        return postToForum(params,targetKey,user,cat) //throws if notexist
         case 't':
         return postToThread(params,targetKey,user)
         case 'post':
@@ -312,6 +321,7 @@ table.postTo = {
 
   }
 }
+
 
 table.getPost = {
   operation:function(params){

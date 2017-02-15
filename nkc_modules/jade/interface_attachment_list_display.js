@@ -9,10 +9,20 @@ var ResourceListItem = React.createClass({
     var rid = robject._key
     var oname = robject.oname
 
+    //附件名太长的处理
+    var oname1 = oname.split('.')[0];
+    var oname2 = oname.split('.')[1];
+    var new_oname;
+    if(oname1.length > 15){
+      new_oname = oname1.substring(0,15)+'.'+oname2;
+    }else{
+      new_oname = oname;
+    }
+
     return (
       <div className="ResourceListItem" onClick={this.click}>
         <img className="ResourceListItemThumb" src={'/rt/'+rid}></img>
-        <div className="ResourceListItemText">{oname}</div>
+        <div className="ResourceListItemText">{new_oname}</div>
       </div>
     )
   }

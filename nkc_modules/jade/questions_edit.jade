@@ -6,7 +6,7 @@ block title
   
 block content
 
-  -var categories = {'null':'未分类','chem':'化学','bio':'生物','math':'数学','phys':'物理','cs':'计算机科学','dev':'软件开发','english':'英文','common':'科学基础','mix':'简单题大杂烩','earth':'地球科学','ee':'电子技术','electrical':'电气工程','med':'医药卫生','agri':'农业技术','space':'航天','aviation':'民航','hedc':'高能材料','mech':'机械','3dp':'三维打印','ham':'业余无线电'}
+  -var categories = {'null':'未分类','chem':'化学','bio':'生物','math':'数学','phys':'物理','cs':'计算机科学','dev':'软件开发','english':'英文','common':'科学基础','mix':'简单题大杂烩','earth':'地球科学','ee':'电子技术','electrical':'电气工程','med':'医药卫生','agri':'农业技术','space':'航天','aviation':'民航','hedc':'高能材料','mech':'机械','3dp':'三维打印','ham':'业余无线电','kchv':'高压技术'}
 
   style.
     .red {
@@ -90,6 +90,7 @@ block content
 
       .col-xs-12.col-sm-6  
         if data.user
+          -console.log(data)
           if data.questions_all
               
             h4 类目 (显示最近5题)

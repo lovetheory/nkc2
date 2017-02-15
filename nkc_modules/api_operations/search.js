@@ -9,7 +9,7 @@ var queryfunc = require('query_functions')
 var AQL = queryfunc.AQL
 
 //this is an example API
-table.useSearch = {
+table.useSearch = {   //写log
   init:function(){
     return queryfunc.createIndex('logs',{
       fields:['searchstring'],
@@ -39,21 +39,63 @@ table.useSearch = {
 
 var elastic = require('../../elastic.js')
 
-table.localSearch = {
+table.localSearch = {  //头部的搜索API
   operation:params=>{
     params.start = Number(params.start)||0
     params.count = Math.min(100,Number(params.count)||10) //shall not exceed 100, for performance considerations
+    params.users_start = Number(params.users_start)||0
+    params.users_count = Number(params.users_count)||10
 
     var ss = params.searchstring
-    if(ss.trim().length<2){
-      throw '输入太短'
+
+    if(ss.trim().length<1){
+      throw '输入不能为空'
     }
+
+    var sss = '%'+ss+'%'
+    var data = {}
+
     return elastic.searchAdvanced(ss,params.start,params.count)
-    .then(res=>{
-      return res
-    })
+     .then(res=>{
+       data.result = res
+       return get_user(ss)
+     })
+     .then(res=>{
+       data.match_one_user = res
+       return get_match_users(sss, ss, params.users_start, params.users_count)
+     })
+     .then(res=>{
+       data.match_users = res
+       return data
+     })
   },
   requiredParams:{
     searchstring:String,
   }
+}
+
+
+
+function get_user(un){
+  return AQL
+  (
+    `for u in users
+     filter u.username == @un
+     return u
+    `,
+    {un:un}
+  )
+}
+
+
+function get_match_users(un1,un2,start,count){
+  return AQL
+  (
+    `for u in users
+     filter u.username like @un1 && u.username != @un2
+     limit @start , @count
+     return u
+    `,
+    {un1:un1,un2:un2,start:start,count:count}
+  )
 }

@@ -1,3 +1,4 @@
+
 .margin-right{
   margin-right: 5px;
 }
@@ -43,7 +44,7 @@
     color: #ea9696;
     margin: 5px;
 }
-  
+
 .HomeSEOLink{
 
 font-size: 10px;
@@ -494,16 +495,24 @@ blockquote {
   display: block;
 }
 .ForumThreadStat{
-    position: absolute;
-    right: 0;
+    /*position: absolute;
+    right: 23px;
     top: 18px;
+    min-width: 30px;*/
+    padding: 1px 5px 1px 5px;
+    display:inline-block;
+    position: relative;
     background-color: #efefef;
     border-radius: 10px;
-    min-width: 30px;
     text-align: center;
-    padding: 1px 5px 1px 5px;
     color: #6d6d6d;
+    font-size:14px;
 }
+.ThreadCheckboxes{
+  width:17px;
+  height:17px;
+}
+
 .ForumThreadStat span{
     margin: 0 3px 0 3px;
 }
@@ -518,9 +527,19 @@ blockquote {
   padding-bottom: 9px;
 }
 .ForumThreadAvatar {
-border-radius: 10%;
-width: 48px;
-height: 48px;
+  border-radius: 10%;
+  width: 48px;
+  height: 48px;
+}
+.ForumThreadAvatar2 {
+  border-radius: 50%;
+  width: 95px;
+  height: 95px;
+}
+.ForumThreadAvatar3 {
+  border-radius: 50%;
+  width: 52px;
+  height: 52px;
 }
 .ForumThreadItemAvatar {
   /* vertical-align: middle; */
@@ -823,9 +842,13 @@ font-weight: bold;
   display: inline-block;
 }
 
+
 .ThreadPostCredits{
+  display:block;
+  word-break: break-all;
+  word-wrap: break-word;  /*内容超出div自动换行*/
   display: table;
-  /* width: 100%; */
+  /*width: 100%;*/
   padding: 10px;
   margin-top: 8px;
   border-style: solid;
@@ -834,34 +857,33 @@ font-weight: bold;
   /* background-color: #FFFFFF; */
   border-radius: 5px;
 }
-.ThreadPostCreditItem{
 
-  display: table-row;
+.ThreadPostCreditItem{  /*行*/
+   display: table-row;
+   font-size: 11px;
+}
 
-  font-size: 14px;
+.ThreadPostCreditItem>div{   /*列*/
+     display: table-cell;
+     padding: 3px;
+     padding-right: 6px;
 }
-.ThreadPostCreditItem>div{
-display: table-cell;
-padding: 3px;
-padding-right: 6px;
-}
+
+
+
 .TPCQ ,.TPCType{
-
-  font-size: 16px;
+  font-size: 13px;
 }
+
 .TPCQ{
-
   color: #CC0000;
-
   /* font-weight: bold; */
 }
+
 .TPCIAI{
-
-  width: 24px;
-
-  height: 24px;
-
-  border-radius: 3px;
+  width: 15px;
+  height: 15px;
+  border-radius: 2px;
 }
 
 .padless{
@@ -1204,17 +1226,15 @@ margin: 5px;
     /* display: inline-block; */
 }
 .CollectionCategoryThreadActions input{
-width: 22px;
-height: 22px;
+    width: 22px;
+    height: 22px;
 }
 .CollectionCategoryThreadActions{
-    /* display: inline-block; */
-    position: absolute;
-    right: 25px;
+    /*position: absolute;
+    right: 0px;
     top: 14px;
-    /* bottom: 0; */
     vertical-align: middle;
-    z-index: 999;
+    z-index: 999;*/
 }
 .nkcpanel{
   margin-bottom: 18px;
@@ -1224,6 +1244,7 @@ margin: 5px;
   border: 1px solid #d8d8d8;
   box-shadow: rgba(0, 0, 0, 0.14) 3px 3px 10px;
 }
+
 
 @media (max-width: 768px){
   #fullwidthpanel {

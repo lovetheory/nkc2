@@ -19,7 +19,7 @@ function submit(){
     category:category.length?category:undefined,
   }
 
-  console.log(examobj);
+  //console.log('haha:'+examobj);
   return nkcAPI('submitExam',examobj)
   .then(function(result){
     if(result.taken_by_user){
@@ -28,8 +28,8 @@ function submit(){
     }
     window.location = '/exam?result=' + result.token
   })
-  .catch(function(err){
-    window.location = '/exam?result=fail&detail=' + encodeURI(JSON.stringify(err))
+  .catch(function(err){   //测试没通过
+    window.location = '/exam?result=fail&detail=' + encodeURI(err.detail);
   })
 }
 

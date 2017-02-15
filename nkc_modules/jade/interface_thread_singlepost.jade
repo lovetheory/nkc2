@@ -1,6 +1,6 @@
 //do sth with the post variable here
 - var po = data.permittedOperations
-    
+
 if !post.disabled || (post.disabled && po.enablePost)
   //horizontal line
   hr(id='#{post._key}').ThreadSinglePostHr
@@ -13,77 +13,82 @@ if !post.disabled || (post.disabled && po.enablePost)
       - var title = user?getUserDescription(user):''
       a(href='/user_profile/#{uid}' title='#{title}')
         img.ThreadPostAvatar(src='/avatar/#{post.uid}')
-    
+
     .content-right
       if(post.t&&post.t!=''&&index!=0)
         span.dirt.ThreadPostTitle #{post.t}
-        
-      .ThreadPostTitleMeta
-        a.ThreadPostTitleUsername(href='/user_profile/#{uid}') #{user?user.username:''}
-        
-        span.lighttext #{fromNow(post.toc)} - 
-        span.lighttext #{dateTimeString(post.toc)} 
-        
-        if data.paging
-          -var floornumber = data.paging.start+index
-          a(href='/t/#{data.thread._key}#{page?"?&page="+data.paging.page.toString():""}##{post._key}').lighttext /#{floornumber}
-        
-      .ThreadTitleAuxillaryLink.PostTitleAuxillaryLink
-        - var po = data.permittedOperations
-        - if(po.postTo)
-          a(href="javascript:quotePost('#{post._key}')") 引用
+
+      .threadOneLine
+        .ThreadPostTitleMeta
+          a.ThreadPostTitleUsername(href='/user_profile/#{uid}') #{user?user.username:''}
+
+          span.lighttext #{fromNow(post.toc)} -
+          span.lighttext #{dateTimeString(post.toc)}
+          -var postid = post._id.split('/')[1]
+          span(style='margin-left:3px;').lighttext #{postid}
           
-        - if(po.addPostToCart)
-          a(href="javascript:cartPost('#{post._key}')") 加入管理车
-          
-        - if(po.addCredit)
-          a(href="javascript:addCredit('#{post._key}')") 评学术分
-          
-        - if(po.disablePost)
-          a(href="javascript:disablePost('#{post._key}')") 屏蔽
-          
-        - if(post.tlm>post.toc && po.viewPostHistory)
-          a(href="/post_history/#{post._key}") 历史
-          
-        if data.user
-          - var user = data.user
-          - var ownership = user._key===uid
-          - if(testModifyTimeLimit(data,ownership,post.toc))
-            a(href='/editor?target=post/#{post._key}') 编辑
             
-          - var cc = data.contentClasses
-          - if(cc.classified)
-            - var ipoc = post.ipoc||post.ip||post.ocip||null
-          
-            if ipoc 
-              - var queryforip = 'http://ip138.com/ips138.asp?ip='+ipoc.toString()+'&action=2'
-              a.lighttext(href='#{queryforip}') #{ipoc}
+        .ThreadTitleAuxillaryLink.PostTitleAuxillaryLink
+          - var po = data.permittedOperations
+          - if(po.postTo)
+            a(href="javascript:quotePost('#{post._key}')") 引用
+
+          - if(po.addPostToCart)
+            a(href="javascript:cartPost('#{post._key}')") 加入管理车
+
+          - if(po.addCredit)
+            a(href="javascript:addCredit('#{post._key}')") 评学术分
+
+          - if(po.disablePost)
+            a(href="javascript:disablePost('#{post._key}')") 屏蔽
+
+          - if(post.tlm>post.toc && po.viewPostHistory)
+            a(href="/post_history/#{post._key}") 历史
+
+          if data.user
+            - var user = data.user
+            - var ownership = user._key===uid
+            - if(testModifyTimeLimit(data,ownership,post.toc))
+              a(href='/editor?target=post/#{post._key}') 编辑
+
+            - var cc = data.contentClasses
+            - if(cc.classified)
+              - var ipoc = post.ipoc||post.ip||post.ocip||null
+
+              if ipoc
+                - var queryforip = 'http://ip138.com/ips138.asp?ip='+ipoc.toString()+'&action=2'
+                a.lighttext(href='#{queryforip}') #{ipoc}
         
+        .floornum(style='float:right;')        
+          if data.paging
+            -var floornumber = data.paging.start+index
+            //a(href='/t/#{data.thread._key}#{page?"?&page="+data.paging.page.toString():""}##{post._key}').lighttext /#{floornumber}
+            a(href='/t/#{data.thread._key}#{page?"?&page="+data.paging.page.toString():""}##{post._key}').lighttext #{floornumber}阶
+
       div.ThreadPostBody(style="#{postHeight?'overflow-y:scroll;max-height:'+postHeight:''}")!= experimental_render(post)
 
       if post.toc!=post.tlm
         p.lighttext [修改于 #{fromNow(post.tlm)} - #{dateString(post.tlm)}]
       //span #{post.user?post.user.post_sign:''}
-      
+
       if post.credits
         .nkcpanel.ThreadPostCredits
           each c,index in post.credits
             -var username = c.username||c.uid
-            -var profile = (c.uid&&c.uid!='0')?'/user_profile/'+c.uid:'/user_profile_byname/'+c.username
+            -var profile = (c.uid&&c.uid!='0')?'/user_profile/'+c.uid:'/user_profile_byname/'+c.username      
             .ThreadPostCreditItem
-              .TPCQ #{(c.q>0?'+':'-')}#{c.q}
-              .TPCType #{creditString(c.type)}
-              .TPCIA
-                a(href='#{profile}')
-                  img.TPCIAI(src='/avatar_small/#{c.uid}')
-                  
-              .TPCIssuer #{username}
-              .TPCDate #{dateTimeString(c.toc).split(' ')[0]}
-              .TPCReason #{c.reason}                
-  
+              span.TPCQ #{(c.q>0?'+':'-')}#{c.q} &nbsp;
+              span.TPCType #{creditString(c.type)} &nbsp;&nbsp;
+              span.TPCIA
+                a(href='#{profile}') 
+                  img.TPCIAI(src='/avatar_small/#{c.uid}') 
+              span.TPCIssuer #{username} &nbsp;&nbsp;
+              span.TPCDate #{dateTimeString(c.toc).split(' ')[0]} &nbsp;&nbsp;
+              span.TPCReason #{c.reason} 
+                
+
 - var po = data.permittedOperations
 if post.disabled
-  
+
   - if(po.enablePost)
     a(href="javascript:enablePost('#{post._key}')") [此楼已屏蔽，点击解除]
-            

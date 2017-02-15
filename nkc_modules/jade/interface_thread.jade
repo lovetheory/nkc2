@@ -22,80 +22,97 @@ block title
   
   
 block content
-  .container
+  .container-fluid(style="max-width:1400px;")
     .row
-
       .col-sm-12.col-md-9.col-lg-9
         #fullwidthpanel.ThreadBox.nkcpanel
           - var thread = data.thread
           - var fid = thread.fid
+          
           .ThreadTitle
-            - var forum = data.forum
-            - var forumname = forum.display_name
-            - var parent = null
-            - if(data.forumlist)data.forumlist.map(item=>{item.forumgroup.map(f=>{if(f._key==data.forum._key){parent=item.parentforum}})})
-            
-            if 0 
-              //this part is replaced by the else part
-              div#pagetop
-                if parent
-                  a.ThreadTitleForumLink.ThreadTitleForumLinkParent(href='/f/#{parent._key}') #{parent.display_name}
-                  span  / 
-                
-                a.ThreadTitleForumLink(href='/f/#{fid}') #{forumname} 
-            else
-              .ForumNavigation1(style='margin-bottom:6px')
-                if parent
-                  -var parentcolor = parent.color
-                  a.active(href='/f/#{parent._key}' style='background-color:#{parentcolor}') #{parent.display_name}
-                  //span(style='margin-right:7px') /
-                -var forumcolor = forum.color||parentcolor
-                a.active(href='/f/#{fid}' style='background-color:#{forumcolor}') #{forumname} 
-            
-            span.ThreadTitleText(href='/t/#{data.thread._key}') #{thread.oc.t}
-            
-            span(style='display:inline-block') #{(thread.count-1)?(thread.count-1)+' 回复 /':''} #{thread.hits} 浏览
+            .ThreadTitle1(style="display:inline-block;width:82%;")
+              - var forum = data.forum
+              - var forumname = forum.display_name
+              - var parent = null
+              - if(data.forumlist)data.forumlist.map(item=>{item.forumgroup.map(f=>{if(f._key==data.forum._key){parent=item.parentforum}})})
               
-            //.ThreadTitleAuxillary.d-inline.lighttext
-                              
-            .ThreadTitleAuxillaryLink
-              - var po = data.permittedOperations
-              
-              a(href='#bottom') 本页底部
-              
-              if po.addThreadToCollection
-                a(href="javascript:addColl('#{thread._key}')") 收藏
-              
-              
-              
-              if po.addThreadToCart
-                a(href="javascript:cartThread('#{data.thread._key}')") 帖入管理车
-                
-              if (po.setDigest)
-                if thread.digest
-                  a(href="javascript:setDigest('#{data.thread._key}')") 撤销精华
-                else
-                  a(href="javascript:setDigest('#{data.thread._key}')") 设置精华
+              if 0 
+                //this part is replaced by the else part
+                div#pagetop
+                  if parent
+                    a.ThreadTitleForumLink.ThreadTitleForumLinkParent(href='/f/#{parent._key}') #{parent.display_name}
+                    span  / 
                   
-              if (po.setTopped)
-                if thread.topped
-                  a(href="javascript:setTopped('#{data.thread._key}')") 撤销置顶
-                else
-                  a(href="javascript:setTopped('#{data.thread._key}')") 设置置顶
-                  
-              a(href='/t/#{data.thread._key}') 本帖地址
+                  a.ThreadTitleForumLink(href='/f/#{fid}') #{forumname} 
+              else
+                .ForumNavigation1(style='margin-bottom:6px')
+                  if parent
+                    -var parentcolor = parent.color
+                    a.active(href='/f/#{parent._key}' style='background-color:#{parentcolor}') #{parent.display_name}
+                    //span(style='margin-right:7px') /
+                  -var forumcolor = forum.color||parentcolor
+                  a.active(href='/f/#{fid}' style='background-color:#{forumcolor}') #{forumname} 
               
-              if po.moveThread
-                .form-inline
-                  .form-group
-
-                    include forumlist_dropdown.jade
-                    button(onclick="javascript:moveThreadTo('#{data.thread._key}')") 移动
+            
+                span.ThreadTitleText(style="margin-right:3%;" href='/t/#{data.thread._key}') #{thread.oc.t}
+              
+                  //span(style='display:inline-block;') #{(thread.count-1)?(thread.count-1)+' 回复 /':''} #{thread.hits} 浏览
+                
+                //br
+                //span(style='display:inline-block;font-size:15px;font-weight:bold;') 
+                  span #{(thread.count-1)?(thread.count-1)+' 回复 /':''} #{thread.hits} 浏览
+                
+              
+                
+                
+              //.ThreadTitleAuxillary.d-inline.lighttext
                                 
-
+              .ThreadTitleAuxillaryLink
+                - var po = data.permittedOperations
                 
-                  .form-group
-                    button#recyclebtn.btn.btn-xs.btn-danger(onclick="recycleThread('#{data.thread._key}')") 送回收站
+                a(href='#bottom') 本页底部
+                
+                if po.addThreadToCollection
+                  a(href="javascript:addColl('#{thread._key}')") 收藏
+                
+                
+                
+                if po.addThreadToCart
+                  a(href="javascript:cartThread('#{data.thread._key}')") 帖入管理车
+                  
+                if (po.setDigest)
+                  if thread.digest
+                    a(href="javascript:setDigest('#{data.thread._key}')") 撤销精华
+                  else
+                    a(href="javascript:setDigest('#{data.thread._key}')") 设置精华
+                    
+                if (po.setTopped)
+                  if thread.topped
+                    a(href="javascript:setTopped('#{data.thread._key}')") 撤销置顶
+                  else
+                    a(href="javascript:setTopped('#{data.thread._key}')") 设置置顶
+                    
+                a(href='/t/#{data.thread._key}') 本帖地址
+                
+                if po.moveThread
+                  .form-inline
+                    .form-group
+
+                      include forumlist_dropdown.jade
+                      button(onclick="javascript:moveThreadTo('#{data.thread._key}')") 移动
+                  
+                    .form-group
+                      button#recyclebtn.btn.btn-xs.btn-danger(onclick="recycleThread('#{data.thread._key}')") 送回收站
+            
+            .ThreadTitle2(style="display:inline-block;width:16%;vertical-align:top;")
+              .ThreadTitle22(style="border:1px solid #ddd;border-radius:10px;")
+                p.lighttext#airnum1(style="font-size:21px;text-align:center;margin-top:0px;margin-bottom:0px;") 文 号
+                .hrdiv(style="width:80%;height:1px;background-color:#ddd;margin:0 auto;")
+                -var tpid = thread.oc._id.split('/')[1]
+                p.lighttext#airnum2(style="font-size:21px;text-align:center;color:#cdf;margin-bottom:0px;margin-top:0px;") #{tpid}     
+                .hrdiv(style="width:80%;height:1px;background-color:#ddd;margin:0 auto;")
+                p.lighttext#airnum3(style="text-align:center;") #{(thread.count-1)?(thread.count-1)+' 回复 /':''} #{thread.hits} 浏览
+
 
           
           include interface_navigation_paging.jade      
@@ -114,8 +131,8 @@ block content
             a(href='/f/#{fid}') #{forumname} 
             //link back to forum
           br
-          span.lighttext 返回 
-            a(href='#pagetop') 本页顶部
+          span.lighttext#bm 返回 
+            a(href='javascript:window.scrollTo(0,0);') 本页顶部
           
           hr.hrNarrowSpace
             
@@ -125,7 +142,7 @@ block content
                 //a.f12(href='/editor?target=#{data.replytarget}') 回复（去编辑器）
 
               .form-group
-                textarea#ReplyContent.form-control(rows='4' placeholder='快速回复（bbcode语法）' style='resize:vertical')
+                textarea#ReplyContent.form-control(rows='5' placeholder='快速回复（bbcode语法）' style='resize:vertical')
               
               .form-inline
                 .form-group
@@ -170,6 +187,13 @@ block content
         .nkcpanel
           ul.HomeFriendlyLink
             include nkc_footer_links.jade
+        
+        .nkcpanel2#topB
+          button(class="glyphicon glyphicon-chevron-up btn btn-sm btn-primary" style="margin-bottom:10px;" onclick="javascript:window.scrollTo(0,0);") 顶部
+          br 
+          button(class="glyphicon glyphicon-chevron-down btn btn-sm btn-primary" onclick="location.href='#bm'") 底部
+        
+              
         //include interface_forums_list.jade
 
           

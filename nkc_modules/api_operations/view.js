@@ -9,6 +9,7 @@ var queryfunc = require('query_functions')
 var validation = require('validation')
 var AQL = queryfunc.AQL
 var apifunc = require('api_functions')
+var svgCaptcha = require('svg-captcha');
 
 var layer = require('layer')
 
@@ -75,7 +76,11 @@ table.viewExam = {
 table.viewRegister = {
   operation:function(params){
     var data = defaultData(params)
-
+    var captcha = svgCaptcha.create();  //创建验证码
+    params._req.session.icode = captcha.text;  //验证码text保存到session中
+    var road = path.resolve(__dirname, '../..')
+    fs.writeFile(road +'/static/captcha/captcha.svg', captcha.data, { 'flag': 'w' });  //保存验证码图片
+    //console.log(captcha.text);
     data.getcode = params.getcode
     data.code = params.code
     data.template = 'nkc_modules/jade/interface_user_register.jade'
@@ -83,6 +88,88 @@ table.viewRegister = {
     return data
   }
 }
+
+
+//邮箱注册
+table.viewRegister2 = {
+  operation:function(params){
+    var data = defaultData(params)
+    var captcha = svgCaptcha.create();  //创建验证码
+    params._req.session.icode = captcha.text;  //验证码text保存到session中
+    var road = path.resolve(__dirname, '../..')
+    fs.writeFile(road +'/static/captcha/captcha.svg', captcha.data, { 'flag': 'w' });  //保存验证码图片
+    //console.log(captcha.text);
+    data.template = 'nkc_modules/jade/interface_user_register2.jade'
+
+    return data
+  }
+}
+
+
+
+//激活邮箱
+table.viewActiveEmail = {
+  operation:function(params){
+    var email = params.email
+    var ecode = params.ecode
+    var data = defaultData(params)
+    //data.template = 'nkc_modules/jade/viewActiveEmail.jade'
+    data.template = 'nkc_modules/jade/interface_user_login.jade'
+
+    return AQL(`
+      for u in emailRegister
+      filter u.email==@email && u.ecode==@ecode && u.toc > @toc
+      limit 1
+      return u
+      `,{email:email, ecode:ecode, toc:Date.now()-2*60*1000}
+    )
+    .then(res=>{
+      if(res.length > 0){
+        var user = {
+          username:res[0].username,
+          password:res[0].passwd,
+          email:res[0].email
+        }
+        create_muser(user)
+        .then(k=>{
+          console.log(k)
+        })
+        data.activeInfo1 = '邮箱注册成功，赶紧登录吧~'
+      }else{
+        data.activeInfo2 = '邮箱链接已失效，请重新注册！'
+      }
+      return data
+    })
+
+  }
+}
+
+
+//点击刷新验证码图片(注册)
+table.refreshicode = {
+  operation:function(params){
+    var data = defaultData(params)
+    var captcha = svgCaptcha.create();  //创建验证码
+    params._req.session.icode = captcha.text;  //验证码text保存到session中
+    var road = path.resolve(__dirname, '../..')
+    fs.writeFile(road +'/static/captcha/captcha.svg', captcha.data, { 'flag': 'w' });  //保存验证码图片
+    return {'resCode':0}
+  }
+}
+
+
+//点击刷新验证码图片(手机找回密码)
+table.refreshicode3 = {
+  operation:function(params){
+    var data = defaultData(params)
+    var captcha = svgCaptcha.create();  //创建验证码
+    params._req.session.icode3 = captcha.text;  //验证码text保存到session中
+    var road = path.resolve(__dirname, '../..')
+    fs.writeFile(road +'/static/captcha/captcha3.svg', captcha.data, { 'flag': 'w' });  //保存验证码图片
+    return {'resCode':0}
+  }
+}
+
 
 function getForumList(params) {
   var contentClasses = params.contentClasses
@@ -115,6 +202,7 @@ function getForumList(params) {
     `,{contentClasses:params.contentClasses}
   )
 }
+
 
 function getForumListKv(params){
   return getForumList(params)
@@ -630,6 +718,14 @@ function getThreadTypes(fid){
   })
 }
 
+function getOneThreadTypes(fid){
+  return AQL(`
+    for i in threadtypes filter i.fid==@fid
+    return i
+    `,{fid:fid||null}
+  )
+}
+
 table.viewThread = {
   init:function(){
     return layer.Thread.buildIndex()
@@ -843,6 +939,7 @@ table.viewExperimental = {
   }
 }
 
+
 table.viewEditor = {
   operation:params=>{
     var data = defaultData(params)
@@ -854,8 +951,7 @@ table.viewEditor = {
     data.navbar = {}
     data.navbar.highlight = 'editor'; //navbar highlight
 
-    if(target.indexOf('post/')==0)
-    {
+    if(target.indexOf('post/')==0){
       //if user appears trying to edit a post
       var pid = target.slice(5);
       report(pid);
@@ -863,8 +959,7 @@ table.viewEditor = {
       return apifunc.get_a_post(pid)
       .then(function(back){
         data.original_post = back;
-
-        return data
+        return data;
       })
     }
 
@@ -873,9 +968,21 @@ table.viewEditor = {
       //l:'pwbb',
     }
 
-    return data
+    var a = target.split('/')[1];  //版块号
+    return getOneThreadTypes(a)
+    .then(res=>{
+      if(res.length != 0){
+        res.splice(0, 0, {"_key":'0',"name":"--默认无分类--"});  //添加到第一个位置
+      }
+      data.threadtypes = res;
+      return data;
+    })
+
+    return data;
   }
 }
+
+
 
 table.viewDanger = {
   operation:params=>{
@@ -1338,10 +1445,55 @@ table.viewForgotPassword={
 
     data.token = params.token
     data.sent = params.sent
+    //console.log(data)
+    return data
+  }
+}
+
+
+//手机找回密码
+table.viewForgotPassword2 = {
+  operation:function(params){
+    var data = defaultData(params)
+    var captcha = svgCaptcha.create();  //创建验证码
+    params._req.session.icode3 = captcha.text;  //验证码text保存到session中
+    var road = path.resolve(__dirname, '../..')
+    fs.writeFile(road +'/static/captcha/captcha3.svg', captcha.data, { 'flag': 'w' });  //保存验证码图片
+    data.template = jadeDir + 'interface_viewForgotPassword2.jade'
+
+    data.username = params.username  //url后面的参数
+    data.phone = params.phone
+    data.mcode = params.mcode
+
+    if(data.phone != undefined && data.mcode != undefined){
+      return AQL(`
+        for u in mobilecodes
+        filter u.mobile == @mobile
+        return u
+        `,{mobile:data.phone}
+      )
+      .then(a=>{
+        console.log(a)
+        return AQL(`
+          for u in users
+          filter u._key == @userid
+          return u
+          `,{userid:a[0].uid}
+        )
+      })
+      .then(b=>{
+        console.log(b)
+        return data
+      })
+
+    }
+
+
 
     return data
   }
 }
+
 
 table.viewLocalSearch = {
   operation:function(params) {
@@ -1354,9 +1506,14 @@ table.viewLocalSearch = {
     var operations = require('api_operations')
     return operations.table.localSearch.operation(params)
     .then(res=>{
-      data.searchresult = res
+      //console.log(res)
+      data.match_one_user = res.match_one_user  //完全匹配的某个用户
+      data.match_users = res.match_users  //完全匹配的某个用户
+      data.searchresult = res.result  //搜索帖子的结果
       data.start = params.start
       data.count = params.count
+      data.users_start = params.users_start
+      data.users_count = params.users_count
 
       data.searchstring = params.searchstring
 
@@ -1368,12 +1525,11 @@ table.viewLocalSearch = {
         let lm = document(posts,t.lm)
         let lmuser = document(users,lm.uid)
         return merge(t,{oc,lm,ocuser,lmuser})
-        `,{hits:res.hits.hits}
+        `,{hits:res.result.hits.hits}
       )
     })
     .then(res=>{
       data.threads = res
-
       return getForumListKv(params)
     })
     .then(res=>{
@@ -1387,4 +1543,50 @@ table.viewLocalSearch = {
       return data
     })
   },
+}
+
+
+
+function sha256HMAC(password,salt){
+  const crypto = require('crypto')
+  var hmac = crypto.createHmac('sha256',salt)
+  hmac.update(password)
+  return hmac.digest('hex')
+}
+
+
+function create_muser(user){
+  return apifunc.get_new_uid()
+  .then((newuid)=>{
+    var timestamp = Date.now();
+
+    var newuser = {
+      _key:newuid,
+      username:user.username,
+      username_lowercase:user.username.toLowerCase(),
+      toc:timestamp,
+      tlv:timestamp,
+      certs:['mobile'],
+    }
+
+    var salt = Math.floor((Math.random()*65536)).toString(16)
+    var hash = sha256HMAC(user.password,salt)
+
+    var newuser_personal = {
+      _key:newuid,
+      email:user.email,
+      hashtype:'sha256HMAC',
+      password:{
+        hash:hash,
+        salt:salt,
+      },
+    }
+    return queryfunc.doc_save(newuser,'users')
+    .then(()=>{
+      return queryfunc.doc_save(newuser_personal,'users_personal')
+    })
+    .then(res=>{
+      return res
+    })
+  })
 }

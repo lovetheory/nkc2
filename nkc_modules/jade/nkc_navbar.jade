@@ -1,4 +1,6 @@
 //nav.navbar.navbar-default
+
+
 div
   - var navbar = data.navbar || {}
   .container-fluid
@@ -36,7 +38,7 @@ div
       
       .col-xs-7.col-sm-3
         .input-group(style='margin-top:4px;')
-          input#SearchBox.form-control(type='text' placeholder='关键词')
+          input#SearchBox.form-control(type='text' placeholder='关键词、文号、用户')
           span.input-group-btn
             button#SearchButton.btn.btn-default(type='button') 搜索
           
@@ -75,3 +77,6 @@ div
             a(href='/login' title='还记得密码吗？') 登录
             a(href='/register' title='恭喜！\n你发现了世界上\n最难注册的论坛') 注册
           
+
+    
+                

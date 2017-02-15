@@ -6,7 +6,9 @@ var nkc_editor = function(){
       t:gv('title').trim(),
       c:gv('content').trim(),
       l:gv('lang').toLowerCase().trim(),
+      cat:gv('cat').trim()
     }
+
 
     if(post.t=='')post.t=undefined
 
@@ -30,6 +32,7 @@ var nkc_editor = function(){
       }
     }
 
+    //alert(JSON.stringify(post) )
     geid('post').disabled = true
     return nkcAPI('postTo',{
       target:target,
@@ -40,7 +43,7 @@ var nkc_editor = function(){
       redirect(redirectTarget?redirectTarget:'/'+target)
     })
     .catch(function(err){
-      jwarning(err)
+      jwarning(err.detail)
       geid('post').disabled = false
     })
   }

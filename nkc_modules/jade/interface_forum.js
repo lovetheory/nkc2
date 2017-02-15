@@ -1,3 +1,16 @@
+
+
+$(document).ready(function(){
+  if($(window).width()<900){
+    //$('.ThreadTitle1').css('width','80%');
+    //$('.ThreadTitle2').css('width','18%');
+    $('.ForumThreadStat').css('font-size','7px');
+    $('.ThreadCheckboxes').css('width','12px');
+    $('.ThreadCheckboxes').css('height','12px');
+  }
+})
+
+
 function enterManagementMode(){
   $('.ThreadCheckboxes').show()
   $('.ForumManagement').show()
@@ -136,9 +149,25 @@ function addForumCategory(fid){
 }
 
 function askForumOfZone(fid){
-  return nkcAPI('getForumsOfZone',{fid:fid})
+  var userCert = fid.split(',')
+  var new_fid = fid.split(',')[0]
+  var forumCert = ['dev','editor','senior_moderator','moderator','scholar']
+
+  //对数组进行过滤
+  function rem(arr){
+    var a = mix(userCert,forumCert).length;
+  	if(a != 0) return arr;  //有权限
+	  if(a == 0) return arr.class != 'classified';
+  }
+
+  //console.log(userCert,forumCert,mix(userCert,forumCert))
+  return nkcAPI('getForumsOfZone',{fid:new_fid})
   .then(function(arr){
-    return screenTopQuestion('请选择一个版块：',arr.map(function(item){return item._key+':'+item.display_name}))
+    //console.log(arr)
+    return screenTopQuestion('请选择一个版块：',
+    arr.filter(rem).map(function(item){
+      return item._key+':'+item.display_name
+    }))
     .then(function(ans){
       return ans.split(':')[0]
     })
@@ -150,4 +179,17 @@ function newPostDirector(fid){
   .then(function(selectedfid){
     redirect('/editor?target=f/'+selectedfid)
   })
+}
+
+//数组求交集
+function mix(a,b){
+    var res = [];
+    for(var i=0;i<a.length;i++){
+      for(var j=0;j<b.length;j++){
+        if(a[i].match(b[j])){
+          res.push(a[i]);
+        }
+      }
+    }
+    return res;
 }

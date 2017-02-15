@@ -5,14 +5,14 @@ function login_submit(){
   }
 
   if(userobj.username=='')
-  return screenTopWarning('我在门口捡到了你的用户名，下次不要忘了');
+  return screenTopWarning('请填写用户名，下次不要忘了哦');
   if(userobj.password=='')
-  return screenTopWarning('我在门口捡到了你的密码，下次不要忘了');
+  return screenTopWarning('请填写密码，下次不要忘了哦');
 
   nkcAPI('userLogin',userobj)
   .then(function(res){
-    geid('error_info').innerHTML = JSON.stringify(res);
-    display('error_info_panel')
+    //geid('error_info').innerHTML = JSON.stringify(res);
+    //display('error_info_panel')  登录成功不用提示
 
     if(
       document.referrer.toString().indexOf('register')>=0 ||
@@ -23,15 +23,20 @@ function login_submit(){
     {
       location.href = '/'; //dont go back to register form
     }else{
-      location.href = document.referrer; //go back in history
+      //alert(document.referrer)
+      if(!document.referrer.match('127.0.0.1:1086') || !document.referrer.match('bbs.kechuang.org') ){
+        location.href = '/';
+      }else{
+        location.href = document.referrer; //go back in history
+      }
     }
   })
   .catch(function(err){
-    geid('error_info').innerHTML = JSON.stringify(err);
-    display('error_info_panel')
+    geid('error_info').innerHTML = '<strong style="color:red;">'+err.detail+'</strong>';
+    display('error_info_panel');
     geid('password').focus();
-
-    screenTopWarning(JSON.stringify(err))
+    //console.log(JSON.stringify(err));
+    screenTopWarning(err.detail);
   })
 }
 
