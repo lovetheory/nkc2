@@ -128,3 +128,6 @@ The author of these files shall not be held responsible for any terrorist attack
 - `node elasticDaemon.js` to start a REPL
 - setupIndex() to delete all indexed documents from ES, then recreate the index, then mark all threads in ArangoDB as unindexed
 - enableIndexing() to start copying documents from ArangoDB into ES
+
+## Redis
+- `使用Redis数据库储存验证码 Redis版本号2.8.24，外部模块储存于package文件夹
