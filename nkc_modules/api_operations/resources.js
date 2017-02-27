@@ -84,19 +84,32 @@ table.getResource={
         replace(/%(?:7C|60|5E)/g, unescape);
       }
 
-      return sendFile(params._res,destFile,{
-        maxAge:1000*86400, //cache everything for 1d
-        lastModified:true,
-        headers:{'Content-Disposition':`attachment; filename=${encodeRFC5987ValueChars(robject.oname)}; filename*=utf-8''${encodeRFC5987ValueChars(robject.oname)}`},
-      })
-      .then(res=>{
-        return accumulateCountHit(params.rid,'resources')
-        .then(res=>{
-          return 'success'
+      if(['jpg','jpeg','gif','png','svg'].indexOf(robject.ext)>=0){
+        return sendFile(params._res,destFile,{
+          maxAge:1000*86400, //cache everything for 1d
+          lastModified:true,
+          headers:{'Content-Disposition':`inline; filename=${encodeRFC5987ValueChars(robject.oname)}; filename*=utf-8''${encodeRFC5987ValueChars(robject.oname)}`},
         })
-
-
-      })
+        .then(res=>{
+          return accumulateCountHit(params.rid,'resources')
+          .then(res=>{
+            return 'success'
+          })
+        })
+      }
+      else{
+        return sendFile(params._res, destFile, {
+          maxAge: 1000 * 86400, //cache everything for 1d
+          lastModified: true,
+          headers: {'Content-Disposition': `attachment; filename=${encodeRFC5987ValueChars(robject.oname)}; filename*=utf-8''${encodeRFC5987ValueChars(robject.oname)}`},
+        })
+        .then(res => {
+          return accumulateCountHit(params.rid, 'resources')
+          .then(res => {
+            return 'success'
+          })
+        })
+      }
     })
   },
   requiredParams:{
