@@ -16,7 +16,7 @@ module.exports = {
   },
 
   sendSMS: function(phone, code, callback){
-    new alidayu('23594580', '25cbe154a3e3381a1f693b43db532c99').smsSend({
+    new alidayu('23632480', '1b4965972ef0b5202b8c7441d64c503f').smsSend({
       sms_free_sign_name: '论坛注册',  //短信签名
       sms_param: {"code": code, "product": "科创论坛"},
       rec_num: phone,
