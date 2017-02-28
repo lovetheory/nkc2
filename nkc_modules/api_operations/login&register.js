@@ -14,11 +14,11 @@ var nm = require('nodemailer')
 
 try{
   var mailSecrets = require('mailSecrets.js');
-  var sendSMS = require('mailsecrets.js').sendSMS;
+  var sendSMS = require('mailSecrets.js').sendSMS;
 }
 catch(e){
   var mailSecrets = require('mailSecrets_template.js');
-  var sendSMS = require('mailsecrets_template.js').sendSMS;
+  var sendSMS = require('mailSecrets_template.js').sendSMS;
 }
 
 var transporter = nm.createTransport(mailSecrets.smtpConfig);
