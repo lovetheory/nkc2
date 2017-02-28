@@ -15,10 +15,12 @@ var alisms = new alidayu('appid', 'appkey');
 var nm = require('nodemailer')
 
 try{
-  var mailSecrets = require('mailSecrets.js')
+  var mailSecrets = require('mailSecrets.js');
+  var smsConfig = require('mailSecrets.js').smsConfig;  //function(phoneNum) {return smsConfObj}
 }
 catch(e){
-  var mailSecrets = require('mailSecrets_template.js')
+  var mailSecrets = require('mailSecrets_template.js');
+  var smsConfig = require('mailSecrets_template.js').smsConfig;  //function(phoneNum) {return smsConfObj}
 }
 
 var transporter = nm.createTransport(mailSecrets.smtpConfig);
@@ -723,12 +725,7 @@ table.getMcode = {
       if(k.length>0){
         throw '此号码已经用于其他用户注册，请检查或更换'
       }else{
-        alisms.smsSend({
-          sms_free_sign_name: '论坛注册',  //短信签名
-          sms_param: {"code": code , "product": "科创论坛"},
-          rec_num: phone,
-          sms_template_code: 'SMS_39395309'//大于平台手机注册模板号
-        },function(err,res){
+        alisms.smsSend(smsConfig(phone),function(err,res){
           if(err){
             console.log(err)
           }else{
@@ -790,12 +787,7 @@ table.getMcode2 = {
     })
     .then(m=>{
       if(m[0].username != username) throw '用户名和手机号码不对应，请检查'
-      alisms.smsSend({
-        sms_free_sign_name: '论坛注册',  //短信签名
-        sms_param: {"code": code , "product": "科创论坛"},
-        rec_num: phone,
-        sms_template_code: 'SMS_43555002'//大于平台手机找回密码模板号
-      },function(err,res){
+      alisms.smsSend(smsConfig(phone), function(err,res){
         if(err){
           console.log(err)
         }else{
