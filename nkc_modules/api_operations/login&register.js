@@ -10,17 +10,15 @@ var validation = require('validation')
 var AQL = queryfunc.AQL
 var apifunc = require('api_functions')
 var layer = require('../layer')
-var alidayu = require('alidayu-node');
-var alisms = new alidayu('appid', 'appkey');
 var nm = require('nodemailer')
 
 try{
   var mailSecrets = require('mailSecrets.js');
-  var smsConfig = require('mailSecrets.js').smsConfig;  //function(phoneNum) {return smsConfObj}
+  var sendSMS = require('mailSecrets.js').sendSMS;
 }
 catch(e){
   var mailSecrets = require('mailSecrets_template.js');
-  var smsConfig = require('mailSecrets_template.js').smsConfig;  //function(phoneNum) {return smsConfObj}
+  var sendSMS = require('mailSecrets_template.js').sendSMS;
 }
 
 var transporter = nm.createTransport(mailSecrets.smtpConfig);
@@ -725,7 +723,7 @@ table.getMcode = {
       if(k.length>0){
         throw '此号码已经用于其他用户注册，请检查或更换'
       }else{
-        alisms.smsSend(smsConfig(phone),function(err,res){
+        sendSMS(phone, code, function(err,res){
           if(err){
             console.log(err)
           }else{
@@ -787,7 +785,7 @@ table.getMcode2 = {
     })
     .then(m=>{
       if(m[0].username != username) throw '用户名和手机号码不对应，请检查'
-      alisms.smsSend(smsConfig(phone), function(err,res){
+      sendSMS(phone, code ,function(err,res){
         if(err){
           console.log(err)
         }else{
