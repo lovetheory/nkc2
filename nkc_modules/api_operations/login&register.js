@@ -14,11 +14,11 @@ var nm = require('nodemailer')
 
 try{
   var mailSecrets = require('mailSecrets.js');
-  var sendSMS = require('mailSecrets.js').sendSMS;
+  var sendSMS = require('mailsecrets.js').sendSMS;
 }
 catch(e){
   var mailSecrets = require('mailSecrets_template.js');
-  var sendSMS = require('mailSecrets_template.js').sendSMS;
+  var sendSMS = require('mailsecrets_template.js').sendSMS;
 }
 
 var transporter = nm.createTransport(mailSecrets.smtpConfig);
@@ -723,7 +723,7 @@ table.getMcode = {
       if(k.length>0){
         throw '此号码已经用于其他用户注册，请检查或更换'
       }else{
-        sendSMS(phone, code, function(err,res){
+        sendSMS(phone, code ,function(err,res){
           if(err){
             console.log(err)
           }else{
