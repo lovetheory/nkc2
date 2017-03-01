@@ -13,7 +13,6 @@ function login_submit(){
   .then(function(res){
     //geid('error_info').innerHTML = JSON.stringify(res);
     //display('error_info_panel')  登录成功不用提示
-
     if(
       document.referrer.toString().indexOf('register')>=0 ||
       document.referrer.toString().indexOf('logout')>=0 ||
@@ -24,7 +23,7 @@ function login_submit(){
       location.href = '/'; //dont go back to register form
     }else{
       //alert(document.referrer)
-      if(!document.referrer.match('127.0.0.1:1086') || !document.referrer.match('bbs.kechuang.org') ){
+      if(document.referrer.match('127.0.0.1:1086') || document.referrer.match('bbs.kechuang.org') ){
         location.href = '/';
       }else{
         location.href = document.referrer; //go back in history
