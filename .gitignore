@@ -29,4 +29,6 @@ test.js
 
 nkc_modules/mailSecrets.js
 
+nkc_modules/mailSecrets_template.js
+
 npm-debug.log

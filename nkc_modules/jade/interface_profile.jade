@@ -11,7 +11,13 @@ block content
   
   .container
     if (data.user == undefined)
-      h2 请先登录后查看，谢谢~
+      .row
+        .col-sm-12
+          span 个人信息暂时不对游客公开,请先
+          a.alert-info(href="/login") 登录
+          span 或
+          a.alert-info(href="/register") 注册
+          span 以继续浏览
     else 
       if isViewingSelf
         include interface_profile_recent.jade
