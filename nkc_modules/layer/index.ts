@@ -165,7 +165,8 @@ var layer = (function(){
         return this;
       }else{
 
-        throw `浏览权限不足. 要浏览这部分内容 (位于：${forum.display_name})，你需要一个叫做 [${forum.class}] 的权限级别. 可尝试登陆或者注册一个账号. 目前你拥有[${Object.keys(contentClasses).filter(i=>contentClasses[i]).join(',')}]权限级别。`
+        //throw `浏览权限不足. 要浏览这部分内容 (位于：${forum.display_name})，你需要一个叫做 [${forum.class}] 的权限级别. 可尝试登陆或者注册一个账号. 目前你拥有[${Object.keys(contentClasses).filter(i=>contentClasses[i]).join(',')}]权限级别。`
+        throw '浏览权限不足. 请登录. 如果已经登录, 则需要参加考试提升账号等级'
       }
     }
 

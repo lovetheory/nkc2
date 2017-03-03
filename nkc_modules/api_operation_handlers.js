@@ -5,7 +5,7 @@ var express = require('express');
 var jaderender = require('jaderender')
 var api = express.Router();
 var helper_mod = require('helper')()
-
+var settings = require('server_settings');
 var queryfunc = require('query_functions')
 
 api.use('/operation', (req,res,next)=>{
@@ -81,11 +81,11 @@ api.use((err,req,res,next)=>{
   }
 
   if((res.obj&&res.obj.template)||req.accepts('html')&&(!req.is('json'))){
-
     res.status(500).send(
-      jaderender('nkc_modules/jade/500.jade',{
-        url:req.originalUrl,
-        err:err.stack?err.stack:JSON.stringify(err),
+      jaderender('nkc_modules/jade/500.jade', {
+        site: settings.site,
+        url: req.originalUrl,
+        err: err.stack?err.stack:JSON.stringify(err)
       })
     );
     return undefined;

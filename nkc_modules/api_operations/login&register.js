@@ -723,7 +723,7 @@ table.getMcode = {
       if(k.length>0){
         throw '此号码已经用于其他用户注册，请检查或更换'
       }else{
-        sendSMS(phone, code ,function(err,res){
+        sendSMS(phone, code , 'register',function(err,res){//调用注册方法
           if(err){
             console.log(err)
           }else{
@@ -785,7 +785,7 @@ table.getMcode2 = {
     })
     .then(m=>{
       if(m[0].username != username) throw '用户名和手机号码不对应，请检查'
-      sendSMS(phone, code ,function(err,res){
+      sendSMS(phone, code , 'reset', function(err,res){ //2调用修改密码方法
         if(err){
           console.log(err)
         }else{

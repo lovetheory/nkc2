@@ -142,7 +142,8 @@ var layer = (function () {
                 return this;
             }
             else {
-                throw "\u6D4F\u89C8\u6743\u9650\u4E0D\u8DB3. \u8981\u6D4F\u89C8\u8FD9\u90E8\u5206\u5185\u5BB9 (\u4F4D\u4E8E\uFF1A" + forum.display_name + ")\uFF0C\u4F60\u9700\u8981\u4E00\u4E2A\u53EB\u505A [" + forum.class + "] \u7684\u6743\u9650\u7EA7\u522B. \u53EF\u5C1D\u8BD5\u767B\u9646\u6216\u8005\u6CE8\u518C\u4E00\u4E2A\u8D26\u53F7. \u76EE\u524D\u4F60\u62E5\u6709[" + Object.keys(contentClasses).filter(function (i) { return contentClasses[i]; }).join(',') + "]\u6743\u9650\u7EA7\u522B\u3002";
+                //throw "\u6D4F\u89C8\u6743\u9650\u4E0D\u8DB3. \u8981\u6D4F\u89C8\u8FD9\u90E8\u5206\u5185\u5BB9 (\u4F4D\u4E8E\uFF1A" + forum.display_name + ")\uFF0C\u4F60\u9700\u8981\u4E00\u4E2A\u53EB\u505A [" + forum.class + "] \u7684\u6743\u9650\u7EA7\u522B. \u53EF\u5C1D\u8BD5\u767B\u9646\u6216\u8005\u6CE8\u518C\u4E00\u4E2A\u8D26\u53F7. \u76EE\u524D\u4F60\u62E5\u6709[" + Object.keys(contentClasses).filter(function (i) { return contentClasses[i]; }).join(',') + "]\u6743\u9650\u7EA7\u522B\u3002";
+                throw '浏览权限不足. 请登录. 如果已经登录, 则需要参加考试提升账号等级'
             }
         };
         Forum.prototype.listThreadsOfPage = function (params) {
