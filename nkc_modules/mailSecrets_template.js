@@ -16,11 +16,11 @@ module.exports = {
   },
 
   sendSMS: function(phone, code, callback){
-    new alidayu('23632480', '1b4965972ef0b5202b8c7441d64c503f').smsSend({
+    new alidayu('appid', 'appkey').smsSend({
       sms_free_sign_name: '论坛注册',  //短信签名
       sms_param: {"code": code, "product": "科创论坛"},
       rec_num: phone,
-      sms_template_code: 'SMS_43555002'//大于平台手机找回密码模板号
+      sms_template_code: 'sms模板号'//大于平台手机找回密码模板号
     }, callback)
   },
 
