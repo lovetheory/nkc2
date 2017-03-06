@@ -90,6 +90,7 @@ table.getResource={
           lastModified:true,
           headers:{'Content-Disposition':`inline; filename=${encodeRFC5987ValueChars(robject.oname)}; filename*=utf-8''${encodeRFC5987ValueChars(robject.oname)}`},
         })
+
         .then(res=>{
           return accumulateCountHit(params.rid,'resources')
           .then(res=>{
