@@ -10,25 +10,27 @@
 /resources/im_test
 /resources/upload
 /resources/thumbnails
-secret.txt
-favicon.psd
+/secret.txt
+/favicon.psd
 /.idea
 /.vscode
 *.DS_Store
-exampleQuestions.json
-tEaterSettings.js
+/exampleQuestions.json
+/tEaterSettings.js
 
-static/tools/*
+/static/tools/*
 !static/tools/*.htm
 !static/tools/*.css
-static/tools.zip
+/static/tools.zip
 
-external_pkgs/MathJax-2.6-latest
+/external_pkgs/MathJax-2.6-latest
 
-test.js
+/test.js
 
-nkc_modules/mailSecrets.js
+/nkc_modules/mailSecrets.js
 
-nkc_modules/mailSecrets_template.js
+/nkc_modules/mailSecrets_template.js
+/nkc_modules/server_settings.js
+/static
 
-npm-debug.log
+/npm-debug.log
