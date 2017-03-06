@@ -93,6 +93,7 @@ var forum= //版
   count_posts:999,
   count_threads:60,
   count_posts_today:6,
+  moderators: Number,//版主
 
   display_name:"板块的显示名称",
   description:'简介',

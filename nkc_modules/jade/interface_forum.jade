@@ -118,7 +118,18 @@ block content
                   a(href='#{url}' style='#{stylestr}' class='#{active?"active":""}') #{name}
                 
               .ForumNavigation2.row
-                each forum,index in data.forums
+                //增加大板介绍
+                .col-xs-12
+                  hr.hrNarrowSpace
+                  -var f = data.forum
+                  -var p = data.forum
+                  include interface_forumprofile2.jade
+                  hr.hrNarrowSpace
+
+                  //button.btn.btn-primary(onclick="newPostDirector('#{data.forum._key}')") 发表新帖
+                  //-console.log('haha:'+data.user.certs)
+
+                //each forum,index in data.forums         //移除原导航
                   -var f = forum
                   -var name = f.display_name
                   -var url = '/f/'+f._key; // url=seo_reverse_rewrite(url)
@@ -137,8 +148,8 @@ block content
                   .col-xs-6.col-sm-4.col-md-3
                     .ForumNaviProf
                       include interface_forumprofile2.jade
-                    
-          
+
+
           if hasChildren && 0
             //older ver, discarded
             each forum,index in data.forums
@@ -165,12 +176,19 @@ block content
                     include interface_forum_singlethread.jade
                     
           if hasChildren
-            -var threads = data.forums.map(i=>i.threads).reduce((a,b)=>b.concat(a)).sort((a,b)=>b.tlm-a.tlm).slice(0,30)
-            
-            .nkcpanel#fullwidthpanel
-              .ForumThreadList
-                each thread,index in threads
-                  include interface_forum_singlethread.jade
+            for forum in data.forums
+              .nkcpanel#fullwidthpanel
+                -var f = forum
+                -var p = forum
+                include interface_forumprofile2.jade
+                if forum.moderators && forum.moderators.length
+                  div(style='height: 20px;text-align:right') 版主:
+                    for moderator in forum.moderators
+                      a(href='/user_profile_byname/#{moderator}')  #{moderator}
+                hr.hrNarrowSpace
+                .ForumThreadList
+                  each thread,index in forum.threads
+                    include interface_forum_singlethread.jade
 
             
           if !hasChildren  
