@@ -47,10 +47,10 @@ var post={ //post 表示楼
   t:String, //楼的标题，可以为空字符串或null
   l:String, //语言，可能的值是 markdown 或 pwbb
 
-  ipoc:'',
-  iplm:'',
+  ipoc:'',//ip on created
+  iplm:'',//ip last modified
 
-  uidlm:'',
+  uidlm:'',//uid last modified
 }
 /*
 关于histories
@@ -93,6 +93,7 @@ var forum= //版
   count_posts:999,
   count_threads:60,
   count_posts_today:6,
+  moderators: Number,//版主
 
   display_name:"板块的显示名称",
   description:'简介',

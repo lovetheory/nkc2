@@ -661,6 +661,8 @@ table.viewForum = {
         sort f.order
 
         let class = f.class
+        let display_name = f.display_name
+        let moderators = f.moderators
 
         filter has(@contentClasses,TO_STRING(class)) /*content ctrl*/
 
@@ -670,7 +672,7 @@ table.viewForum = {
 
           filter t.fid == f._key && t.disabled==null
           sort t.fid desc,t.disabled desc, t.tlm desc
-          limit 30
+          limit 5
 
           let oc = document(posts,t.oc)
           let ocuser = document(users,t.uid)
@@ -679,7 +681,7 @@ table.viewForum = {
 
           return merge(t,{oc,ocuser,lm,lmuser})
         )
-        let nf = merge(f,{threads})
+        let nf = merge(f,{threads, display_name, moderators})
 
         return nf
         `,{parentid:data.forum._key||999,contentClasses:params.contentClasses}

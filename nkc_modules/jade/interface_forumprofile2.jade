@@ -5,10 +5,8 @@ div
   - var forumcolor = f.color||p.color||'#eee'
   
   .HomeForumTitleCircle(style='background-color:#{forumcolor}')
-  a.HomeForumTitlePrimary(href='#{url}') #{f.display_name}
+  a.HomeForumTitlePrimary(href='#{f._key}') #{f.display_name}
   if f.count_posts_today
     span.reddish  (今日 #{f.count_posts_today}
-
-hr.hrNarrowSpace
 
 div!=markdown(f.description||'')
