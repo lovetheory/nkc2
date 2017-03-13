@@ -62,11 +62,11 @@ table.viewExam = {
     }
 
     return apifunc.exam_gen({ip:params._req.iptrim,category:params.category})
-    .then(function(back){
-      data.exam = back;
-      data.category = params.category
-      return data;
-    })
+      .then(function(back){
+        data.exam = back;
+        data.category = params.category
+        return data;
+      })
   },
 
   requiredParams:{
@@ -123,23 +123,23 @@ table.viewActiveEmail = {
       return u
       `,{email:email, ecode:ecode, toc:Date.now()-2*60*1000}
     )
-    .then(res=>{
-      if(res.length > 0){
-        var user = {
-          username:res[0].username,
-          password:res[0].passwd,
-          email:res[0].email
+      .then(res=>{
+        if(res.length > 0){
+          var user = {
+            username:res[0].username,
+            password:res[0].passwd,
+            email:res[0].email
+          }
+          create_muser(user)
+            .then(k=>{
+              console.log(k)
+            })
+          data.activeInfo1 = '邮箱注册成功，赶紧登录吧~'
+        }else{
+          data.activeInfo2 = '邮箱链接已失效，请重新注册！'
         }
-        create_muser(user)
-        .then(k=>{
-          console.log(k)
-        })
-        data.activeInfo1 = '邮箱注册成功，赶紧登录吧~'
-      }else{
-        data.activeInfo2 = '邮箱链接已失效，请重新注册！'
-      }
-      return data
-    })
+        return data
+      })
 
   }
 }
@@ -206,23 +206,23 @@ function getForumList(params) {
 
 function getForumListKv(params){
   return getForumList(params)
-  .then(res=>{
-    var forumlist = res
-    var kv = {}
-    forumlist.map(group=>{
-      group.forumgroup.map(f=>{
-        var belong_forum = f
-        var pf = group.parentforum
-        kv[f._key] = {
-          belong_forum,
-          pf,
-          color:(f?f.color:null)||(pf?pf.color:null)||'#aaa',
-        }
+    .then(res=>{
+      var forumlist = res
+      var kv = {}
+      forumlist.map(group=>{
+        group.forumgroup.map(f=>{
+          var belong_forum = f
+          var pf = group.parentforum
+          kv[f._key] = {
+            belong_forum,
+            pf,
+            color:(f?f.color:null)||(pf?pf.color:null)||'#aaa',
+          }
+        })
       })
-    })
 
-    return kv
-  })
+      return kv
+    })
 }
 
 
@@ -266,21 +266,21 @@ table.viewPanorama = {
       return k
       `
     )
-    .then(count_digests=>{
-      count_digests = count_digests[0]
-      var count = 6
+      .then(count_digests=>{
+        count_digests = count_digests[0]
+        var count = 6
 
-      var randomarray=[]
-      for(i=0;i<count;i++){
-        randomarray.push(
-          Math.floor(Math.random()*count_digests-0.0001)
-        )
-      }
+        var randomarray=[]
+        for(i=0;i<count;i++){
+          randomarray.push(
+            Math.floor(Math.random()*count_digests-0.0001)
+          )
+        }
 
-      var promarr = []
-      var tharr = []
-      for(i in randomarray){
-        promarr.push(AQL(`
+        var promarr = []
+        var tharr = []
+        for(i in randomarray){
+          promarr.push(AQL(`
           for t in threads
           filter t.digest == true
           limit @i,1
@@ -290,23 +290,23 @@ table.viewPanorama = {
 
           return merge(t,{oc:p,ocuser:u})
           `,{
-            i:randomarray[i],
-          }
-        ).then(res=>{
-          tharr.push(res[0])
-        }))
-      }
+              i:randomarray[i],
+            }
+          ).then(res=>{
+            tharr.push(res[0])
+          }))
+        }
 
-      return Promise.all(promarr)
-      .then(()=>{
-        return tharr
+        return Promise.all(promarr)
+          .then(()=>{
+            return tharr
+          })
       })
-    })
-    .then(res=>{
-      data.digestThreads = res
+      .then(res=>{
+        data.digestThreads = res
 
-      //latestThreads
-      return AQL(`
+        //latestThreads
+        return AQL(`
         for t in threads
         sort t.disabled desc, t.tlm desc
         filter t.disabled==null
@@ -325,11 +325,11 @@ table.viewPanorama = {
         limit 10
         return merge(t,{oc:oc,lm:lm,forum,ocuser})
         `,{contentClasses:Object.assign(params.contentClasses,{sensitive:true,non_broadcast:undefined})}
-      )
-    })
-    .then(res=>{
-      data.latestThreads = res
-      return AQL(`
+        )
+      })
+      .then(res=>{
+        data.latestThreads = res
+        return AQL(`
         for t in threads
         sort t.disabled desc, t.toc desc
         filter t.disabled==null
@@ -349,12 +349,12 @@ table.viewPanorama = {
         return merge(t,{oc,lm,forum,ocuser})
 
         `,{contentClasses:Object.assign(params.contentClasses,{sensitive:true,non_broadcast:undefined})}
-      )
-    })
-    .then(res=>{
-      data.newestThreads = res
+        )
+      })
+      .then(res=>{
+        data.newestThreads = res
 
-      return AQL(`
+        return AQL(`
         for t in threads
         filter t.digest == true
         sort t.digest desc, t.toc desc
@@ -367,26 +367,26 @@ table.viewPanorama = {
 
         return merge(t,{oc:oc,lm:lm,forum,ocuser})
         `
-      )
-    })
-    .then(res=>{
-      data.newestDigestThreads = res
+        )
+      })
+      .then(res=>{
+        data.newestDigestThreads = res
 
-      return AQL(`
+        return AQL(`
         for u in users
         //filter u.tlv!=null
         sort u.tlv desc
         limit 30
         return u
         `
-      )
-    })
-    .then(res=>{
-      data.latestVisitUsers = res
+        )
+      })
+      .then(res=>{
+        data.latestVisitUsers = res
 
-      return null
+        return null
 
-      return AQL(`
+        return AQL(`
         for t in threads
         sort t.disabled desc, t.toc desc
         filter t.disabled==null
@@ -418,120 +418,230 @@ table.viewPanorama = {
         //return merge(t,{oc,lm,forum,ocuser})
         return merge(lm,{r:resources_declared,user:lmuser,thread:merge(t,{oc,ocuser})})
         `,{contentClasses:Object.assign(params.contentClasses,{sensitive:true,non_broadcast:undefined})}
-      )
-    })
-    .then(res=>{
-      //data.galleryItems = galleryItems
+        )
+      })
+      .then(res=>{
+        //data.galleryItems = galleryItems
 
-      data.latestReplies2 = res
-      return data
-    })
+        data.latestReplies2 = res
+        return data
+      })
   }
 }
 
 table.viewHome = {
   init:function(){
     queryfunc.createIndex('threads',{
-      fields:['fid','disabled'],
+      fields:['digest'],
+      type:'hash',
+      unique:'false',
+      sparse:'true',
+    })
+    queryfunc.createIndex('threads',{
+      fields:['disabled','toc'],
       type:'skiplist',
       unique:'false',
       sparse:'false',
     })
 
     queryfunc.createIndex('threads',{
-      fields:['disabled','tlm'],
+      fields:['digest','toc'],
+      type:'skiplist',
+      unique:'false',
+      sparse:'false',
+    })
+
+    queryfunc.createIndex('users',{
+      fields:['tlv'],
       type:'skiplist',
       unique:'false',
       sparse:'false',
     })
   },
   operation:params=>{
-    var data = defaultData(params)
-    data.template = jadeDir+ 'interface_home.jade'
-
-    var contentClasses = params.contentClasses
-    for(c in contentClasses){
-      if(!contentClasses[c]){
-        contentClasses[c]=undefined;
-      }
-    }
-    var threadPerForum = 3
+    var data = defaultData(params);
+    data.template = jadeDir+ 'interface_home__new.jade';
+    data.navbar = {highlight: 'home'};
 
     return AQL(`
-      for f in forums
+      for t in threads
+      filter t.digest==true
+      collect with count into k
+      return k
+      `
+    )
+      .then(count_digests=>{
+        count_digests = count_digests[0]
+        var count = 6
 
-      let class = f.class
+        var randomarray=[]
+        for(i=0;i<count;i++){
+          randomarray.push(
+            Math.floor(Math.random()*count_digests-0.0001)
+          )
+        }
 
-      filter has(@contentClasses,TO_STRING(class)) /*content ctrl*/
+        var promarr = []
+        var tharr = []
+        for(i in randomarray){
+          promarr.push(AQL(`
+          for t in threads
+          filter t.digest == true
+          limit @i,1
 
-      filter f.type == 'forum' && f.parentid !=null
-      let threads =
-      (
+          let p = document(posts,t.oc)
+          let u = document(users,p.uid)
+
+          return merge(t,{oc:p,ocuser:u})
+          `,{
+              i:randomarray[i],
+            }
+          ).then(res=>{
+            tharr.push(res[0])
+          }))
+        }
+
+        return Promise.all(promarr)
+          .then(()=>{
+            return tharr
+          })
+      })
+      .then(res=>{
+        data.digestThreads = res
+
+        //latestThreads
+        return AQL(`
         for t in threads
+        sort t.disabled desc, t.tlm desc
+        filter t.disabled==null
+        limit 60
 
-        filter t.fid == f._key && t.disabled==null
-        sort t.fid desc,t.disabled desc, t.tlm desc
-        limit ${threadPerForum}
+        let parentforum = document(forums,t.fid)
+        let class = parentforum.class
+
+        filter has(@contentClasses,TO_STRING(class)) /*content ctrl*/
 
         let oc = document(posts,t.oc)
         let lm = document(posts,t.lm)
-        return merge(t,{oc,lm})
-      )
-      let nf = merge(f,{threads})
+        let forum = document(forums,t.fid)
+        let ocuser = document(users,t.uid)
 
-      collect parent = nf.parentid into forumgroup = nf
-      let parentforum = document(forums,parent)
-      filter parentforum
+        limit 10
+        return merge(t,{oc:oc,lm:lm,forum,ocuser})
+        `,{contentClasses:Object.assign(params.contentClasses,{sensitive:true,non_broadcast:undefined})}
+        )
+      })
+      .then(res=>{
+        data.latestThreads = res
+        return AQL(`
+        for t in threads
+        sort t.disabled desc, t.toc desc
+        filter t.disabled==null
+        limit 60
 
-      let class = parentforum.class
+        let parentforum = document(forums,t.fid)
+        let class = parentforum.class
 
-      //filter has(@contentClasses,TO_STRING(class)) /*content ctrl*/
+        filter has(@contentClasses,TO_STRING(class)) /*content ctrl*/
 
-      let group =  {parentforum,forumgroup}
-      sort group.parentforum.order asc
-      return group
-      `,
-      {
-        contentClasses:Object.assign(contentClasses,{}),
-      }
-    )
-    .then(grouparray=>{
+        limit 10
+        let oc = document(posts,t.oc)
+        let lm = document(posts,t.lm)
+        let forum = document(forums,t.fid)
+        let ocuser = document(users,oc.uid)
 
-      //aftermath: filter out the invisible while preserve the visible, even if group is invisible
-      for(i in grouparray){
-        var group = grouparray[i]
-        var k = []
-        for(g in group.forumgroup){
-          var forum = group.forumgroup[g]
-          if(contentClasses[(forum.class||group.parentforum.class||'null')]){ //if user can view this
-            k.push(forum)
-            //group.forumgroup[g]=null
-          }
-        }
-        group.forumgroup=k
-      }
+        return merge(t,{oc,lm,forum,ocuser})
 
-      data.grouparray = grouparray;
-      data.navbar_highlight = 'home'
-      //data.forums = forums;
-      return AQL(`
-        for a in answersheets collect with count into k return k
+        `,{contentClasses:Object.assign(params.contentClasses,{sensitive:true,non_broadcast:undefined})}
+        )
+      })
+      .then(res=>{
+        data.newestThreads = res
+
+        return AQL(`
+        for t in threads
+        filter t.digest == true
+        sort t.digest desc, t.toc desc
+
+        limit 10
+        let oc = document(posts,t.oc)
+        let lm = document(posts,t.lm)
+        let forum = document(forums,t.fid)
+        let ocuser = document(users,t.uid)
+
+        return merge(t,{oc:oc,lm:lm,forum,ocuser})
         `
-      )
-    })
-    .then(karr=>{
-      var na = karr[0]
-      data.answersheet_count = na;
-      //data.forums = forums;
+        )
+      })
+      .then(res=>{
+        data.newestDigestThreads = res
 
-      return {} //ignore following
-    })
-    .then(res=>{
-      data.latestThreads = res
+        return AQL(`
+        for u in users
+        //filter u.tlv!=null
+        sort u.tlv desc
+        limit 30
+        return u
+        `
+        )
+      })
+      .then(res=>{
+        data.latestVisitUsers = res
 
-      data.seo_arr = settings.seo_rewrite_mapping
-      return data
-    })
+        return null
+
+        return AQL(`
+        for t in threads
+        sort t.disabled desc, t.toc desc
+        filter t.disabled==null
+        limit 60
+
+        let parentforum = document(forums,t.fid)
+        let class = parentforum.class
+
+        filter has(@contentClasses,TO_STRING(class)) /*content ctrl*/
+
+
+        let oc = document(posts,t.oc)
+        let lm = document(posts,t.lm)
+        filter lm.disabled!=true
+        limit 10
+        let forum = document(forums,t.fid)
+        let ocuser = document(users,oc.uid)
+        let lmuser = document(users,lm.uid)
+
+        let resources_declared = (
+          let p = lm
+          filter is_array(p.r)
+          for r in p.r
+          let rd = document(resources,r)
+          filter rd!=null
+          return rd
+        )
+
+        //return merge(t,{oc,lm,forum,ocuser})
+        return merge(lm,{r:resources_declared,user:lmuser,thread:merge(t,{oc,ocuser})})
+        `,{contentClasses:Object.assign(params.contentClasses,{sensitive:true,non_broadcast:undefined})}
+        )
+      })
+      .then(res=>{
+        //data.galleryItems = galleryItems
+        data.latestReplies2 = res
+
+        //add homepage posts      17-03-13  lzszone
+        var pageCount = queryfunc.docCount('threads');
+        var paging = new layer.Paging(params.page).getPagingParams(pageCount);
+        var option = {
+          start: paging.page,
+          count: paging.perpage,
+          type: 'threads'
+        };
+        return queryfunc.doc_list_all(option);
+      })
+      .then(res => {
+        data.indexPosts = res;
+        return data;
+      })
   }
 }
 
@@ -573,28 +683,28 @@ var xsflimit = require('../misc/xsflimit')
 table.viewForum = {
   init:function(){
     return layer.Forum.buildIndex()
-    .then(()=>{
-      queryfunc.createIndex('threads',{
-        fields:['topped','fid','toc'],
-        type:'skiplist',
-        unique:'false',
-        sparse:'true',
-      })
+      .then(()=>{
+        queryfunc.createIndex('threads',{
+          fields:['topped','fid','toc'],
+          type:'skiplist',
+          unique:'false',
+          sparse:'true',
+        })
 
-      queryfunc.createIndex('threads',{
-        fields:['fid','cid','toc'],
-        type:'skiplist',
-        unique:'false',
-        sparse:'true',
-      })
+        queryfunc.createIndex('threads',{
+          fields:['fid','cid','toc'],
+          type:'skiplist',
+          unique:'false',
+          sparse:'true',
+        })
 
-      queryfunc.createIndex('threads',{
-        fields:['fid','cid','tlm'],
-        type:'skiplist',
-        unique:'false',
-        sparse:'true',
+        queryfunc.createIndex('threads',{
+          fields:['fid','cid','tlm'],
+          type:'skiplist',
+          unique:'false',
+          sparse:'true',
+        })
       })
-    })
   },
   operation:params=>{
     var data = defaultData(params)
@@ -609,32 +719,32 @@ table.viewForum = {
     var forum = new layer.Forum(fid)
 
     return forum.load()
-    .then(forum=>{
-      return forum.inheritPropertyFromParent()
-      .then(res=>{
-        return forum.testView(params.contentClasses)
+      .then(forum=>{
+        return forum.inheritPropertyFromParent()
+          .then(res=>{
+            return forum.testView(params.contentClasses)
+          })
       })
-    })
-    .then(()=>{
-      data.forum = forum.model
-    })
-    .then(()=>{
+      .then(()=>{
+        data.forum = forum.model
+      })
+      .then(()=>{
 
-      return forum.listThreadsOfPage(params)
-    })
-    .then(result=>{
-      //if nothing went wrong
-      data.threads = result
-      data.paging = result.paging
+        return forum.listThreadsOfPage(params)
+      })
+      .then(result=>{
+        //if nothing went wrong
+        data.threads = result
+        data.paging = result.paging
 
-      return getForumList(params)
-    })
-    .then(forumlist=>{
-      data.forumlist = forumlist
-      data.replytarget = 'f/' + fid;
+        return getForumList(params)
+      })
+      .then(forumlist=>{
+        data.forumlist = forumlist
+        data.replytarget = 'f/' + fid;
 
-      if(data.paging.page==0){
-        return AQL(`
+        if(data.paging.page==0){
+          return AQL(`
           for t in threads
           filter t.topped==true && t.fid == @fid
           sort t.topped, t.fid, t.toc
@@ -646,16 +756,16 @@ table.viewForum = {
 
           return merge(t,{oc,lm,ocuser,lmuser})
           `,{fid}
-        )
-      }
-      else{
-        return null
-      }
-    })
-    .then(res=>{
-      data.toppedThreads = res
+          )
+        }
+        else{
+          return null
+        }
+      })
+      .then(res=>{
+        data.toppedThreads = res
 
-      return AQL(`
+        return AQL(`
         for f in forums
         filter f.parentid==@parentid
         sort f.order
@@ -685,23 +795,23 @@ table.viewForum = {
 
         return nf
         `,{parentid:data.forum._key||999,contentClasses:params.contentClasses}
-      )
-    })
-    .then(res=>{
-      data.forums = res
-      //return data
+        )
+      })
+      .then(res=>{
+        data.forums = res
+        //return data
 
-      return getThreadTypes(fid)
-    })
-    .then(res=>{
-      data.threadtypes = res.tt
-      data.forumthreadtypes = res.ftt
+        return getThreadTypes(fid)
+      })
+      .then(res=>{
+        data.threadtypes = res.tt
+        data.forumthreadtypes = res.ftt
 
-    })
-    .then(res=>{
+      })
+      .then(res=>{
 
-      return data
-    })
+        return data
+      })
   },
   requiredParams:{
     fid:String,
@@ -715,9 +825,9 @@ function getThreadTypes(fid){
     return {tt,ftt}
     `,{fid:fid||null}
   )
-  .then(res=>{
-    return res[0]
-  })
+    .then(res=>{
+      return res[0]
+    })
 }
 
 function getOneThreadTypes(fid){
@@ -739,57 +849,57 @@ table.viewThread = {
 
     var thread = new layer.Thread(tid)
     return thread.load()
-    .then(res=>{
-      return thread.loadForum()
-    })
-    .then(forum=>{
-      return forum.testView(params.contentClasses)// test if have permission to view.
-    })
-    .then(forum=>{
-      data.forum = forum.model
-
-      return thread.mergeOc()
       .then(res=>{
-        var ocuser = new layer.User(thread.model.oc.uid)
-        return ocuser.load()
-        .then(ocuser=>{
-          data.ocuser = ocuser.model
-
-
-          data.paging = thread.getPagingParams(params.page)
-          return thread.listPostsOfPage(params.page)
-        })
+        return thread.loadForum()
       })
-    })
-    .then(posts=>{
-
-      //xsf limiting on post content
-      for(i in posts){
-        posts[i]=xsflimit(posts[i],params)
-      }
-
-      if (!posts.length) {
-        params._res.redirect('/t/'+params.tid)
-        params._res.sent = true
-        //if no posts exist on that page, goto 1th page
-      }
-
-      data.posts = posts
-      data.thread = thread.model
-    })
-    .then(result=>{
-      return getForumList(params)
-    })
-    .then(forumlist=>{
-
-      data.forumlist = forumlist
-      data.replytarget = 't/' + tid
-
-      return thread.accumulateCountHit()
-      .then(res=>{
-        return data
+      .then(forum=>{
+        return forum.testView(params.contentClasses)// test if have permission to view.
       })
-    })
+      .then(forum=>{
+        data.forum = forum.model
+
+        return thread.mergeOc()
+          .then(res=>{
+            var ocuser = new layer.User(thread.model.oc.uid)
+            return ocuser.load()
+              .then(ocuser=>{
+                data.ocuser = ocuser.model
+
+
+                data.paging = thread.getPagingParams(params.page)
+                return thread.listPostsOfPage(params.page)
+              })
+          })
+      })
+      .then(posts=>{
+
+        //xsf limiting on post content
+        for(i in posts){
+          posts[i]=xsflimit(posts[i],params)
+        }
+
+        if (!posts.length) {
+          params._res.redirect('/t/'+params.tid)
+          params._res.sent = true
+          //if no posts exist on that page, goto 1th page
+        }
+
+        data.posts = posts
+        data.thread = thread.model
+      })
+      .then(result=>{
+        return getForumList(params)
+      })
+      .then(forumlist=>{
+
+        data.forumlist = forumlist
+        data.replytarget = 't/' + tid
+
+        return thread.accumulateCountHit()
+          .then(res=>{
+            return data
+          })
+      })
   },
   requiredParams:{
     tid:String,
@@ -830,30 +940,30 @@ table.viewUserThreads = {
 
     var userclass = new layer.User(uid)
     return userclass.load()
-    .then(()=>{
-      return AQL(`
+      .then(()=>{
+        return AQL(`
         for t in threads ${filter} collect with count into k return k
         `,{uid}
-      )
-    })
-    .then(res=>{
-      totalcount = res[0]
+        )
+      })
+      .then(res=>{
+        totalcount = res[0]
 
-      var paging = new layer.Paging(params.page)
-      data.paging = paging.getPagingParams(totalcount)
+        var paging = new layer.Paging(params.page)
+        data.paging = paging.getPagingParams(totalcount)
 
-      var user = userclass.model
+        var user = userclass.model
 
-      data.forum = {
-        display_name:user.username+' 的主题',
-        description:user.post_sign||'',
-        count_threads:user.count_threads||null,
-        count_posts:user.count_posts||null,
-        color:user.color||'#bbb'
-      }
+        data.forum = {
+          display_name:user.username+' 的主题',
+          description:user.post_sign||'',
+          count_threads:user.count_threads||null,
+          count_posts:user.count_posts||null,
+          color:user.color||'#bbb'
+        }
 
-      var uid = user._key
-      return AQL(`
+        var uid = user._key
+        return AQL(`
         for t in threads
 
         ${filter}
@@ -867,24 +977,24 @@ table.viewUserThreads = {
 
         return merge(t,{oc,ocuser,lmuser})
         `,
-        {
-          uid,
-          start:data.paging.start,
-          count:data.paging.count,
-        }
-      )
-    })
-    .then(threads=>{
-      //if nothing went wrong
-      data.threads = threads
-      //return apifunc.get_all_forums()
+          {
+            uid,
+            start:data.paging.start,
+            count:data.paging.count,
+          }
+        )
+      })
+      .then(threads=>{
+        //if nothing went wrong
+        data.threads = threads
+        //return apifunc.get_all_forums()
 
-      return getForumList(params)
-    })
-    .then(forumlist=>{
-      data.forumlist = forumlist
-      return data
-    })
+        return getForumList(params)
+      })
+      .then(forumlist=>{
+        data.forumlist = forumlist
+        return data
+      })
   }
 }
 
@@ -933,11 +1043,11 @@ table.viewExperimental = {
     data.template = jadeDir+'interface_experimental.jade'
 
     return getForumList(params)
-    .then(forumlist=>{
+      .then(forumlist=>{
 
-      data.forumlist=forumlist
-      return data
-    })
+        data.forumlist=forumlist
+        return data
+      })
   }
 }
 
@@ -959,10 +1069,10 @@ table.viewEditor = {
       report(pid);
       //load from db
       return apifunc.get_a_post(pid)
-      .then(function(back){
-        data.original_post = back;
-        return data;
-      })
+        .then(function(back){
+          data.original_post = back;
+          return data;
+        })
     }
 
     data.original_post = {
@@ -972,13 +1082,13 @@ table.viewEditor = {
 
     var a = target.split('/')[1];  //版块号
     return getOneThreadTypes(a)
-    .then(res=>{
-      if(res.length != 0){
-        res.splice(0, 0, {"_key":'0',"name":"--默认无分类--"});  //添加到第一个位置
-      }
-      data.threadtypes = res;
-      return data;
-    })
+      .then(res=>{
+        if(res.length != 0){
+          res.splice(0, 0, {"_key":'0',"name":"--默认无分类--"});  //添加到第一个位置
+        }
+        data.threadtypes = res;
+        return data;
+      })
 
     return data;
   }
@@ -995,48 +1105,48 @@ table.viewDanger = {
     var username = params.username
 
     return Promise.resolve()
-    .then(()=>{
-      if(doc_id){
-        var p = doc_id.split('/')
-        var collname = p[0]
-        var doc_key = p[1]
+      .then(()=>{
+        if(doc_id){
+          var p = doc_id.split('/')
+          var collname = p[0]
+          var doc_key = p[1]
 
-        var doc = new layer.BaseDao(collname,doc_key)
+          var doc = new layer.BaseDao(collname,doc_key)
 
-        return doc.load()
-        .then(m=>{
-          data.doc = doc.model
-        })
-        .catch(err=>{
-          //ignore
-          report('no doc to load/bad id')
-        })
-        .then(()=>{
-          return data
-        })
-      }
+          return doc.load()
+            .then(m=>{
+              data.doc = doc.model
+            })
+            .catch(err=>{
+              //ignore
+              report('no doc to load/bad id')
+            })
+            .then(()=>{
+              return data
+            })
+        }
 
-      if(username){
-        var user = new layer.User()
-        return user.loadByName(username)
-        .then(u=>{
-          data.doc = u.model
-          return data
-        })
-        .catch(err=>{
-          return data
-        })
-      }
+        if(username){
+          var user = new layer.User()
+          return user.loadByName(username)
+            .then(u=>{
+              data.doc = u.model
+              return data
+            })
+            .catch(err=>{
+              return data
+            })
+        }
 
-      return data
-    })
-    .then(data=>{
-      return getForumList(params)
-    })
-    .then(fl=>{
-      data.forumlist = fl
-      return data
-    })
+        return data
+      })
+      .then(data=>{
+        return getForumList(params)
+      })
+      .then(fl=>{
+        data.forumlist = fl
+        return data
+      })
 
   }
 }
@@ -1077,25 +1187,25 @@ table.viewQuestions = {
     data.template = jadeDir + 'questions_edit.jade'
 
     return Promise.resolve()
-    .then(()=>{
-      var showcount = params.permittedOperations.listAllQuestions?null:5;
+      .then(()=>{
+        var showcount = params.permittedOperations.listAllQuestions?null:5;
 
-      if(params.category){
-        return layer.Question.listAllQuestionsOfCategory(params.category,showcount)
-      }
-      else{
-        return layer.Question.listAllQuestions(null,showcount)
-      }
-    })
-    .then(function(back){
-      data.questions_all = back
+        if(params.category){
+          return layer.Question.listAllQuestionsOfCategory(params.category,showcount)
+        }
+        else{
+          return layer.Question.listAllQuestions(null,showcount)
+        }
+      })
+      .then(function(back){
+        data.questions_all = back
 
-      return layer.Question.listAllQuestions(params.user._key)
-    })
-    .then(function(back){
-      data.questions = back;
+        return layer.Question.listAllQuestions(params.user._key)
+      })
+      .then(function(back){
+        data.questions = back;
 
-      return AQL(`
+        return AQL(`
         let byuser = (
           for q in questions
           collect username = (q.username||document(users,q.uid).username) with count into number
@@ -1112,14 +1222,14 @@ table.viewQuestions = {
 
         return {byuser,bycategory}
         `
-      )
-    })
-    .then(back=>{
-      data.byuser = back[0].byuser
-      data.bycategory = back[0].bycategory
+        )
+      })
+      .then(back=>{
+        data.byuser = back[0].byuser
+        data.bycategory = back[0].bycategory
 
-      return data
-    })
+        return data
+      })
   }
 }
 
@@ -1177,10 +1287,10 @@ table.viewSMS = {
 
       `,{uid}
     )
-    .then(sarr=>{
-      data.smslist = sarr
+      .then(sarr=>{
+        data.smslist = sarr
 
-      return AQL(`
+        return AQL(`
         for r in replies
         filter r.touid == @uid
         sort r.touid desc, r.toc desc
@@ -1195,21 +1305,21 @@ table.viewSMS = {
         limit 30
         return merge(r,{fromuser,frompost,topost,touser})
         `,{uid}
-      )
-    })
-    .then(arr=>{
-      data.replylist = arr
+        )
+      })
+      .then(arr=>{
+        data.replylist = arr
 
-      var psnl = new layer.Personal(uid)
-      return psnl.load()
-      .then(psnl=>{
-        data.lastVisitTimestamp = psnl.model.message_lastvisit||0
-        return psnl.update({new_message:0,message_lastvisit:Date.now()})
+        var psnl = new layer.Personal(uid)
+        return psnl.load()
+          .then(psnl=>{
+            data.lastVisitTimestamp = psnl.model.message_lastvisit||0
+            return psnl.update({new_message:0,message_lastvisit:Date.now()})
+          })
+          .then(psnl=>{
+            return data
+          })
       })
-      .then(psnl=>{
-        return data
-      })
-    })
   }
 }
 
@@ -1219,15 +1329,15 @@ table.viewPersonal = {
     data.template = jadeDir + 'interface_personal.jade'
     var psnl = new layer.Personal(params.user._key)
     return psnl.load()
-    .then(psnl=>{
-      data.personal = psnl
+      .then(psnl=>{
+        data.personal = psnl
 
-      return getForumList(params)
-    })
-    .then(res=>{
-      data.forumlist = res
-      return data
-    })
+        return getForumList(params)
+      })
+      .then(res=>{
+        data.forumlist = res
+        return data
+      })
   }
 }
 
@@ -1235,10 +1345,10 @@ table.viewSelf = {
   operation:function(params){
     params.uid = params.user._key
     return table.viewUser.operation(params)
-    .then(data=>{
-      data.navbar_highlight = 'self'
-      return data
-    })
+      .then(data=>{
+        data.navbar_highlight = 'self'
+        return data
+      })
   },
 }
 
@@ -1251,23 +1361,23 @@ table.viewUser = {
     var uname = params.username
 
     return Promise.resolve()
-    .then(()=>{
-      var thatuser
-      if(uid){
-        thatuser = new layer.User(uid.toString())
-        return thatuser.load()
-      }else if(uname){
-        thatuser = new layer.User()
-        return thatuser.loadByName(uname.toString())
-      }else{
-        throw 'please specify uid or username'
-      }
-    })
-    .then(thatuser=>{
-      data.thatuser = thatuser.model
-      uid = thatuser.model._key
-      //1. list posts replied by this user
-      return AQL(`
+      .then(()=>{
+        var thatuser
+        if(uid){
+          thatuser = new layer.User(uid.toString())
+          return thatuser.load()
+        }else if(uname){
+          thatuser = new layer.User()
+          return thatuser.loadByName(uname.toString())
+        }else{
+          throw 'please specify uid or username'
+        }
+      })
+      .then(thatuser=>{
+        data.thatuser = thatuser.model
+        uid = thatuser.model._key
+        //1. list posts replied by this user
+        return AQL(`
         for p in posts
         filter p.uid == @uid
         sort p.tlm desc
@@ -1284,12 +1394,12 @@ table.viewUser = {
         return merge(p,{thread:merge(thread,{oc})})
 
         `,{uid}
-      )
-    })
-    .then(recentposts=>{
-      data.recentReplies = recentposts
+        )
+      })
+      .then(recentposts=>{
+        data.recentReplies = recentposts
 
-      return AQL(`
+        return AQL(`
         for p in posts
         filter p.uid == @uid
         sort p.toc desc
@@ -1310,27 +1420,27 @@ table.viewUser = {
         return merge(p,{thread:merge(thread,{oc,lm,lmuser})})
 
         `,{uid}
-      )
-    })
-    .then(res=>{
+        )
+      })
+      .then(res=>{
 
-      //filtering:
-      // remove duplicate threads in result
-      var resfiltered = [];var cache={}
-      for(p in res){
-        if(cache[res[p].tid]){
+        //filtering:
+        // remove duplicate threads in result
+        var resfiltered = [];var cache={}
+        for(p in res){
+          if(cache[res[p].tid]){
 
-        }else{
-          cache[res[p].tid]=true;
-          resfiltered.push(res[p])
+          }else{
+            cache[res[p].tid]=true;
+            resfiltered.push(res[p])
+          }
         }
-      }
-      data.recentInvolvedThreadResponses = resfiltered.sort(function(a,b){
-        return b.thread.tlm - a.thread.tlm
-      }).slice(0,10)
+        data.recentInvolvedThreadResponses = resfiltered.sort(function(a,b){
+          return b.thread.tlm - a.thread.tlm
+        }).slice(0,10)
 
-      return data
-    })
+        return data
+      })
   }
 }
 
@@ -1343,25 +1453,25 @@ table.viewPostHistory = {
 
     var p = new layer.Post(pid)
     return p.load()
-    .then(p=>{
-      return p.testView(params.contentClasses)
-    })
-    .then(p=>{
+      .then(p=>{
+        return p.testView(params.contentClasses)
+      })
+      .then(p=>{
 
-      data.post = p.model
-      return AQL(
-        `
+        data.post = p.model
+        return AQL(
+          `
         for p in histories
         filter p.pid == @pid
         sort p.pid desc, p.tlm desc
         return p
         `,{pid}
-      )
-    })
-    .then(posts=>{
-      data.histories = posts
-      return data
-    })
+        )
+      })
+      .then(posts=>{
+        data.histories = posts
+        return data
+      })
   },
   requiredParams:{
     pid:String,
@@ -1377,13 +1487,13 @@ table.viewPage = {
     var pid = pagenames[params.pagename]||params.pagename
     var post = new layer.Post(pid)
     return post.load()
-    .then(p=>{
-      return p.mergeResources()
-    })
-    .then(p=>{
-      data.post = p.model
-      return data
-    })
+      .then(p=>{
+        return p.mergeResources()
+      })
+      .then(p=>{
+        data.post = p.model
+        return data
+      })
   },
   requiredParams:{
     pagename:String,
@@ -1412,31 +1522,31 @@ table.viewCollectionOfUser = {
     params.uid = uid
     var u = new layer.User(uid)
     return u.load()
-    .then(u=>{
-      data.thisuser = u.model
+      .then(u=>{
+        data.thisuser = u.model
 
-      return operations.table.listMyCategories.operation(params)
-    })
-    .then(arr=>{
-      data.categoryNames = arr
-      if(arr.indexOf(params.category||null)<0){
-        //if specified category not exist
-        params.category = arr[0]
-      }
-
-      return operations.table.listMyCollectionOfCategory.operation(params)
-    })
-    .then(arr=>{
-      data.categoryThreads = arr
-      data.category = params.category
-
-      return getForumList(params)
-      .then(res=>{
-        data.forumlist = res
-        data.forum = {}
-        return data
+        return operations.table.listMyCategories.operation(params)
       })
-    })
+      .then(arr=>{
+        data.categoryNames = arr
+        if(arr.indexOf(params.category||null)<0){
+          //if specified category not exist
+          params.category = arr[0]
+        }
+
+        return operations.table.listMyCollectionOfCategory.operation(params)
+      })
+      .then(arr=>{
+        data.categoryThreads = arr
+        data.category = params.category
+
+        return getForumList(params)
+          .then(res=>{
+            data.forumlist = res
+            data.forum = {}
+            return data
+          })
+      })
   }
 }
 
@@ -1474,19 +1584,19 @@ table.viewForgotPassword2 = {
         return u
         `,{mobile:data.phone}
       )
-      .then(a=>{
-        console.log(a)
-        return AQL(`
+        .then(a=>{
+          console.log(a)
+          return AQL(`
           for u in users
           filter u._key == @userid
           return u
           `,{userid:a[0].uid}
-        )
-      })
-      .then(b=>{
-        console.log(b)
-        return data
-      })
+          )
+        })
+        .then(b=>{
+          console.log(b)
+          return data
+        })
 
     }
 
@@ -1507,19 +1617,19 @@ table.viewLocalSearch = {
 
     var operations = require('api_operations')
     return operations.table.localSearch.operation(params)
-    .then(res=>{
-      //console.log(res)
-      data.match_one_user = res.match_one_user  //完全匹配的某个用户
-      data.match_users = res.match_users  //完全匹配的某个用户
-      data.searchresult = res.result  //搜索帖子的结果
-      data.start = params.start
-      data.count = params.count
-      data.users_start = params.users_start
-      data.users_count = params.users_count
+      .then(res=>{
+        //console.log(res)
+        data.match_one_user = res.match_one_user  //完全匹配的某个用户
+        data.match_users = res.match_users  //完全匹配的某个用户
+        data.searchresult = res.result  //搜索帖子的结果
+        data.start = params.start
+        data.count = params.count
+        data.users_start = params.users_start
+        data.users_count = params.users_count
 
-      data.searchstring = params.searchstring
+        data.searchstring = params.searchstring
 
-      return AQL(`
+        return AQL(`
         for h in @hits
         let t = document(threads,h._source.tid)
         let oc = document(posts,t.oc)
@@ -1528,22 +1638,22 @@ table.viewLocalSearch = {
         let lmuser = document(users,lm.uid)
         return merge(t,{oc,lm,ocuser,lmuser})
         `,{hits:res.result.hits.hits}
-      )
-    })
-    .then(res=>{
-      data.threads = res
-      return getForumListKv(params)
-    })
-    .then(res=>{
-      data.forumlistkv = res
-      return getThreadTypes()
-    })
-    .then(res=>{
-      data.threadtypes = res.tt
-      data.forumthreadtypes = res.ftt
+        )
+      })
+      .then(res=>{
+        data.threads = res
+        return getForumListKv(params)
+      })
+      .then(res=>{
+        data.forumlistkv = res
+        return getThreadTypes()
+      })
+      .then(res=>{
+        data.threadtypes = res.tt
+        data.forumthreadtypes = res.ftt
 
-      return data
-    })
+        return data
+      })
   },
 }
 
@@ -1559,36 +1669,36 @@ function sha256HMAC(password,salt){
 
 function create_muser(user){
   return apifunc.get_new_uid()
-  .then((newuid)=>{
-    var timestamp = Date.now();
+    .then((newuid)=>{
+      var timestamp = Date.now();
 
-    var newuser = {
-      _key:newuid,
-      username:user.username,
-      username_lowercase:user.username.toLowerCase(),
-      toc:timestamp,
-      tlv:timestamp,
-      certs:['mobile'],
-    }
+      var newuser = {
+        _key:newuid,
+        username:user.username,
+        username_lowercase:user.username.toLowerCase(),
+        toc:timestamp,
+        tlv:timestamp,
+        certs:['mobile'],
+      }
 
-    var salt = Math.floor((Math.random()*65536)).toString(16)
-    var hash = sha256HMAC(user.password,salt)
+      var salt = Math.floor((Math.random()*65536)).toString(16)
+      var hash = sha256HMAC(user.password,salt)
 
-    var newuser_personal = {
-      _key:newuid,
-      email:user.email,
-      hashtype:'sha256HMAC',
-      password:{
-        hash:hash,
-        salt:salt,
-      },
-    }
-    return queryfunc.doc_save(newuser,'users')
-    .then(()=>{
-      return queryfunc.doc_save(newuser_personal,'users_personal')
+      var newuser_personal = {
+        _key:newuid,
+        email:user.email,
+        hashtype:'sha256HMAC',
+        password:{
+          hash:hash,
+          salt:salt,
+        },
+      }
+      return queryfunc.doc_save(newuser,'users')
+        .then(()=>{
+          return queryfunc.doc_save(newuser_personal,'users_personal')
+        })
+        .then(res=>{
+          return res
+        })
     })
-    .then(res=>{
-      return res
-    })
-  })
 }

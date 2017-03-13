@@ -1,0 +1,46 @@
+extends bootstrap_base
+
+block title
+  meta(name='description' content='从这里开始你的发现之旅。华语世界最纯粹的科技/文艺/爱好社区, Since 2001.')
+
+  meta(property='og:image' content='http://bbs.kechuang.org/resources/site_specific/umaru_chem_300x200.png')
+  meta(property='og:title' content='科创论坛')
+  meta(property='og:site_name' content='科创论坛')
+  meta(property='og:description' content='从这里开始你的发现之旅。华语世界最纯粹的科技/文艺/爱好社区, Since 2001.')
+
+  title #{data.site.name} - #{data.site.description}
+
+block content
+  .container-fluid(style='max-width: 1400px;')
+    .row
+      .col-md-9
+        -var threadlist = data.newestDigestThreads
+        include interface_home_newest
+        .col-xs-12.col-sm-6
+          .Gallery
+            img#GalleryImage(src='')
+            .GalleryTitle
+              a#GalleryTitle
+              a#GalleryAuthor
+              a#GalleryForumName
+            .GalleryNavigation
+              span#GalleryNavigationLeft <
+              span#GalleryNavigationRight >
+
+      .col-md-9
+        .nkcpanel
+          for item in data.indexPosts
+            p #{item.uid}
+
+
+      .col-md-3.hidden-xs.hidden-sm
+        .nkcpanel
+          include forum_logo_wisdom
+
+        .nkcpanel userinfo
+
+        .nkcpanel post
+
+        .nkcpanel userlist
+
+        .nkcpanel forumlist
