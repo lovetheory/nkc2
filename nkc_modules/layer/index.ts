@@ -252,7 +252,7 @@ var layer = (function(){
       function getPageFromString(pagestr){
         if(pagestr){
           var page = parseInt(pagestr)
-          if(page===NaN)page = 0
+          if(page===NaN)var page = 0
         }else{
           var page = 0
         }

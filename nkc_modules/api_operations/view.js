@@ -132,7 +132,7 @@ table.viewActiveEmail = {
           }
           create_muser(user)
             .then(k=>{
-              console.log(k)
+              //console.log(k)
             })
           data.activeInfo1 = '邮箱注册成功，赶紧登录吧~'
         }else{
@@ -629,17 +629,22 @@ table.viewHome = {
         data.latestReplies2 = res
 
         //add homepage posts      17-03-13  lzszone
-        var pageCount = queryfunc.docCount('threads');
+        var pageCount = queryfunc.docCount('threads', {});
         var paging = new layer.Paging(params.page).getPagingParams(pageCount);
-        var option = {
-          start: paging.page,
-          count: paging.perpage,
-          type: 'threads'
-        };
-        return queryfunc.doc_list_all(option);
+        data.paging = paging;
+        if(params.digest){
+          data.digest = true;
+        }
+        data.sortby = params.sortby;
+        return queryfunc.getIndexThreads(params, paging)
       })
       .then(res => {
-        data.indexPosts = res;
+        //console.log(res);
+        data.indexThreads = res._result;
+        return queryfunc.getForumList()
+      })
+      .then(res => {
+        data.forums = res._result;
         return data;
       })
   }
@@ -1585,7 +1590,7 @@ table.viewForgotPassword2 = {
         `,{mobile:data.phone}
       )
         .then(a=>{
-          console.log(a)
+          //console.log(a)
           return AQL(`
           for u in users
           filter u._key == @userid
@@ -1594,7 +1599,7 @@ table.viewForgotPassword2 = {
           )
         })
         .then(b=>{
-          console.log(b)
+          //console.log(b)
           return data
         })
 

@@ -23,7 +23,7 @@ var user_personal={
   email:String, //电子邮件地址
   regcode:String, //注册码
 
-  hashtype:'pw9'
+  hashtype:'pw9',
 
   //password:String, //密码（明文）
   password:{
@@ -64,8 +64,8 @@ var thread= //thread表示帖
   category:'94', //板块下帖子的分类
 
   //以下属性是发布时或者回帖时更新的。
-  toc:Number,
-  tlm:Number,
+  toc:Number, //创建日期
+  tlm:Number, //最后修改
 
   digest:Boolean,
 

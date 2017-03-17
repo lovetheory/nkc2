@@ -14,33 +14,66 @@ block content
   .container-fluid(style='max-width: 1400px;')
     .row
       .col-md-9
-        -var threadlist = data.newestDigestThreads
-        include interface_home_newest
-        .col-xs-12.col-sm-6
-          .Gallery
-            img#GalleryImage(src='')
-            .GalleryTitle
-              a#GalleryTitle
-              a#GalleryAuthor
-              a#GalleryForumName
-            .GalleryNavigation
-              span#GalleryNavigationLeft <
-              span#GalleryNavigationRight >
+        .nkcpanel(style='height: 335px;')
+          -var threadlist = data.newestDigestThreads
+          include interface_home_newest
+          .col-xs-12.col-sm-6
+            .Gallery
+              img#GalleryImage(src='')
+              .GalleryTitle
+                a#GalleryTitle
+                a#GalleryAuthor
+                a#GalleryForumName
+              .GalleryNavigation
+                span#GalleryNavigationLeft <
+                span#GalleryNavigationRight >
 
-      .col-md-9
         .nkcpanel
-          for item in data.indexPosts
-            p #{item.uid}
+          nav
+            include interface_navigation_paging.jade
 
+            - var paging = data.paging
+            - var digest = data.digest
+            - var class_str_all = digest?'':'active'
+            - var class_str_digest = digest?'active':''
+
+            - var cat = data.cat
+            - var sortby = data.sortby
+            - var class_str_sortby_toc = sortby?'active':''
+            - var class_str_sortby_tlm = sortby?'':'active'
+
+            ul.pagination.NavigationPaging
+              - var page = paging?paging.page:null
+              li(class="#{class_str_all}")
+                a(href='#{toQueryString({cat})}') 俱
+
+              li(class="#{class_str_digest}")
+                a(href='#{toQueryString({cat, digest: true})}') 精
+
+            ul.pagination.NavigationPaging
+              li(class='#{class_str_sortby_tlm}')
+                a(href='#{toQueryString({cat, digest})}') 复序
+              li(class='#{class_str_sortby_toc}')
+                a(href='#{toQueryString({cat, digest, sortby: "toc"})}') 帖序
+
+
+          hr.hrNarrowSpace
+          for thread in data.indexThreads
+            include interface_forum_singlethread
+          nav
+            include interface_navigation_paging.jade
 
       .col-md-3.hidden-xs.hidden-sm
         .nkcpanel
           include forum_logo_wisdom
 
-        .nkcpanel userinfo
-
-        .nkcpanel post
-
-        .nkcpanel userlist
+        -var user = data.user
+        if user
+          include interface_thread_userpatch.jade
 
         .nkcpanel forumlist
+        for forum in data.forums
+          .nkcpanel
+//block scripts
+//  script(src='/interface_common.js')
+//  script(src='/interface_panorama.js')

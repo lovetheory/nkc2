@@ -18,6 +18,8 @@ var api = express.Router();
 
 var validation = require('validation');
 
+let aql = require('arangojs').aql;
+
 var queryfunc = {};
 
 queryfunc.db_init = function(){
@@ -317,6 +319,136 @@ queryfunc.ftp_join = (opt)=>{
     },
   };
   return aqlall(aqlobj);
+};
+
+/**
+ *  @description: returns a count of a collection
+ *  @param: (String)colName, (String)filter: attribute of querying doc
+ *  @e.g.: queryfunc.docCount('threads', 'cid == "149"')
+ *  @return: (Number)length: length of querying collection
+ *  @author: lzszone 03-13-2017
+ * */
+
+queryfunc.docCount = (colName, filterObj) => {
+  var filterObj = filterObj || {};
+  var filters = '';
+  if(!colName) throw 'colName should not be undefined';
+  if(JSON.stringify(filterObj)==='{}');
+  else{
+    filters = 'FILTER ';
+    for(var filter in filterObj) {
+      filters += `t.${filter} == ${String(filterObj[filter])} && `;
+    }
+    filters = filters.substring(0, filters.length - 4);
+  }
+  return db.query(aql`
+    FOR doc IN ${colName}
+      ${filters == '' ? '' : 'FILTER ' + filters}
+      COLLECT WITH COUNT INTO length
+      RETURN length
+  `).catch(e => report(e))
+};
+/**
+ * @description: returns a list of all threads, filter & sort by params
+ * @param: (Object)params, (Object)paging
+ * @e.g.: queryfunc.getIndexThreads(params, paging)
+ * @return: ...
+ * @author: lzszone 03-17-2017
+* */
+queryfunc.getIndexThreads = (params, paging) => {
+  var contentClasses = {};
+  for(param in params.contentClasses) {
+    if(params.contentClasses[param] == true) {
+      contentClasses[param] = true;
+    }
+  }
+  if(params.sortby){// aql sucks: it seem that aql didn't treat the string template as a string,
+    return db.query(aql`
+    FOR t IN threads
+      SORT t.disabled DESC, t.toc DESC
+      FILTER t.disabled==null && t.digest==${params.digest? true : null}
+      LET forum = DOCUMENT(forums, t.fid)
+      FILTER HAS(${contentClasses}, forum.class)
+      LIMIT ${paging.start}, ${paging.count}
+      LET oc = DOCUMENT(posts, t.oc)
+      LET ocuser = DOCUMENT(users, oc.uid)
+      LET lm = DOCUMENT(posts, t.lm)
+      LET lmuser = DOCUMENT(users, lm.uid)
+      RETURN MERGE(t, {oc, lm, forum, ocuser, lmuser})
+   `).catch(e => report(e));
+  }
+  else{
+    return db.query(aql`
+    FOR t IN threads
+      SORT t.disabled DESC, t.tlm DESC
+      FILTER t.disabled==null && t.digest==${params.digest? true : null}
+      LET forum = DOCUMENT(forums, t.fid)
+      FILTER HAS(${contentClasses}, forum.class)
+      LIMIT ${paging.start}, ${paging.count}
+      LET oc = DOCUMENT(posts, t.oc)
+      LET ocuser = DOCUMENT(users, oc.uid)
+      LET lm = DOCUMENT(posts, t.lm)
+      LET lmuser = DOCUMENT(users, lm.uid)
+      RETURN MERGE(t, {oc, lm, forum, ocuser, lmuser})
+   `).catch(e => report(e));
+  }
+};
+
+/**
+ *
+ *     unfilished!!!!
+ *
+ * */
+
+queryfunc.getPostsFromDB = (filterObj, limitObj, sortArr) => {
+  var filterObj = filterObj || {};
+  var limitObj = limitObj || {};
+  var sortArr = sortArr || [];
+  var filters = '';
+  var sorters = '';
+  if(JSON.stringify(filterObj)==='{}');
+  else{
+    filters = 'FILTER ';
+    for(var filter in filterObj) {
+      if(filter === 'contentClasses') {
+        filters += `HAS(${filterObj[filter].toString()}, TO_STRING(class)) && `
+      }
+      else{
+        filters += `t.${filter} == ${String(filterObj[filter])} &&`;
+      }
+    }
+    filters = filters.substring(0, filters.length-4);
+  }
+  limitObj.start = limitObj.start ? Number(limitObj.start) : 0;
+  limitObj.count = limitObj.count ? Number(limitObj.count) : 100;
+  if(JSON.stringify(sortArr)==='[]');
+  else{
+    sorters = 'SORT ';
+    for(var sort in sortArr) {
+      sorters += 't.' + sort + ' desc && ';
+    }
+    sorters = sorters.substring(0, sorters.length-4);
+  }
+  return db.query(aql`
+    FOR t IN threads
+      LET forum = DOCUMENT(forums, t.fid)
+      LET forumName = forum.display_name
+      LET class = forum.class
+      LET postName = DOCUMENT(posts, t.oc)
+      LET postContent = DOCUMENT(posts, )
+      ${filters == '' ? '' : + filters}
+      LIMIT ${limitObj.start} ${limitObj.count}
+      ${sorters == '' ? '' : sorters}
+      
+`)
+};
+
+queryfunc.getForumList = () => {
+  return db.query(aql`
+    FOR f IN forums
+      FILTER f.type=='category'
+      RETURN f
+  `)
 };
 
 module.exports = queryfunc;
