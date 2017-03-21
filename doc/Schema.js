@@ -103,3 +103,10 @@ var forum= //版
 var counter={ //计数器
   count:Number, // 该项计数值
 }
+
+var activeusers = {
+  //...attributes in users
+  lWPostCount: 1, //last week post count
+  lWThreadCount: 1, //thread count
+  vitality: 4 //computed by settings.user.vitalityArithmetic
+};

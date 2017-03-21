@@ -41,6 +41,7 @@ queryfunc.db_init = function(){
   'mobilecodes',
   'threadtypes',
   'mailcodes',
+  'activeusers'
 ].map(function(collection_name){db.collection(collection_name).create()});
 //create every collection, if not existent
 }
@@ -448,6 +449,90 @@ queryfunc.getForumList = () => {
     FOR f IN forums
       FILTER f.type=='category'
       RETURN f
+  `)
+};
+
+queryfunc.computeActiveUser = () => {
+  var lWThreadUsers = [];  //last week thread users
+  var lWPostUsers = [];  //post users
+  var activeUL = [];  //active user list
+  db.query(aql`
+      FOR t IN threads
+        FILTER t.toc > ${Date.now() - 604800000} && t.disabled == NULL
+        LET lWThreadCount = 0
+        LET lWPostCount = 0
+        LET xsf = DOCUMENT(users, t.uid).xsf
+        RETURN {'uid': t.uid, lWThreadCount, lWPostCount, xsf}
+    `)
+    .then(res => {
+      lWThreadUsers = res._result;
+      return db.query(aql`
+        FOR p IN posts
+          FILTER p.tlm > ${Date.now() - 604800000}
+          LET lWThreadCount = 0
+          LET lWPostCount = 0
+          LET xsf = DOCUMENT(users, p.uid).xsf
+          RETURN {'uid': p.uid, lWThreadCount, lWPostCount, xsf})
+      `)
+    })  //6048000000 = 1week
+    .then(res => {
+      lWPostUsers = res._result;
+      for(var oUser in lWThreadUsers) { //original
+        var flag = true;
+        for(var nUser in activeUL) { //new
+          if(activeUL[nUser].uid === lWThreadUsers[oUser].uid) {
+            activeUL[nUser].lWThreadCount += 1;
+            flag = false;
+            break;
+          }
+        }
+        if(flag) {
+          lWThreadUsers[oUser].lWThreadCount = 1;
+          activeUL.push(lWThreadUsers[oUser]);
+        }
+      }
+      for(var oUser in lWPostUsers) { //original
+        var flag = true;
+        for(var nUser in activeUL) { //new
+          if(activeUL[nUser].uid === lWPostUsers[oUser].uid) {
+            activeUL[nUser].lWPostCount += 1;
+            flag = false;
+            break;
+          }
+        }
+        if(flag) {
+          lWPostUsers[oUser].lWPostCount = 1;
+          activeUL.push(lWPostUsers[oUser]);
+        }
+      }
+      activeUL.sort((a, b) => {
+        return (a.xsf + a.lWThreadCount*3 + a.lWPostCount) - (b.xsf + b.lWThreadCount*3 + b.lWPostCount)
+      });
+      activeUL = activeUL.slice(0,16);
+      return db.listCollections();
+    })
+    .then(collections => {
+      if(collections.indexOf('activeusers')){
+        return db.collection('activeusers').drop();
+      }
+    })
+    .then(() => {
+      return db.collection('activeusers').create()
+    })
+    .then(() => {
+      for(var user in activeUL) {
+        db.collection('activeusers').save(activeUL[user]).catch(e => console.log(e))
+      }
+    })
+    .catch((e) => console.log(e));
+};
+
+queryfunc.getActiveUsers = () => {
+  return db.query(aql`
+    FOR u IN activeusers
+      SORT u.vitality
+      LIMIT 10
+      RETURN u
   `)
 };
 

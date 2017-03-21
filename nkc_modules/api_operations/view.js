@@ -451,8 +451,8 @@ table.viewHome = {
       sparse:'false',
     })
 
-    queryfunc.createIndex('users',{
-      fields:['tlv'],
+    queryfunc.createIndex('activeusers',{
+      fields:['vitality'],
       type:'skiplist',
       unique:'false',
       sparse:'false',
@@ -645,10 +645,15 @@ table.viewHome = {
       })
       .then(res => {
         data.forums = res._result;
+        return queryfunc.getActiveUsers();
+      })
+      .then((res) => {
+        data.activeUsers = res._result;
         return data;
       })
+      .catch(e => console.log(e))
   }
-}
+};
 
 function get_all_forums(){
   return AQL

@@ -71,6 +71,9 @@ block content
         if user
           include interface_thread_userpatch.jade
 
+        .nkcpanel userlist
+          for user in data.activeUsers
+            p #{user.username}(帖:#{user.lWThreadCount} 复:#{user.lWPostCount} 活跃度:#{user.vitality})
         .nkcpanel forumlist
         for forum in data.forums
           .nkcpanel
