@@ -345,3 +345,19 @@ function directedMove(){
   })
   .catch(jwarning)
 }
+var ___nowAt = 0;
+function listForumBranch(index) {
+  $($('#cForum').children('list-group-item')[___nowAt]).removeClass('active');
+  $($('#branch-forum').children('.list-group')[___nowAt]).addClass('invisible');
+  $($('#cForum').children('list-group-item')[index]).addClass('active');
+  $($('#branch-forum').children('.list-group')[index]).removeClass('invisible');
+  ___nowAt = index;
+}
+function hideForum(fid){
+  nkcAPI('hideForum',{fid:fid})
+    .then(function(res){
+      screenTopAlert(fid+' 已隐藏，请刷新')
+      //location.reload()
+    })
+    .catch(jwarning)
+}

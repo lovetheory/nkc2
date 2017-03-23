@@ -52,6 +52,23 @@ block content
             h4 这里是回显
             pre#logger
             
+    hr
+    .row
+      .col-md-12
+        .col-md-6
+          .panel
+            -for(var i = 0; i < data.forumTree.length; i++)
+              a.list-group-item(href='javascript: listForumBranch(#{i})') #{data.forumTree[i].display_name}
+                a.btn.btn-default.btn-sm(href='javascript: hideForum(#{data.forumTree[i]._key})') 隐藏
+
+        .col-md-6
+          .panel.panel-default#branch-forum
+            -for(var i = 0; i < data.forumTree.length; i++)
+              ul.list-group.invisible
+                -for(var j = 0; j < data.forumTree[i].children.length; j++)
+                  li.list-group-item #{data.forumTree[i].children[j].display_name}
+                    a.btn.btn-default.btn-sm(href='javascript: hideForum(#{data.forumTree[i].children[j]._key})') 隐藏
+
 
     hr    
     .row

@@ -27,10 +27,11 @@ var certificates={
 
     contentClasses:{
       administrative:true,
+      invisible: true
     },
 
     permittedOperations:{
-
+      hideForum: true,
       viewQuestions:true,
       addQuestion:true,
       deleteQuestion:true,

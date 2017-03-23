@@ -460,173 +460,30 @@ table.viewHome = {
   },
   operation:params=>{
     var data = defaultData(params);
+    var contentClasses = {};
     data.template = jadeDir+ 'interface_home__new.jade';
     data.navbar = {highlight: 'home'};
-
+    for(var param in params.contentClasses) {
+      if(params.contentClasses[param] == true) {
+        contentClasses[param] = true;
+      }
+    }
     return AQL(`
-      for t in threads
-      filter t.digest==true
-      collect with count into k
-      return k
-      `
+    for t in threads
+    filter t.digest == true
+    sort t.digest desc, t.toc desc
+    
+    limit 11
+    let oc = document(posts,t.oc)
+    let lm = document(posts,t.lm)
+    let forum = document(forums,t.fid)
+    let ocuser = document(users,t.uid)
+
+    return merge(t,{oc:oc,lm:lm,forum,ocuser})
+    `
     )
-      .then(count_digests=>{
-        count_digests = count_digests[0]
-        var count = 6
-
-        var randomarray=[]
-        for(i=0;i<count;i++){
-          randomarray.push(
-            Math.floor(Math.random()*count_digests-0.0001)
-          )
-        }
-
-        var promarr = []
-        var tharr = []
-        for(i in randomarray){
-          promarr.push(AQL(`
-          for t in threads
-          filter t.digest == true
-          limit @i,1
-
-          let p = document(posts,t.oc)
-          let u = document(users,p.uid)
-
-          return merge(t,{oc:p,ocuser:u})
-          `,{
-              i:randomarray[i],
-            }
-          ).then(res=>{
-            tharr.push(res[0])
-          }))
-        }
-
-        return Promise.all(promarr)
-          .then(()=>{
-            return tharr
-          })
-      })
-      .then(res=>{
-        data.digestThreads = res
-
-        //latestThreads
-        return AQL(`
-        for t in threads
-        sort t.disabled desc, t.tlm desc
-        filter t.disabled==null
-        limit 60
-
-        let parentforum = document(forums,t.fid)
-        let class = parentforum.class
-
-        filter has(@contentClasses,TO_STRING(class)) /*content ctrl*/
-
-        let oc = document(posts,t.oc)
-        let lm = document(posts,t.lm)
-        let forum = document(forums,t.fid)
-        let ocuser = document(users,t.uid)
-
-        limit 10
-        return merge(t,{oc:oc,lm:lm,forum,ocuser})
-        `,{contentClasses:Object.assign(params.contentClasses,{sensitive:true,non_broadcast:undefined})}
-        )
-      })
-      .then(res=>{
-        data.latestThreads = res
-        return AQL(`
-        for t in threads
-        sort t.disabled desc, t.toc desc
-        filter t.disabled==null
-        limit 60
-
-        let parentforum = document(forums,t.fid)
-        let class = parentforum.class
-
-        filter has(@contentClasses,TO_STRING(class)) /*content ctrl*/
-
-        limit 10
-        let oc = document(posts,t.oc)
-        let lm = document(posts,t.lm)
-        let forum = document(forums,t.fid)
-        let ocuser = document(users,oc.uid)
-
-        return merge(t,{oc,lm,forum,ocuser})
-
-        `,{contentClasses:Object.assign(params.contentClasses,{sensitive:true,non_broadcast:undefined})}
-        )
-      })
-      .then(res=>{
-        data.newestThreads = res
-
-        return AQL(`
-        for t in threads
-        filter t.digest == true
-        sort t.digest desc, t.toc desc
-
-        limit 10
-        let oc = document(posts,t.oc)
-        let lm = document(posts,t.lm)
-        let forum = document(forums,t.fid)
-        let ocuser = document(users,t.uid)
-
-        return merge(t,{oc:oc,lm:lm,forum,ocuser})
-        `
-        )
-      })
       .then(res=>{
         data.newestDigestThreads = res
-
-        return AQL(`
-        for u in users
-        //filter u.tlv!=null
-        sort u.tlv desc
-        limit 30
-        return u
-        `
-        )
-      })
-      .then(res=>{
-        data.latestVisitUsers = res
-
-        return null
-
-        return AQL(`
-        for t in threads
-        sort t.disabled desc, t.toc desc
-        filter t.disabled==null
-        limit 60
-
-        let parentforum = document(forums,t.fid)
-        let class = parentforum.class
-
-        filter has(@contentClasses,TO_STRING(class)) /*content ctrl*/
-
-
-        let oc = document(posts,t.oc)
-        let lm = document(posts,t.lm)
-        filter lm.disabled!=true
-        limit 10
-        let forum = document(forums,t.fid)
-        let ocuser = document(users,oc.uid)
-        let lmuser = document(users,lm.uid)
-
-        let resources_declared = (
-          let p = lm
-          filter is_array(p.r)
-          for r in p.r
-          let rd = document(resources,r)
-          filter rd!=null
-          return rd
-        )
-
-        //return merge(t,{oc,lm,forum,ocuser})
-        return merge(lm,{r:resources_declared,user:lmuser,thread:merge(t,{oc,ocuser})})
-        `,{contentClasses:Object.assign(params.contentClasses,{sensitive:true,non_broadcast:undefined})}
-        )
-      })
-      .then(res=>{
-        //data.galleryItems = galleryItems
-        data.latestReplies2 = res
 
         //add homepage posts      17-03-13  lzszone
         var pageCount = queryfunc.docCount('threads', {});
@@ -639,18 +496,18 @@ table.viewHome = {
         return queryfunc.getIndexThreads(params, paging)
       })
       .then(res => {
-        //console.log(res);
+        console.log(params.contentClasses);
         data.indexThreads = res._result;
-        return queryfunc.getForumList()
-      })
-      .then(res => {
-        data.forums = res._result;
         return queryfunc.getActiveUsers();
       })
-      .then((res) => {
+      .then(res => {
         data.activeUsers = res._result;
-        return data;
+        return queryfunc.getForumList(contentClasses);
       })
+      .then(res => {
+        data.indexForumList = res._result;
+      })
+      .then(() => data)
       .catch(e => console.log(e))
   }
 };
@@ -1050,14 +907,21 @@ table.viewLogin = {
 table.viewExperimental = {
   operation:params=>{
     var data = defaultData(params)
+    var contentClasses = {};
     data.template = jadeDir+'interface_experimental.jade'
-
+    for(var param in params.contentClasses) {
+      if(params.contentClasses[param] === true) {
+        contentClasses[param] = true;
+      }
+    }
     return getForumList(params)
       .then(forumlist=>{
 
         data.forumlist=forumlist
-        return data
       })
+      .then(() => queryfunc.getForumList(contentClasses))
+      .then(res => data.forumTree = res._result)
+      .then(() => data)
   }
 }
 

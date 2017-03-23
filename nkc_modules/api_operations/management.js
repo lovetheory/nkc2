@@ -381,4 +381,13 @@ table.addCredit = {
     type:String,
     q:Number,
   }
-}
+};
+
+table.hideForum = {
+  operation: params => {
+    var user = new layer.User(params.user._key);
+    var permissions = user.getPermissions();
+    console.log(permissions);
+    return true;
+  }
+};

@@ -245,6 +245,10 @@ var layer = (function(){
         })
       })
     }
+
+    visibilitySwitch() {
+
+    }
   }
 
   class Paging {

@@ -358,7 +358,7 @@ queryfunc.docCount = (colName, filterObj) => {
 * */
 queryfunc.getIndexThreads = (params, paging) => {
   var contentClasses = {};
-  for(param in params.contentClasses) {
+  for(var param in params.contentClasses) {
     if(params.contentClasses[param] == true) {
       contentClasses[param] = true;
     }
@@ -395,63 +395,6 @@ queryfunc.getIndexThreads = (params, paging) => {
   }
 };
 
-/**
- *
- *     unfilished!!!!
- *
- * */
-
-queryfunc.getPostsFromDB = (filterObj, limitObj, sortArr) => {
-  var filterObj = filterObj || {};
-  var limitObj = limitObj || {};
-  var sortArr = sortArr || [];
-  var filters = '';
-  var sorters = '';
-  if(JSON.stringify(filterObj)==='{}');
-  else{
-    filters = 'FILTER ';
-    for(var filter in filterObj) {
-      if(filter === 'contentClasses') {
-        filters += `HAS(${filterObj[filter].toString()}, TO_STRING(class)) && `
-      }
-      else{
-        filters += `t.${filter} == ${String(filterObj[filter])} &&`;
-      }
-    }
-    filters = filters.substring(0, filters.length-4);
-  }
-  limitObj.start = limitObj.start ? Number(limitObj.start) : 0;
-  limitObj.count = limitObj.count ? Number(limitObj.count) : 100;
-  if(JSON.stringify(sortArr)==='[]');
-  else{
-    sorters = 'SORT ';
-    for(var sort in sortArr) {
-      sorters += 't.' + sort + ' desc && ';
-    }
-    sorters = sorters.substring(0, sorters.length-4);
-  }
-  return db.query(aql`
-    FOR t IN threads
-      LET forum = DOCUMENT(forums, t.fid)
-      LET forumName = forum.display_name
-      LET class = forum.class
-      LET postName = DOCUMENT(posts, t.oc)
-      LET postContent = DOCUMENT(posts, )
-      ${filters == '' ? '' : + filters}
-      LIMIT ${limitObj.start} ${limitObj.count}
-      ${sorters == '' ? '' : sorters}
-      
-`)
-};
-
-queryfunc.getForumList = () => {
-  return db.query(aql`
-    FOR f IN forums
-      FILTER f.type=='category'
-      RETURN f
-  `)
-};
-
 queryfunc.computeActiveUser = () => {
   var lWThreadUsers = [];  //last week thread users
   var lWPostUsers = [];  //post users
@@ -462,7 +405,7 @@ queryfunc.computeActiveUser = () => {
         LET lWThreadCount = 0
         LET lWPostCount = 0
         LET xsf = DOCUMENT(users, t.uid).xsf
-        RETURN {'uid': t.uid, lWThreadCount, lWPostCount, xsf}
+        RETURN {uid: t.uid, lWThreadCount: lWThreadCount, lWPostCount: lWPostCount, xsf: xsf}
     `)
     .then(res => {
       lWThreadUsers = res._result;
@@ -472,10 +415,10 @@ queryfunc.computeActiveUser = () => {
           LET lWThreadCount = 0
           LET lWPostCount = 0
           LET xsf = DOCUMENT(users, p.uid).xsf
-          RETURN {'uid': p.uid, lWThreadCount, lWPostCount, xsf})
+          RETURN {uid: p.uid, lWThreadCount: lWThreadCount, lWPostCount: lWPostCount, xsf: xsf}
       `)
     })  //6048000000 = 1week
-    .then(res => {
+    .then(res => {   //merge user array
       lWPostUsers = res._result;
       for(var oUser in lWThreadUsers) { //original
         var flag = true;
@@ -505,8 +448,12 @@ queryfunc.computeActiveUser = () => {
           activeUL.push(lWPostUsers[oUser]);
         }
       }
+      for(var index in activeUL) {
+        var user = activeUL[index];
+        user.vitality = settings.user.vitalityArithmetic(user.lWThreadCount, user.lWPostCount, user.xsf);
+      }
       activeUL.sort((a, b) => {
-        return (a.xsf + a.lWThreadCount*3 + a.lWPostCount) - (b.xsf + b.lWThreadCount*3 + b.lWPostCount)
+        return a.vitality - b.vitality;
       });
       activeUL = activeUL.slice(0,16);
       return db.listCollections();
@@ -532,7 +479,28 @@ queryfunc.getActiveUsers = () => {
     FOR u IN activeusers
       SORT u.vitality
       LIMIT 10
-      RETURN u
+      LET username = DOCUMENT(users, u.uid).username
+      RETURN MERGE(u, {username})
+  `)
+}
+
+queryfunc.getForumList = (contentClasses) => {
+  return db.query(aql`
+    LET cForums = (FOR f IN forums
+      FILTER f.type == 'category' && HAS(${contentClasses}, f.class)
+      RETURN f)
+    FOR cForum IN cForums
+      LET children = (FOR f IN forums
+        FILTER f.parentid == cForum._key && HAS(${contentClasses}, f.class)
+        LET lastThread = (FOR t IN threads
+          SORT t.tlm DESC
+          FILTER t.fid == f._key
+          LIMIT 1
+          LET lastPost = DOCUMENT(posts, t.lm)
+          RETURN MERGE(t, {lastPost})
+        )[0]
+        RETURN MERGE(f, {lastThread}))
+      RETURN MERGE(cForum, {children})
   `)
 };
 

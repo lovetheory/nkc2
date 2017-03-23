@@ -71,12 +71,27 @@ block content
         if user
           include interface_thread_userpatch.jade
 
-        .nkcpanel userlist
+        .nkcpanel 一周活跃用户
           for user in data.activeUsers
-            p #{user.username}(帖:#{user.lWThreadCount} 复:#{user.lWPostCount} 活跃度:#{user.vitality})
-        .nkcpanel forumlist
-        for forum in data.forums
+            div(style='padding: 5px; width: 100%;')
+              img(src='/avatar/#{user.uid}' style='width:36px;height:36px;border-radius:6px;')
+              a(href='user_profile/'+ user.uid style='margin-left: 20px; display: inline-block;') #{user.username}
+              span(style='color: #d6571c; margin-right: 0; display: inline-block;') (帖:#{user.lWThreadCount} 复:#{user.lWPostCount})
+        for cForum in data.indexForumList
           .nkcpanel
+            div(style='text-align: center; font-size: 16px; margin-left: -15px;')
+              div(style='background-color: #{cForum.color}').HomeForumTitleCircle
+              a(href='f/#{cForum._key}') #{cForum.display_name}
+            hr.hrNarrowSpace
+            for child in cForum.children
+              div
+                a(href='f/#{child._key}' style='font-size: 15px;') #{child.display_name}
+                span(style='color: #d6571c;') (新:#{child.count_posts_today} 总:#{child.count_posts})
+                if child.lastThread != null
+                  -var lp = child.lastThread.lastPost
+                  -var c = lp.c.slice(0, 30)
+                  p
+                    a(style='color: grey;' href='t/#{lp.tid}') &nbsp;&nbsp;#{lp.username}: #{c}...
 //block scripts
 //  script(src='/interface_common.js')
 //  script(src='/interface_panorama.js')

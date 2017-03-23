@@ -46,3 +46,6 @@
 .ItemText {
   display: inline;
 }
+.invisible {
+  display: none;
+}
