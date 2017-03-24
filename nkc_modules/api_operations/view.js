@@ -496,7 +496,6 @@ table.viewHome = {
         return queryfunc.getIndexThreads(params, paging)
       })
       .then(res => {
-        console.log(params.contentClasses);
         data.indexThreads = res._result;
         return queryfunc.getActiveUsers();
       })

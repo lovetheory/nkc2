@@ -388,7 +388,6 @@ table.forumVisibilitySwitch = {
     var forum = new layer.Forum(params.fid);
     return forum.visibilitySwitch()
       .then(res => {
-        console.log(res._result);
         return res._result[0];
       });
   }
