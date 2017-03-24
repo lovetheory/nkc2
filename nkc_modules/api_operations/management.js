@@ -383,11 +383,21 @@ table.addCredit = {
   }
 };
 
-table.hideForum = {
+table.forumVisibilitySwitch = {
   operation: params => {
-    var user = new layer.User(params.user._key);
-    var permissions = user.getPermissions();
-    console.log(permissions);
-    return true;
+    var forum = new layer.Forum(params.fid);
+    return forum.visibilitySwitch()
+      .then(res => {
+        console.log(res._result);
+        return res._result[0];
+      });
+  }
+};
+
+table.forumIsVisibleForNCCSwitch = {
+  operation: params => {
+    var forum = new layer.Forum(params.fid);
+    return forum.isVisibleForNCCSwitch()
+      .then(res => res._result[0]);
   }
 };

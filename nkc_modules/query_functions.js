@@ -484,7 +484,7 @@ queryfunc.getActiveUsers = () => {
   `)
 }
 
-queryfunc.getForumList = (contentClasses) => {
+queryfunc.getForumList = contentClasses => {
   return db.query(aql`
     LET cForums = (FOR f IN forums
       FILTER f.type == 'category' && HAS(${contentClasses}, f.class)
@@ -492,14 +492,20 @@ queryfunc.getForumList = (contentClasses) => {
     FOR cForum IN cForums
       LET children = (FOR f IN forums
         FILTER f.parentid == cForum._key && HAS(${contentClasses}, f.class)
-        LET lastThread = (FOR t IN threads
-          SORT t.tlm DESC
-          FILTER t.fid == f._key
-          LIMIT 1
-          LET lastPost = DOCUMENT(posts, t.lm)
-          RETURN MERGE(t, {lastPost})
-        )[0]
-        RETURN MERGE(f, {lastThread}))
+        RETURN f)
+      RETURN MERGE(cForum, {children})
+  `)
+};
+
+queryfunc.getIndexForumList = contentClasses => {
+  return db.query(aql`
+    LET cForums = (FOR f IN forums
+      FILTER f.type == 'category' && f.visibility == true && (HAS(${contentClasses}, f.class) || f.isVisibleForNCC == true)
+      RETURN f)
+    FOR cForum IN cForums
+      LET children = (FOR f IN forums
+        FILTER f.parentid == cForum._key && f.visibility == true && (HAS(${contentClasses}, f.class) || f.isVisibleForNCC == true)
+        RETURN f)
       RETURN MERGE(cForum, {children})
   `)
 };

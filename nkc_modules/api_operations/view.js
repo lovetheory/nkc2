@@ -502,7 +502,7 @@ table.viewHome = {
       })
       .then(res => {
         data.activeUsers = res._result;
-        return queryfunc.getForumList(contentClasses);
+        return queryfunc.getIndexForumList(contentClasses);
       })
       .then(res => {
         data.indexForumList = res._result;

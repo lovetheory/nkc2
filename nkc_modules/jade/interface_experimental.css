@@ -49,3 +49,6 @@
 .invisible {
   display: none;
 }
+.now-at {
+  background-color: silver;
+}

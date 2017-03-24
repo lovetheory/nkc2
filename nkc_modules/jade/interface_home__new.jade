@@ -14,7 +14,7 @@ block content
   .container-fluid(style='max-width: 1400px;')
     .row
       .col-md-9
-        .nkcpanel(style='height: 335px;')
+        .panel(style='height: 310px; border: none; box-shadow: none;')
           -var threadlist = data.newestDigestThreads
           include interface_home_newest
           .col-xs-12.col-sm-6
@@ -28,6 +28,9 @@ block content
                 span#GalleryNavigationLeft <
                 span#GalleryNavigationRight >
 
+        div(style='width: 100%; margin-bottom: 13px;')
+          for cForum in data.indexForumList
+            a(style='margin: 2px 5px;' href='/f/#{cForum._key}') #{cForum.display_name}
         .nkcpanel
           nav
             include interface_navigation_paging.jade
@@ -87,11 +90,9 @@ block content
               div
                 a(href='f/#{child._key}' style='font-size: 15px;') #{child.display_name}
                 span(style='color: #d6571c;') (新:#{child.count_posts_today} 总:#{child.count_posts})
-                if child.lastThread != null
-                  -var lp = child.lastThread.lastPost
-                  -var c = lp.c.slice(0, 30)
-                  p
-                    a(style='color: grey;' href='t/#{lp.tid}') &nbsp;&nbsp;#{lp.username}: #{c}...
+                if child.description != null
+                  -var description = child.description
+                  p(style='color: grey;') &nbsp;&nbsp;#{description}
 //block scripts
 //  script(src='/interface_common.js')
 //  script(src='/interface_panorama.js')
