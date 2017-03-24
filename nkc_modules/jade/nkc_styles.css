@@ -107,12 +107,18 @@ color: #2563A2;
 vertical-align: middle;
 }
 .HLTtitletext{
-overflow: hidden;
-/* white-space: pre-wrap; */
-/* height: 23px; */
-display: inline;
-vertical-align: middle;
-/* color: #1259A2; */
+
+overflow: hidden;
+
+/* white-space: pre-wrap; */
+
+/* height: 23px; */
+
+display: inline;
+
+vertical-align: middle;
+
+/* color: #1259A2; */
 }
 .HLM{
 
@@ -190,12 +196,16 @@ color: #929292;
     color: #2F68BF;
 }
 .HomeFriendlyLink{
-padding-left: 0;
-margin-bottom: 0;
+
+padding-left: 0;
+
+margin-bottom: 0;
 }
 .HomeFriendlyLink>li{
-display: inline-block;
-margin-right: 10px;
+
+display: inline-block;
+
+margin-right: 10px;
 }
 
 .HomeChildrenArea{
@@ -220,21 +230,34 @@ color: #929292;
 }
 
 .HomeForumContainer{
-margin-bottom: 20px;
-margin-top: 20px;
-/* padding: 6px; */
-/* background-color: #ecf1ef; */
-/* height: 135px; */
-/* overflow-y: hidden; */
-/* border: #E2E2E2; */
-/* border-width: 1px; */
-/* border-style: solid; */
-/* border-radius: 5px; */
+
+margin-bottom: 20px;
+
+margin-top: 20px;
+
+/* padding: 6px; */
+
+/* background-color: #ecf1ef; */
+
+/* height: 135px; */
+
+/* overflow-y: hidden; */
+
+/* border: #E2E2E2; */
+
+/* border-width: 1px; */
+
+/* border-style: solid; */
+
+/* border-radius: 5px; */
 }
 .HomeForumTitle{
-height: 28px;
-position: relative;
-/* margin-bottom: 3px; */
+
+height: 28px;
+
+position: relative;
+
+/* margin-bottom: 3px; */
 }
 
 .HomeForumDescription{
@@ -336,7 +359,8 @@ color: #929292;
   overflow: hidden !important;
 }
 .HomeThreadText:visited{
-color: #4f84c3;
+
+color: #4f84c3;
 }
 
 .HomeThreadTextDigest{
@@ -358,12 +382,18 @@ color: #929292;
 }
 
 .ForumTitleCircle{
-width: 22px;
-height: 22px;
-border-radius: 50%;
-display: inline-block;
-margin-right: 5px;
-vertical-align: middle;
+
+width: 22px;
+
+height: 22px;
+
+border-radius: 50%;
+
+display: inline-block;
+
+margin-right: 5px;
+
+vertical-align: middle;
 }
 .ForumName{
   /* margin-top: 10px; */
@@ -412,9 +442,12 @@ color: #929292;
     vertical-align: middle;
 }
 .ForumNavigation1 .active{
-background-color: #f3834c;
-color: white;
-padding: 1px 7px 1px 7px; */
+
+background-color: #f3834c;
+
+color: white;
+
+padding: 1px 7px 1px 7px; */
 }
 .ForumNavigation1 .parentforum{
     color: #f3834c;
@@ -464,13 +497,20 @@ blockquote {
 }
 
 .ForumThreadList{
-/* border-collapse: collapse; */
-/* padding-left: 6px; */
-/* display: table; */
-/* background: #ecf1ef; */
-border-radius: 5px;
-/* margin-bottom: 10px; */
-width: 100%;
+
+/* border-collapse: collapse; */
+
+/* padding-left: 6px; */
+
+/* display: table; */
+
+/* background: #ecf1ef; */
+
+border-radius: 5px;
+
+/* margin-bottom: 10px; */
+
+width: 100%;
 }
 .ForumThreadItem {
   position: relative;
@@ -548,10 +588,14 @@ blockquote {
 }
 
 .ForumThreadCreatorInfo{
-display: inline-block;
-margin-top: 0px;
-/* margin-left: 10px; */
-/* width: 50%; */
+
+display: inline-block;
+
+margin-top: 0px;
+
+/* margin-left: 10px; */
+
+/* width: 50%; */
 }
 
 .ForumThreadDigestText{
@@ -582,21 +626,30 @@ blockquote {
 }
 
 .ForumThreadItemReplyInfo{
-display: inline;
-font-size: 10pt;
-/* vertical-align: bottom; */
+
+display: inline;
+
+font-size: 10pt;
+
+/* vertical-align: bottom; */
 }
 .ForumThreadItemReplyInfo span{
     margin-right: 10px;
 }
 
 .ForumThreadItemUsername{
-display: inline-block;
-font-size: 10px;
-font-weight: bold;
-color: #738394;
-/* margin-left: 7px; */
-margin-right: 7px;
+
+display: inline-block;
+
+font-size: 10px;
+
+font-weight: bold;
+
+color: #738394;
+
+/* margin-left: 7px; */
+
+margin-right: 7px;
 }
 .ForumThreadItemCreationTime{
 
@@ -737,8 +790,10 @@ line-height: 1.4;
 }
 
 .ThreadPostBody li li{
-margin-top: 5px;
-margin-bottom: 5px;
+
+margin-top: 5px;
+
+margin-bottom: 5px;
 }
 
 .ThreadPostBody span.xbbcode-code{
@@ -809,10 +864,14 @@ font-weight: bold;
   display: inline;
 }
 .PostResourceFileSize{
-font-size: 10pt;
-display: inline-block;
-margin-left: 3px;
-color: #d66;
+
+font-size: 10pt;
+
+display: inline-block;
+
+margin-left: 3px;
+
+color: #d66;
 }
 .PostResourceCounter{
     font-size: 10pt;
@@ -1014,13 +1073,20 @@ h4,h5,h6 {
     margin: 0;
 }
 .SMSTableItem{
-border-bottom-style: solid;
-border-width: 1px;
-/* border-radius: 6px; */
-border-color: #dadada;
-/* background-color: #f9f9f9; */
-padding: 2px;
-/* margin: 4px; */
+
+border-bottom-style: solid;
+
+border-width: 1px;
+
+/* border-radius: 6px; */
+
+border-color: #dadada;
+
+/* background-color: #f9f9f9; */
+
+padding: 2px;
+
+/* margin: 4px; */
 }
 .SMSFirstRow{
     display: inline-block;
@@ -1106,19 +1172,26 @@ pre {
     font-size: 12px;
 }
 .UserPostTitleText{
-color: #6691b7;
+
+color: #6691b7;
 }
 .UserPostContent{
     padding-left: 5px;
     color: black;
 }
 .UserProfileSection1{
-/* text-align: center; */
-/* border-style: dashed; */
-/* border-width: 1px; */
-/* border-color: #c7c7c7; */
-/* border-radius: 5px; */
-margin-bottom: 8px;
+
+/* text-align: center; */
+
+/* border-style: dashed; */
+
+/* border-width: 1px; */
+
+/* border-color: #c7c7c7; */
+
+/* border-radius: 5px; */
+
+margin-bottom: 8px;
 }
 .UserProfileSection2{}
 .UserProfileSection2 span,.UserProfileSection2 a{
@@ -1157,7 +1230,8 @@ margin: 5px;
 }
 
 .PanoLVUList span{
-margin-left: 5px;
+
+margin-left: 5px;
 }
 
 .DiffAdded{
@@ -1168,10 +1242,10 @@ margin: 5px;
 }
 .Gallery{
     position: relative;
-    border-radius: 5px;
     overflow: hidden;
     height: 305px;
     width: 100%;
+    border-radius: 5px;
 }
 .Gallery #GalleryImage{
     width: 100%;

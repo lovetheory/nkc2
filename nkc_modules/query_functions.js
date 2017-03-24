@@ -18,6 +18,8 @@ var api = express.Router();
 
 var validation = require('validation');
 
+let aql = require('arangojs').aql;
+
 var queryfunc = {};
 
 queryfunc.db_init = function(){
@@ -39,6 +41,7 @@ queryfunc.db_init = function(){
   'mobilecodes',
   'threadtypes',
   'mailcodes',
+  'activeusers'
 ].map(function(collection_name){db.collection(collection_name).create()});
 //create every collection, if not existent
 }
@@ -317,6 +320,194 @@ queryfunc.ftp_join = (opt)=>{
     },
   };
   return aqlall(aqlobj);
+};
+
+/**
+ *  @description: returns a count of a collection
+ *  @param: (String)colName, (String)filter: attribute of querying doc
+ *  @e.g.: queryfunc.docCount('threads', 'cid == "149"')
+ *  @return: (Number)length: length of querying collection
+ *  @author: lzszone 03-13-2017
+ * */
+
+queryfunc.docCount = (colName, filterObj) => {
+  var filterObj = filterObj || {};
+  var filters = '';
+  if(!colName) throw 'colName should not be undefined';
+  if(JSON.stringify(filterObj)==='{}');
+  else{
+    filters = 'FILTER ';
+    for(var filter in filterObj) {
+      filters += `t.${filter} == ${String(filterObj[filter])} && `;
+    }
+    filters = filters.substring(0, filters.length - 4);
+  }
+  return db.query(aql`
+    FOR doc IN ${colName}
+      ${filters == '' ? '' : 'FILTER ' + filters}
+      COLLECT WITH COUNT INTO length
+      RETURN length
+  `).catch(e => report(e))
+};
+/**
+ * @description: returns a list of all threads, filter & sort by params
+ * @param: (Object)params, (Object)paging
+ * @e.g.: queryfunc.getIndexThreads(params, paging)
+ * @return: ...
+ * @author: lzszone 03-17-2017
+* */
+queryfunc.getIndexThreads = (params, paging) => {
+  var contentClasses = {};
+  for(var param in params.contentClasses) {
+    if(params.contentClasses[param] == true) {
+      contentClasses[param] = true;
+    }
+  }
+  if(params.sortby){// aql sucks: it seem that aql didn't treat the string template as a string,
+    return db.query(aql`
+    FOR t IN threads
+      SORT t.disabled DESC, t.toc DESC
+      FILTER t.disabled==null && t.digest==${params.digest? true : null}
+      LET forum = DOCUMENT(forums, t.fid)
+      FILTER HAS(${contentClasses}, forum.class)
+      LIMIT ${paging.start}, ${paging.count}
+      LET oc = DOCUMENT(posts, t.oc)
+      LET ocuser = DOCUMENT(users, oc.uid)
+      LET lm = DOCUMENT(posts, t.lm)
+      LET lmuser = DOCUMENT(users, lm.uid)
+      RETURN MERGE(t, {oc, lm, forum, ocuser, lmuser})
+   `).catch(e => report(e));
+  }
+  else{
+    return db.query(aql`
+    FOR t IN threads
+      SORT t.disabled DESC, t.tlm DESC
+      FILTER t.disabled==null && t.digest==${params.digest? true : null}
+      LET forum = DOCUMENT(forums, t.fid)
+      FILTER HAS(${contentClasses}, forum.class)
+      LIMIT ${paging.start}, ${paging.count}
+      LET oc = DOCUMENT(posts, t.oc)
+      LET ocuser = DOCUMENT(users, oc.uid)
+      LET lm = DOCUMENT(posts, t.lm)
+      LET lmuser = DOCUMENT(users, lm.uid)
+      RETURN MERGE(t, {oc, lm, forum, ocuser, lmuser})
+   `).catch(e => report(e));
+  }
+};
+
+queryfunc.computeActiveUser = () => {
+  var lWThreadUsers = [];  //last week thread users
+  var lWPostUsers = [];  //post users
+  var activeUL = [];  //active user list
+  db.query(aql`
+      FOR t IN threads
+        FILTER t.toc > ${Date.now() - 604800000} && t.disabled == NULL
+        LET lWThreadCount = 0
+        LET lWPostCount = 0
+        LET xsf = DOCUMENT(users, t.uid).xsf
+        RETURN {uid: t.uid, lWThreadCount: lWThreadCount, lWPostCount: lWPostCount, xsf: xsf}
+    `)
+    .then(res => {
+      lWThreadUsers = res._result;
+      return db.query(aql`
+        FOR p IN posts
+          FILTER p.tlm > ${Date.now() - 604800000}
+          LET lWThreadCount = 0
+          LET lWPostCount = 0
+          LET xsf = DOCUMENT(users, p.uid).xsf
+          RETURN {uid: p.uid, lWThreadCount: lWThreadCount, lWPostCount: lWPostCount, xsf: xsf}
+      `)
+    })  //6048000000 = 1week
+    .then(res => {   //merge user array
+      lWPostUsers = res._result;
+      for(var oUser in lWThreadUsers) { //original
+        var flag = true;
+        for(var nUser in activeUL) { //new
+          if(activeUL[nUser].uid === lWThreadUsers[oUser].uid) {
+            activeUL[nUser].lWThreadCount += 1;
+            flag = false;
+            break;
+          }
+        }
+        if(flag) {
+          lWThreadUsers[oUser].lWThreadCount = 1;
+          activeUL.push(lWThreadUsers[oUser]);
+        }
+      }
+      for(var oUser in lWPostUsers) { //original
+        var flag = true;
+        for(var nUser in activeUL) { //new
+          if(activeUL[nUser].uid === lWPostUsers[oUser].uid) {
+            activeUL[nUser].lWPostCount += 1;
+            flag = false;
+            break;
+          }
+        }
+        if(flag) {
+          lWPostUsers[oUser].lWPostCount = 1;
+          activeUL.push(lWPostUsers[oUser]);
+        }
+      }
+      for(var index in activeUL) {
+        var user = activeUL[index];
+        user.vitality = settings.user.vitalityArithmetic(user.lWThreadCount, user.lWPostCount, user.xsf);
+      }
+      activeUL.sort((a, b) => {
+        return a.vitality - b.vitality;
+      });
+      activeUL = activeUL.slice(0,16);
+      return db.listCollections();
+    })
+    .then(collections => {
+      if(collections.indexOf('activeusers')){
+        return db.collection('activeusers').drop();
+      }
+    })
+    .then(() => {
+      return db.collection('activeusers').create()
+    })
+    .then(() => {
+      for(var user in activeUL) {
+        db.collection('activeusers').save(activeUL[user]).catch(e => console.log(e))
+      }
+    })
+    .catch((e) => console.log(e));
+};
+
+queryfunc.getActiveUsers = () => {
+  return db.query(aql`
+    FOR u IN activeusers
+      SORT u.vitality
+      LIMIT 10
+      LET username = DOCUMENT(users, u.uid).username
+      RETURN MERGE(u, {username})
+  `)
+}
+
+queryfunc.getForumList = contentClasses => {
+  return db.query(aql`
+    LET cForums = (FOR f IN forums
+      FILTER f.type == 'category' && HAS(${contentClasses}, f.class)
+      RETURN f)
+    FOR cForum IN cForums
+      LET children = (FOR f IN forums
+        FILTER f.parentid == cForum._key && HAS(${contentClasses}, f.class)
+        RETURN f)
+      RETURN MERGE(cForum, {children})
+  `)
+};
+
+queryfunc.getIndexForumList = contentClasses => {
+  return db.query(aql`
+    LET cForums = (FOR f IN forums
+      FILTER f.type == 'category' && f.visibility == true && (HAS(${contentClasses}, f.class) || f.isVisibleForNCC == true)
+      RETURN f)
+    FOR cForum IN cForums
+      LET children = (FOR f IN forums
+        FILTER f.parentid == cForum._key && f.visibility == true && (HAS(${contentClasses}, f.class) || f.isVisibleForNCC == true)
+        RETURN f)
+      RETURN MERGE(cForum, {children})
+  `)
 };
 
 module.exports = queryfunc;

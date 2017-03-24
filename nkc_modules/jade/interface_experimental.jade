@@ -52,6 +52,35 @@ block content
             h4 这里是回显
             pre#logger
             
+    hr
+    .row
+      .col-md-9
+        .col-md-6
+          .panel.panel-default
+            ui.list-group#cForum
+              -for(var i = 0; i < data.forumTree.length; i++)
+                -var cForum = data.forumTree[i]
+                -var buttonVSInfo = cForum.visibility? '对用户隐藏' : '对用户可见'
+                -var buttonIVInfo = cForum.isVisibleForNCC? '无权限不可见' : '无权限可见'
+                li.list-group-item
+                  span.col-md-5 #{data.forumTree[i].display_name}
+                  a.btn.btn-default.btn-sm(href='javascript:;' onclick='listForumBranch(event,#{i})') 显示子版
+                  a.btn.btn-default.btn-sm(href='javascript:;' onclick='forumVisibilitySwitch(event, "#{data.forumTree[i]._key}")') #{buttonVSInfo}
+                  a.btn.btn-default.btn-sm(href='javascript:;' onclick='forumIsVisibleForNCCSwitch(event, "#{data.forumTree[i]._key}")') #{buttonIVInfo}
+
+        .col-md-6
+          .panel.panel-default#branch-forum
+            -for(var i = 0; i < data.forumTree.length; i++)
+              ul.list-group.invisible
+                -for(var j = 0; j < data.forumTree[i].children.length; j++)
+                  -var cForum = data.forumTree[i]
+                  -var buttonVSInfo = cForum.visibility? '对用户隐藏' : '对用户可见'
+                  -var buttonIVInfo = cForum.isVisibleForNCC? '无权限不可见' : '无权限可见'
+                  li.list-group-item
+                    span.col-md-7 #{data.forumTree[i].children[j].display_name}
+                    a.btn.btn-default.btn-sm(href='javascript:;' onclick='forumVisibilitySwitch(event, "#{data.forumTree[i].children[j]._key}")') #{buttonVSInfo}
+                    a.btn.btn-default.btn-sm(href='javascript:;' onclick='forumIsVisibleForNCCSwitch(event, "#{data.forumTree[i].children[j]._key}")') #{buttonIVInfo}
+
 
     hr    
     .row

@@ -18,7 +18,7 @@ db.useDatabase(settings.server.database_name);
 var permission = require('permissions');
 var crypto = require('crypto');
 var BaseDao = require('./BaseDao');
-
+var aql = require('arangojs').aql
 
 var layer = (function () {
     var layer = {};
@@ -177,6 +177,25 @@ var layer = (function () {
                     return threads;
                 });
             });
+        };
+        Forum.prototype.visibilitySwitch = function() {
+            return db.query(aql`
+                LET forum = DOCUMENT(forums, ${this.key})
+                UPDATE forum WITH {
+                  visibility: !forum.visibility
+                } IN forums
+                RETURN NEW
+            `)
+        };
+
+        Forum.prototype.isVisibleForNCCSwitch = function() {
+            return db.query(aql`
+                LET forum = DOCUMENT(forums, ${this.key})
+                UPDATE forum WITH {
+                    isVisibleForNCC: !forum.isVisibleForNCC 
+                } IN forums
+                RETURN NEW
+            `)
         };
         return Forum;
     }(BaseDao));

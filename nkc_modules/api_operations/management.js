@@ -381,4 +381,22 @@ table.addCredit = {
     type:String,
     q:Number,
   }
-}
+};
+
+table.forumVisibilitySwitch = {
+  operation: params => {
+    var forum = new layer.Forum(params.fid);
+    return forum.visibilitySwitch()
+      .then(res => {
+        return res._result[0];
+      });
+  }
+};
+
+table.forumIsVisibleForNCCSwitch = {
+  operation: params => {
+    var forum = new layer.Forum(params.fid);
+    return forum.isVisibleForNCCSwitch()
+      .then(res => res._result[0]);
+  }
+};

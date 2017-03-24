@@ -26,11 +26,10 @@ var certificates={
     inheritFrom:['senior_moderator'],
 
     contentClasses:{
-      administrative:true,
+      administrative:true
     },
 
     permittedOperations:{
-
       viewQuestions:true,
       addQuestion:true,
       deleteQuestion:true,

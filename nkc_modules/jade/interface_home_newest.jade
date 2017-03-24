@@ -1,7 +1,6 @@
 - var threadlist = threadlist
   .col-md-6.col-sm-6.col-xs-12
     H4 #{listtitle}
-    hr.hrNarrowSpace
     each thread,index in threadlist
       
       .HomeLatestThreadItem
@@ -22,7 +21,8 @@
             
             
             if thread.forum && thread.forum.abbr
-              span.HLTtitletext #{thread.forum.abbr} 
+              span.HLTtitletext
+                a(href='f/#{thread.forum._key}' style='color: #969696;') &nbsp;#{thread.forum.abbr}&nbsp;
               
             - var titletext = thread.oc.t
             if thread.digest

@@ -46,3 +46,9 @@
 .ItemText {
   display: inline;
 }
+.invisible {
+  display: none;
+}
+.now-at {
+  background-color: silver;
+}

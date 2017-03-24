@@ -345,3 +345,45 @@ function directedMove(){
   })
   .catch(jwarning)
 }
+var ___nowAt = 0;
+function listForumBranch(event, index) {
+  $($('#cForum').children('.list-group-item')[___nowAt]).removeClass('now-at');
+  $($('#branch-forum').children('.list-group')[___nowAt]).addClass('invisible');
+  $($('#cForum').children('.list-group-item')[index]).addClass('now-at');
+  $($('#branch-forum').children('.list-group')[index]).removeClass('invisible');
+  ___nowAt = index;
+}
+
+function forumVisibilitySwitch(event, fid){
+  $(event.target).addClass('disabled');
+  nkcAPI('forumVisibilitySwitch', {fid: fid})
+    .then(function(res) {
+      console.log(res.visibility);
+      if(res.visibility) {
+        event.target.innerHTML = '对用户隐藏';
+        $(event.target).removeClass('disabled');
+        screenTopAlert(fid + ' 已对用户可见');
+        return;
+      }
+      event.target.innerHTML = '对用户可见';
+      $(event.target).removeClass('disabled');
+      screenTopAlert(fid + ' 已对用户隐藏');
+      return;
+    })
+    .catch(jwarning)
+}
+
+function forumIsVisibleForNCCSwitch(event, fid) {
+  nkcAPI('forumIsVisibleForNCCSwitch', {fid: fid})
+    .then(function(res) {
+      if(res.isVisibleForNCC) {
+        event.target.innerHTML = '对无权限隐藏';
+        $(event.target).removeClass('disabled');
+        return screenTopAlert(fid + ' 已对无权限用户可见');
+      }
+      event.target.innerHTML = '对无权限可见';
+      $(event.target).removeClass('disabled');
+      return screenTopAlert(fid + ' 已对无权限用户隐藏');
+    })
+    .catch(jwarning)
+}

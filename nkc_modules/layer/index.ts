@@ -9,7 +9,7 @@ var apifunc = require('api_functions')
 var validation = require('validation')
 var rs = require('random-seed')
 var AQL = queryfunc.AQL
-
+var aql = require('arangojs').aql;
 var db = require('arangojs')(settings.arango.address);
 db.useDatabase(settings.server.database_name);
 
@@ -245,6 +245,32 @@ var layer = (function(){
         })
       })
     }
+
+    visibilitySwitch() {
+      return db.query(aql`
+        LET forum = DOCUMENT(forums, ${this.key})
+        UPDATE forum WITH {
+          visibility: !forum.visibility 
+        } IN forums
+        RETURN {
+          old: OLD,
+          new: NEW
+        }
+      `)
+    }
+
+    isVisibleForNCCSwitch() {
+      return db.query(aql`
+        LET forum = DOCUMENT(forums, ${this.key})
+        UPDATE forum WITH {
+          isVisibleForNCC: !forum.isVisibleForNCC 
+        } IN forums
+        RETURN {
+          old: OLD,
+          new: NEW
+        }
+      `)
+    }
   }
 
   class Paging {
@@ -252,7 +278,7 @@ var layer = (function(){
       function getPageFromString(pagestr){
         if(pagestr){
           var page = parseInt(pagestr)
-          if(page===NaN)page = 0
+          if(page===NaN)var page = 0
         }else{
           var page = 0
         }

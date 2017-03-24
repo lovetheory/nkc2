@@ -107,9 +107,11 @@ var postToThread = function(params,tid,user){
         }
       }
       saveResult.redirect+= '#' + pid
-
-      return saveResult;
+      console.log('asdf');
+      return queryfunc.computeActiveUser();
     })
+    .then(() => saveResult)
+
     //okay to respond the user
   })
 };
@@ -163,6 +165,7 @@ var postToForum = function(params,fid,user,cat){
   .then((result)=>{
     return postToThread(params,newtid,user)
   })
+  .then(() => queryfunc.computeActiveUser())
 }
 
 
@@ -254,8 +257,9 @@ var postToPost = function(params,pid,user){ //modification.
 
       //
 
-      return result;
     })
+    .then(() => queryfunc.computeActiveUser())
+    .then(() => result)
   })
 }
 
