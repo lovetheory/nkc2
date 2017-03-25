@@ -98,6 +98,8 @@ var forum= //版
   display_name:"板块的显示名称",
   description:'简介',
   owners:String, //csv
+  visibility: '(bool) is visible',
+  isVisibleForNCC: '(bool) is visible for non-content class user'
 }
 
 var counter={ //计数器
@@ -105,7 +107,6 @@ var counter={ //计数器
 }
 
 var activeusers = {
-  //...attributes in users
   lWPostCount: 1, //last week post count
   lWThreadCount: 1, //thread count
   vitality: 4 //computed by settings.user.vitalityArithmetic
