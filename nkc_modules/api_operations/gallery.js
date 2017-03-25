@@ -33,6 +33,7 @@ table.getGalleryRecent = {
       let oc = document(posts,thread.oc)
       let ocuser = document(users,oc.uid)
       let forum = document(forums,thread.fid)
+      filter forum.visibility == true
 
       limit 30
 
