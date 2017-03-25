@@ -42,7 +42,7 @@ queryfunc.db_init = function(){
   'threadtypes',
   'mailcodes',
   'activeusers'
-].map(function(collection_name){db.collection(collection_name).create()});
+].map(function(collection_name){db.collection(collection_name).create().catch(e => e)});
 //create every collection, if not existent
 }
 
@@ -369,7 +369,7 @@ queryfunc.getIndexThreads = (params, paging) => {
       SORT t.disabled DESC, t.toc DESC
       FILTER t.disabled==null && t.digest==${params.digest? true : null}
       LET forum = DOCUMENT(forums, t.fid)
-      FILTER HAS(${contentClasses}, forum.class)
+      FILTER (HAS(${contentClasses}, forum.class) || forum.isVisibleForNCC == true) && forum.visibility == true
       LIMIT ${paging.start}, ${paging.count}
       LET oc = DOCUMENT(posts, t.oc)
       LET ocuser = DOCUMENT(users, oc.uid)
@@ -384,7 +384,7 @@ queryfunc.getIndexThreads = (params, paging) => {
       SORT t.disabled DESC, t.tlm DESC
       FILTER t.disabled==null && t.digest==${params.digest? true : null}
       LET forum = DOCUMENT(forums, t.fid)
-      FILTER HAS(${contentClasses}, forum.class)
+      FILTER (HAS(${contentClasses}, forum.class) || forum.isVisibleForNCC == true) && forum.visibility == true
       LIMIT ${paging.start}, ${paging.count}
       LET oc = DOCUMENT(posts, t.oc)
       LET ocuser = DOCUMENT(users, oc.uid)

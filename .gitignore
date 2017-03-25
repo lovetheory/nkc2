@@ -27,7 +27,7 @@
 /external_pkgs/MathJax-2.6-latest
 
 /test.js
-
+/run_as_production
 /nkc_modules/mailSecrets.js
 
 /nkc_modules/mailSecrets_template.js
