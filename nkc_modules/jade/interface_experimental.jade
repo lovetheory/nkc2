@@ -55,6 +55,7 @@ block content
     hr
     .row
       .col-md-9
+        .panel.panel-default 操作说明：按钮显示的内容为即将执行的操作，如对用户隐藏，表示当前板块用户是可见的，按下此按钮，板块属性变为用户不可见
         .col-md-6
           .panel.panel-default
             ui.list-group#cForum
@@ -63,7 +64,7 @@ block content
                 -var buttonVSInfo = cForum.visibility? '对用户隐藏' : '对用户可见'
                 -var buttonIVInfo = cForum.isVisibleForNCC? '无权限不可见' : '无权限可见'
                 li.list-group-item
-                  span.col-md-5 #{data.forumTree[i].display_name}
+                  span.col-md-3 #{data.forumTree[i].display_name}
                   a.btn.btn-default.btn-sm(href='javascript:;' onclick='listForumBranch(event,#{i})') 显示子版
                   a.btn.btn-default.btn-sm(href='javascript:;' onclick='forumVisibilitySwitch(event, "#{data.forumTree[i]._key}")') #{buttonVSInfo}
                   a.btn.btn-default.btn-sm(href='javascript:;' onclick='forumIsVisibleForNCCSwitch(event, "#{data.forumTree[i]._key}")') #{buttonIVInfo}
@@ -77,7 +78,7 @@ block content
                   -var buttonVSInfo = cForum.visibility? '对用户隐藏' : '对用户可见'
                   -var buttonIVInfo = cForum.isVisibleForNCC? '无权限不可见' : '无权限可见'
                   li.list-group-item
-                    span.col-md-7 #{data.forumTree[i].children[j].display_name}
+                    span.col-md-3 #{data.forumTree[i].children[j].display_name}
                     a.btn.btn-default.btn-sm(href='javascript:;' onclick='forumVisibilitySwitch(event, "#{data.forumTree[i].children[j]._key}")') #{buttonVSInfo}
                     a.btn.btn-default.btn-sm(href='javascript:;' onclick='forumIsVisibleForNCCSwitch(event, "#{data.forumTree[i].children[j]._key}")') #{buttonIVInfo}
 
