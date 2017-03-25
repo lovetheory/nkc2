@@ -42,7 +42,7 @@ queryfunc.db_init = function(){
   'threadtypes',
   'mailcodes',
   'activeusers'
-].map(function(collection_name){db.collection(collection_name).create()});
+].map(function(collection_name){db.collection(collection_name).create().catch(e => e)});
 //create every collection, if not existent
 }
 
