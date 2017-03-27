@@ -473,7 +473,7 @@ table.viewHome = {
     filter t.digest == true
     sort t.digest desc, t.toc desc
     
-    limit 11
+    limit 10
     let oc = document(posts,t.oc)
     let lm = document(posts,t.lm)
     let forum = document(forums,t.fid)
