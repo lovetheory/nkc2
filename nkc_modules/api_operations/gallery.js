@@ -35,7 +35,7 @@ table.getGalleryRecent = {
       let forum = document(forums,thread.fid)
       filter forum.visibility == true
 
-      limit 30
+      limit 6
 
       return {r:parr[rand()*length(parr)],forum,thread:merge(thread,{oc,ocuser})}
       `
@@ -69,7 +69,7 @@ table.getGalleryRecent = {
       })
     })
     .then(arr=>{
-      console.log(arr);
+      //console.log(arr);
       return arr
     })
   }
