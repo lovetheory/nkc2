@@ -15,8 +15,6 @@ block content
     .row
       .col-md-9
         .panel(style='height: 310px; border: none; box-shadow: none;')
-          -var threadlist = data.newestDigestThreads
-          include interface_home_newest
           .col-xs-12.col-sm-6
             .Gallery
               img#GalleryImage(src='')
@@ -27,6 +25,9 @@ block content
               .GalleryNavigation
                 span#GalleryNavigationLeft <
                 span#GalleryNavigationRight >
+          -var threadlist = data.newestDigestThreads
+          -var listtitle = '全站精华'
+          include interface_home_newest
 
         div(style='width: 100%; margin-bottom: 13px;')
           for cForum in data.indexForumList
