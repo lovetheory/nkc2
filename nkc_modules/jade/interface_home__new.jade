@@ -15,7 +15,7 @@ block content
     .row
       .col-md-9
         .panel(style='height: 310px; border: none; box-shadow: none;')
-          .col-xs-12.col-sm-6
+          .col-xs-12.col-sm-6(style='padding-left: 5px; margin-top: 10px;padding-right: 5px;')
             .Gallery
               a#GalleryImageA
                 img#GalleryImage(src='')
@@ -27,13 +27,14 @@ block content
                 span#GalleryNavigationLeft <
                 span#GalleryNavigationRight >
           -var threadlist = data.newestDigestThreads
-          -var listtitle = '全站精华'
+          -var listtitle = '推荐阅读'
           include interface_home_newest
 
         div(style='width: 100%; margin-bottom: 13px;')
-          for cForum in data.indexForumList
-            a(style='margin: 2px 5px;' href='/f/#{cForum._key}') #{cForum.display_name}
-        .nkcpanel
+          div(style='margin-top: 20px;')
+            for cForum in data.indexForumList
+              a(style='margin: 20px 2px 2px 2px;' href='/f/#{cForum._key}') #{cForum.display_name}
+        .panel
           nav
             include interface_navigation_paging.jade
 
@@ -98,3 +99,4 @@ block content
 block scripts
   script(src='/interface_common.js')
   script(src='/interface_panorama.js')
+  script(type='text/javascript') $(document).ready(function () {if($(window).width() < 900){$('.ForumThreadStat').css('font-size','7px');}});
