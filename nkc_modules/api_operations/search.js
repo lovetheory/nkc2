@@ -88,11 +88,11 @@ function get_user(un){
 }
 
 
-function get_match_users(un1,un2,start,count){
+function get_match_users(un1,un2,start,count){//暂时对like进行处理
   return AQL
   (
     `for u in users
-     filter u.username like @un1 && u.username != @un2
+     filter u.username == @un1 && u.username != @un2
      limit @start , @count
      return u
     `,

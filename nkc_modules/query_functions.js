@@ -453,7 +453,7 @@ queryfunc.computeActiveUser = () => {
         user.vitality = settings.user.vitalityArithmetic(user.lWThreadCount, user.lWPostCount, user.xsf);
       }
       activeUL.sort((a, b) => {
-        return a.vitality - b.vitality;
+        return b.vitality - a.vitality;
       });
       activeUL = activeUL.slice(0,16);
       return db.listCollections();
