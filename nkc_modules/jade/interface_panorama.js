@@ -4,7 +4,7 @@ var gallery = (function(){
     titleItem:geid('GalleryTitle'),
     authorItem:geid('GalleryAuthor'),
     forumName:geid('GalleryForumName'),
-
+    imageA: geid('GalleryImageA'),
     navileft:geid('GalleryNavigationLeft'),
     naviright:geid('GalleryNavigationRight'),
   }
@@ -53,7 +53,7 @@ var gallery = (function(){
 
     gallery.titleItem.innerHTML = thread.oc.t.replace(/</g,'&lt;').replace(/>/g,'&gt;')
     gallery.titleItem.href = '/t/' + thread._key
-
+    gallery.imageA.href = '/t/' + thread._key;
     gallery.authorItem.innerHTML = thread.ocuser.username
     gallery.authorItem.href = '/user_profile/' + thread.ocuser._key
 
@@ -62,7 +62,6 @@ var gallery = (function(){
   }
 
   gallery.init = function(){
-    gallery.imageItem.addEventListener('click',gallery.click)
     gallery.navileft.addEventListener('click',gallery.backclick)
     gallery.naviright.addEventListener('click',gallery.click)
 
