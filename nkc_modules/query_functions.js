@@ -1,7 +1,7 @@
 //query functions
 //equivalent ORM-Layer
 module.paths.push('./nkc_modules'); //enable require-ment for this path
-
+var colors = require('colors');
 var moment = require('moment');
 
 var settings = require('server_settings.js');
@@ -459,8 +459,10 @@ queryfunc.computeActiveUser = () => {
       return db.listCollections();
     })
     .then(collections => {
-      if(collections.indexOf('activeusers')){
-        return db.collection('activeusers').drop();
+      for(var collection of collections){
+        if(collection.name === 'activeusers'){
+          return db.collection('activeusers').drop();
+        }
       }
     })
     .then(() => {
@@ -468,7 +470,7 @@ queryfunc.computeActiveUser = () => {
     })
     .then(() => {
       for(var user in activeUL) {
-        db.collection('activeusers').save(activeUL[user]).catch(e => console.log(e))
+        db.collection('activeusers').save(activeUL[user]).catch(e => console.log('error occurred'.red,e))
       }
     })
     .catch((e) => console.log(e));
@@ -477,7 +479,7 @@ queryfunc.computeActiveUser = () => {
 queryfunc.getActiveUsers = () => {
   return db.query(aql`
     FOR u IN activeusers
-      SORT u.vitality
+      SORT u.vitality DESC
       LIMIT 10
       LET username = DOCUMENT(users, u.uid).username
       RETURN MERGE(u, {username})
@@ -500,10 +502,12 @@ queryfunc.getForumList = contentClasses => {
 queryfunc.getIndexForumList = contentClasses => {
   return db.query(aql`
     LET cForums = (FOR f IN forums
+      SORT f.order
       FILTER f.type == 'category' && f.visibility == true && (HAS(${contentClasses}, f.class) || f.isVisibleForNCC == true)
       RETURN f)
     FOR cForum IN cForums
       LET children = (FOR f IN forums
+        SORT f.order
         FILTER f.parentid == cForum._key && f.visibility == true && (HAS(${contentClasses}, f.class) || f.isVisibleForNCC == true)
         RETURN f)
       RETURN MERGE(cForum, {children})
