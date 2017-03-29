@@ -282,8 +282,8 @@ table.postTo = {
     var target = params.target.split('/')
     if(target.length!=2)throw 'Bad target format, expect "targetType/targetKey"'
     var targetType = target[0]; var targetKey = target[1];
-    console.log(target)
-
+    //console.log(target)
+    //console.log(params);
     //3. switch according to targetType
     return Promise.resolve()
     .then(()=>{
