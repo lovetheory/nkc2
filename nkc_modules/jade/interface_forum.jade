@@ -182,9 +182,11 @@ block content
                 -var p = forum
                 include interface_forumprofile2.jade
                 if forum.moderators && forum.moderators.length
-                  div(style='height: 20px;text-align:right') 版主:
+                  div(style='height: 20px;text-align:right; width: 20%; display: inline-block') 版主:
                     for moderator in forum.moderators
                       a(href='/user_profile_byname/#{moderator}')  #{moderator}
+                div
+                  a.btn.btn-default(href='/editor?target=f/#{forum._key}') 新帖
                 hr.hrNarrowSpace
                 .ForumThreadList
                   each thread,index in forum.threads

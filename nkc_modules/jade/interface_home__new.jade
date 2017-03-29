@@ -29,12 +29,15 @@ block content
           -var threadlist = data.newestDigestThreads
           -var listtitle = '推荐阅读'
           include interface_home_newest
+        .clearfix
 
         div(style='width: 100%; margin-bottom: 13px;')
-          div(style='margin-top: 20px;')
-            for cForum in data.indexForumList
-              a(style='margin: 20px 2px 2px 2px;' href='/f/#{cForum._key}') #{cForum.display_name}
-        .panel
+          p(style='color: orange; padding: 5px 5px;')
+            span(style='font-size: 17px;') 学院分区
+            span(style='color: grey;') (如要发帖请进入对应分区点击发帖按钮发帖)
+          for cForum in data.indexForumList
+            a(style='margin: 2px 5px;' href='/f/#{cForum._key}') #{cForum.display_name}
+        .nkcpanel#fullwidthpanel
           nav
             include interface_navigation_paging.jade
 
