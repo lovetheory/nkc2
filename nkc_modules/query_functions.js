@@ -468,17 +468,17 @@ queryfunc.computeActiveUser = () => {
     .then(collections => {
       for(var collection of collections){
         if(collection.name === 'activeusers'){
-          console.log('dropping the activeusers collection...'.green);
+          //console.log('dropping the activeusers collection...'.green);
           return db.collection('activeusers').drop();
         }
       }
     })
     .then(() => {
-      console.log('creating the activeusers collection'.green);
+      //console.log('creating the activeusers collection'.green);
       return db.collection('activeusers').create()
     })
     .then(() => {
-      console.log('writing data to activeusers'.green);
+      //console.log('writing data to activeusers'.green);
       for(var user of activeUL) {
         db.collection('activeusers').save(user).catch(e => console.log('error occurred'.red + e))
       }
