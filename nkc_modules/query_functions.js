@@ -406,7 +406,7 @@ queryfunc.computeActiveUser = () => {
         LET lWPostCount = 0
         LET user = DOCUMENT(users, t.uid)
         LET certs = user.certs
-        FILTER POSITION(certs, 'banned', true)
+        FILTER !POSITION(certs, 'banned')
         LET xsf = user.xsf
         RETURN {uid: t.uid, lWThreadCount: lWThreadCount, lWPostCount: lWPostCount, xsf: xsf}
     `)
@@ -420,7 +420,7 @@ queryfunc.computeActiveUser = () => {
           LET lWPostCount = 0
           LET user = DOCUMENT(users, p.uid)
           LET certs = user.certs
-          FILTER POSITION(certs, 'banned', true)
+          FILTER !POSITION(certs, 'banned')
           LET xsf = user.xsf
           RETURN {uid: p.uid, lWThreadCount: lWThreadCount, lWPostCount: lWPostCount, xsf: xsf}
       `)
