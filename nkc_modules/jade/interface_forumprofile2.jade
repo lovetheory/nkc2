@@ -1,13 +1,12 @@
 
-div(style='width: 70%; display: inline-block;')
-  div
-    - var forumname = f.display_name
-    //a.f12(href='/f/#{fid}') #{forumname}
-    - var forumcolor = f.color||p.color||'#eee'
+div
+  - var forumname = f.display_name
+  //a.f12(href='/f/#{fid}') #{forumname}
+  - var forumcolor = f.color||p.color||'#eee'
 
-    .HomeForumTitleCircle(style='background-color:#{forumcolor}')
-    a.HomeForumTitlePrimary(href='#{f._key}') #{f.display_name}
-    if f.count_posts_today
-      span.reddish  (今日 #{f.count_posts_today}
+  .HomeForumTitleCircle(style='background-color:#{forumcolor}')
+  a.HomeForumTitlePrimary(href='#{f._key}') #{f.display_name}
+  if f.count_posts_today
+    span.reddish  (今日 #{f.count_posts_today}
 
   div!=markdown(f.description||'')
