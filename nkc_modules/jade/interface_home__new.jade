@@ -100,6 +100,6 @@ block content
                   -var description = child.description
                   p(style='color: grey;') &nbsp;&nbsp;#{description}
 block scripts
-  //script(src='/interface_common.js')
-  //script(src='/interface_panorama.js')
+  script(src='/interface_common.js')
+  script(src='/interface_panorama.js')
   script(type='text/javascript') $(document).ready(function () {if($(window).width() < 900){$('.ForumThreadStat').css('font-size','7px');}});
