@@ -180,7 +180,10 @@ block content
               .nkcpanel#fullwidthpanel
                 -var f = forum
                 -var p = forum
-                include interface_forumprofile2.jade
+                div(style='width: 70%; display: inline-block;')
+                  include interface_forumprofile2.jade
+                  div
+                    a.btn.btn-default(href='/editor?target=f/#{forum._key}') 新帖
                 if forum.moderators && forum.moderators.length
                   div(style='height: 20px;text-align:right; width: 20%; display: inline-block') 版主:
                     for moderator in forum.moderators
