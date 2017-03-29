@@ -401,55 +401,62 @@ queryfunc.computeActiveUser = () => {
   var activeUL = [];  //active user list
   db.query(aql`
       FOR t IN threads
-        FILTER t.toc > ${Date.now() - 604800000} && t.disabled == NULL
+        FILTER t.toc > ${Date.now() - 604800000} && t.disabled == NULL && t.fid != 'recycle'
         LET lWThreadCount = 0
         LET lWPostCount = 0
-        LET xsf = DOCUMENT(users, t.uid).xsf
+        LET user = DOCUMENT(users, t.uid)
+        LET certs = user.certs
+        FILTER POSITION(certs, 'banned', true)
+        LET xsf = user.xsf
         RETURN {uid: t.uid, lWThreadCount: lWThreadCount, lWPostCount: lWPostCount, xsf: xsf}
     `)
     .then(res => {
       lWThreadUsers = res._result;
       return db.query(aql`
         FOR p IN posts
-          FILTER p.tlm > ${Date.now() - 604800000}
+          LET t = DOCUMENT(threads, p.tid)
+          FILTER p.tlm > ${Date.now() - 604800000} && t.fid != 'recycle'
           LET lWThreadCount = 0
           LET lWPostCount = 0
-          LET xsf = DOCUMENT(users, p.uid).xsf
+          LET user = DOCUMENT(users, p.uid)
+          LET certs = user.certs
+          FILTER POSITION(certs, 'banned', true)
+          LET xsf = user.xsf
           RETURN {uid: p.uid, lWThreadCount: lWThreadCount, lWPostCount: lWPostCount, xsf: xsf}
       `)
     })  //6048000000 = 1week
     .then(res => {   //merge user array
       lWPostUsers = res._result;
-      for(var oUser in lWThreadUsers) { //original
+      for(var oUser of lWThreadUsers) { //original
         var flag = true;
-        for(var nUser in activeUL) { //new
-          if(activeUL[nUser].uid === lWThreadUsers[oUser].uid) {
-            activeUL[nUser].lWThreadCount += 1;
+        for(var nUser of activeUL) { //new
+          if(nUser.uid === oUser.uid) {
+            nUser.lWThreadCount += 1;
             flag = false;
             break;
           }
         }
         if(flag) {
-          lWThreadUsers[oUser].lWThreadCount = 1;
-          activeUL.push(lWThreadUsers[oUser]);
+          oUser.lWThreadCount = 1;
+          activeUL.push(oUser);
         }
       }
-      for(var oUser in lWPostUsers) { //original
+      for(var oUser of lWPostUsers) { //original
         var flag = true;
-        for(var nUser in activeUL) { //new
-          if(activeUL[nUser].uid === lWPostUsers[oUser].uid) {
-            activeUL[nUser].lWPostCount += 1;
+        for(var nUser of activeUL) { //new
+          if(nUser.uid === oUser.uid) {
+            nUser.lWPostCount += 1;
             flag = false;
             break;
           }
         }
         if(flag) {
-          lWPostUsers[oUser].lWPostCount = 1;
-          activeUL.push(lWPostUsers[oUser]);
+          oUser.lWPostCount = 1;
+          activeUL.push(oUser);
         }
       }
-      for(var index in activeUL) {
-        var user = activeUL[index];
+      for(var user of activeUL) {
+        user.lWPostCount = user.lWPostCount - user.lWThreadCount;    //creating a post when creating a thread by default
         user.vitality = settings.user.vitalityArithmetic(user.lWThreadCount, user.lWPostCount, user.xsf);
       }
       activeUL.sort((a, b) => {
@@ -461,16 +468,19 @@ queryfunc.computeActiveUser = () => {
     .then(collections => {
       for(var collection of collections){
         if(collection.name === 'activeusers'){
+          console.log('dropping the activeusers collection...'.green);
           return db.collection('activeusers').drop();
         }
       }
     })
     .then(() => {
+      console.log('creating the activeusers collection'.green);
       return db.collection('activeusers').create()
     })
     .then(() => {
-      for(var user in activeUL) {
-        db.collection('activeusers').save(activeUL[user]).catch(e => console.log('error occurred'.red,e))
+      console.log('writing data to activeusers'.green);
+      for(var user of activeUL) {
+        db.collection('activeusers').save(user).catch(e => console.log('error occurred'.red + e))
       }
     })
     .catch((e) => console.log(e));
