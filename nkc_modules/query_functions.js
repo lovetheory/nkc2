@@ -502,13 +502,13 @@ queryfunc.getForumList = contentClasses => {
 queryfunc.getIndexForumList = contentClasses => {
   return db.query(aql`
     LET cForums = (FOR f IN forums
-      SORT f.order
       FILTER f.type == 'category' && f.visibility == true && (HAS(${contentClasses}, f.class) || f.isVisibleForNCC == true)
+      SORT f.order
       RETURN f)
     FOR cForum IN cForums
       LET children = (FOR f IN forums
-        SORT f.order
         FILTER f.parentid == cForum._key && f.visibility == true && (HAS(${contentClasses}, f.class) || f.isVisibleForNCC == true)
+        SORT f.order
         RETURN f)
       RETURN MERGE(cForum, {children})
   `)
