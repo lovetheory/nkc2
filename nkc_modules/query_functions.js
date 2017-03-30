@@ -338,7 +338,7 @@ queryfunc.docCount = (colName, filterObj) => {
   else{
     filters = 'FILTER ';
     for(var filter in filterObj) {
-      filters += `t.${filter} == ${String(filterObj[filter])} && `;
+      filters += `doc.${filter} == ${String(filterObj[filter])} && `;
     }
     filters = filters.substring(0, filters.length - 4);
   }
