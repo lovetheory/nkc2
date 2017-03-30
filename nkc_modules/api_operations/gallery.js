@@ -33,7 +33,7 @@ table.getGalleryRecent = {
       let oc = document(posts,thread.oc)
       let ocuser = document(users,oc.uid)
       let forum = document(forums,thread.fid)
-      filter forum.visibility == true
+      filter forum.visibility == true && forum._key != '97'//去掉自由市场
 
       limit 6
 

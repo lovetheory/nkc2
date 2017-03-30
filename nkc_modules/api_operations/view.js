@@ -486,8 +486,8 @@ table.viewHome = {
         data.newestDigestThreads = res
 
         //add homepage posts      17-03-13  lzszone
-        var pageCount = queryfunc.docCount('threads', {});
-        var paging = new layer.Paging(params.page).getPagingParams(pageCount);
+        var docCount = queryfunc.docCount('threads', {});
+        var paging = new layer.Paging(params.page).getPagingParams(docCount);
         data.paging = paging;
         if(params.digest){
           data.digest = true;
@@ -1124,42 +1124,25 @@ table.viewSMS = {
   operation:params=>{
     var data = defaultData(params)
     data.template = jadeDir + 'interface_messages.jade'
-
     var uid = params.user._key
 
     data.receiver = params.receiver //optional param
 
+    var docCount1 = queryfunc.docCount('sms', {s: uid});
+    var docCount2 = queryfunc.docCount('sms', {r: uid});
+    var docCount = docCount2 + docCount1;
+    var paging = new layer.Paging(params.page).getPagingParams(docCount);
+    data.paging = paging;
+
     return AQL(`
-      let s1=(
-        for s in sms
-        filter s.s == @uid
-        sort s.s desc, s.toc desc
-        limit 100
-        return s
-      )
-
-      let s2=(
-        for s in sms
-        filter s.r == @uid
-        sort s.r desc, s.toc desc
-        limit 100
-        return s
-      )
-
-      let s3 = union(s1,s2)
-
-      for s in s3
-      sort s.toc desc
-
-      limit 100
-
-      let us = document(users,s.s)
-      let ur = document(users,s.r)
-
-      return merge(s,{us,ur})
-
-      `,{uid}
-    )
+      FOR s IN sms
+        FILTER s.s == @uid || s.r == @uid
+        SORT s.s DESC, s.toc DESC
+        LIMIT @start, @count
+        LET us = DOCUMENT(users, s.s)
+        LET ur = DOCUMENT(users, s.r)
+        RETURN MERGE(s, {us, ur})
+    `,{uid: uid, start: paging.start, count: paging.count})
       .then(sarr=>{
         data.smslist = sarr
 
@@ -1181,8 +1164,7 @@ table.viewSMS = {
         )
       })
       .then(arr=>{
-        data.replylist = arr
-
+        data.replylist = arr;
         var psnl = new layer.Personal(uid)
         return psnl.load()
           .then(psnl=>{

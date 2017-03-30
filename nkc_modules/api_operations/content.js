@@ -64,9 +64,13 @@ var postToThread = function(params,tid,user){
     //extract quotation if exists
     var found = post.c.match(/\[quote=(.*?),(.*?)]/)
     if(found&&found[2]){
-      var topid = found[2]
-      report(found)
-      createReplyRelation(pid,topid)
+      apifunc.get_user_by_name(found[1]).then(users => {
+        var ptuser = users[0];
+        if(ptuser._key !== tobject.uid) {
+          report(found)
+          createReplyRelation(pid,found[2])
+        }
+      });
     }
 
     return Promise.resolve()
