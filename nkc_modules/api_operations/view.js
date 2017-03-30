@@ -1182,7 +1182,10 @@ table.viewSMS = {
       })
       .then(arr=>{
         data.replylist = arr
-
+        for(var reply of arr) {
+          if(!reply.fromuser)
+          console.log(reply.);
+        }
         var psnl = new layer.Personal(uid)
         return psnl.load()
           .then(psnl=>{

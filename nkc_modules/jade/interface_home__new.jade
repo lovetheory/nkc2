@@ -107,6 +107,9 @@ block content
                 if child.description != null
                   -var description = child.description
                   p(style='color: grey;') &nbsp;&nbsp;#{description}
+      .row
+        .col-md-12
+          include nkc_friendlies.jade
 block scripts
   script(src='/interface_common.js')
   script(src='/interface_panorama.js')
