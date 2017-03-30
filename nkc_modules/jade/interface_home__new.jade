@@ -79,6 +79,14 @@ block content
         -var user = data.user
         if user
           include interface_thread_userpatch.jade
+        if !data.permittedOperations.getLatestPosts || data.permittedOperations.viewQuestions
+          .nkcpanel
+            if !data.permittedOperations.getLatestPosts
+              :markdown
+                普通会员不能进入特种技术板块，请点击这里[参加考试](/register?getcode=true)，升级高级会员
+            if data.permittedOperations.viewQuestions
+              :markdown
+                科创题库现已面向1学术分以上会员开放。为科创入站测试[添加你的题目](/api/operation?&operation=viewQuestions)吧！
 
         .nkcpanel 一周活跃用户
           for user in data.activeUsers
