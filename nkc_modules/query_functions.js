@@ -323,33 +323,6 @@ queryfunc.ftp_join = (opt)=>{
 };
 
 /**
- *  @description: returns a count of a collection
- *  @param: (String)colName, (String)filter: attribute of querying doc
- *  @e.g.: queryfunc.docCount('threads', 'cid == "149"')
- *  @return: (Number)length: length of querying collection
- *  @author: lzszone 03-13-2017
- * */
-
-queryfunc.docCount = (colName, filterObj) => {
-  var filterObj = filterObj || {};
-  var filters = '';
-  if(!colName) throw 'colName should not be undefined';
-  if(JSON.stringify(filterObj)==='{}');
-  else{
-    filters = 'FILTER ';
-    for(var filter in filterObj) {
-      filters += `doc.${filter} == ${String(filterObj[filter])} && `;
-    }
-    filters = filters.substring(0, filters.length - 4);
-  }
-  return db.query(aql`
-    FOR doc IN ${colName}
-      ${filters == '' ? '' : 'FILTER ' + filters}
-      COLLECT WITH COUNT INTO length
-      RETURN length
-  `).catch(e => report(e))
-};
-/**
  * @description: returns a list of all threads, filter & sort by params
  * @param: (Object)params, (Object)paging
  * @e.g.: queryfunc.getIndexThreads(params, paging)

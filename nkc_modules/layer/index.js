@@ -219,7 +219,7 @@ var layer = (function () {
             var perpage = settings.paging.perpage;
             var start = page * perpage;
             var count = perpage;
-            var pagecount = total_items ? Math.floor((total_items - 1) / perpage) + 1 : null;
+            var pagecount = total_items ? Math.ceil(total_items / perpage) : null;
             var paging = {
                 page: page,
                 perpage: perpage,
