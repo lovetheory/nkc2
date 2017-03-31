@@ -480,14 +480,32 @@ table.viewHome = {
     let ocuser = document(users,t.uid)
 
     return merge(t,{oc:oc,lm:lm,forum,ocuser})
-    `
-    )
+    `)
       .then(res=>{
         data.newestDigestThreads = res
 
         //add homepage posts      17-03-13  lzszone
-        var docCount = queryfunc.docCount('threads', {});
-        var paging = new layer.Paging(params.page).getPagingParams(docCount);
+        if(params.digest) {
+          return AQL(`
+          FOR t IN threads
+            FILTER t.disabled == null && t.fid != 'recycle' && t.digest == true
+            LET forum = DOCUMENT(forums, t.fid)
+            FILTER (HAS(@contentClasses, forum.class) || forum.isVisibleForNCC == true) && forum.visibility == true
+            COLLECT WITH COUNT INTO length
+            RETURN length
+        `, {contentClasses: params.contentClasses})
+        }
+        return AQL(`
+          FOR t IN threads
+            FILTER t.disabled == null && t.fid != 'recycle'
+            LET forum = DOCUMENT(forums, t.fid)
+            FILTER (HAS(@contentClasses, forum.class) || forum.isVisibleForNCC == true) && forum.visibility == true
+            COLLECT WITH COUNT INTO length
+            RETURN length - 250 //估计帖子有坏数据,筛选有空白页
+        `, {contentClasses: params.contentClasses})
+      })
+      .then(length => {
+        var paging = new layer.Paging(params.page).getPagingParams(length);
         data.paging = paging;
         if(params.digest){
           data.digest = true;
@@ -510,39 +528,6 @@ table.viewHome = {
       .catch(e => console.log(e))
   }
 };
-
-function get_all_forums(){
-  return AQL
-  (
-    `for f in forums
-    return f
-    `
-  )
-}
-
-function getPaging(params){
-  var pagestr = params.page
-
-  if(pagestr){
-    var page = parseInt(pagestr)
-    if(page===NaN)page = 0
-  }else{
-    var page = 0
-  }
-
-  var perpage = settings.paging.perpage
-  var start = page* perpage
-  var count = perpage
-
-  var paging = {
-    page,
-    perpage,
-    start,
-    count,
-  }
-
-  return paging
-}
 
 var xsflimit = require('../misc/xsflimit')
 
@@ -1127,22 +1112,26 @@ table.viewSMS = {
     var uid = params.user._key
 
     data.receiver = params.receiver //optional param
-
-    var docCount1 = queryfunc.docCount('sms', {s: uid});
-    var docCount2 = queryfunc.docCount('sms', {r: uid});
-    var docCount = docCount2 + docCount1;
-    var paging = new layer.Paging(params.page).getPagingParams(docCount);
-    data.paging = paging;
-
     return AQL(`
       FOR s IN sms
         FILTER s.s == @uid || s.r == @uid
-        SORT s.s DESC, s.toc DESC
-        LIMIT @start, @count
-        LET us = DOCUMENT(users, s.s)
-        LET ur = DOCUMENT(users, s.r)
-        RETURN MERGE(s, {us, ur})
-    `,{uid: uid, start: paging.start, count: paging.count})
+        COLLECT WITH COUNT INTO length
+        RETURN length
+    `, {uid})
+      .then(length => {
+        var paging = new layer.Paging(params.page).getPagingParams(length);
+        data.paging = paging;
+
+        return AQL(`
+          FOR s IN sms
+            FILTER s.s == @uid || s.r == @uid
+            SORT s.s DESC, s.toc DESC
+            LIMIT @start, @count
+            LET us = DOCUMENT(users, s.s)
+            LET ur = DOCUMENT(users, s.r)
+            RETURN MERGE(s, {us, ur})
+        `,{uid: uid, start: paging.start, count: paging.count})
+      })
       .then(sarr=>{
         data.smslist = sarr
 
