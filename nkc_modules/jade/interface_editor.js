@@ -148,6 +148,7 @@ function fitscreen(){
   screenfitted = !screenfitted
 }
 
+/*
 geid('btnGroup').onclick = btnGroupClick;
 
 function btnGroupClick(event) {
@@ -183,3 +184,4 @@ function insertStyle(content, start, end) {
   textArea.selectionStart = position + start;
   textArea.selectionEnd = position + end;
 }
+*/
