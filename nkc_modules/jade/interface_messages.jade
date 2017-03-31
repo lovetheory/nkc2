@@ -37,16 +37,15 @@ block content
         .nkcpanel
           h4 短消息
           span (点击用户名快捷添回复)
-          -if(data.user.certs.indexOf('mobile') > -1 || data.user.certs.indexOf('mail') > -1 )
-            .row
-              .form-group.col-sm-3#msgForm
-                input#username.form-control(type='text' placeholder='收信人用户名' value="#{data.receiver||''}")
-            
-              li.col-sm-12(style='list-style-type: none;')
-                textarea#content.form-control(placeholder='消息内容' form='msgForm' style='height: 100px;')
-                
-              .form-group.col-sm-2
-                button#send.btn.btn-default() 发送
+          .row
+            .form-group.col-sm-3#msgForm
+              input#username.form-control(type='text' placeholder='收信人用户名' value="#{data.receiver||''}")
+
+            li.col-sm-12(style='list-style-type: none;')
+              textarea#content.form-control(placeholder='消息内容' form='msgForm' style='height: 100px;')
+
+            .form-group.col-sm-2
+              button#send.btn.btn-default() 发送
               
 
           -var smslist = data.smslist
