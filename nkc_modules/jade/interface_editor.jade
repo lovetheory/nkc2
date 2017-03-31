@@ -26,7 +26,14 @@ block content
           h4 编辑内容
           .form-group
             input#title.form-control(type='text' placeholder='标题' value="#{data.original_post?data.original_post.t||'':''}")
-            
+
+          .form-group#btnGroup
+            a.btn.btn-default(href='javascript:;') 黑体
+            a.btn.btn-default(href='javascript:;') 链接
+            a.btn.btn-default(href='javascript:;') 公式
+            a.btn.btn-default(href='javascript:;') 颜色
+
+
           .form-group
             textarea#content.form-control(placeholder='内容' style='height:300px;resize:vertical;') #{data.original_post?data.original_post.c:''}
           
