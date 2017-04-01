@@ -313,7 +313,7 @@ table.postTo = {
       }
 
       return Promise.all(parr).then(()=>{
-        queryfunc.computeActiveUser();
+        queryfunc.computeActiveUser(params.user);
         return result
       })
     })

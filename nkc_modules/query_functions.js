@@ -368,7 +368,7 @@ queryfunc.getIndexThreads = (params, paging) => {
   }
 };
 
-queryfunc.computeActiveUser = () => {
+queryfunc.computeActiveUser = (triggerUser) => {
   var lWThreadUsers = [];  //last week thread users
   var lWPostUsers = [];  //post users
   var activeUL = [];  //active user list
@@ -400,70 +400,85 @@ queryfunc.computeActiveUser = () => {
     })  //6048000000 = 1week
     .then(res => {   //merge user array
       lWPostUsers = res._result;
-      for(var oUser of lWThreadUsers) { //original
+      for (var oUser of lWThreadUsers) { //original
         var flag = true;
-        for(var nUser of activeUL) { //new
-          if(nUser.uid === oUser.uid) {
+        for (var nUser of activeUL) { //new
+          if (nUser.uid === oUser.uid) {
             nUser.lWThreadCount += 1;
             flag = false;
             break;
           }
         }
-        if(flag) {
+        if (flag) {
           oUser.lWThreadCount = 1;
           activeUL.push(oUser);
         }
       }
-      for(var oUser of lWPostUsers) { //original
+      for (var oUser of lWPostUsers) { //original
         var flag = true;
-        for(var nUser of activeUL) { //new
-          if(nUser.uid === oUser.uid) {
+        for (var nUser of activeUL) { //new
+          if (nUser.uid === oUser.uid) {
             nUser.lWPostCount += 1;
             flag = false;
             break;
           }
         }
-        if(flag) {
+        if (flag) {
           oUser.lWPostCount = 1;
           activeUL.push(oUser);
         }
       }
-      for(var user of activeUL) {
+      for (var user of activeUL) {
         user.lWPostCount = user.lWPostCount - user.lWThreadCount;    //creating a post when creating a thread by default
         user.vitality = settings.user.vitalityArithmetic(user.lWThreadCount, user.lWPostCount, user.xsf);
+        delete user.xsf;
       }
       activeUL.sort((a, b) => {
         return b.vitality - a.vitality;
       });
-      activeUL = activeUL.slice(0,16);
-      return db.listCollections();
+      activeUL = activeUL.slice(0, 12);
+      return db.listCollections()
     })
     .then(collections => {
-      for(var collection of collections){
-        if(collection.name === 'activeusers'){
-          //console.log('dropping the activeusers collection...'.green);
-          return db.collection('activeusers').drop();
+      console.log(collections);
+      for (var collection of collections) {
+        if (collection.name === 'activeusers') {
+          for (user of activeUL) {
+            if (user.uid === triggerUser._key) {
+              return db.query(aql`
+                FOR u IN activeusers
+                  SORT u.vitality
+                    LIMIT 1
+                    UPDATE u WITH {
+                      uid: ${user.uid},
+                      lWPostCount: ${user.lWPostCount},
+                      lWThreadCount: ${user.lWThreadCount}
+                    } IN activeusers
+                `)
+                .catch(e => console.log(e))
+            }
+          }
         }
       }
-    })
-    .then(() => {
-      //console.log('creating the activeusers collection'.green);
+      return;
       return db.collection('activeusers').create()
+        .then(() => {
+          console.log('code goes here..3');
+          //console.log('writing data to activeusers'.green);
+          for (var user of activeUL) {
+            db.collection('activeusers').save(user).catch(e => console.log('error occurred'.red + e))
+          }
+        })
+        .catch((e) => console.log(e))
     })
-    .then(() => {
-      //console.log('writing data to activeusers'.green);
-      for(var user of activeUL) {
-        db.collection('activeusers').save(user).catch(e => console.log('error occurred'.red + e))
-      }
-    })
-    .catch((e) => console.log(e));
+    .catch(e => console.log(e))
 };
 
 queryfunc.getActiveUsers = () => {
   return db.query(aql`
     FOR u IN activeusers
       SORT u.vitality DESC
-      LIMIT 10
+      LIMIT 12
       LET username = DOCUMENT(users, u.uid).username
       RETURN MERGE(u, {username})
   `)
