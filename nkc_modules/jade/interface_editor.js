@@ -147,3 +147,41 @@ function fitscreen(){
 
   screenfitted = !screenfitted
 }
+
+/*
+geid('btnGroup').onclick = btnGroupClick;
+
+function btnGroupClick(event) {
+  geid('lang').value = 'bbcode';
+  switch(event.target.innerHTML) {
+    case '黑体':
+      insertStyle('[b][/b]', 3);
+      break;
+    case '链接':
+      insertStyle('[url=http://网址]文字描述[/url]', 12, 14);
+      break;
+    case '公式':
+      insertStyle('[cf][/cf]', 4);
+      break;
+    case '颜色':
+      insertStyle('[color=red]内容[/color]', 7, 10);
+      break;
+    default:
+      throw 'unknown button type!!!!';
+  }
+}
+
+function insertStyle(content, start, end) {
+  var end = end || start;
+  var textArea = geid('content');
+  var value = textArea.value;
+  console.log(textArea.value);
+  var position = textArea.selectionStart;
+  var v1 = value.slice(0, position);
+  var v2 = value.slice(position);
+  textArea.value = v1 + content + v2;
+  textArea.focus();
+  textArea.selectionStart = position + start;
+  textArea.selectionEnd = position + end;
+}
+*/

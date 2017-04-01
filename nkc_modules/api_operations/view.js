@@ -470,8 +470,10 @@ table.viewHome = {
     }
     return AQL(`
     for t in threads
-    filter t.digest == true
-    sort t.digest desc, t.toc desc
+    LET f = DOCUMENT(forums, t.fid)
+    FILTER t.disabled != true && t.fid != '97'
+    && t.fid != 'recycle' && f.visibility == true
+    sort t.toc desc
     
     limit 10
     let oc = document(posts,t.oc)
@@ -506,8 +508,8 @@ table.viewHome = {
       })
       .then(length => {
         var paging = new layer.Paging(params.page).getPagingParams(length);
-        data.paging = paging;
-        if(params.digest){
+        data.paging = paging
+        if(params.digest){;
           data.digest = true;
         }
         data.sortby = params.sortby;

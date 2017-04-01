@@ -10,8 +10,7 @@ var validation = require('validation')
 var rs = require('random-seed')
 var AQL = queryfunc.AQL
 var aql = require('arangojs').aql;
-var db = require('arangojs')(settings.arango.address);
-db.useDatabase(settings.server.database_name);
+var db = require('arangojs')(settings.arango);
 
 var permission = require('permissions')
 var crypto =require('crypto')
