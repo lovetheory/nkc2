@@ -338,7 +338,7 @@ queryfunc.getIndexThreads = (params, paging) => {
     return db.query(aql`
     FOR t IN threads
       SORT t.disabled DESC, t.toc DESC
-      FILTER t.disabled==null && t.digest==${params.digest? true : null}
+      FILTER t.disabled==null && t.${params.digest? 'digest' : 'disabled'}==${params.digest? true : null}
       LET forum = DOCUMENT(forums, t.fid)
       FILTER (HAS(${contentClasses}, forum.class) || forum.isVisibleForNCC == true) && forum.visibility == true
       LIMIT ${paging.start}, ${paging.count}
@@ -353,7 +353,7 @@ queryfunc.getIndexThreads = (params, paging) => {
     return db.query(aql`
     FOR t IN threads
       SORT t.disabled DESC, t.tlm DESC
-      FILTER t.disabled==null && t.digest==${params.digest? true : null}
+      FILTER t.disabled==null && t.${params.digest? 'digest' : 'disabled'}==${params.digest? true : null}
       LET forum = DOCUMENT(forums, t.fid)
       FILTER (HAS(${contentClasses}, forum.class) || forum.isVisibleForNCC == true) && forum.visibility == true
       LIMIT ${paging.start}, ${paging.count}

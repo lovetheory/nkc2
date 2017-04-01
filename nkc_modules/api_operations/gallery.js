@@ -36,30 +36,7 @@ table.getGalleryRecent = {
           forum,
           thread: MERGE(t, {oc: p, ocuser: user})
         }
-        
-      // filter p.r
-      // filter length(p.r)
-      // filter !p.disabled
-      //
-      // let parr = (
-      //   for r in p.r
-      //   let res = document(resources,r)
-      //   filter position(['jpg','png','svg','jpeg'],res.ext,false)
-      //   return res
-      // )
-      // filter length(parr)
-      //
-      // let thread = document(threads,p.tid)
-      // let oc = document(posts,thread.oc)
-      // let ocuser = document(users,oc.uid)
-      // let forum = document(forums,thread.fid)
-      // filter forum.visibility == true && forum._key != '97'//去掉自由市场
-      //
-      // limit 6
-      //
-      // return {r:parr[rand()*length(parr)],forum,thread:merge(thread,{oc,ocuser})}
-      `
-    )
+    `)
     .then(arr=>{
       var promarr = []
       var resarr=[]
