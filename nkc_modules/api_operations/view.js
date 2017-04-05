@@ -1115,7 +1115,6 @@ table.viewSMS = {
     var data = defaultData(params)
     data.template = jadeDir + 'interface_messages.jade'
     var uid = params.user._key
-    console.log('goes here');
     data.receiver = params.receiver //optional param
     return AQL(`
       FOR s IN sms
@@ -1130,7 +1129,7 @@ table.viewSMS = {
         return AQL(`
           FOR s IN sms
             FILTER s.s == @uid || s.r == @uid
-            SORT s.s DESC, s.toc DESC
+            SORT s.toc DESC
             LIMIT @start, @count
             LET us = DOCUMENT(users, s.s)
             LET ur = DOCUMENT(users, s.r)
