@@ -49,8 +49,8 @@ queryfunc.db_init = function(){
           if(colName === collections[index].name) {
             return
           }
-          return db.collection(colName).create()
         }
+        return db.collection(colName).create()
       }
     })
     .catch(e => console.log(e))
