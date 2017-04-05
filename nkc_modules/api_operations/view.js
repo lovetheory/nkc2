@@ -465,11 +465,11 @@ table.viewHome = {
     return AQL(`
     for t in threads
     LET f = DOCUMENT(forums, t.fid)
-    FILTER t.disabled != true && t.fid != '97'
+    FILTER t.disabled != true && t.fid != '97' && t.digest == true
     && t.fid != 'recycle' && f.visibility == true
     sort t.toc desc
     
-    limit 10
+    limit 100
     let oc = document(posts,t.oc)
     let lm = document(posts,t.lm)
     let forum = document(forums,t.fid)
@@ -478,6 +478,15 @@ table.viewHome = {
     return merge(t,{oc:oc,lm:lm,forum,ocuser})
     `)
       .then(res=>{
+        let rand = function() {
+          return Math.round(Math.random() * 100)
+        };
+        let randArr = [rand(),rand(),rand(),rand(),rand(),rand(),rand(),rand(),rand(),rand(),rand()];
+        let temp = [];
+        randArr.map(ele => {
+          temp.push(res[ele])
+        });
+        res = temp;
         data.newestDigestThreads = res
 
         //add homepage posts      17-03-13  lzszone
@@ -1106,7 +1115,7 @@ table.viewSMS = {
     var data = defaultData(params)
     data.template = jadeDir + 'interface_messages.jade'
     var uid = params.user._key
-
+    console.log('goes here');
     data.receiver = params.receiver //optional param
     return AQL(`
       FOR s IN sms
