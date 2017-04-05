@@ -77,6 +77,9 @@ function submit2(){
 
   return Promise.resolve()
   .then(function(){
+    if(!phone.match(/^0?(13[0-9]|15[012356789]|17[013678]|18[0-9]|14[57])[0-9]{8}$/)) {
+      throw ({detail: '非法的手机号码'})
+    }
     if(password == ''){
       getFocus("#password")
       throw({detail:'请填写密码！'})
@@ -122,7 +125,9 @@ function getMcode(){
     getFocus("#username")
     return error_report('请填写用户名！')
   }
-  if(phone == '' || phone.length < 11){
+  if(phone == '' || phone.length < 11 ||
+  !phone.match(/^0?(13[0-9]|15[012356789]|17[013678]|18[0-9]|14[57])[0-9]{8}$/))
+  {
     getFocus("#phone")
     return error_report('手机号码为空或者格式不正确！')
   }
