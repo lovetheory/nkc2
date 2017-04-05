@@ -87,15 +87,19 @@ function register_submit(){
   })
   .catch(function(err){
     if(err.detail == '用户名已存在，请输入其他用户名'){
+      refreshICode();
       getFocus("#username")
     }
     if(err.detail == '手机验证码不正确，请检查'){
+      refreshICode();
       getFocus("#mcode")
     }
     if(err.detail == '图片验证码不正确，请检查'){
+      refreshICode();
       getFocus("#icode")
     }
     if(err.detail == '此号码已经用于其他用户注册，请检查或更换查'){
+      refreshICode();
       getFocus("#phone")
     }
     error_report(err.detail);
@@ -150,12 +154,15 @@ function getMcode(){
     })
     .catch(function(err){
       if(err.detail == '手机验证码不正确，请检查'){
+        refreshICode();
         getFocus("#mcode")
       }
       if(err.detail == '图片验证码不正确，请检查'){
+        refreshICode();
         getFocus("#icode")
       }
       if(err.detail == '此号码已经用于其他用户注册，请检查或更换查'){
+        refreshICode()
         getFocus("#phone")
       }
       error_report(err.detail);
@@ -164,14 +171,16 @@ function getMcode(){
 }
 
 
+function refreshICode() {
+  nkcAPI('refreshicode')
+    .then(function(res) {
+      $('#icodeImg').attr('src', '/static/captcha/captcha.svg?' + Math.random())
+    })
+}
+
 //点击刷新图片验证码
 $(document).ready(function() {
-	 $("#icodeImg").click(function(){
-		 nkcAPI('refreshicode')
-     .then(function(res){
-       $("#icodeImg").attr("src","/static/captcha/captcha.svg?"+ Math.random() );
-     })
-	 })
+	 $("#icodeImg").click(refreshICode)
 })
 
 

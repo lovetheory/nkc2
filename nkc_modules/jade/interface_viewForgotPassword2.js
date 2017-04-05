@@ -48,11 +48,13 @@ function submit(){
       return;
     }
     if(userobj.phone.length < 11){
+      refreshICode();
       getFocus("#phone")
       throw({detail:'手机号码格式不正确！'})
       return;
     }
     if(userobj.mcode == ''){
+      refreshICode();
       getFocus("#mcode")
       throw({detail:'请填写手机验证码！'})
       return;
@@ -146,21 +148,28 @@ function getMcode(){
       }
     })
     .catch(function(err){
+      if(err.detail === '没有找到该手机号码，请检查') {
+        refreshICode3();
+      }
+      else if(err.detail === '用户名和手机号码不对应，请检查') {
+        refreshICode3();
+      }
       error_report(err.detail);
     })
   }
 }
 
+function refreshICode3() {
+  nkcAPI('refreshicode3')
+    .then(function(res){
+      $("#icodeImg").attr("src","/static/captcha/captcha3.svg?"+ Math.random() );
+    })
+}
 
 //点击刷新图片验证码
 $(document).ready(function() {
-	 $("#icodeImg").click(function(){
-		 nkcAPI('refreshicode3')
-     .then(function(res){
-       $("#icodeImg").attr("src","/static/captcha/captcha3.svg?"+ Math.random() );
-     })
+	 $("#icodeImg").click(refreshICode3)
 	 })
-})
 
 
 function getFocus(a){
