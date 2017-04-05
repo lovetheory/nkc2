@@ -73,7 +73,7 @@ table.forgotPassword = {
       .then(()=>{
 
         var text =
-        `有人在 ${(new Date).toLocaleString()} 请求重置账户 ${u.model.username} 的密码。`+
+        `有人在 ${(new Date).toLocaleString()} 请求重置账户密码。`+
         '如果这不是你的操作，请忽略。 '
 
         var href = 'http://bbs.kechuang.org/forgotPassword?token='+token

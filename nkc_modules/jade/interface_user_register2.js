@@ -45,12 +45,14 @@ function register_submit(){
       return;
     }
     if(userobj.icode == ''){
-      getFocus("#icode")
+      refreshICode();
+      getFocus("#icode");
       throw({detail:'请填写图片验证码！'})
       return;
     }
     if( !userobj.email.match(/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/) ){
       getFocus("#email")
+      refreshICode();
       throw({detail:'邮箱格式不正确！'})
       return;
     }
@@ -82,12 +84,15 @@ function register_submit(){
   })
   .catch(function(err){
     if(err.detail == '此用户名已存在，请更换一个'){
+      refreshICode();
       getFocus("#username")
     }
     if(err.detail == '此邮箱已注册过，请检查或更换'){
+      refreshICode();
       getFocus("#email")
     }
     if(err.detail == '图片验证码不正确，请检查'){
+      refreshICode();
       getFocus("#icode")
     }
     error_report(err.detail);
@@ -95,17 +100,17 @@ function register_submit(){
 
 }
 
-
+function refreshICode() {
+  nkcAPI('refreshicode')
+    .then(function(res) {
+      $('#icodeImg').attr('src', '/static/captcha/captcha.svg?' + Math.random())
+    })
+}
 
 //点击刷新图片验证码
 $(document).ready(function() {
-	 $("#icodeImg").click(function(){
-		 nkcAPI('refreshicode')
-     .then(function(res){
-       $("#icodeImg").attr("src","/static/captcha/captcha.svg?"+ Math.random() );
-     })
-	 })
-})
+	 $("#icodeImg").click(refreshICode)
+});
 
 
 

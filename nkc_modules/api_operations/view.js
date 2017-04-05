@@ -451,12 +451,13 @@ table.viewHome = {
       sparse:'false',
     })
 
-    queryfunc.createIndex('activeusers',{
-      fields:['vitality'],
-      type:'skiplist',
-      unique:'false',
-      sparse:'false',
+    queryfunc.createIndex('threads', {
+      fields: ['disabled','fid'],
+      type: 'hash',
+      unique: 'false',
+      sparse: 'false'
     })
+
   },
   operation:params=>{
     var data = defaultData(params);
@@ -471,11 +472,11 @@ table.viewHome = {
     return AQL(`
     for t in threads
     LET f = DOCUMENT(forums, t.fid)
-    FILTER t.disabled != true && t.fid != '97'
+    FILTER t.disabled != true && t.fid != '97' && t.digest == true
     && t.fid != 'recycle' && f.visibility == true
     sort t.toc desc
     
-    limit 10
+    limit 100
     let oc = document(posts,t.oc)
     let lm = document(posts,t.lm)
     let forum = document(forums,t.fid)
@@ -484,9 +485,19 @@ table.viewHome = {
     return merge(t,{oc:oc,lm:lm,forum,ocuser})
     `)
       .then(res=>{
+        let rand = function() {
+          return Math.round(Math.random() * 100)
+        };
+        let randArr = [rand(),rand(),rand(),rand(),rand(),rand(),rand(),rand(),rand(),rand(),rand()];
+        let temp = [];
+        randArr.map(ele => {
+          temp.push(res[ele])
+        });
+        res = temp;
         data.newestDigestThreads = res
 
         //add homepage posts      17-03-13  lzszone
+        console.log(Date.now());
         if(params.digest) {
           return AQL(`
           FOR t IN threads
@@ -501,7 +512,7 @@ table.viewHome = {
           FOR t IN threads
             FILTER t.disabled == null && t.fid != 'recycle'
             LET forum = DOCUMENT(forums, t.fid)
-            FILTER (HAS(@contentClasses, forum.class) || forum.isVisibleForNCC == true) && forum.visibility == true
+            FILTER (HAS(@contentClasses, forum.class) || forum.isVisibleForNCC == true)
             COLLECT WITH COUNT INTO length
             RETURN length - 250 //估计帖子有坏数据,筛选有空白页
         `, {contentClasses: params.contentClasses})
@@ -1112,7 +1123,6 @@ table.viewSMS = {
     var data = defaultData(params)
     data.template = jadeDir + 'interface_messages.jade'
     var uid = params.user._key
-
     data.receiver = params.receiver //optional param
     return AQL(`
       FOR s IN sms
@@ -1127,7 +1137,7 @@ table.viewSMS = {
         return AQL(`
           FOR s IN sms
             FILTER s.s == @uid || s.r == @uid
-            SORT s.s DESC, s.toc DESC
+            SORT s.toc DESC
             LIMIT @start, @count
             LET us = DOCUMENT(users, s.s)
             LET ur = DOCUMENT(users, s.r)
