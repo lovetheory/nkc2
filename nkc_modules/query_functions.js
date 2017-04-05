@@ -22,25 +22,38 @@ let aql = require('arangojs').aql;
 var queryfunc = {};
 
 queryfunc.db_init = function(){
-  ['posts',
-  'threads',
-  'forums',
-  'logs',
-  'users',
-  'users_personal',
-  'counters',
-  'resources',
-  'questions',
-  'answersheets',
-  'histories',
-  'sms',
-  'collections',
-  'replies',
-  'mobilelogs',
-  'mobilecodes',
-  'threadtypes',
-  'mailcodes',
-].map(function(collection_name){db.collection(collection_name).create().catch(e => e)});
+  var colArr = [
+    'posts',
+    'threads',
+    'forums',
+    'logs',
+    'users',
+    'users_personal',
+    'counters',
+    'resources',
+    'questions',
+    'answersheets',
+    'histories',
+    'sms',
+    'collections',
+    'replies',
+    'mobilelogs',
+    'mobilecodes',
+    'threadtypes',
+    'mailcodes',
+  ];
+  db.listCollections()
+    .then(collections => {
+      for(var colName of colArr) {
+        for(var index in collections) {
+          if(colName === collections[index].name) {
+            return
+          }
+          return db.collection(colName).create()
+        }
+      }
+    })
+    .catch(e => console.log(e))
 //create every collection, if not existent
 }
 
@@ -373,8 +386,9 @@ queryfunc.computeActiveUser = (triggerUser) => {
   var user = {};
   return db.listCollections()
     .then(collections => {
-      for (var collection of collections) {
-        if (collection.name === 'activeusers') {
+      for (var index in collections) {
+        if (collections[index].name === 'activeusers') {
+          console.log('goes here');
           return db.query(aql`
             LET lWThreadCount = (
               FOR t IN threads
@@ -505,9 +519,17 @@ queryfunc.computeActiveUser = (triggerUser) => {
             })
             .then(() => {
               for (var user of activeUL) {
-                db.collection('activeusers').save(user).catch(e => console.log('error occurred'.red + e))
+                db.collection('activeusers').save(user)
+                  .catch(e => console.log('error occurred'.red + e))
               }
             })
+            .then(() => queryfunc.createIndex('activeusers',{
+                fields:['vitality'],
+                type:'skiplist',
+                unique:'false',
+                sparse:'false',
+              })
+            )
             .catch((e) => console.log(e))
         })
     })

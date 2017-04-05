@@ -9,19 +9,19 @@ module.exports = {
     {
       name      : 'nkc2',
       script    : 'server.js',
-      instances: 4,
+      instances: 8,
       exec_mode: 'cluster',
       watch: false,
       cron_restart: '0 0/30 * * * ',
       autorestart: true,
       env: {
-        COMMON_VARIABLE: 'true'
+        NODE_ENV: 'development'
       },
       env_production : {
         NODE_ENV: 'production'
       }
     }
-  ],
+  ]
 
 
   /**

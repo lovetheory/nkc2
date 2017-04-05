@@ -451,12 +451,6 @@ table.viewHome = {
       sparse:'false',
     })
 
-    queryfunc.createIndex('activeusers',{
-      fields:['vitality'],
-      type:'skiplist',
-      unique:'false',
-      sparse:'false',
-    })
   },
   operation:params=>{
     var data = defaultData(params);
