@@ -91,10 +91,10 @@ block content
         .nkcpanel 一周活跃用户
           div
             for user in data.activeUsers
-              div(style='padding: 5px; width: 90px; display: inline-block;position: relative;')
+              div(style='padding: 5px; width: 90px; display: inline-block;position: relative;text-align: center;')
                 img(src='/avatar/#{user.uid}' style='width:80px;height:80px;border-radius:6px;')
-                a(href='user_profile/'+ user.uid style='display: inline-block;') #{user.username}
-                span(style='color: #d6571c; margin-right: 0; display: inline-block;') (帖:#{user.lWThreadCount} 复:#{user.lWPostCount})
+                a(href='user_profile/'+ user.uid style='display: inline-block;overflow: hidden;') #{user.username}
+                span(style='color: #d6571c; margin-right: 0; display: inline-block;overflow: hidden;') (帖:#{user.lWThreadCount} 复:#{user.lWPostCount})
         for cForum in data.indexForumList
           .nkcpanel
             div(style='text-align: center; font-size: 16px; margin-left: -15px;')
