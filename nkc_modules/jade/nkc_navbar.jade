@@ -21,9 +21,6 @@ div
           li(class="#{isActive('home')}")
             a(href='/' title='扫一眼') 板块
             
-          li(class="#{isActive('pano')}")
-            a(href='/pano' title='大家都在忙什么？') 广场
-            
           if data.user&&data.user._key
             li(class="#{isActive('self')}")
               a(href='/self' title='个人动态') 我的
