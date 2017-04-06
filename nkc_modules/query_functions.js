@@ -347,36 +347,21 @@ queryfunc.getIndexThreads = (params, paging) => {
       contentClasses[param] = true;
     }
   }
-  if(params.sortby){// aql sucks: it seem that aql didn't treat the string template as a string,
-    return db.query(aql`
-    FOR t IN threads
-      SORT t.disabled DESC, t.toc DESC
-      FILTER t.disabled==null && t.${params.digest? 'digest' : 'disabled'}==${params.digest? true : null}
-      LET forum = DOCUMENT(forums, t.fid)
-      FILTER (HAS(${contentClasses}, forum.class) || forum.isVisibleForNCC == true) && forum.visibility == true
-      LIMIT ${paging.start}, ${paging.count}
-      LET oc = DOCUMENT(posts, t.oc)
-      LET ocuser = DOCUMENT(users, oc.uid)
-      LET lm = DOCUMENT(posts, t.lm)
-      LET lmuser = DOCUMENT(users, lm.uid)
-      RETURN MERGE(t, {oc, lm, forum, ocuser, lmuser})
-   `).catch(e => report(e));
-  }
-  else{
-    return db.query(aql`
-    FOR t IN threads
-      SORT t.disabled DESC, t.tlm DESC
-      FILTER t.disabled==null && t.${params.digest? 'digest' : 'disabled'}==${params.digest? true : null}
-      LET forum = DOCUMENT(forums, t.fid)
-      FILTER (HAS(${contentClasses}, forum.class) || forum.isVisibleForNCC == true) && forum.visibility == true
-      LIMIT ${paging.start}, ${paging.count}
-      LET oc = DOCUMENT(posts, t.oc)
-      LET ocuser = DOCUMENT(users, oc.uid)
-      LET lm = DOCUMENT(posts, t.lm)
-      LET lmuser = DOCUMENT(users, lm.uid)
-      RETURN MERGE(t, {oc, lm, forum, ocuser, lmuser})
-   `).catch(e => report(e));
-  }
+  return db.query(aql`
+  FOR t IN threads
+    SORT t.disabled DESC, t.${params.sortby? 'toc' : 'tlm'} DESC
+    FILTER t.disabled==null &&
+    t.${params.digest? 'digest' : 'disabled'}==${params.digest? true : null}
+    LET forum = DOCUMENT(forums, t.fid)
+    FILTER (HAS(${contentClasses}, forum.class) || forum.isVisibleForNCC == true) &&
+    forum.visibility == true
+    LIMIT ${paging.start}, ${paging.count}
+    LET oc = DOCUMENT(posts, t.oc)
+    LET ocuser = DOCUMENT(users, oc.uid)
+    LET lm = DOCUMENT(posts, t.lm)
+    LET lmuser = DOCUMENT(users, lm.uid)
+    RETURN MERGE(t, {oc, lm, forum, ocuser, lmuser})
+ `).catch(e => report(e));
 };
 
 queryfunc.computeActiveUser = (triggerUser) => {

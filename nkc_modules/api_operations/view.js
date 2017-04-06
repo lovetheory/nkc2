@@ -498,7 +498,6 @@ table.viewHome = {
         data.newestDigestThreads = res
 
         //add homepage posts      17-03-13  lzszone
-        console.log(Date.now());
         if(params.digest) {
           return AQL(`
           FOR t IN threads
@@ -515,7 +514,7 @@ table.viewHome = {
             LET forum = DOCUMENT(forums, t.fid)
             FILTER (HAS(@contentClasses, forum.class) || forum.isVisibleForNCC == true)
             COLLECT WITH COUNT INTO length
-            RETURN length - 250 //估计帖子有坏数据,筛选有空白页
+            RETURN length - 1200 //估计帖子有坏数据,筛选有空白页
         `, {contentClasses: params.contentClasses})
       })
       .then(length => {
