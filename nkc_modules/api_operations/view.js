@@ -127,7 +127,8 @@ table.viewActiveEmail = {
         if(res.length > 0){
           var user = {
             username:res[0].username,
-            password:res[0].passwd,
+            password:res[0].password,
+            hashtype: res[0].hashtype,
             email:res[0].email
           }
           create_muser(user)
@@ -1534,21 +1535,15 @@ function create_muser(user){
         username_lowercase:user.username.toLowerCase(),
         toc:timestamp,
         tlv:timestamp,
-        certs:['mobile'],
+        certs:['mail'],
       }
-
-      var salt = Math.floor((Math.random()*65536)).toString(16)
-      var hash = sha256HMAC(user.password,salt)
 
       var newuser_personal = {
         _key:newuid,
         email:user.email,
-        hashtype:'sha256HMAC',
-        password:{
-          hash:hash,
-          salt:salt,
-        },
-      }
+        hashtype: user.hashtype,
+        password:user.password
+      };
       return queryfunc.doc_save(newuser,'users')
         .then(()=>{
           return queryfunc.doc_save(newuser_personal,'users_personal')

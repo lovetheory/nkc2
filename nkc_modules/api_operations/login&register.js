@@ -362,12 +362,30 @@ table.userMailRegister = {
       if(res.length > 0) throw "此邮箱已注册过，请检查或更换"
       if( params.icode.toLowerCase() != params._req.session.icode.toLowerCase() ) throw '图片验证码不正确，请检查'
 
-      var ecode = random(14)
+      var ecode = random(14);
+      let salt = Math.floor(Math.random()*65536).toString(16);
+      let hash = sha256HMAC(params.password, salt);
       AQL(`
         INSERT {
-          email: @email, ecode: @ecode, toc: @time, username:@username, passwd: @passwd
+          email: @email,
+          ecode: @ecode,
+          toc: @time,
+          username:@username,
+          hashtype: 'sha256HMAC',
+          password: {
+            hash: @hash,
+            salt: @salt
+          }
         } IN emailRegister
-        `,{email:params.email, ecode:ecode, time:Date.now(), username:params.username, passwd:params.password}
+        `,
+        {
+          email:params.email,
+          ecode:ecode,
+          time:Date.now(),
+          username:params.username,
+          hash: hash,
+          salt: salt
+        }
       )
       return {email:params.email, ecode:ecode}
     })
