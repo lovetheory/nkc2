@@ -487,7 +487,7 @@ table.viewHome = {
     `)
       .then(res=>{
         let rand = function() {
-          return Math.round(Math.random() * 100)
+          return Math.floor(Math.random() * 100)
         };
         let randArr = [rand(),rand(),rand(),rand(),rand(),rand(),rand(),rand(),rand(),rand(),rand()];
         let temp = [];
