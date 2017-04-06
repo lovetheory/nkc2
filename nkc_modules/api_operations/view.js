@@ -487,7 +487,7 @@ table.viewHome = {
     `)
       .then(res=>{
         let rand = function() {
-          return Math.round(Math.random() * 100)
+          return Math.floor(Math.random() * 100)
         };
         let randArr = [rand(),rand(),rand(),rand(),rand(),rand(),rand(),rand(),rand(),rand(),rand()];
         let temp = [];
@@ -495,7 +495,7 @@ table.viewHome = {
           temp.push(res[ele])
         });
         res = temp;
-        data.newestDigestThreads = res
+        data.newestDigestThreads = res;
 
         //add homepage posts      17-03-13  lzszone
         if(params.digest) {
