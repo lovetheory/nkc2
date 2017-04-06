@@ -127,7 +127,8 @@ table.viewActiveEmail = {
         if(res.length > 0){
           var user = {
             username:res[0].username,
-            password:res[0].passwd,
+            password:res[0].password,
+            hashtype: res[0].hashtype,
             email:res[0].email
           }
           create_muser(user)
@@ -462,7 +463,7 @@ table.viewHome = {
   operation:params=>{
     var data = defaultData(params);
     var contentClasses = {};
-    data.template = jadeDir+ 'interface_home__new.jade';
+    data.template = jadeDir+ 'interface_home.jade';
     data.navbar = {highlight: 'home'};
     for(var param in params.contentClasses) {
       if(params.contentClasses[param] == true) {
@@ -486,7 +487,7 @@ table.viewHome = {
     `)
       .then(res=>{
         let rand = function() {
-          return Math.round(Math.random() * 100)
+          return Math.floor(Math.random() * 100)
         };
         let randArr = [rand(),rand(),rand(),rand(),rand(),rand(),rand(),rand(),rand(),rand(),rand()];
         let temp = [];
@@ -494,10 +495,9 @@ table.viewHome = {
           temp.push(res[ele])
         });
         res = temp;
-        data.newestDigestThreads = res
+        data.newestDigestThreads = res;
 
         //add homepage posts      17-03-13  lzszone
-        console.log(Date.now());
         if(params.digest) {
           return AQL(`
           FOR t IN threads
@@ -514,9 +514,10 @@ table.viewHome = {
             LET forum = DOCUMENT(forums, t.fid)
             FILTER (HAS(@contentClasses, forum.class) || forum.isVisibleForNCC == true)
             COLLECT WITH COUNT INTO length
-            RETURN length - 250 //估计帖子有坏数据,筛选有空白页
+            RETURN length - 1200 //估计帖子有坏数据,筛选有空白页
         `, {contentClasses: params.contentClasses})
       })
+      .then(res => res[0])
       .then(length => {
         var paging = new layer.Paging(params.page).getPagingParams(length);
         data.paging = paging
@@ -591,6 +592,7 @@ table.viewForum = {
       })
       .then(()=>{
         data.forum = forum.model
+        console.log(forum.model);
       })
       .then(()=>{
 
@@ -598,16 +600,15 @@ table.viewForum = {
       })
       .then(result=>{
         //if nothing went wrong
-        data.threads = result
-        data.paging = result.paging
-
+        data.threads = result;
+        data.paging = params.paging;
         return getForumList(params)
       })
       .then(forumlist=>{
         data.forumlist = forumlist
         data.replytarget = 'f/' + fid;
 
-        if(data.paging.page==0){
+        if(data.paging.page==0 && data.forum.type == 'forum'){
           return AQL(`
           for t in threads
           filter t.topped==true && t.fid == @fid
@@ -640,22 +641,7 @@ table.viewForum = {
 
         filter has(@contentClasses,TO_STRING(class)) /*content ctrl*/
 
-        let threads =
-        (
-          for t in threads
-
-          filter t.fid == f._key && t.disabled==null
-          sort t.fid desc,t.disabled desc, t.tlm desc
-          limit 5
-
-          let oc = document(posts,t.oc)
-          let ocuser = document(users,t.uid)
-          let lm = document(posts,t.lm)
-          let lmuser = document(users,lm.uid)
-
-          return merge(t,{oc,ocuser,lm,lmuser})
-        )
-        let nf = merge(f,{threads, display_name, moderators})
+        let nf = merge(f,{display_name, moderators})
 
         return nf
         `,{parentid:data.forum._key||999,contentClasses:params.contentClasses}
@@ -1534,21 +1520,15 @@ function create_muser(user){
         username_lowercase:user.username.toLowerCase(),
         toc:timestamp,
         tlv:timestamp,
-        certs:['mobile'],
+        certs:['mail'],
       }
-
-      var salt = Math.floor((Math.random()*65536)).toString(16)
-      var hash = sha256HMAC(user.password,salt)
 
       var newuser_personal = {
         _key:newuid,
         email:user.email,
-        hashtype:'sha256HMAC',
-        password:{
-          hash:hash,
-          salt:salt,
-        },
-      }
+        hashtype: user.hashtype,
+        password:user.password
+      };
       return queryfunc.doc_save(newuser,'users')
         .then(()=>{
           return queryfunc.doc_save(newuser_personal,'users_personal')

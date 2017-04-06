@@ -1,0 +1,126 @@
+extends bootstrap_base.jade
+
+block title
+  meta(name='description' content='从这里开始你的发现之旅。华语世界最纯粹的科技/文艺/爱好社区, Since 2001.')
+  
+  meta(property='og:image' content='http://bbs.kechuang.org/resources/site_specific/umaru_chem_300x200.png')
+  meta(property='og:title' content='科创论坛')
+  meta(property='og:site_name' content='科创论坛')
+  meta(property='og:description' content='从这里开始你的发现之旅。华语世界最纯粹的科技/文艺/爱好社区, Since 2001.')
+  
+  title #{data.site.name} - #{data.site.description}
+
+block content
+  -var mainContainer1400 = true
+  .container-fluid(style='max-width:1400px;')
+    .row
+      .col-md-12(style='margin-bottom:10px;')
+        div(style='display:inline-block;max-width:207px')
+          include forum_logo_wisdom.jade
+          
+        span(style='color: #e89769;margin-left:10px;') 科技爱好者综合社区
+    //include interface_home_newest.jade
+    
+    if data.user
+      .row
+        .col-md-12
+          span 我的板块
+          hr.hrNarrowSpace
+          
+      if data.user.focus_forums && data.user.focus_forums.length>0
+        .row
+          -var ff = data.user.focus_forums.replace(/，/g,',').split(',').filter(n=>{return n.trim()!=''}).slice(0,12)
+          -var userChosenForumArray = []
+          -for(fid of ff){for(g of data.grouparray){for(af of g.forumgroup){ if(af._key==fid){af.parentforum = g.parentforum ;userChosenForumArray.push(af)} }}}
+          if 1
+            each forum,index in userChosenForumArray
+              -var parent = forum.parentforum
+              include interface_home_singleforum.jade
+      else
+        .row
+          .col-md-12
+            |你还没有关注任何板块。
+            a(href='/api/operation?operation=viewPersonal') 去个人设置页面
+            
+      //hr.hrNarrowSpace
+      
+      if !data.permittedOperations.getLatestPosts
+        :markdown
+          普通会员不能进入特种技术板块，请点击这里[参加考试](/register?getcode=true)，升级高级会员
+        br
+      if data.permittedOperations.viewQuestions
+        :markdown
+          科创题库现已面向1学术分以上会员开放。为科创入站测试[添加你的题目](/api/operation?&operation=viewQuestions)吧！
+        br
+    //hr.hrNarrowSpace
+    if 0
+      .ka
+        - var cindex = 0
+        each group,gindex in data.grouparray
+          -var p = group.parentforum
+          a(href='/f/#{p._key}' style='font-size:17pt;margin-right:10px;') #{p.display_name}
+          span #{p.description}
+          hr.hrNarrowSpace
+          .row
+            
+            
+            
+            - var parent = group.parentforum
+            each forum,findex in group.forumgroup 
+              - var index = cindex + findex
+              include interface_home_singleforum.jade
+          
+          - cindex += group.forumgroup.length
+      
+    if 1
+      .row
+        - var cindex = 0
+        each group,gindex in data.grouparray
+          -var p = group.parentforum
+          
+
+          -var parent = group.parentforum
+          -var forum = parent
+          -var ts = []; group.forumgroup.map(item=>{ts=ts.concat(item.threads)})
+          -ts = ts.sort((a,b)=>b.tlm-a.tlm).slice(0,3)
+          -forum.threads = ts
+          -var sum = (tot,cur)=>tot||0+cur||0
+          -var sfk = (key)=>group.forumgroup.map(k=>k[key]).reduce(sum,0)
+          
+          -var count_posts_today = sfk('count_posts_today')
+          -var count_threads = sfk('count_threads')
+          -var count_posts = sfk('count_posts')
+          
+          -var children = group.forumgroup
+          
+          -Object.assign(forum,{count_posts_today,count_posts,count_threads})
+          -var index = gindex
+          
+            //each forum,findex in group.forumgroup 
+            //- var index = cindex + findex
+            include interface_home_singleforum.jade
+          
+          - cindex += group.forumgroup.length
+    
+    .row
+      .col-md-12(style='margin-bottom:10px;')
+      
+        -var mapping = data.seo_arr
+        if mapping
+          -for(i in mapping)
+            -var fr = i
+            -var to = mapping[i].to
+            -var display_name = mapping[i].display_name
+            a.HomeSEOLink(href='#{fr}') #{display_name}
+      
+        if data.answersheet_count
+          span(style='color:#ccc;display:inline-block;') - [ 学术委员会 ] 已经有 #{data.answersheet_count.toString(10)} 人次通过了测试
+    
+    .row
+      .col-md-12
+        include nkc_friendlies.jade
+        
+  include debug_output.jade
+
+block scripts
+  script(src='/interface_common.js')

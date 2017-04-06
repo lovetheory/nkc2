@@ -19,10 +19,7 @@ div
               a(href='/static/tools/index.htm' title='由论坛朋友贡献的工具箱') 工具
             
           li(class="#{isActive('home')}")
-            a(href='/' title='扫一眼') 板块
-            
-          li(class="#{isActive('pano')}")
-            a(href='/pano' title='大家都在忙什么？') 广场
+            a(href='/' title='扫一眼') 首页
             
           if data.user&&data.user._key
             li(class="#{isActive('self')}")
