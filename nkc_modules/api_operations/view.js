@@ -463,7 +463,7 @@ table.viewHome = {
   operation:params=>{
     var data = defaultData(params);
     var contentClasses = {};
-    data.template = jadeDir+ 'interface_home__new.jade';
+    data.template = jadeDir+ 'interface_home.jade';
     data.navbar = {highlight: 'home'};
     for(var param in params.contentClasses) {
       if(params.contentClasses[param] == true) {
