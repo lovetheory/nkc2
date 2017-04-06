@@ -517,6 +517,7 @@ table.viewHome = {
             RETURN length - 1200 //估计帖子有坏数据,筛选有空白页
         `, {contentClasses: params.contentClasses})
       })
+      .then(res => res[0])
       .then(length => {
         var paging = new layer.Paging(params.page).getPagingParams(length);
         data.paging = paging
@@ -591,6 +592,7 @@ table.viewForum = {
       })
       .then(()=>{
         data.forum = forum.model
+        console.log(forum.model);
       })
       .then(()=>{
 
@@ -598,16 +600,15 @@ table.viewForum = {
       })
       .then(result=>{
         //if nothing went wrong
-        data.threads = result
-        data.paging = result.paging
-
+        data.threads = result;
+        data.paging = params.paging;
         return getForumList(params)
       })
       .then(forumlist=>{
         data.forumlist = forumlist
         data.replytarget = 'f/' + fid;
 
-        if(data.paging.page==0){
+        if(data.paging.page==0 && data.forum.type == 'forum'){
           return AQL(`
           for t in threads
           filter t.topped==true && t.fid == @fid
@@ -640,22 +641,7 @@ table.viewForum = {
 
         filter has(@contentClasses,TO_STRING(class)) /*content ctrl*/
 
-        let threads =
-        (
-          for t in threads
-
-          filter t.fid == f._key && t.disabled==null
-          sort t.fid desc,t.disabled desc, t.tlm desc
-          limit 5
-
-          let oc = document(posts,t.oc)
-          let ocuser = document(users,t.uid)
-          let lm = document(posts,t.lm)
-          let lmuser = document(users,lm.uid)
-
-          return merge(t,{oc,ocuser,lm,lmuser})
-        )
-        let nf = merge(f,{threads, display_name, moderators})
+        let nf = merge(f,{display_name, moderators})
 
         return nf
         `,{parentid:data.forum._key||999,contentClasses:params.contentClasses}

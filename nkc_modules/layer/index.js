@@ -146,36 +146,60 @@ var layer = (function () {
             }
         };
         Forum.prototype.listThreadsOfPage = function (params) {
-            var _this = this;
-            if (params.digest) {
-                var filter = "\n        filter t.fid == @fid && t.digest == true\n        sort t.fid desc, t.digest desc, t.tlm desc\n        ";
-            }
-            else {
-                var filter = "\n        filter t.fid == @fid && t.disabled==null\n        sort t.fid desc, t.disabled desc, t.tlm desc\n        ";
-            }
-            var sortbywhattime = params.sortby ? 'toc' : 'tlm';
-            var filter = "\n      filter t.fid == @fid\n\n      " + (params.cat ? '&& t.cid == @cat' : '') + "\n      " + (params.digest ? '&& t.digest==true' : '') + "\n\n      sort\n      t.fid desc,\n\n      " + (params.digest ? 't.digest desc,' : '') + "\n      t." + sortbywhattime + " desc\n      ";
-            var count_result;
-            return AQL("\n        for t in threads\n        " + filter + "\n        collect with count into k\n        return k\n        ", {
-                fid: this.key,
-                cat: params.cat || undefined,
+          var _this = this;
+          if (_this.model.type === 'category') {
+            return db.query(aql`
+                LET cForum = (FOR f IN forums
+                  FILTER f.parentid == ${_this.model._key}
+                  RETURN f._key)
+                FOR t IN threads
+                  FILTER POSITION(cForum, t.fid) && t.disabled != true &&
+                  t.digest == ${params.digest ? true : null}
+                  COLLECT WITH COUNT INTO length
+                  RETURN length
+              `)
+              .then(res => res._result)
+              .then(length => {
+                let p = new Paging(params.page);
+                let paging = p.getPagingParams(length);
+                return db.query(aql`
+                  FOR t IN threads
+                    FILTER f.parentid == ${_this.model._key}
+                  RETURN f._key)
+                  FOR t IN threads
+                    FILTER POSITION(cForum, t.fid) && t.disabled != true &&
+                    t.digest == ${params.digest ? true : null}
+                    SORT t.${params.sortby ? 'toc' : 'tlm'} DESC
+                    LIMIT ${paging.start}, ${paging.count}
+                    RETURN t
+                `)
+              })
+              .then(res => res._result)
+          }
+          return db.query(aql`
+              FOR t IN threads
+              FILTER t.tid == ${_this.model._key} && t.disabled != true &&
+              t.digest == ${params.digest ? true : null}
+              COLLECT WITH COUNT INTO length
+              RETURN length
+            `)
+            .then(res => res._result)
+            .then(length => {
+              let p = new Paging(params.page);
+              let paging = p.getPagingParams(length);
+              return db.query(aql`
+                FOR t IN threads
+                  FILTER f.parentid == ${_this.model._key}
+                RETURN f._key)
+                FOR t IN threads
+                  FILTER POSITION(cForum, t.fid) && t.disabled != true &&
+                  t.digest == ${params.digest ? true : null}
+                  SORT t.${params.sortby ? 'toc' : 'tlm'} DESC
+                  LIMIT ${paging.start}, ${paging.count}
+                  RETURN t
+              `)
             })
-                .then(function (res) {
-                count_result = res[0];
-                var p = new Paging(params.page);
-                var paging = p.getPagingParams(count_result);
-                return AQL("\n          for t in threads\n          " + filter + "\n          limit @start,@count\n\n          let oc = document(posts,t.oc)\n          let lm = document(posts,t.lm)\n          let ocuser = document(users,oc.uid)\n          let lmuser = document(users,lm.uid)\n\n          return merge(t,{oc,ocuser,lmuser})\n\n          ", {
-                    fid: _this.key,
-                    start: paging.start,
-                    count: paging.count,
-                    cat: params.cat || undefined,
-                })
-                    .then(function (threads) {
-                    threads.count = count_result;
-                    threads.paging = paging;
-                    return threads;
-                });
-            });
+            .then(res => res._result)
         };
         Forum.prototype.visibilitySwitch = function() {
             return db.query(aql`
