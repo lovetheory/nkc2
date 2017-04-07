@@ -153,50 +153,58 @@ var layer = (function () {
                   FILTER f.parentid == ${_this.model._key}
                   RETURN f._key)
                 FOR t IN threads
-                  FILTER POSITION(cForum, t.fid) && t.disabled != true &&
+                  FILTER POSITION(cForum, t.fid) && !t.disabled &&
                   t.digest == ${params.digest ? true : null}
                   COLLECT WITH COUNT INTO length
                   RETURN length
               `)
-              .then(res => res._result)
+              .then(res => res._result[0])
               .then(length => {
                 let p = new Paging(params.page);
                 let paging = p.getPagingParams(length);
+                params.paging = paging;
+                console.log(Date.now())
                 return db.query(aql`
-                  FOR t IN threads
+                  LET cForum = (FOR f IN forums
                     FILTER f.parentid == ${_this.model._key}
                   RETURN f._key)
                   FOR t IN threads
-                    FILTER POSITION(cForum, t.fid) && t.disabled != true &&
+                    FILTER POSITION(cForum, t.fid) && !t.disabled &&
                     t.digest == ${params.digest ? true : null}
                     SORT t.${params.sortby ? 'toc' : 'tlm'} DESC
                     LIMIT ${paging.start}, ${paging.count}
-                    RETURN t
+                    LET oc = DOCUMENT(posts, t.oc)
+                    LET ocuser = DOCUMENT(users, oc.uid)
+                    LET lm = DOCUMENT(posts, t.lm)
+                    LET lmuser = DOCUMENT(users, lm.uid)
+                    RETURN MERGE(t, {oc, ocuser, lm, lmuser})
                 `)
               })
               .then(res => res._result)
           }
           return db.query(aql`
               FOR t IN threads
-              FILTER t.tid == ${_this.model._key} && t.disabled != true &&
+              FILTER t.fid == ${_this.model._key} && !t.disabled &&
               t.digest == ${params.digest ? true : null}
               COLLECT WITH COUNT INTO length
               RETURN length
             `)
-            .then(res => res._result)
+            .then(res => res._result[0])
             .then(length => {
               let p = new Paging(params.page);
               let paging = p.getPagingParams(length);
+              params.paging = paging;
               return db.query(aql`
                 FOR t IN threads
-                  FILTER f.parentid == ${_this.model._key}
-                RETURN f._key)
-                FOR t IN threads
-                  FILTER POSITION(cForum, t.fid) && t.disabled != true &&
+                  FILTER t.fid == ${_this.model._key} && !t.disabled &&
                   t.digest == ${params.digest ? true : null}
                   SORT t.${params.sortby ? 'toc' : 'tlm'} DESC
                   LIMIT ${paging.start}, ${paging.count}
-                  RETURN t
+                  LET oc = DOCUMENT(posts, t.oc)
+                  LET ocuser = DOCUMENT(users, oc.uid)
+                  LET lm = DOCUMENT(posts, t.lm)
+                  LET lmuser = DOCUMENT(users, lm.uid)
+                  RETURN MERGE(t, {oc, ocuser, lm, lmuser})
               `)
             })
             .then(res => res._result)

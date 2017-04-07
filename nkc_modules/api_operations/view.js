@@ -592,16 +592,13 @@ table.viewForum = {
       })
       .then(()=>{
         data.forum = forum.model
-        console.log(forum.model);
       })
-      .then(()=>{
-
-        return forum.listThreadsOfPage(params)
-      })
+      .then(() => forum.listThreadsOfPage(params))
       .then(result=>{
         //if nothing went wrong
+        console.log(Date.now())
         data.threads = result;
-        data.paging = params.paging;
+        data.paging = params.paging || 0;
         return getForumList(params)
       })
       .then(forumlist=>{
