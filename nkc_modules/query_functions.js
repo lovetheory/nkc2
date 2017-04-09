@@ -80,7 +80,7 @@ queryfunc.allNecessaryIndexes = ()=>{
     createIndex('threads',{fields:['fid','toc']}),
     createIndex('threads',{fields:['tlm']}),
     createIndex('threads',{fields:['fid','tlm'],sparse:false}),
-
+    createIndex('threads',{fie })
     //createIndex('posts',{fields:['tid','toc']}),
     //createIndex('posts',{fields:['tid','tlm']}),
     createIndex('posts',{fields:['tid'],type:'hash'}),

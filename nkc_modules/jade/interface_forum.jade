@@ -41,7 +41,7 @@ block content
         .col-md-9
         
           //split 10/12 for post area
-          #fullwidthpanel.nkcpanel
+          .panel
             if !forumIsParent
               //if forum is not category
               .row
@@ -98,10 +98,12 @@ block content
                       each ftt in data.forumthreadtypes
                         -var active = ftt._key==data.cat
                         a(href='/f/#{data.forum._key}?cat=#{ftt._key}' class='#{active?"active":""}' ) #{ftt.name}
+                      hr.hrNarrowSpace
                   else
                     .ForumNavigation1
                       hr.hrNarrowSpace
                       span 分类: (暂无分类)
+                      hr.hrNarrowSpace
                       
             if forumIsParent
               //if forum is category
@@ -125,143 +127,81 @@ block content
                   -var p = data.forum
                   include interface_forumprofile2.jade
                   hr.hrNarrowSpace
+                  div(style='width: 100%; margin-bottom: 13px;')
+                    p(style='color: orange; padding: 5px 5px;')
+                      span(style='font-size: 17px;') 专业分区
+                      span(style='color: grey;') (发帖请进入对应分区)
+                    for cForum in data.forums
+                      a(style='margin: 2px 5px;' href='/f/#{cForum._key}') #{cForum.display_name}
+                  hr.hrNarrowSpace
 
-                  //button.btn.btn-primary(onclick="newPostDirector('#{data.forum._key}')") 发表新帖
-                  //-console.log('haha:'+data.user.certs)
-
-                //each forum,index in data.forums         //移除原导航
-                  -var f = forum
-                  -var name = f.display_name
-                  -var url = '/f/'+f._key; // url=seo_reverse_rewrite(url)
-                  -var p = data.forum
-                  if (forum!=null)
-                    if 1
-                      if index%4==0
-                        .clearfix.visible-lg-block
-                      if index%4==0
-                        .clearfix.visible-md-block
-                      if index%3==0
-                        .clearfix.visible-sm-block
-                      if index%2==0
-                        .clearfix.visible-xs-block
-                        
-                  .col-xs-6.col-sm-4.col-md-3
-                    .ForumNaviProf
-                      include interface_forumprofile2.jade
-
-
-          if hasChildren && 0
-            //older ver, discarded
-            each forum,index in data.forums
-              -var f=forum;var p=data.forum
-              .nkcpanel#fullwidthpanel
-                .HomeForumTitle
-                  - var forumcolor = f.color||p.color||'#eee'
-                  - var url = '/f/'+f._key; url = seo_reverse_rewrite(url)
-
-                  .HomeForumTitleCircle(style='background-color:#{forumcolor}')
-                  a.HomeForumTitlePrimary(href='#{url}') #{f.display_name}
-
-                  .HomeForumTitleSecondary
-                    if f.count_posts_today > 0
-                      span.HomeForumTitlePostCountToday #{f.count_posts_today||""}/
-
-                    span.HomeForumTitleThreadCount #{f.count_threads}/
-                    span.HomeForumTitlePostCount #{f.count_posts}
-
-                p #{f.description}
-                hr.hrNarrowSpace
-                .ForumThreadList
-                  each thread,index in forum.threads
-                    include interface_forum_singlethread.jade
-
-          if hasChildren
-            for forum in data.forums
-              .nkcpanel#fullwidthpanel
-                -var f = forum
-                -var p = forum
-                div(style='width: 70%; display: inline-block;')
-                  include interface_forumprofile2.jade
-                  div
-                    a.btn.btn-default(href='/editor?target=f/#{forum._key}') 新帖
-                if forum.moderators && forum.moderators.length
-                  div(style='height: 20px;text-align:right; width: 20%; display: inline-block') 版主:
-                    for moderator in forum.moderators
-                      a(href='/user_profile_byname/#{moderator}')  #{moderator}
-                hr.hrNarrowSpace
-                .ForumThreadList
-                  each thread,index in forum.threads
-                    include interface_forum_singlethread.jade
-
-
-          if !hasChildren
-            .nkcpanel#fullwidthpanel
+            .panel
               .row
                 .col-xs-12
                   .form-group(style='margin-top:0px;margin-bottom:6px')
                     if data.replytarget
-                      
+
                       a.btn.btn-default(href='/editor?target=#{data.replytarget}') 新帖
-                  
+
                       button#enterManagementMode.btn.btn-default(onclick='enterManagementMode()') 管理
-                      
+
                   .ForumManagement(style='display:none;margin-top:12px;margin-bottom:12px')
 
                     .form-inline(style='margin-top:10px')
-                      
+
                       if data.permittedOperations.addThreadToCollection
                         .form-group
                           button#addSelectedToMyCollection.btn-xs.btn.btn-default(onclick='addSelectedToMyCollection()') 添加到个人收藏
-                    
+
                       .form-group
-                        button.btn.btn-xs.btn-default(onclick='selectbtn()') 全选/不选  
+                        button.btn.btn-xs.btn-default(onclick='selectbtn()') 全选/不选
                       .form-group
                         include forumlist_dropdown.jade
                         button#moveThreadTo(onclick="javascript:moveThreadTo()") 移动
-                      
+
                       .form-group
                         button#recyclebtn.btn.btn-xs.btn-danger(style='margin-left:20px;margin-right:20px;' onclick='recyclebtn()') 送回收站
-                      
+
                       if data.permittedOperations.modifyThreadType
                         -var ffid = data.forum._key
                         button(onclick="renameForumCategory('#{ffid}')") 重命名分类
                         button(onclick="addForumCategory('#{ffid}')") 增加分类
                         button(onclick="deleteForumCategory('#{ffid}')") 删除分类
-                      
-                      
+
+
 
                 .col-xs-12
                   nav
                     include interface_navigation_paging.jade
-                    
+
                     - var paging = data.paging
                     - var digest = data.digest
                     - var class_str_all = digest?'':'active'
                     - var class_str_digest = digest?'active':''
-                    
+
                     - var cat = data.cat
                     - var sortby = data.sortby
                     - var class_str_sortby_toc = sortby?'active':''
                     - var class_str_sortby_tlm = sortby?'':'active'
-                    
+
                     ul.pagination.NavigationPaging
                       - var page = paging?paging.page:null
                       li(class="#{class_str_all}")
                         a(href='#{toQueryString({cat})}') 俱
-                        
+
                       li(class="#{class_str_digest}")
-                        a(href='#{toQueryString({cat,digest:true})}') 精
-                
+                        a(href='#{toQueryString({cat, digest: true})}') 精
+
                     ul.pagination.NavigationPaging
                       li(class='#{class_str_sortby_tlm}')
-                        a(href='#{toQueryString({cat,digest})}') 复序
+                        a(href='#{toQueryString({cat, digest})}') 复序
                       li(class='#{class_str_sortby_toc}')
-                        a(href='#{toQueryString({cat,digest,sortby:"toc"})}') 帖序
-                        
-                    
-                  hr.hrNarrowSpace  
-                    
-              if data.toppedThreads && data.toppedThreads.length>0 && !data.cat
+                        a(href='#{toQueryString({cat, digest, sortby: "toc"})}') 帖序
+
+
+                  hr.hrNarrowSpace
+
+              if data.toppedThreads && data.toppedThreads.length > 0 && !data.cat
                 .ForumThreadList
                   each thread,index in data.toppedThreads
                     include interface_forum_singlethread.jade
@@ -270,7 +210,7 @@ block content
 
               .ForumThreadList
                 each thread,index in data.threads
-                  if data.toppedThreads && (data.toppedThreads.map(item=>item._key).indexOf(thread._key)>=0)
+                  if data.toppedThreads && (data.toppedThreads.map(item => item._key).indexOf(thread._key) >= 0)
                     //exclude threads that are shown in topped area.
                   else
                     include interface_forum_singlethread.jade
@@ -279,10 +219,12 @@ block content
                 .col-md-12
                   nav
                     include interface_navigation_paging.jade
-                
+
                   if data.replytarget
                     a.btn.btn-default(style="margin-top:13px" href='/editor?target=#{data.replytarget}') 发表新帖
-                  
+
+
+
                 
         .col-md-3.hidden-xs.hidden-sm
           .nkcpanel
@@ -307,7 +249,29 @@ block content
                   -data.user['certs'] = []
                   //-console.log('haha:'+data.user.certs)
                 button.btn.btn-primary(onclick="newPostDirector('#{ data.forum._key},#{ data.user.certs} ')") 发表新帖
-            
+          if !hasChildren
+
+          if hasChildren
+            for forum in data.forums
+              .nkcpanel
+                -var f = forum
+                -var p = forum
+                include interface_forumprofile2.jade
+                hr.hrNarrowSpace
+                //  div
+                //    a.btn.btn-default(href='/editor?target=f/#{forum._key}') 新帖
+                //if forum.moderators && forum.moderators.length
+                //  div(style='height: 20px;text-align:right; width: 20%; display: inline-block') 版主:
+                -var moderators = forum.moderators || []
+                  span 版主:
+                for moderator in moderators
+                  a(href='/user_profile_byname/#{moderator}')  #{moderator}
+                //hr.hrNarrowSpace
+                //.ForumThreadList
+                //  each thread,index in forum.threads
+                //    include interface_forum_singlethread.jade
+
+
           .nkcpanel
             ul.HomeFriendlyLink
               include nkc_footer_links.jade
