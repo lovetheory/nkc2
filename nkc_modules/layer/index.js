@@ -161,8 +161,9 @@ var layer = (function () {
                   FILTER f.parentid == ${_this.model._key}
                   RETURN f._key)
                 FOR t IN threads
-                  FILTER POSITION(cForum, t.fid) && !t.disabled &&
-                  t.digest == ${params.digest ? true : null}
+                  FILTER t.disabled == null &&
+                  t.digest == ${params.digest ? true : null} &&
+                  POSITION(cForum, t.fid)
                   COLLECT WITH COUNT INTO length
                   RETURN length
               `)
@@ -177,8 +178,9 @@ var layer = (function () {
                     FILTER f.parentid == ${_this.model._key}
                   RETURN f._key)
                   FOR t IN threads
-                    FILTER POSITION(cForum, t.fid) && !t.disabled &&
-                    t.digest == ${params.digest ? true : null}
+                    FILTER t.disabled == null &&
+                    t.digest == ${params.digest ? true : null} &&
+                    POSITION(cForum, t.fid)
                     SORT t.${params.sortby ? 'toc' : 'tlm'} DESC
                     LIMIT ${paging.start}, ${paging.count}
                     LET oc = DOCUMENT(posts, t.oc)
@@ -192,7 +194,7 @@ var layer = (function () {
           }
           return db.query(aql`
               FOR t IN threads
-              FILTER t.fid == ${_this.model._key} && !t.disabled &&
+              FILTER t.fid == ${_this.model._key} && t.disabled == null &&
               t.digest == ${params.digest ? true : null}
               COLLECT WITH COUNT INTO length
               RETURN length

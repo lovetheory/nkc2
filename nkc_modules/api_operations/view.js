@@ -498,17 +498,22 @@ table.viewHome = {
         data.newestDigestThreads = res;
 
         //add homepage posts      17-03-13  lzszone
-        if(params.digest) {
-          return AQL(`
+        if(!global.allThreadsCount) {
+          if(params.digest) {
+            return AQL(`
           FOR t IN threads
-            FILTER t.disabled == null && t.fid != 'recycle' && t.digest == true
+            FILTER t.disabled == null && t.fid != 'recycle'
             LET forum = DOCUMENT(forums, t.fid)
             FILTER (HAS(@contentClasses, forum.class) || forum.isVisibleForNCC == true) && forum.visibility == true
             COLLECT WITH COUNT INTO length
             RETURN length
         `, {contentClasses: params.contentClasses})
-        }
-        return AQL(`
+            .then(res => {
+              var length = global.allThreadsCount = res[0];
+              return length;
+            })
+          }
+          return AQL(`
           FOR t IN threads
             FILTER t.disabled == null && t.fid != 'recycle'
             LET forum = DOCUMENT(forums, t.fid)
@@ -516,8 +521,13 @@ table.viewHome = {
             COLLECT WITH COUNT INTO length
             RETURN length - 1200 //估计帖子有坏数据,筛选有空白页
         `, {contentClasses: params.contentClasses})
+            .then(res => {
+              var length = global.allThreadsCount = res[0];
+              return length;
+            })
+        }
+        return global.allThreadsCount
       })
-      .then(res => res[0])
       .then(length => {
         var paging = new layer.Paging(params.page).getPagingParams(length);
         data.paging = paging
