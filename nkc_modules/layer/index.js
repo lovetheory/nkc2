@@ -82,12 +82,20 @@ var layer = (function () {
             _super.call(this, 'forums', key);
         }
         Forum.buildIndex = function () {
-            return queryfunc.createIndex('threads', {
+            return Promise.all([
+              queryfunc.createIndex('threads', {
                 fields: ['fid', 'disabled', 'tlm'],
                 type: 'skiplist',
                 unique: 'false',
                 sparse: 'false',
-            });
+              }),
+              queryfunc.createIndex('threads', {
+                fields: ['disabled', 'digest'],
+                type: 'skiplist',
+                unique: 'false',
+                sparse: 'false'
+              })
+            ])
         };
         Forum.prototype.inheritPropertyFromParent = function () {
             var _this = this;
