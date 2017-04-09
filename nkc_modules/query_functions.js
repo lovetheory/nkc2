@@ -53,7 +53,7 @@ queryfunc.db_init = function(){
         return db.collection(colName).create()
       }
     })
-    .catch(e => console.log(e))
+    .catch(e => console.log(e,'error occurs here'))
 //create every collection, if not existent
 }
 
@@ -373,7 +373,6 @@ queryfunc.computeActiveUser = (triggerUser) => {
     .then(collections => {
       for (var index in collections) {
         if (collections[index].name === 'activeusers') {
-          console.log('goes here');
           return db.query(aql`
             LET lWThreadCount = (
               FOR t IN threads
