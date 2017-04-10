@@ -118,7 +118,6 @@ block content
                   
                   -var stylestr = active?'background-color:'+color:''
                   a(href='#{url}' style='#{stylestr}' class='#{active?"active":""}') #{name}
-                
               .ForumNavigation2.row
                 //增加大板介绍
                 .col-xs-12
@@ -127,6 +126,13 @@ block content
                   -var p = data.forum
                   include interface_forumprofile2.jade
                   hr.hrNarrowSpace
+                  //.panel(style='height: 310px; border: none; box-shadow: none;')
+                    //-var target = 'index'
+                    //include gallery
+                    //-var threadlist = data.newestDigestThreads
+                    //-var listtitle = '推荐阅读'
+                    //include interface_recommend_thread
+                  //.clearfix
                   div(style='width: 100%; margin-bottom: 13px;')
                     p(style='color: orange; padding: 5px 5px;')
                       span(style='font-size: 17px;') 专业分区
@@ -134,7 +140,6 @@ block content
                     for cForum in data.forums
                       a(style='margin: 2px 5px;' href='/f/#{cForum._key}') #{cForum.display_name}
                   hr.hrNarrowSpace
-
             .panel
               .row
                 .col-xs-12
@@ -229,28 +234,11 @@ block content
         .col-md-3.hidden-xs.hidden-sm
           .nkcpanel
             include forum_logo_wisdom.jade
-          
-          -var skipOtherParent = true
-          if data.forum._key
-            include interface_forums_list.jade
-          -skipOtherParent=false
-            
-          if data.operation !== 'viewUserThreads'
-            .nkcpanel
-              -var f = data.forum
-              -var p = data.forum
-              include interface_forumprofile2.jade
-              
-              if forumIsParent
-                hr.hrNarrowSpace
-                //button.btn.btn-primary(onclick="newPostDirector('#{data.forum._key}')") 发表新帖
-                -if(data.user == undefined)
-                  -data['user'] = {}
-                  -data.user['certs'] = []
-                  //-console.log('haha:'+data.user.certs)
-                button.btn.btn-primary(onclick="newPostDirector('#{ data.forum._key},#{ data.user.certs} ')") 发表新帖
-          if !hasChildren
-
+          -var user = data.user
+          if user
+            include interface_thread_userpatch.jade
+          //-var active_user_title = '学院活跃用户'
+          //include interface_active_users
           if hasChildren
             for forum in data.forums
               .nkcpanel
@@ -285,6 +273,7 @@ block scripts
   script(src='/interface_common.js')
   script(src='/interface_collections.js')
   script(src='/interface_forum.js')
+  script(src='/gallery.js')
   
   -var isModerator = data.permittedOperations.moveThread
   if isModerator&&!forumIsParent

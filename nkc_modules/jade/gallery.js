@@ -64,9 +64,10 @@ var gallery = (function(){
   gallery.init = function(){
     gallery.navileft.addEventListener('click',gallery.backclick)
     gallery.naviright.addEventListener('click',gallery.click)
-
+    var params = {};
+    params.target = geid('gMain').getAttribute('fTarget');
     console.log('gallery init...');
-    return nkcAPI('getGalleryRecent')
+    return nkcAPI('getGalleryRecent',params)
     .then(function(arr){
       gallery.arr = arr
       gallery.counter = Math.floor(Math.random()*arr.length)

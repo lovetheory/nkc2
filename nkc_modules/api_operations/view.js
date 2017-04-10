@@ -496,7 +496,6 @@ table.viewHome = {
         });
         res = temp;
         data.newestDigestThreads = res;
-        console.log(Date.now());
         //add homepage posts      17-03-13  lzszone
         if(!global.allThreadsCount) {
           return AQL(`
@@ -531,7 +530,6 @@ table.viewHome = {
         return queryfunc.getIndexThreads(params, paging)
       })
       .then(res => {
-        console.log(Date.now());
         data.indexThreads = res._result;
         return queryfunc.getActiveUsers();
       })
@@ -541,6 +539,7 @@ table.viewHome = {
       })
       .then(res => {
         data.indexForumList = res._result;
+        data.fTarget = 'home'
       })
       .then(() => data)
       .catch(e => console.log(e))
@@ -600,7 +599,6 @@ table.viewForum = {
       .then(() => forum.listThreadsOfPage(params))
       .then(result=>{
         //if nothing went wrong
-        console.log(Date.now())
         data.threads = result;
         data.paging = params.paging || 0;
         return getForumList(params)
@@ -654,13 +652,26 @@ table.viewForum = {
 
         return getThreadTypes(fid)
       })
-      .then(res=>{
+      .then(res=> {
         data.threadtypes = res.tt
-        data.forumthreadtypes = res.ftt
-
+        data.forumthreadtypes = res.ftt;
+        //console.log(params.fid);
+        data.fTarget = params.fid;
+        return AQL(`
+          FOR t IN threads
+          SORT t.digest DESC, t.toc DESC
+          FILTER t.disabled == null && t.fid == 81
+          LIMIT 10
+          LET oc = document(posts,t.oc)
+          LET lm = document(posts,t.lm)
+          LET forum = document(forums,t.fid)
+          LET ocuser = document(users,t.uid)
+      
+          RETURN MERGE(t,{oc:oc,lm:lm,forum,ocuser})
+        `)
       })
       .then(res=>{
-
+        data.newestDigestThreads = res;
         return data
       })
   },

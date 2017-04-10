@@ -185,7 +185,6 @@ var layer = (function () {
                 let p = new Paging(params.page);
                 let paging = p.getPagingParams(params.digest? length.digest : length.normal);
                 params.paging = paging;
-                console.log(Date.now())
                 return db.query(aql`
                   LET cForum = (FOR f IN forums
                     FILTER f.parentid == ${_this.model._key}
