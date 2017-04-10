@@ -556,4 +556,18 @@ queryfunc.getIndexForumList = contentClasses => {
   `)
 };
 
+queryfunc.threadsCount = function(fid) {
+  global.allThreadsCount.nCount++;
+  return db.query(aql`
+    LET f = DOCUMENT(forums, ${fid})
+    LET count = f.tCount.nCount + 1
+    UPDATE f WITH {
+      tCount:{
+        nCount: count,
+        dCount: f.tCount.dCount
+      }
+    } IN forums
+  `)
+}
+
 module.exports = queryfunc;

@@ -496,37 +496,30 @@ table.viewHome = {
         });
         res = temp;
         data.newestDigestThreads = res;
-
+        console.log(Date.now());
         //add homepage posts      17-03-13  lzszone
         if(!global.allThreadsCount) {
-          if(params.digest) {
-            return AQL(`
-          FOR t IN threads
-            FILTER t.disabled == null && t.fid != 'recycle'
-            LET forum = DOCUMENT(forums, t.fid)
-            FILTER (HAS(@contentClasses, forum.class) || forum.isVisibleForNCC == true) && forum.visibility == true
-            COLLECT WITH COUNT INTO length
-            RETURN length
-        `, {contentClasses: params.contentClasses})
-            .then(res => {
-              var length = global.allThreadsCount = res[0];
-              return length;
-            })
-          }
           return AQL(`
-          FOR t IN threads
-            FILTER t.disabled == null && t.fid != 'recycle'
-            LET forum = DOCUMENT(forums, t.fid)
-            FILTER (HAS(@contentClasses, forum.class) || forum.isVisibleForNCC == true)
-            COLLECT WITH COUNT INTO length
-            RETURN length - 1200 //估计帖子有坏数据,筛选有空白页
-        `, {contentClasses: params.contentClasses})
-            .then(res => {
-              var length = global.allThreadsCount = res[0];
-              return length;
+            LET nCount = (FOR t IN threads
+              FILTER t.disabled == null && t.fid != 'recycle'
+              LET forum = DOCUMENT(forums, t.fid)
+              FILTER forum.isVisibleForNCC == true && forum.visibility == true
+              COLLECT WITH COUNT INTO length
+              RETURN length[0])
+            LET dCount = (FOR t IN threads
+              FILTER t.disabled == null && t.digest == true && t.fid != 'recycle'
+              LET forum = DOCUMENT(forums, t.fid)
+              FILTER forum.isVisibleForNCC == true && forum.visibility == true
+              COLLECT WITH COUNT INTO length
+              RETURN length[0])
+            RETURN {dCount, nCount}
+            `)
+            .then(count => {
+              global.allThreadsCount = count;
+              return params.digist? global.allThreadsCount.dCount : global.allThreadsCount.nCount
             })
         }
-        return global.allThreadsCount
+        return params.digist? global.allThreadsCount.dCount : global.allThreadsCount.nCount
       })
       .then(length => {
         var paging = new layer.Paging(params.page).getPagingParams(length);
@@ -538,6 +531,7 @@ table.viewHome = {
         return queryfunc.getIndexThreads(params, paging)
       })
       .then(res => {
+        console.log(Date.now());
         data.indexThreads = res._result;
         return queryfunc.getActiveUsers();
       })
