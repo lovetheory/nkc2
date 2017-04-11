@@ -53,7 +53,7 @@ queryfunc.db_init = function(){
         return db.collection(colName).create()
       }
     })
-    .catch(e => console.log(e))
+    .catch(e => console.log(e,'error occurs here'))
 //create every collection, if not existent
 }
 
@@ -80,7 +80,6 @@ queryfunc.allNecessaryIndexes = ()=>{
     createIndex('threads',{fields:['fid','toc']}),
     createIndex('threads',{fields:['tlm']}),
     createIndex('threads',{fields:['fid','tlm'],sparse:false}),
-
     //createIndex('posts',{fields:['tid','toc']}),
     //createIndex('posts',{fields:['tid','tlm']}),
     createIndex('posts',{fields:['tid'],type:'hash'}),
@@ -373,7 +372,6 @@ queryfunc.computeActiveUser = (triggerUser) => {
     .then(collections => {
       for (var index in collections) {
         if (collections[index].name === 'activeusers') {
-          console.log('goes here');
           return db.query(aql`
             LET lWThreadCount = (
               FOR t IN threads
@@ -557,5 +555,19 @@ queryfunc.getIndexForumList = contentClasses => {
       RETURN MERGE(cForum, {children})
   `)
 };
+
+queryfunc.threadsCount = function(fid) {
+  global.allThreadsCount.nCount++;
+  return db.query(aql`
+    LET f = DOCUMENT(forums, ${fid})
+    LET count = f.tCount.nCount + 1
+    UPDATE f WITH {
+      tCount:{
+        nCount: count,
+        dCount: f.tCount.dCount
+      }
+    } IN forums
+  `)
+}
 
 module.exports = queryfunc;

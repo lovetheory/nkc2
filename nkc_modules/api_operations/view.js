@@ -498,24 +498,28 @@ table.viewHome = {
         data.newestDigestThreads = res;
 
         //add homepage posts      17-03-13  lzszone
-        if(params.digest) {
+        if(!global.allThreadsCount) {
           return AQL(`
-          FOR t IN threads
-            FILTER t.disabled == null && t.fid != 'recycle' && t.digest == true
-            LET forum = DOCUMENT(forums, t.fid)
-            FILTER (HAS(@contentClasses, forum.class) || forum.isVisibleForNCC == true) && forum.visibility == true
-            COLLECT WITH COUNT INTO length
-            RETURN length
-        `, {contentClasses: params.contentClasses})
+            LET nCount = (FOR t IN threads
+              FILTER t.disabled == null && t.fid != 'recycle'
+              LET forum = DOCUMENT(forums, t.fid)
+              FILTER forum.isVisibleForNCC == true && forum.visibility == true
+              COLLECT WITH COUNT INTO length
+              RETURN length[0])
+            LET dCount = (FOR t IN threads
+              FILTER t.disabled == null && t.digest == true && t.fid != 'recycle'
+              LET forum = DOCUMENT(forums, t.fid)
+              FILTER forum.isVisibleForNCC == true && forum.visibility == true
+              COLLECT WITH COUNT INTO length
+              RETURN length[0])
+            RETURN {dCount, nCount}
+            `)
+            .then(count => {
+              global.allThreadsCount = count;
+              return params.digist? global.allThreadsCount.dCount : global.allThreadsCount.nCount
+            })
         }
-        return AQL(`
-          FOR t IN threads
-            FILTER t.disabled == null && t.fid != 'recycle'
-            LET forum = DOCUMENT(forums, t.fid)
-            FILTER (HAS(@contentClasses, forum.class) || forum.isVisibleForNCC == true)
-            COLLECT WITH COUNT INTO length
-            RETURN length - 1200 //估计帖子有坏数据,筛选有空白页
-        `, {contentClasses: params.contentClasses})
+        return params.digist? global.allThreadsCount.dCount : global.allThreadsCount.nCount
       })
       .then(res => res[0])
       .then(length => {
@@ -537,6 +541,7 @@ table.viewHome = {
       })
       .then(res => {
         data.indexForumList = res._result;
+        data.fTarget = 'home'
       })
       .then(() => data)
       .catch(e => console.log(e))
@@ -594,14 +599,13 @@ table.viewForum = {
         data.forum = forum.model
         console.log(forum.model);
       })
-      .then(()=>{
-
-        return forum.listThreadsOfPage(params)
-      })
+      .then(() => forum.listThreadsOfPage(params))
       .then(result=>{
         //if nothing went wrong
         data.threads = result;
-        data.paging = params.paging;
+
+        data.paging = params.paging || 0;
+
         return getForumList(params)
       })
       .then(forumlist=>{
@@ -653,13 +657,26 @@ table.viewForum = {
 
         return getThreadTypes(fid)
       })
-      .then(res=>{
+      .then(res=> {
         data.threadtypes = res.tt
-        data.forumthreadtypes = res.ftt
-
+        data.forumthreadtypes = res.ftt;
+        //console.log(params.fid);
+        data.fTarget = params.fid;
+        return AQL(`
+          FOR t IN threads
+          SORT t.digest DESC, t.toc DESC
+          FILTER t.disabled == null && t.fid == 81
+          LIMIT 10
+          LET oc = document(posts,t.oc)
+          LET lm = document(posts,t.lm)
+          LET forum = document(forums,t.fid)
+          LET ocuser = document(users,t.uid)
+      
+          RETURN MERGE(t,{oc:oc,lm:lm,forum,ocuser})
+        `)
       })
       .then(res=>{
-
+        data.newestDigestThreads = res;
         return data
       })
   },

@@ -82,12 +82,20 @@ var layer = (function () {
             _super.call(this, 'forums', key);
         }
         Forum.buildIndex = function () {
-            return queryfunc.createIndex('threads', {
+            return Promise.all([
+              queryfunc.createIndex('threads', {
                 fields: ['fid', 'disabled', 'tlm'],
                 type: 'skiplist',
                 unique: 'false',
                 sparse: 'false',
-            });
+              }),
+              queryfunc.createIndex('threads', {
+                fields: ['disabled', 'digest'],
+                type: 'skiplist',
+                unique: 'false',
+                sparse: 'false'
+              })
+            ])
         };
         Forum.prototype.inheritPropertyFromParent = function () {
             var _this = this;
@@ -145,58 +153,86 @@ var layer = (function () {
                 throw '浏览权限不足. 请登录. 如果已经登录, 则需要参加考试提升账号等级'
             }
         };
+        Forum.prototype.getCount = function() {
+            return db.query(aql`
+                RETURN DOCUMENT(forums, ${this.model._key}).tCount
+            `)
+              .then(res => res._result)
+              .then(tCount => {
+                  if(tCount) {
+                      return tCount
+                  }
+                  return db.query(aql`
+                      for f in forums
+                      let nCount = (for t in threads
+                          filter t.fid == f._key && t.disabled == null
+                          collect with count into length
+                          return length)
+                      let dCount = (for t in threads
+                          filter t.fid == f._key && t.disabled == null && t.digest == true
+                          collect with count into length
+                          return length)
+                          update f with {tCount: {digest: dCount[0],normal: nCount[0]}} in forums
+                      return DOCUMENT(forums, ${this.model._key}).tCount
+                  `)
+              })
+        }
         Forum.prototype.listThreadsOfPage = function (params) {
           var _this = this;
           if (_this.model.type === 'category') {
-            return db.query(aql`
-                LET cForum = (FOR f IN forums
-                  FILTER f.parentid == ${_this.model._key}
-                  RETURN f._key)
-                FOR t IN threads
-                  FILTER POSITION(cForum, t.fid) && t.disabled != true &&
-                  t.digest == ${params.digest ? true : null}
-                  COLLECT WITH COUNT INTO length
-                  RETURN length
-              `)
-              .then(res => res._result)
+
+            return this.getCount()
               .then(length => {
                 let p = new Paging(params.page);
-                let paging = p.getPagingParams(length);
+                let paging = p.getPagingParams(params.digest? length.digest : length.normal);
+                params.paging = paging;
                 return db.query(aql`
-                  FOR t IN threads
+                  LET cForum = (FOR f IN forums
                     FILTER f.parentid == ${_this.model._key}
                   RETURN f._key)
                   FOR t IN threads
-                    FILTER POSITION(cForum, t.fid) && t.disabled != true &&
-                    t.digest == ${params.digest ? true : null}
+                    FILTER t.disabled == null &&
+                    t.digest == ${params.digest ? true : null} &&
+                    POSITION(cForum, t.fid)
                     SORT t.${params.sortby ? 'toc' : 'tlm'} DESC
                     LIMIT ${paging.start}, ${paging.count}
-                    RETURN t
+                    LET oc = DOCUMENT(posts, t.oc)
+                    LET ocuser = DOCUMENT(users, oc.uid)
+                    LET lm = DOCUMENT(posts, t.lm)
+                    LET lmuser = DOCUMENT(users, lm.uid)
+                    RETURN MERGE(t, {oc, ocuser, lm, lmuser})
+
                 `)
               })
               .then(res => res._result)
           }
           return db.query(aql`
               FOR t IN threads
-              FILTER t.tid == ${_this.model._key} && t.disabled != true &&
+
+              FILTER t.fid == ${_this.model._key} && t.disabled == null &&
+
               t.digest == ${params.digest ? true : null}
               COLLECT WITH COUNT INTO length
               RETURN length
             `)
-            .then(res => res._result)
+
+            .then(res => res._result[0])
             .then(length => {
               let p = new Paging(params.page);
               let paging = p.getPagingParams(length);
+              params.paging = paging;
               return db.query(aql`
                 FOR t IN threads
-                  FILTER f.parentid == ${_this.model._key}
-                RETURN f._key)
-                FOR t IN threads
-                  FILTER POSITION(cForum, t.fid) && t.disabled != true &&
+                  FILTER t.fid == ${_this.model._key} && !t.disabled &&
                   t.digest == ${params.digest ? true : null}
                   SORT t.${params.sortby ? 'toc' : 'tlm'} DESC
                   LIMIT ${paging.start}, ${paging.count}
-                  RETURN t
+                  LET oc = DOCUMENT(posts, t.oc)
+                  LET ocuser = DOCUMENT(users, oc.uid)
+                  LET lm = DOCUMENT(posts, t.lm)
+                  LET lmuser = DOCUMENT(users, lm.uid)
+                  RETURN MERGE(t, {oc, ocuser, lm, lmuser})
+
               `)
             })
             .then(res => res._result)

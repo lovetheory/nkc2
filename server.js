@@ -295,4 +295,4 @@ process.openStdin().addListener('data',function(d){
   process.exit();
 });
 
-require('my_cron.js').startAllJobs();
+//require('my_cron.js').startAllJobs();

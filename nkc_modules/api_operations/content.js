@@ -161,6 +161,7 @@ var postToForum = function(params,fid,user,cat){
     //save this new thread
     return queryfunc.doc_save(newthread,'threads')
   })
+  .then(() => queryfunc.threadsCount(fid))
   .then((result)=>{
     return incrementForumOnNewThread(newtid)
   })
