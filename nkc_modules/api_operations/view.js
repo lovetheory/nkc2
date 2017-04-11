@@ -516,12 +516,11 @@ table.viewHome = {
             `)
             .then(count => {
               global.allThreadsCount = count;
-              return params.digist? global.allThreadsCount.dCount : global.allThreadsCount.nCount
+              return params.digest? global.allThreadsCount.dCount : global.allThreadsCount.nCount
             })
         }
-        return params.digist? global.allThreadsCount.dCount : global.allThreadsCount.nCount
+        return params.digest? global.allThreadsCount.dCount : global.allThreadsCount.nCount
       })
-      .then(res => res[0])
       .then(length => {
         var paging = new layer.Paging(params.page).getPagingParams(length);
         data.paging = paging
