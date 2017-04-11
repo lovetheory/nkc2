@@ -28,7 +28,7 @@ block title
     }
 
 block content   
-  
+  -var isModerator = data.permittedOperations.moveThread
   -var forumIsParent = data.forum.type&&data.forum.type=='category'
   -var hasChildren = data.forum.type&&data.forum.type=='category'&&data.forums&&data.forums.length
   
@@ -147,8 +147,8 @@ block content
                     if data.replytarget && !hasChildren
 
                       a.btn.btn-default(href='/editor?target=#{data.replytarget}') 新帖
-
-                    button#enterManagementMode.btn.btn-default(onclick='enterManagementMode()') 管理
+                    if isModerator&&!forumIsParent
+                      button#enterManagementMode.btn.btn-default(onclick='enterManagementMode()') 管理
 
                   .ForumManagement(style='display:none;margin-top:12px;margin-bottom:12px')
 
@@ -275,7 +275,7 @@ block scripts
   script(src='/interface_forum.js')
   script(src='/gallery.js')
   
-  -var isModerator = data.permittedOperations.moveThread
+
   if isModerator&&!forumIsParent
     script.
       enterManagementMode()
