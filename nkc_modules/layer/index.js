@@ -180,6 +180,7 @@ var layer = (function () {
         Forum.prototype.listThreadsOfPage = function (params) {
           var _this = this;
           if (_this.model.type === 'category') {
+
             return this.getCount()
               .then(length => {
                 let p = new Paging(params.page);
@@ -200,17 +201,21 @@ var layer = (function () {
                     LET lm = DOCUMENT(posts, t.lm)
                     LET lmuser = DOCUMENT(users, lm.uid)
                     RETURN MERGE(t, {oc, ocuser, lm, lmuser})
+
                 `)
               })
               .then(res => res._result)
           }
           return db.query(aql`
               FOR t IN threads
+
               FILTER t.fid == ${_this.model._key} && t.disabled == null &&
+
               t.digest == ${params.digest ? true : null}
               COLLECT WITH COUNT INTO length
               RETURN length
             `)
+
             .then(res => res._result[0])
             .then(length => {
               let p = new Paging(params.page);
@@ -227,6 +232,7 @@ var layer = (function () {
                   LET lm = DOCUMENT(posts, t.lm)
                   LET lmuser = DOCUMENT(users, lm.uid)
                   RETURN MERGE(t, {oc, ocuser, lm, lmuser})
+
               `)
             })
             .then(res => res._result)

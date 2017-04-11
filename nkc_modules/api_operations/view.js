@@ -496,6 +496,7 @@ table.viewHome = {
         });
         res = temp;
         data.newestDigestThreads = res;
+
         //add homepage posts      17-03-13  lzszone
         if(!global.allThreadsCount) {
           return AQL(`
@@ -520,6 +521,7 @@ table.viewHome = {
         }
         return params.digest? global.allThreadsCount.dCount : global.allThreadsCount.nCount
       })
+      .then(res => res[0])
       .then(length => {
         var paging = new layer.Paging(params.page).getPagingParams(length);
         data.paging = paging
@@ -595,12 +597,15 @@ table.viewForum = {
       })
       .then(()=>{
         data.forum = forum.model
+        console.log(forum.model);
       })
       .then(() => forum.listThreadsOfPage(params))
       .then(result=>{
         //if nothing went wrong
         data.threads = result;
+
         data.paging = params.paging || 0;
+
         return getForumList(params)
       })
       .then(forumlist=>{
