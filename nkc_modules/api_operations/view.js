@@ -489,7 +489,7 @@ table.viewHome = {
         let rand = function() {
           return Math.floor(Math.random() * 100)
         };
-        let randArr = [rand(),rand(),rand(),rand(),rand(),rand(),rand(),rand(),rand(),rand(),rand()];
+        let randArr = [rand(),rand(),rand(),rand(),rand(),rand(),rand(),rand(),rand(),rand()];
         let temp = [];
         randArr.map(ele => {
           temp.push(res[ele])
@@ -503,19 +503,19 @@ table.viewHome = {
             LET nCount = (FOR t IN threads
               FILTER t.disabled == null && t.fid != 'recycle'
               LET forum = DOCUMENT(forums, t.fid)
-              FILTER forum.isVisibleForNCC == true && forum.visibility == true
+              FILTER forum.visibility == true
               COLLECT WITH COUNT INTO length
-              RETURN length[0])
+            RETURN length)[0]
             LET dCount = (FOR t IN threads
               FILTER t.disabled == null && t.digest == true && t.fid != 'recycle'
               LET forum = DOCUMENT(forums, t.fid)
-              FILTER forum.isVisibleForNCC == true && forum.visibility == true
+              FILTER forum.visibility == true
               COLLECT WITH COUNT INTO length
-              RETURN length[0])
+              RETURN length)[0]
             RETURN {dCount, nCount}
             `)
             .then(count => {
-              global.allThreadsCount = count;
+              global.allThreadsCount = count[0];
               return params.digest? global.allThreadsCount.dCount : global.allThreadsCount.nCount
             })
         }
@@ -596,7 +596,6 @@ table.viewForum = {
       })
       .then(()=>{
         data.forum = forum.model
-        console.log(forum.model);
       })
       .then(() => forum.listThreadsOfPage(params))
       .then(result=>{
