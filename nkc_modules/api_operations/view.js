@@ -453,8 +453,8 @@ table.viewHome = {
     })
 
     queryfunc.createIndex('threads', {
-      fields: ['disabled','fid'],
-      type: 'hash',
+      fields: ['disabled','fid','tlm'],
+      type: 'skiplist',
       unique: 'false',
       sparse: 'false'
     })
@@ -600,6 +600,7 @@ table.viewForum = {
       .then(() => forum.listThreadsOfPage(params))
       .then(result=>{
         //if nothing went wrong
+        data.cat = params.cat;
         data.threads = result;
 
         data.paging = params.paging || 0;

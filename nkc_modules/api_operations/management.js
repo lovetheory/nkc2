@@ -48,7 +48,6 @@ table.moveThread = {
       //test existence
       return thread.update({fid,cid})
     })
-    .then(() => queryfunc.computeActiveUser())
     .then(()=>`successfully moved ${tid} to ${fid}`)
   },
   requiredParams:{

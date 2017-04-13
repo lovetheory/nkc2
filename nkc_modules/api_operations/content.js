@@ -487,6 +487,22 @@ table.updateAllForums = {
       update forum with {count_posts,count_posts_today,count_threads} in forums
       `
     )
+      .then(() => {
+      console.log('ksjdf')
+        return AQL(`
+          FOR f IN forums
+            FILTER f.type == 'forum'
+            LET normal = (FOR t IN threads
+              FILTER t.disabled == null && t.fid == f._key
+              COLLECT WITH COUNT INTO length
+              RETURN length)[0]
+            LET digest = (FOR t IN threads
+              FILTER t.disabled == null && t.digest == true && t.fid == f._key
+              COLLECT WITH COUNT INTO length
+              RETURN length)[0]
+            UPDATE f WITH {tCount: {digest, normal}} IN forums
+        `)
+      })
   }
 }
 
