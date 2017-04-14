@@ -41,6 +41,7 @@ queryfunc.db_init = function(){
     'mobilecodes',
     'threadtypes',
     'mailcodes',
+    'invites'
   ];
   db.listCollections()
     .then(collections => {

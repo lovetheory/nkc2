@@ -162,3 +162,25 @@ table.getForumsOfZone = {
     fid:String,
   }
 }
+
+table.inviteUser = {
+  init: () => {
+    queryfunc.createIndex('invites', {
+      fields:['ioc','touid'],
+      type: 'skiplist',
+      unique: 'false',
+      sparse: 'false'
+    })
+  },
+  operation: (params) => {
+    let frompid = params.frompid;
+    let touid = params.touid;
+    let ioc = Date.now();
+    let invite = new layer.BaseDao('invites');
+    return invite.save({
+      frompid,
+      touid,
+      ioc
+    })
+  }
+}

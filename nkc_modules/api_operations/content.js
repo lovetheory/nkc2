@@ -11,6 +11,7 @@ var AQL = queryfunc.AQL
 var apifunc = require('api_functions')
 var layer = require('../layer')
 var permissions = require('permissions')
+let operations = require('api_operations');
 
 var table = {};
 module.exports = table;
@@ -279,7 +280,6 @@ table.postTo = {
     var user = params.user
     var post = params.post
     var cat = post.cat
-
     //1. validation
     validation.validatePost(post);
 
@@ -738,7 +738,22 @@ update_thread = (tid)=>{
   })
 };
 
-//!!!danger!!! will make the database very busy.
-update_all_threads = ()=>{
+let checkInviteUser = (params) => {
+  let found = content.match(/@ (.*?) /);
+  if(found[0]) {
+    return apifunc.get_user_by_name(found[1])
+      .then(users => {
+        if(users.length) {
+          let user = users[0];
+          return operations.table.inviteUser.operation({
+            frompid: })
+        }
+        return params
+      })
+  }
+  return params
+}
 
+//!!!danger!!! will make the database very busy.
+update_all_threads = () => {
 };

@@ -78,8 +78,8 @@ block content
             if data.permittedOperations.viewQuestions
               :markdown
                 科创题库现已面向1学术分以上会员开放。为科创入站测试[添加你的题目](/api/operation?&operation=viewQuestions)吧！
-        //-var active_user_title = '一周活跃用户'
-        //include interface_active_users
+        -var active_user_title = '一周活跃用户'
+        include interface_active_users
         for cForum in data.indexForumList
           .nkcpanel
             div(style='text-align: center; font-size: 16px; margin-left: -15px;')
