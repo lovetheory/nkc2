@@ -111,3 +111,10 @@ var activeusers = {
   lWThreadCount: 1, //thread count
   vitality: 4 //computed by settings.user.vitalityArithmetic
 };
+
+var personal_forum = {
+  uid: 123,
+  tid: 123,
+  type: 1, //1发帖 2回thread 3修改POST 4推荐 5收藏
+
+}

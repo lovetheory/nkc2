@@ -23,7 +23,7 @@ function createReplyRelation(frompid,topid){
 }
 
 //post to a given thread.
-var postToThread = function(params,tid,user){
+var postToThread = function(params,tid,user,type){
   var post = params.post
   var tobject = null
 
@@ -53,9 +53,9 @@ var postToThread = function(params,tid,user){
       username:user.username,
       ipoc:params._req.iptrim,
     };
-
+    return postToMine(newpost, type)
+      .then(() => queryfunc.doc_save(newpost,'posts'))
     //insert the new post into posts collection
-    return queryfunc.doc_save(newpost,'posts')
   })
   .then(saveResult=>{
     var pid = saveResult._key
@@ -121,7 +121,7 @@ var postToThread = function(params,tid,user){
 
 
 
-var postToForum = function(params,fid,user,cat){
+var postToForum = function(params,fid,user,cat,type){
   var post = params.post
 
   if(typeof post.t !=='string')throw '请填写标题！'
@@ -167,7 +167,7 @@ var postToForum = function(params,fid,user,cat){
     return incrementForumOnNewThread(newtid)
   })
   .then((result)=>{
-    return postToThread(params,newtid,user)
+    return postToThread(params,newtid,user,type)
   })
     .catch(e => console.log(e))
 };
@@ -294,9 +294,9 @@ table.postTo = {
     .then(()=>{
       switch (targetType) {
         case 'f':
-        return postToForum(params,targetKey,user,cat) //throws if notexist
+        return postToForum(params,targetKey,user,cat,1) //throws if notexist
         case 't':
-        return postToThread(params,targetKey,user)
+        return postToThread(params,targetKey,user,2)
         case 'post':
         return postToPost(params,targetKey,user)
         default:
@@ -738,21 +738,31 @@ update_thread = (tid)=>{
   })
 };
 
-let checkInviteUser = (params) => {
-  let found = content.match(/@ (.*?) /);
-  if(found[0]) {
-    return apifunc.get_user_by_name(found[1])
-      .then(users => {
-        if(users.length) {
-          let user = users[0];
-          return operations.table.inviteUser.operation({
-            frompid: })
-        }
-        return params
-      })
-  }
-  return params
+let postToMine = (obj, type) => {
+  return queryfunc.doc_save({
+    uid: obj.uid,
+    tid: obj.tid,
+    pid: obj._key,
+    time: obj.tlm,
+    type: type.toString()
+  }, 'personal_forum')
 }
+
+// let checkInviteUser = (params) => {
+//   let found = content.match(/@ (.*?) /);
+//   if(found[0]) {
+//     return apifunc.get_user_by_name(found[1])
+//       .then(users => {
+//         if(users.length) {
+//           let user = users[0];
+//           return operations.table.inviteUser.operation({
+//             frompid: })
+//         }
+//         return params
+//       })
+//   }
+//   return params
+// }
 
 //!!!danger!!! will make the database very busy.
 update_all_threads = () => {

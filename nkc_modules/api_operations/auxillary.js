@@ -165,12 +165,14 @@ table.getForumsOfZone = {
 
 table.inviteUser = {
   init: () => {
-    queryfunc.createIndex('invites', {
-      fields:['ioc','touid'],
-      type: 'skiplist',
-      unique: 'false',
-      sparse: 'false'
-    })
+    Promise.all([
+      queryfunc.createIndex('invites', {
+        fields:['ioc','touid'],
+        type: 'skiplist',
+        unique: 'false',
+        sparse: 'false'
+      })
+    ]).catch(e => console.log(e))
   },
   operation: (params) => {
     let frompid = params.frompid;
