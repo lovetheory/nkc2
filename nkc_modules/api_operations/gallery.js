@@ -31,7 +31,7 @@ table.getGalleryRecent = {
           LET user = DOCUMENT(users, t.uid)
           LET forum = DOCUMENT(forums, t.fid)
           FILTER forum.visibility == true
-          LIMIT 6
+          LIMIT 50
           RETURN {
             r: parr[RAND() * LENGTH(parr)],
             forum,
@@ -39,6 +39,15 @@ table.getGalleryRecent = {
           }
       `)
         .then(arr => {
+          let rand = function() {
+            return Math.floor(Math.random() * 50)
+          };
+          let randArr = [rand(),rand(),rand(),rand(),rand(),rand()];
+          let temp = [];
+          randArr.map(ele => {
+            temp.push(arr[ele])
+          });
+          arr = temp;
           var promarr = []
           var resarr = []
 

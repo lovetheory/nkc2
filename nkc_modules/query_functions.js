@@ -22,6 +22,7 @@ let aql = require('arangojs').aql;
 var queryfunc = {};
 
 queryfunc.db_init = function(){
+  let p = [];
   var colArr = [
     'posts',
     'threads',
@@ -41,16 +42,24 @@ queryfunc.db_init = function(){
     'mobilecodes',
     'threadtypes',
     'mailcodes',
+    'invites',
+    'personalForum',
+    'usersOperation'
   ];
-  db.listCollections()
+  return db.listCollections()
     .then(collections => {
-      for(var colName of colArr) {
-        for(var index in collections) {
+      let flag = true;
+      for(let colName of colArr) {
+        flag = true;
+        for(let index in collections) {
           if(colName === collections[index].name) {
-            return
+            flag = false;
           }
         }
-        return db.collection(colName).create()
+        if(flag) {
+          console.log('creating collection ' + colName);
+          Promise.resolve(db.collection(colName).create().catch(e => console.log(e)))
+        }
       }
     })
     .catch(e => console.log(e,'error occurs here'))
