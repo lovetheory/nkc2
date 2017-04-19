@@ -11,15 +11,47 @@ let db = arango(settings.arango);
 
 let table = {};
 
-table.subscribeUser = uid => {
-  let
-}
+table.subscribeUser = {
+  operation: params => {
+    let user = params.user;
+    let subUid = params.subUid;
+    return db.collection('users').document(subUid)
+      .then(() => {
+        return db.query(aql`
+          UPSERT {_key: ${user._key}}
+          INSERT {
+            _key: ${user._key},
+            subUsers: [${subUid}]
+          }
+          UPDATE {subUsers: PUSH(OLD.subUsers, ${subUid}, true)}
+          IN personalForums
+        `)
+      })
+      .catch(e => {throw `user ${user._key} does not exist.`})
+  }
+};
 
-table.subscribeForum = fid => {
+table.subscribeForum = {
+  operation: params => {
+    let user = params.user;
+    let subFid = params.subFid;
+    return db.collection('forums').document(subFid)
+      .then(() => {
+        return db.query(aql`
+          UPSERT {_key: ${user._key}}
+          INSERT {
+            _key: ${user._key},
+            subForums: [${subFid}]
+          }
+          UPDATE {subForums: PUSH(OLD.subForums, ${subFid}, true)}
+          IN personalForums
+        `)
+      })
+      .catch(e => {throw `forum ${subscribeFid} does not exist`})
+  }
+};
 
-}
-
-
+module.exports = table;
 
 /**
  * Created by lzszo on 2017/4/17.

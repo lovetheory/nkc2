@@ -43,14 +43,15 @@ queryfunc.db_init = function(){
     'threadtypes',
     'mailcodes',
     'invites',
-    'personal_forum'
+    'personalForum',
+    'usersOperation'
   ];
   return db.listCollections()
     .then(collections => {
       let flag = true;
-      for(var colName of colArr) {
+      for(let colName of colArr) {
         flag = true;
-        for(var index in collections) {
+        for(let index in collections) {
           if(colName === collections[index].name) {
             flag = false;
           }

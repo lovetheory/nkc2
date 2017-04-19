@@ -10,7 +10,8 @@ var validation = require('validation')
 var AQL = queryfunc.AQL
 var apifunc = require('api_functions')
 var svgCaptcha = require('svg-captcha');
-
+let db = require('arangojs')(settings.arango);
+let aql = require('arangojs').aql;
 var layer = require('layer')
 
 var jadeDir = __projectroot + 'nkc_modules/jade/'
@@ -804,55 +805,76 @@ table.viewUserThreads = {
 
     `
 
-    var userclass = new layer.User(uid)
-    return userclass.load()
-      .then(()=>{
-        return AQL(`
-        for t in threads ${filter} collect with count into k return k
-        `,{uid}
-        )
-      })
+     var userclass = new layer.User(uid)
+     return userclass.load()
+        .then(()=>{
+
+         var user = userclass.model
+
+         data.forum = {
+           display_name: user.username + ' 的个人专栏',
+           description: user.post_sign || '',
+           count_threads: user.count_threads || null,
+           count_posts: user.count_posts || null,
+           color: user.color || '#bbb'
+         }
+
+         var uid = user._key;
+         return db.query(aql`
+          LET po = (FOR p IN posts
+            FILTER p.uid == ${uid}
+            RETURN DOCUMENT(threads, p.tid))
+          LET pt = (FOR t IN po
+            FILTER t.${params.digest? 'digest' : 'disabled'} == ${params.digest? true : null}
+            RETURN t._key
+          )
+          LET toPF = (FOR t IN threads
+            FILTER t.toPFid == ${uid} &&
+            t.${params.digest? 'digest' : 'disabled'} == ${params.digest? true : null}
+            RETURN t._key
+          )
+          LET ts = APPEND(pt, toPF, true)
+          LET uts = UNIQUE(ts)
+          LET result = (FOR tid IN uts
+            LET thread = DOCUMENT(threads, tid)
+            SORT thread.${params.sortby? 'toc' : 'tlm'} DESC
+            LET oc = DOCUMENT(posts, thread.oc)
+            LET ocuser = DOCUMENT(users, oc.uid)
+            LET lm = DOCUMENT(posts, thread.lm)
+            LET lmuser = DOCUMENT(users, lm.uid)
+            RETURN MERGE(thread, {oc,ocuser,lmuser}))
+          RETURN {
+            threads: SLICE(result, ${params.page * settings.paging.perpage}, ${settings.paging.perpage}),
+            count: LENGTH(result)
+            }
+        `)
+         // return AQL(`
+         // for t in threads
+         //
+         // ${filter}
+         //
+         // limit @start,@count
+         //
+         // let oc = document(posts,t.oc)
+         // let lm = document(posts,t.lm)
+         // let ocuser = document(users,oc.uid)
+         // let lmuser = document(users,lm.uid)
+         //
+         // return merge(t,{oc,ocuser,lmuser})
+         // `,
+         //   {
+         //     uid,
+         //     start:data.paging.start,
+         //     count:data.paging.count,
+         //   }
+         // )
+       })
+      .then(res => res._result[0])
       .then(res=>{
-        totalcount = res[0]
-
-        var paging = new layer.Paging(params.page)
-        data.paging = paging.getPagingParams(totalcount)
-
-        var user = userclass.model
-
-        data.forum = {
-          display_name:user.username+' 的主题',
-          description:user.post_sign||'',
-          count_threads:user.count_threads||null,
-          count_posts:user.count_posts||null,
-          color:user.color||'#bbb'
-        }
-
-        var uid = user._key
-        return AQL(`
-        for t in threads
-
-        ${filter}
-
-        limit @start,@count
-
-        let oc = document(posts,t.oc)
-        let lm = document(posts,t.lm)
-        let ocuser = document(users,oc.uid)
-        let lmuser = document(users,lm.uid)
-
-        return merge(t,{oc,ocuser,lmuser})
-        `,
-          {
-            uid,
-            start:data.paging.start,
-            count:data.paging.count,
-          }
-        )
-      })
-      .then(threads=>{
-        //if nothing went wrong
-        data.threads = threads
+        //if nothing went wrongvar paging = new layer.Paging(params.page)
+        let paging = new layer.Paging(params.page);
+        data.paging = paging.getPagingParams(res.count);
+        data.threads = res.threads;
         //return apifunc.get_all_forums()
 
         return getForumList(params)
@@ -1208,6 +1230,24 @@ table.viewSelf = {
         return data
       })
   },
+  // operation:function(params){
+  //   let uid = params.user._key;
+  //   return db.query(aql`
+  //     LET user = DOCUMENT(users, ${user._key})
+  //     LET sUs = user.subscribeUsers
+  //     LET sFs = user.subscribeForums
+  //     LET sTs = user.subscribeThreads
+  //     LET sPs = user.subscribePosts
+  //     FOR o IN personal_forum
+  //       FILTER POSITION(sUs, o.tid) ||
+  //       POSITION(sFs, o.fid) ||
+  //       POSITION(sTs, o.tid) ||
+  //       POSITION(sPs, o.pid)
+  //       LET toc = DOCUMENT(threads, )
+  //       LIMIT ${params.startAt}, 30
+  //     RETURN MERGE()
+  //   `)
+  // },
 }
 
 table.viewUser = {
@@ -1235,6 +1275,7 @@ table.viewUser = {
         data.thatuser = thatuser.model
         uid = thatuser.model._key
         //1. list posts replied by this user
+
         return AQL(`
         for p in posts
         filter p.uid == @uid

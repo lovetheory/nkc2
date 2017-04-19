@@ -23,15 +23,13 @@ function createReplyRelation(frompid,topid){
 }
 
 //post to a given thread.
-var postToThread = function(params,tid,user,type){
+var postToThread = function(params,tid,user, type){
+  let pid;
   var post = params.post
   var tobject = null
 
   //check existence
   return queryfunc.doc_load(tid,'threads')
-  .catch((err)=>{
-    throw 'target thread not found'
-  })
   .then((th)=>{
     //th is the thread object now
     tobject = th
@@ -53,12 +51,19 @@ var postToThread = function(params,tid,user,type){
       username:user.username,
       ipoc:params._req.iptrim,
     };
-    return postToMine(newpost, type)
-      .then(() => queryfunc.doc_save(newpost,'posts'))
+    /*return postToMine({
+      tid: tid,
+      pid: newpid,
+      time: timestamp,
+      fid: tobject.fid,
+      uid: user._key,
+    }, type)
+      .then(() =>*/
+    return queryfunc.doc_save(newpost,'posts')
     //insert the new post into posts collection
   })
   .then(saveResult=>{
-    var pid = saveResult._key
+    pid = saveResult._key
     //update thread object to make sync
     var updatedThread = null
 
@@ -111,7 +116,7 @@ var postToThread = function(params,tid,user,type){
           saveResult.redirect += '?page=' + page.toString()
         }
       }
-      saveResult.redirect+= '#' + pid
+      saveResult.redirect+= '#' + pid;
       return saveResult;
     })
 
@@ -121,7 +126,7 @@ var postToThread = function(params,tid,user,type){
 
 
 
-var postToForum = function(params,fid,user,cat,type){
+var postToForum = function(params,fid,user,cat){
   var post = params.post
 
   if(typeof post.t !=='string')throw '请填写标题！'
@@ -167,7 +172,7 @@ var postToForum = function(params,fid,user,cat,type){
     return incrementForumOnNewThread(newtid)
   })
   .then((result)=>{
-    return postToThread(params,newtid,user,type)
+    return postToThread(params,newtid,user, 1)
   })
     .catch(e => console.log(e))
 };
@@ -177,7 +182,7 @@ var postToForum = function(params,fid,user,cat,type){
 
 var postToPost = function(params,pid,user){ //modification.
   var post = params.post
-
+  var fid;
   var timestamp,newpost={},original_key,tid;
 
   return queryfunc.doc_load(pid,'posts')
@@ -200,6 +205,7 @@ var postToPost = function(params,pid,user){ //modification.
       return new layer.Forum(origthread.model.fid).load()
     })
     .then(origforum=>{
+      fid = origforum.model._key;
       return origforum.inheritPropertyFromParent()
     })
     .then(origforum=>{
@@ -224,6 +230,13 @@ var postToPost = function(params,pid,user){ //modification.
 
       newpost.uidlm = params.user._key
       newpost.iplm = params._req.iptrim
+      /*postToMine({
+        time: timestamp,
+        uid: original_post.uid,
+        tid: original_post.tid,
+        pid: original_post._key,
+        fid: fid
+      }, 3);*/
 
       //update only the necessary ones
 
@@ -284,40 +297,45 @@ table.postTo = {
     validation.validatePost(post);
 
     //2. target extraction
-    var target = params.target.split('/')
-    if(target.length!=2)throw 'Bad target format, expect "targetType/targetKey"'
-    var targetType = target[0]; var targetKey = target[1];
-    //console.log(target)
-    //console.log(params);
-    //3. switch according to targetType
-    return Promise.resolve()
-    .then(()=>{
-      switch (targetType) {
-        case 'f':
-        return postToForum(params,targetKey,user,cat,1) //throws if notexist
-        case 't':
-        return postToThread(params,targetKey,user,2)
-        case 'post':
-        return postToPost(params,targetKey,user)
-        default:
-        throw 'target type not implemented'
-      }
-    })
-    .then(result=>{
-      var parr=[]
-      if(result.pid){
-        parr.push(updatePost(result.pid))
-      }
+    var targets = params.target.split(',')
+    for(target of targets) {
+      target = target.split('/');
+      if(target.length!=2)throw 'Bad target format, expect "targetType/targetKey"'
+      var targetType = target[0]; var targetKey = target[1];
+      //console.log(target)
+      //console.log(params);
+      //3. switch according to targetType
+      return Promise.resolve()
+        .then(()=>{
+          switch (targetType) {
+            case 'f':
+              return postToForum(params,targetKey,user,cat,1) //throws if notexist
+            case 't':
+              return postToThread(params,targetKey,user,2)
+            case 'post':
+              return postToPost(params,targetKey,user)
+            case 'm':
+              return postToPersonalForum(params,targetKey)
+            default:
+              throw 'target type not implemented'
+          }
+        })
+        .then(result=>{
+          var parr=[]
+          if(result.pid){
+            parr.push(updatePost(result.pid))
+          }
 
-      if(result.fid){
-        //parr.push(updateForum(result.fid))
-      }
+          if(result.fid){
+            //parr.push(updateForum(result.fid))
+          }
 
-      return Promise.all(parr).then(()=>{
-        queryfunc.computeActiveUser(params.user);
-        return result
-      })
-    })
+          return Promise.all(parr).then(()=>{
+            queryfunc.computeActiveUser(params.user);
+            return result
+          })
+        })
+    }
   },
   requiredParams:{
     target:String,
@@ -748,6 +766,39 @@ let postToMine = (obj, type) => {
   }, 'personal_forum')
 }
 
+let postToPersonalForum = (params, targetKey) => {
+  let user = params.user;
+  let post = params.post;
+
+  if (typeof post.t !== 'string')throw '请填写标题！'
+
+  post.t = post.t.trim();
+  if (post.t.length < 3)throw '标题太短啦！'
+
+  let newtid;
+
+  //check existence
+  return queryfunc.doc_load(targetKey, 'users')
+    .then(() => apifunc.get_new_tid())
+    .then(gottid => {
+      newtid = gottid;
+      //now we got brand new tid.
+
+      //construct a new thread
+      let newthread =
+        {
+          _key: newtid.toString(),//key must be string.
+          uid: user._key,
+          mid: targetKey.toString(),
+        };
+
+      //save this new thread
+      return queryfunc.doc_save(newthread, 'threads')
+    })
+    .then(() => postToThread(params, newtid, user, 1))
+    .catch(e => console.log(e))
+};
+
 // let checkInviteUser = (params) => {
 //   let found = content.match(/@ (.*?) /);
 //   if(found[0]) {
@@ -763,6 +814,7 @@ let postToMine = (obj, type) => {
 //   }
 //   return params
 // }
+
 
 //!!!danger!!! will make the database very busy.
 update_all_threads = () => {
