@@ -1,11 +1,9 @@
 
 div
-  - var forumname = f.display_name
-  //a.f12(href='/f/#{fid}') #{forumname}
   - var forumcolor = f.color||p.color||'#eee'
 
   .HomeForumTitleCircle(style='background-color:#{forumcolor}')
-  a.HomeForumTitlePrimary(href='../f/#{f._key}') #{f.display_name}
+  a.HomeForumTitlePrimary(href='../#{type}/#{f._key}') #{f.display_name}
   if f.count_posts_today
     span.reddish  (今日 #{f.count_posts_today}
 

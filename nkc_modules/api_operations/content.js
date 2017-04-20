@@ -767,6 +767,7 @@ let postToMine = (obj, type) => {
 }
 
 let postToPersonalForum = (params, targetKey) => {
+  targetKey = targetKey.toString();
   let user = params.user;
   let post = params.post;
 
@@ -789,9 +790,11 @@ let postToPersonalForum = (params, targetKey) => {
         {
           _key: newtid.toString(),//key must be string.
           uid: user._key,
-          mid: targetKey.toString(),
+          mid: user._key,
         };
-
+      if(user._key !== targetKey) {
+        newthread.toMid = targetKey
+      }
       //save this new thread
       return queryfunc.doc_save(newthread, 'threads')
     })

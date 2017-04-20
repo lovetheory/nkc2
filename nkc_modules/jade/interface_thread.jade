@@ -27,7 +27,7 @@ block content
       .col-sm-12.col-md-9.col-lg-9
         #fullwidthpanel.ThreadBox.nkcpanel
           - var thread = data.thread
-          - var fid = thread.fid
+          - var target = thread.fid || thread.toMid || thread.mid
           
           .ThreadTitle
             .ThreadTitle1(style="display:inline-block;width:82%;")
@@ -43,7 +43,7 @@ block content
                     a.ThreadTitleForumLink.ThreadTitleForumLinkParent(href='/f/#{parent._key}') #{parent.display_name}
                     span  / 
                   
-                  a.ThreadTitleForumLink(href='/f/#{fid}') #{forumname} 
+                  a.ThreadTitleForumLink(href='/f/#{taget}') #{forumname}
               else
                 .ForumNavigation1(style='margin-bottom:6px')
                   if parent
@@ -51,7 +51,8 @@ block content
                     a.active(href='/f/#{parent._key}' style='background-color:#{parentcolor}') #{parent.display_name}
                     //span(style='margin-right:7px') /
                   -var forumcolor = forum.color||parentcolor
-                  a.active(href='/f/#{fid}' style='background-color:#{forumcolor}') #{forumname} 
+                  -var type = thread.fid? 'f' : 'm'
+                  a.active(href='/#{type}/#{target}' style='background-color:#{forumcolor}') #{forumname}
               
             
                 span.ThreadTitleText(style="margin-right:3%;" href='/t/#{data.thread._key}') #{thread.oc.t}
@@ -128,7 +129,7 @@ block content
           
           - var forumname = data.forum.display_name
           span.lighttext 返回 
-            a(href='/f/#{fid}') #{forumname} 
+            a(href='/f/#{target}') #{forumname}
             //link back to forum
           br
           span.lighttext#bm 返回 

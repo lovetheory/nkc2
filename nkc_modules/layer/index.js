@@ -358,7 +358,26 @@ var layer = (function () {
         function Thread(key) {
             _super.call(this, 'threads', key);
         }
-        Thread.buildIndex = function () {
+        Thread.buildIndex = () => Promise.all([
+          queryfunc.createIndex('posts', {
+            fields: ['tid', 'toc'],
+            type: 'skiplist',
+            unique: 'false',
+            sparse: 'false',
+          }),
+          queryfunc.createIndex('resources', {
+            fields: ['pid'],
+            type: 'hash',
+            unique: 'false',
+            sparse: 'false',
+          }),
+          queryfunc.createIndex('posts', {
+            fields: ['mid'],
+            type: 'skiplist',
+            unique: 'false',
+            sparse: 'false',
+          })
+        ]); /*function () {
             return queryfunc.createIndex('posts', {
                 fields: ['tid', 'toc'],
                 type: 'skiplist',
@@ -371,9 +390,14 @@ var layer = (function () {
                     type: 'hash',
                     unique: 'false',
                     sparse: 'false',
-                });
+                })
+                  .then(function () {
+                      return queryfunc.createIndex('resources', {
+                          fiel
+                      })
+                  })
             });
-        };
+        };*/
         Thread.prototype.loadForum = function () {
             var t = this.model;
             var f = new Forum(t.fid);
@@ -382,6 +406,24 @@ var layer = (function () {
                 return f.inheritPropertyFromParent();
             });
         };
+        Thread.prototype.loadOthersForum = function() {
+            let t = this.model;
+            return db.collection('personalForums').document(t.toMid)
+              .then(model => {
+                  return {
+                    testView: contentClasses => {return {model}}
+                  }
+              })
+        }
+        Thread.prototype.loadMyForum = function() {
+            let t = this.model;
+            return db.collection('personalForums').document(t.mid)
+              .then(model => {
+                return {
+                  testView: contentClasses => {return {model}}
+                }
+              })
+        }
         Thread.prototype.getPagingParams = function (pagestr) {
             var p = new Paging(pagestr);
             var t = this.model;

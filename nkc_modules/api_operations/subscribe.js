@@ -24,7 +24,7 @@ table.subscribeUser = {
             subUsers: [${subUid}]
           }
           UPDATE {subUsers: PUSH(OLD.subUsers, ${subUid}, true)}
-          IN personalForums
+          IN usersSubscribe
         `)
       })
       .catch(e => {throw `user ${user._key} does not exist.`})
@@ -44,10 +44,10 @@ table.subscribeForum = {
             subForums: [${subFid}]
           }
           UPDATE {subForums: PUSH(OLD.subForums, ${subFid}, true)}
-          IN personalForums
+          IN usersSubscribe
         `)
       })
-      .catch(e => {throw `forum ${subscribeFid} does not exist`})
+      .catch(e => {throw `forum ${subFid} does not exist`})
   }
 };
 

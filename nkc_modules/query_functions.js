@@ -43,8 +43,8 @@ queryfunc.db_init = function(){
     'threadtypes',
     'mailcodes',
     'invites',
-    'personalForum',
-    'usersOperation'
+    'personalForums',
+    'usersSubscribe'
   ];
   return db.listCollections()
     .then(collections => {

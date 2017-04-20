@@ -241,7 +241,7 @@ var certificates={
       viewForum:true,
       viewHome:true,
       viewUser:true,
-      viewUserThreads:true, ////////////////these are for test purpose only
+      viewPersonalForum:true, ////////////////these are for test purpose only
       //move to visitor afterwards
 
       useSearch:true,

@@ -717,14 +717,21 @@ table.viewThread = {
     var thread = new layer.Thread(tid)
     return thread.load()
       .then(res=>{
-        return thread.loadForum()
+        if(thread.model.fid){
+          return thread.loadForum()
+        }
+        if(thread.model.toMid) {
+          return thread.loadOthersForum()
+        }
+        if(thread.model.mid) {
+          return thread.loadMyForum()
+        }
       })
       .then(forum=>{
         return forum.testView(params.contentClasses)// test if have permission to view.
       })
       .then(forum=>{
         data.forum = forum.model
-
         return thread.mergeOc()
           .then(res=>{
             var ocuser = new layer.User(thread.model.oc.uid)
@@ -773,7 +780,7 @@ table.viewThread = {
   }
 }
 
-table.viewUserThreads = {
+table.viewPersonalForum = {
   requiredParams:{
     uid:String,
   },
@@ -788,7 +795,9 @@ table.viewUserThreads = {
   operation:function(params){
     var data=defaultData(params)
     data.template = jadeDir + 'interface_forum.jade'
-    data.operation='viewUserThreads'
+    data.operation='viewUserThreads';
+    let user;
+    data.replytarget = 'm/' + params.uid;
 
     var uid = params.uid
 
@@ -807,17 +816,13 @@ table.viewUserThreads = {
 
      var userclass = new layer.User(uid)
      return userclass.load()
-        .then(()=>{
+        .then(()=> {
 
-         var user = userclass.model
-
-         data.forum = {
-           display_name: user.username + ' 的个人专栏',
-           description: user.post_sign || '',
-           count_threads: user.count_threads || null,
-           count_posts: user.count_posts || null,
-           color: user.color || '#bbb'
-         }
+          user = userclass.model
+          return db.collection('personalForums').document(uid)
+        })
+       .then(forum => {
+         data.forum = forum;
 
          var uid = user._key;
          return db.query(aql`
@@ -828,12 +833,12 @@ table.viewUserThreads = {
             FILTER t.${params.digest? 'digest' : 'disabled'} == ${params.digest? true : null}
             RETURN t._key
           )
-          LET toPF = (FOR t IN threads
-            FILTER t.toPFid == ${uid} &&
+          LET toMid = (FOR t IN threads
+            FILTER t.toMid == ${uid} &&
             t.${params.digest? 'digest' : 'disabled'} == ${params.digest? true : null}
             RETURN t._key
           )
-          LET ts = APPEND(pt, toPF, true)
+          LET ts = APPEND(pt, toMid, true)
           LET uts = UNIQUE(ts)
           LET result = (FOR tid IN uts
             LET thread = DOCUMENT(threads, tid)
