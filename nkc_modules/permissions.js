@@ -186,6 +186,7 @@ var certificates={
       non_broadcast:true,
     },
     permittedOperations:{
+      configPersonalForum: true,
       viewSMS:true,
       sendShortMessageByUsername:true,
 

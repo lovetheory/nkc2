@@ -794,7 +794,7 @@ table.viewPersonalForum = {
   },
   operation:function(params){
     var data=defaultData(params)
-    data.template = jadeDir + 'interface_forum.jade'
+    data.template = jadeDir + 'interface_personal_forum.jade'
     data.operation='viewUserThreads';
     let user;
     data.replytarget = 'm/' + params.uid;
@@ -853,26 +853,6 @@ table.viewPersonalForum = {
             count: LENGTH(result)
             }
         `)
-         // return AQL(`
-         // for t in threads
-         //
-         // ${filter}
-         //
-         // limit @start,@count
-         //
-         // let oc = document(posts,t.oc)
-         // let lm = document(posts,t.lm)
-         // let ocuser = document(users,oc.uid)
-         // let lmuser = document(users,lm.uid)
-         //
-         // return merge(t,{oc,ocuser,lmuser})
-         // `,
-         //   {
-         //     uid,
-         //     start:data.paging.start,
-         //     count:data.paging.count,
-         //   }
-         // )
        })
       .then(res => res._result[0])
       .then(res=>{

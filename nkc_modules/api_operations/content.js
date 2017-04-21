@@ -12,6 +12,8 @@ var apifunc = require('api_functions')
 var layer = require('../layer')
 var permissions = require('permissions')
 let operations = require('api_operations');
+let db = require('arangojs')(settings.arango);
+let aql = require('arangojs').aql;
 
 var table = {};
 module.exports = table;
@@ -818,6 +820,21 @@ let postToPersonalForum = (params, targetKey) => {
 //   return params
 // }
 
+table.configPersonalForum = {
+  operation: params => {
+    let description = params.description;
+    let forumName = params.forumName;
+    return db.query(aql`
+      UPDATE DOCUMENT(personalForums, ${params.user._key}) WITH {
+        description: ${description},
+        display_name: ${forumName}
+      } IN personalForums
+      RETURN NEW
+    `)
+      .then(res => res._result[0])
+      .catch(e => e)
+  }
+}
 
 //!!!danger!!! will make the database very busy.
 update_all_threads = () => {
