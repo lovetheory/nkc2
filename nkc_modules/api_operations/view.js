@@ -1207,32 +1207,48 @@ table.viewPersonal = {
 }
 
 table.viewSelf = {
-  operation:function(params){
-    params.uid = params.user._key
-    return table.viewUser.operation(params)
-      .then(data=>{
-        data.navbar_highlight = 'self'
+  // operation:function(params){
+  //   params.uid = params.user._key
+  //   return table.viewUser.operation(params)
+  //     .then(data=>{
+  //       data.navbar_highlight = 'self'
+  //       return data
+  //     })
+  // },
+  operation: params => {
+    let data = defaultData(params);
+    let uid = params.user._key;
+    data.template = jadeDir + 'self.jade';
+    return db.query(aql`
+      LET usersSub = DOCUMENT(usersSubscribe, ${uid})
+      LET sUs = usersSub.subscribeUsers
+      LET sFs = usersSub.subscribeForums
+      FOR o IN usersBehavior
+        SORT o.time DESC
+        LIMIT 100
+        LET thread = DOCUMENT(threads, o.tid)
+        LET oc = DOCUMENT(posts, thread.oc)
+        LET post = DOCUMENT(posts, o.pid)
+        LET forum = DOCUMENT(forums, o.fid)
+        LET myForum = DOCUMENT(personalForums, o.mid)
+        LET toMyForum = DOCUMENT(personalForums, o.toMid)
+        LET user = DOCUMENT(users, o.uid)
+        RETURN MERGE(o,{
+          thread,
+          oc,
+          post,
+          forum,
+          myForum,
+          toMyForum,
+          user
+        })
+    `)
+      .then(res => {
+        data.dynamics = res._result;
         return data
       })
+      .catch(e => console.log(e))
   },
-  // operation:function(params){
-  //   let uid = params.user._key;
-  //   return db.query(aql`
-  //     LET user = DOCUMENT(users, ${user._key})
-  //     LET sUs = user.subscribeUsers
-  //     LET sFs = user.subscribeForums
-  //     LET sTs = user.subscribeThreads
-  //     LET sPs = user.subscribePosts
-  //     FOR o IN personal_forum
-  //       FILTER POSITION(sUs, o.tid) ||
-  //       POSITION(sFs, o.fid) ||
-  //       POSITION(sTs, o.tid) ||
-  //       POSITION(sPs, o.pid)
-  //       LET toc = DOCUMENT(threads, )
-  //       LIMIT ${params.startAt}, 30
-  //     RETURN MERGE()
-  //   `)
-  // },
 }
 
 table.viewUser = {

@@ -1,2 +1,71 @@
-.row
-  if
+extends bootstrap_base
+
+block title
+  title #{data.user.username} - 科创论坛
+  style.
+    .dynamic {
+      width: 100%;
+      padding: 5px;
+      height: 80px;
+    }
+    .dynamic-info {
+      display: inline-block;
+      vertical-align: middle;
+    }
+    .dynamic-title {
+      font-size: 20px;
+    }
+    .dynamic-content {
+      color: grey;
+    }
+    .dynamic-type {
+      width: 70px;
+      display: inline-block;
+      vertical-align: middle;
+    }
+    .dynamic-user {
+      display: inline-block;
+      width: 60px;
+      vertical-align: middle;
+      overflow: hidden;
+    }
+
+
+block content
+  .container
+    if data.user == undefined
+      .row
+        .col-sm-12
+          span 个人信息暂时不对游客公开,请先
+          a.alert-info(href='/login') 登录
+          span 或
+          a.alert-info(href='/register') 注册
+          span 以继续浏览
+
+    else
+      hr.hrNarrowSpace
+      for obj in data.dynamics
+        -var type
+          if obj.type == 1
+            -type = 'Po'
+          else if obj.type == 2
+            -type = 'Re'
+        -var forum = obj.forum || obj.toMyForum || obj.myForum
+          .dynamic
+            .dynamic-type
+              div(style='font-size: 30px;') #{type}
+              div(style='color: silver;') #{fromNow(obj.time)}
+            .dynamic-user
+              a(href='/m/#{obj.user._key}')
+                img(src='/avatar/#{obj.user._key}' style='width: 50px; height: 50px;')
+              a(href='/m/#{obj.user._key}') #{obj.user.username}
+            .dynamic-info
+              .dynamic-title
+                a(href='#{forum == obj.forum? "/f/" : "/m/"}#{forum._key}')
+                  span(style='border-radius: 4px; background-color: #{forum.color}; color: white; font-size: 16px;') #{forum.abbr}
+                a(href='/t/#{obj.tid}')
+                  span #{obj.oc.t}
+              a(href='/t/#{obj.tid}##{obj.pid}')
+                .dynamic-content #{obj.post.c}
+          hr.hrNarrowSpace
+
