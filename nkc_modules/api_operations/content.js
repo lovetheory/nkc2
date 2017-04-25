@@ -80,8 +80,17 @@ var postToThread = function(params,tid,user, type){
         }
       });
     }
-
-    return Promise.resolve()
+    if(type === 1)
+    return userBehaviorRec({
+      pid,
+      tid,
+      mid: tobject.mid,
+      toMid: tobject.toMid,
+      uid: user._key,
+      fid: tobject.fid,
+      time: saveResult.tlm,
+      type: type
+    })
     .then(()=>{
       if(user._key==tobject.uid){
         //if the reply was to oneself
@@ -164,6 +173,7 @@ var postToForum = function(params,fid,user,cat){
       fid:fid.toString(),
       category:cat,
       cid:cat,
+      mid: user._key,
     };
 
     //save this new thread
@@ -186,6 +196,7 @@ var postToPost = function(params,pid,user){ //modification.
   var post = params.post
   var fid;
   var timestamp,newpost={},original_key,tid;
+  let origthread;
 
   return queryfunc.doc_load(pid,'posts')
   .catch(err=>{
@@ -201,7 +212,7 @@ var postToPost = function(params,pid,user){ //modification.
     //params, isSelf, timeofcreation
 
     //test to see if he owns the forum
-    var origthread = new layer.Thread(tid)
+    origthread = new layer.Thread(tid)
     return origthread.load()
     .then(origthread=>{
       return new layer.Forum(origthread.model.fid).load()
@@ -250,7 +261,19 @@ var postToPost = function(params,pid,user){ //modification.
       return queryfunc.doc_save(original_post,'histories')
     })
   })
-  .then((back)=>{
+  .then((back)=> {
+    return userBehaviorRec({
+      pid: newpost._key,
+      tid: newpost.tid,
+      mid: origthread.mid,
+      toMid: origthread.toMid,
+      fid: origthread.fid,
+      type: 3,
+      uid: newpost.uidlm,
+      time: newpost.tlm
+    })
+  })
+    .then(() => {
     //now update the existing with the newly created:
     return queryfunc.doc_update(original_key,'posts',newpost);
   })
@@ -311,7 +334,7 @@ table.postTo = {
         .then(()=>{
           switch (targetType) {
             case 'f':
-              return postToForum(params,targetKey,user,cat,1) //throws if notexist
+              return postToForum(params,targetKey,user,cat) //throws if notexist
             case 't':
               return postToThread(params,targetKey,user,2)
             case 'post':
@@ -758,14 +781,9 @@ update_thread = (tid)=>{
   })
 };
 
-let postToMine = (obj, type) => {
-  return queryfunc.doc_save({
-    uid: obj.uid,
-    tid: obj.tid,
-    pid: obj._key,
-    time: obj.tlm,
-    type: type.toString()
-  }, 'personal_forum')
+let userBehaviorRec = obj => {
+  console.log(obj);
+  return queryfunc.doc_save(obj, 'usersBehavior')
 }
 
 let postToPersonalForum = (params, targetKey) => {

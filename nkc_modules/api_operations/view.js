@@ -1155,7 +1155,6 @@ table.viewSMS = {
       })
       .then(sarr=>{
         data.smslist = sarr
-
         return AQL(`
         for r in replies
         filter r.touid == @uid
@@ -1207,14 +1206,6 @@ table.viewPersonal = {
 }
 
 table.viewSelf = {
-  // operation:function(params){
-  //   params.uid = params.user._key
-  //   return table.viewUser.operation(params)
-  //     .then(data=>{
-  //       data.navbar_highlight = 'self'
-  //       return data
-  //     })
-  // },
   operation: params => {
     let data = defaultData(params);
     let uid = params.user._key;
@@ -1225,7 +1216,8 @@ table.viewSelf = {
       LET sFs = usersSub.subscribeForums
       FOR o IN usersBehavior
         SORT o.time DESC
-        LIMIT 100
+        FILTER POSITION(sUs, TO_NUMBER(o.uid)) || POSITION(sFs, TO_NUMBER(o.fid)) || o.mid == ${uid} 
+        LIMIT 200
         LET thread = DOCUMENT(threads, o.tid)
         LET oc = DOCUMENT(posts, thread.oc)
         LET post = DOCUMENT(posts, o.pid)
@@ -1243,6 +1235,39 @@ table.viewSelf = {
           user
         })
     `)
+    /*console.log(Date.now())
+    return db.query(aql`
+      LET usersSub = DOCUMENT(usersSubscribe, ${uid})
+      LET sUs = usersSub.subscribeUsers
+      LET sFs = usersSub.subscribeForums
+      FOR post IN posts
+      SORT post.tlm DESC
+      SORT post.tlm DESC
+      LET thread = DOCUMENT(threads, post.tid)
+      FILTER POSITION(sUs, TO_NUMBER(post.uid)) || POSITION(sFs, TO_NUMBER(thread.fid))
+      LIMIT 65
+      LET forum = DOCUMENT(forums, thread.fid)
+      LET oc = DOCUMENT(posts, thread.oc)
+      LET myForum = DOCUMENT(personalForums, thread.mid)
+      LET toMyForum = DOCUMENT(personalForums, thread.toMid)
+      LET user = DOCUMENT(users, ${uid})
+      RETURN MERGE({} ,{
+          thread,
+          oc,
+          post,
+          forum,
+          myForum,
+          toMyForum,
+          user,
+          tid: thread._key,
+          fid: forum._key,
+          pid: post._key,
+          time: post.tlm,
+          uid: user._key,
+          mid: thread.mid,
+          toMid: thread.toMid
+        })
+    `)*/
       .then(res => {
         data.dynamics = res._result;
         return data
