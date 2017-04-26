@@ -29,6 +29,7 @@ var postToThread = function(params,tid,user, type){
   let pid;
   var post = params.post
   var tobject = null
+  let timestamp = Date.now();
 
   //check existence
   return queryfunc.doc_load(tid,'threads')
@@ -40,7 +41,6 @@ var postToThread = function(params,tid,user, type){
   })
   .then((newpid) =>{
     //create a new post
-    var timestamp = Date.now();
     var newpost = { //accept only listed attribute
       _key:newpid,
       tid,
@@ -88,7 +88,7 @@ var postToThread = function(params,tid,user, type){
       toMid: tobject.toMid,
       uid: user._key,
       fid: tobject.fid,
-      time: saveResult.tlm,
+      time: timestamp,
       type: type
     })
     .then(()=>{

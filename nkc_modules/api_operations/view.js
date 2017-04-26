@@ -1206,6 +1206,32 @@ table.viewPersonal = {
 }
 
 table.viewSelf = {
+  init: () => Promise.all([
+    queryfunc.createIndex('usersBehavior', {
+      type: 'skiplist',
+      fields: ['time']
+    }),
+    queryfunc.createIndex('usersBehavior', {
+      type: 'skiplist',
+      fields: ['uid'],
+    }),
+    queryfunc.createIndex('usersBehavior', {
+      type: 'skiplist',
+      fields: ['pid'],
+    }),
+    queryfunc.createIndex('usersBehavior', {
+      type: 'skiplist',
+      fields: ['tid'],
+    }),
+    queryfunc.createIndex('usersBehavior', {
+      type: 'skiplist',
+      fields: ['fid'],
+    }),
+    queryfunc.createIndex('usersBehavior', {
+      type: 'skiplist',
+      fields: ['mid', 'toMid']
+    })
+  ]),
   operation: params => {
     let data = defaultData(params);
     let uid = params.user._key;
@@ -1216,8 +1242,10 @@ table.viewSelf = {
       LET sFs = usersSub.subscribeForums
       FOR o IN usersBehavior
         SORT o.time DESC
-        FILTER POSITION(sUs, TO_NUMBER(o.uid)) || POSITION(sFs, TO_NUMBER(o.fid)) || o.mid == ${uid} 
-        LIMIT 200
+        FILTER POSITION(sUs, TO_NUMBER(o.uid)) ||
+        POSITION(sFs, TO_NUMBER(o.fid)) || o.mid == ${uid} ||
+        o.toMid == ${uid}
+        LIMIT 30
         LET thread = DOCUMENT(threads, o.tid)
         LET oc = DOCUMENT(posts, thread.oc)
         LET post = DOCUMENT(posts, o.pid)
@@ -1275,6 +1303,45 @@ table.viewSelf = {
       .catch(e => console.log(e))
   },
 }
+
+table.viewPersonalDynamic = {
+  operation: params => {
+    let data = defaultData(params);
+    data.template = jadeDir + 'interface_dynamic_personal.jade';
+    let uid = params.uid;
+    let targetUser = new layer.User(uid.toString());
+    return targetUser.load()
+      .then(() => db.query(aql`
+        FOR o IN usersBehavior
+          SORT o.time DESC
+          FILTER o.uid == ${uid}
+          LIMIT 30
+          LET thread = DOCUMENT(threads, o.tid)
+          LET oc = DOCUMENT(posts, thread.oc)
+          LET post = DOCUMENT(posts, o.pid)
+          LET forum = DOCUMENT(forums, o.fid)
+          LET myForum = DOCUMENT(personalForums, o.mid)
+          LET toMyForum = DOCUMENT(personalForums, o.toMid)
+          LET user = DOCUMENT(users, o.uid)
+          RETURN MERGE(o,{
+          thread,
+          oc,
+          post,
+          forum,
+          myForum,
+          toMyForum,
+          user
+        })
+      `))
+      .then(res => {
+        data.dynamics = res._result;
+        return data;
+      })
+      .catch(e => {
+        throw `${uid}不是一个正确的uid`
+      })
+  }
+};
 
 table.viewUser = {
   operation:function(params){

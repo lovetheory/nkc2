@@ -192,7 +192,11 @@ var certificates={
 
       listCart:true,
       clearCart:true,
-
+      viewPersonalDynamic: true,
+      subscribeUser: true,
+      unsubscribeUser: true,
+      subscribeForum: true,
+      unsubscribeForum: true,
       //postTo:true, //////////////////////////////////// may cancel in the future
       //getPostContent:true,/////////////////////////////
 

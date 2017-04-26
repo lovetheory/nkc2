@@ -1,0 +1,32 @@
+-var type
+  if obj.type == 1
+    -type = 'Po'
+  else if obj.type == 2
+    -type = 'Re'
+  .dynamic
+    .dynamic-type
+      div(style='font-size: 30px;') #{type}
+      div(style='color: silver;') #{fromNow(obj.time)}
+    .dynamic-user
+      a(href='/m/#{obj.user._key')
+        img(src='/avatar/#{obj.user._key}' style='width: 50px; height: 50px;')
+      a(href='/m/#{obj.user._key}') #{obj.user.username}
+    .dynamic-info
+      .dynamic-title
+        if(obj.forum)
+          -var color = obj.forum.color || 'orange'
+          a(href='/f/#{obj.forum._key}')
+            span(style='border-radius: 2px; background-color: #{color}; color: white; font-size: 15px; margin: 3px 3px;') &nbsp;#{obj.forum.abbr}&nbsp;
+        if(obj.toMyForum)
+          -var color = obj.toMyForum.color || 'orange'
+          a(href='/m/#{obj.toMyForum._key}')
+            span(style='border-radius: 2px; background-color: #{color}; color: white; font-size: 15px; margin: 3px 3px;') &nbsp;#{obj.toMyForum.abbr}&nbsp;
+        if(obj.myForum)
+          -var color = obj.myForum.color || 'orange'
+          a(href='/m/#{obj.myForum._key}')
+            span(style='border-radius: 2px; background-color: #{color}; color: white; font-size: 15px; margin: 3px 3px;') &nbsp;#{obj.myForum.abbr}&nbsp;
+        a(href='/t/#{obj.tid}')
+          span(style='overflow: hidden;') #{obj.oc.t}
+      a(href='/t/#{obj.tid}##{obj.pid}' style='overflow: hidden;')
+        .dynamic-content #{obj.post.c}
+  hr.hrNarrowSpace

@@ -31,6 +31,18 @@ table.subscribeUser = {
   }
 };
 
+table.unsubscribeUser = {
+  operations: params => {
+    let user = params.user;
+    let unSubUid = params.unSubUid;
+    return db.query(aql`
+      UPDATE DOCUMENT(usersSubscribe, ${user._key}) WITH {
+        subUsers: REMOVE_VALUE(OLD.subUsers, ${unSubUid})
+      } IN usersSubscribe
+    `)
+  }
+};
+
 table.subscribeForum = {
   operation: params => {
     let user = params.user;
@@ -48,6 +60,18 @@ table.subscribeForum = {
         `)
       })
       .catch(e => {throw `forum ${subFid} does not exist`})
+  }
+};
+
+table.unsubscribeForum = {
+  operation: params => {
+    let user = params.user;
+    let unSubFid = params.unSubFid;
+    return db.query(aql`
+      UPDATE DOCUMENT(usersSubscribe, ${user._key}) WITH {
+        subForums: REMOVE_VALUE(OLD.subForums, ${unSubFid})
+      }
+    `)
   }
 };
 
