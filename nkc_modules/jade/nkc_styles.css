@@ -1344,35 +1344,58 @@ margin-left: 5px;
     content: "\00bb"; /* Unicode hex for &raquo; */
 }
 
-/*dynamic*/
-.dynamic {
+/*activity*/
+.activity {
     width: 100%;
     padding: 5px;
     height: 80px;
+    border-bottom: 1px solid #eee;
 }
-.dynamic-info {
+.activity-info {
     display: inline-block;
     height: 70px;
     vertical-align: middle;
     width: 80%;
 }
-.dynamic-title {
+.activity-title {
     font-size: 20px;
 }
-.dynamic-content {
+.activity-content {
     color: grey;
     overflow: hidden;
     height: 40px;
 }
-.dynamic-type {
+.activity-type {
     width: 8%;
     display: inline-block;
     vertical-align: middle;
 }
-.dynamic-user {
+.activity-user {
     display: inline-block;
     width: 8%;
     vertical-align: middle;
     overflow: hidden;
 }
-/*dynamic*/
+.activity-type-text {
+    font-size: 30px;
+}
+.activity-type-date {
+    color: silver;
+}
+.activity-user-avatar {
+    width: 50px;
+    height: 50px;
+}
+.activity-title-forum {
+    border-radius: 2px;
+    color: white;
+    font-size: 15px;
+    margin: 3px 3px;
+}
+.activity-user > a {
+    display: block;
+    text-align: center;
+}
+
+
+/*activity*/

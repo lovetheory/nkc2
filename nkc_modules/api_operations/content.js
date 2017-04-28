@@ -39,7 +39,7 @@ var postToThread = function(params,tid,user, type){
     //apply for a new pid
     return apifunc.get_new_pid();
   })
-  .then((newpid) =>{
+  .then((newpid) => {
     //create a new post
     var newpost = { //accept only listed attribute
       _key:newpid,

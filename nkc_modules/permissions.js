@@ -192,7 +192,7 @@ var certificates={
 
       listCart:true,
       clearCart:true,
-      viewPersonalDynamic: true,
+      viewPersonalActivities: true,
       subscribeUser: true,
       unsubscribeUser: true,
       subscribeForum: true,

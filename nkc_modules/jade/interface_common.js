@@ -427,3 +427,16 @@ function edInsertContent(which, myValue) {
     //myField.focus();
   }
 }
+
+function subscribeUserSwitch(uid) {
+  nkcAPI('subscribeUser',{uid})
+    .then(function() {
+      screenTopAlert('关注成功');
+      var button = geid('subscribeButton');
+      button.innerHTML = '取关';
+      button.className = 'btn btn-sm btn-danger';
+    })
+    .catch(function(e) {
+      screenTopWarning(e);
+    })
+}

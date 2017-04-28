@@ -6,8 +6,9 @@
       -var user = thatuser  
       div(style='display:inline-block;margin-top:8px;')
         //.ForumTitleCircle(style='background-color:#{user.color||"#bbb"}')
-        .ForumName #{user.username}
-        
+        .ForumName #{user.username}&nbsp;&nbsp;&nbsp;
+          if(thatuser._key != data.user._key)
+            a.btn.btn-sm.btn-info(href:'javascript: subscribeUserSwitch(#{uid})')#subscribeButton 订阅
     -var user = thatuser
     include interface_profile_info_section2.jade
           

@@ -1236,6 +1236,7 @@ table.viewSelf = {
     let data = defaultData(params);
     let uid = params.user._key;
     data.template = jadeDir + 'self.jade';
+    let page = params.page || 0;
     return db.query(aql`
       LET usersSub = DOCUMENT(usersSubscribe, ${uid})
       LET sUs = usersSub.subscribeUsers
@@ -1245,7 +1246,7 @@ table.viewSelf = {
         FILTER POSITION(sUs, TO_NUMBER(o.uid)) ||
         POSITION(sFs, TO_NUMBER(o.fid)) || o.mid == ${uid} ||
         o.toMid == ${uid}
-        LIMIT 30
+        LIMIT ${page*30}, 30
         LET thread = DOCUMENT(threads, o.tid)
         LET oc = DOCUMENT(posts, thread.oc)
         LET post = DOCUMENT(posts, o.pid)
@@ -1297,48 +1298,55 @@ table.viewSelf = {
         })
     `)*/
       .then(res => {
-        data.dynamics = res._result;
+        data.activities = res._result;
+        if(params.page) return res._result;
         return data
       })
       .catch(e => console.log(e))
   },
 }
 
-table.viewPersonalDynamic = {
+table.viewPersonalActivities = {
   operation: params => {
     let data = defaultData(params);
-    data.template = jadeDir + 'interface_dynamic_personal.jade';
+    data.template = jadeDir + 'interface_activities_personal.jade';
     let uid = params.uid;
+    let page = params.page;
     let targetUser = new layer.User(uid.toString());
     return targetUser.load()
-      .then(() => db.query(aql`
-        FOR o IN usersBehavior
-          SORT o.time DESC
-          FILTER o.uid == ${uid}
-          LIMIT 30
-          LET thread = DOCUMENT(threads, o.tid)
-          LET oc = DOCUMENT(posts, thread.oc)
-          LET post = DOCUMENT(posts, o.pid)
-          LET forum = DOCUMENT(forums, o.fid)
-          LET myForum = DOCUMENT(personalForums, o.mid)
-          LET toMyForum = DOCUMENT(personalForums, o.toMid)
-          LET user = DOCUMENT(users, o.uid)
-          RETURN MERGE(o,{
-          thread,
-          oc,
-          post,
-          forum,
-          myForum,
-          toMyForum,
-          user
-        })
-      `))
+      .then(() => {
+        data.targetUser = targetUser.model;
+        return db.query(aql`
+          FOR o IN usersBehavior
+            SORT o.time DESC
+            FILTER o.uid == ${uid}
+            LIMIT ${page? page*30 : 0}, 30
+            LET thread = DOCUMENT(threads, o.tid)
+            LET oc = DOCUMENT(posts, thread.oc)
+            LET post = DOCUMENT(posts, o.pid)
+            LET forum = DOCUMENT(forums, o.fid)
+            LET myForum = DOCUMENT(personalForums, o.mid)
+            LET toMyForum = DOCUMENT(personalForums, o.toMid)
+            LET user = DOCUMENT(users, o.uid)
+            RETURN MERGE(o,{
+            thread,
+            oc,
+            post,
+            forum,
+            myForum,
+            toMyForum,
+            user
+          })
+        `)
+      })
       .then(res => {
-        data.dynamics = res._result;
+        data.activities = res._result;
+        if(page) return res._result;
+
         return data;
       })
       .catch(e => {
-        throw `${uid}不是一个正确的uid`
+        throw e
       })
   }
 };
