@@ -1,4 +1,4 @@
-module.paths.push(__projectroot + 'nkc_modules'); //enable require-ment for this path
+
 
 var table = {};
 module.exports = table;
@@ -6,16 +6,16 @@ module.exports = table;
 var moment = require('moment')
 var path = require('path')
 var fs = require('fs.extra')
-var settings = require('server_settings.js');
-var helper_mod = require('helper.js')();
-var queryfunc = require('query_functions')
-var validation = require('validation')
+var settings = require('../server_settings.js');
+var helper_mod = require('../helper.js')();
+var queryfunc = require('../query_functions')
+var validation = require('../validation')
 var AQL = queryfunc.AQL
-var apifunc = require('api_functions')
+var apifunc = require('../api_functions')
 
-var layer = require('layer')
+var layer = require('../layer')
 
-var permissions = require('permissions')
+var permissions = require('../permissions')
 
 table.addThreadToCollection = {
   operation:function(params){

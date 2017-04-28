@@ -1,17 +1,17 @@
-module.paths.push(__projectroot + 'nkc_modules'); //enable require-ment for this path
+
 
 var moment = require('moment')
 var path = require('path')
 var fs = require('fs.extra')
-var settings = require('server_settings.js');
-var helper_mod = require('helper.js')();
-var queryfunc = require('query_functions')
-var validation = require('validation')
+var settings = require('../server_settings.js');
+var helper_mod = require('../helper.js')();
+var queryfunc = require('../query_functions')
+var validation = require('../validation')
 var AQL = queryfunc.AQL
-var apifunc = require('api_functions')
+var apifunc = require('../api_functions')
 var layer = require('../layer')
-var permissions = require('permissions')
-let operations = require('api_operations');
+var permissions = require('../permissions')
+let operations = require('../api_operations');
 let db = require('arangojs')(settings.arango);
 let aql = require('arangojs').aql;
 
@@ -19,7 +19,7 @@ var table = {};
 module.exports = table;
 
 function createReplyRelation(frompid,topid){
-  var operations = require('api_operations')
+  var operations = require('../api_operations.js')
   report('create reply relation '+frompid+' to '+topid)
   return operations.table.createReplyRelation.operation({frompid,topid})
 }

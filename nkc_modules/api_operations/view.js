@@ -1,18 +1,16 @@
-module.paths.push(__projectroot + 'nkc_modules'); //enable require-ment for this path
-
 var moment = require('moment')
 var path = require('path')
 var fs = require('fs.extra')
-var settings = require('server_settings.js');
-var helper_mod = require('helper.js')();
-var queryfunc = require('query_functions')
-var validation = require('validation')
+var settings = require('../server_settings.js');
+var helper_mod = require('../helper.js')();
+var queryfunc = require('../query_functions')
+var validation = require('../validation')
 var AQL = queryfunc.AQL
-var apifunc = require('api_functions')
+let layer = require('../layer');
+var apifunc = require('../api_functions')
 var svgCaptcha = require('svg-captcha');
 let db = require('arangojs')(settings.arango);
 let aql = require('arangojs').aql;
-var layer = require('layer')
 
 var jadeDir = __projectroot + 'nkc_modules/jade/'
 
@@ -37,9 +35,9 @@ table.viewMe = {
 
     if(!params.user) throw 'must login to view this page'
 
-    data.allCertificates =  require('permissions').listAllCertificates()
+    data.allCertificates =  require('../permissions').listAllCertificates()
 
-    data.certificateDefinitions = require('permissions').certificates
+    data.certificateDefinitions = require('../permissions').certificates
 
     data.examinated = params.examinated
     data.replytarget = 'me'
@@ -1513,7 +1511,7 @@ table.viewTemplate = {
 
 table.viewCollectionOfUser = {
   operation:function(params){
-    var operations = require('api_operations')
+    var operations = require('../api_operations.js')
 
     var data = defaultData(params)
     data.template = jadeDir + 'interface_collections.jade'
@@ -1615,7 +1613,7 @@ table.viewLocalSearch = {
     params.start = Number(params.start)||0
     params.count = Number(params.count)||30
 
-    var operations = require('api_operations')
+    var operations = require('../api_operations.js')
     return operations.table.localSearch.operation(params)
       .then(res=>{
         //console.log(res)

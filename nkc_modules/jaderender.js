@@ -1,14 +1,14 @@
-module.paths.push(__projectroot + 'nkc_modules'); //enable require-ment for this path
 
-var helper = require('helper');
+
+var helper = require('./helper');
 
 var jade = require('jade');
-var settings = require('server_settings.js');
+var settings = require('./server_settings.js');
 
 var moment = require('moment');
 moment.locale('zh-cn');//yo!
 
-var render = require('nkc_render');
+var render = require('./nkc_render');
 
 jade.filters.markdown = render.commonmark_render;
 jade.filters.markdown_safe = render.commonmark_safe;
@@ -51,7 +51,7 @@ function shortDateTimeString(t){
 }
 
 function getCertsInText(user){
-  var perm = require('permissions')
+  var perm = require('./permissions.js')
 
   var certs =  perm.calculateThenConcatCerts(user)
 
@@ -115,7 +115,7 @@ var jadeoptions = {
   },
 
   getDisplayNameOfCert:function(cert){
-    var perm = require('permissions')
+    var perm = require('./permissions.js')
     return perm.getDisplayNameOfCert(cert)
   },
 
@@ -134,7 +134,7 @@ var jadeoptions = {
 
   testModifyTimeLimit:function(params,ownership,toc){
     try{
-      require('permissions').testModifyTimeLimit(params,ownership,toc)
+      require('./permissions.js').testModifyTimeLimit(params,ownership,toc)
     }catch(err){
       return false
     }

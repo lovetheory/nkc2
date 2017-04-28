@@ -1,10 +1,9 @@
-//api functions
-module.paths.push('./nkc_modules'); //enable require-ment for this path
+
 
 var moment = require('moment');
 
-var settings = require('server_settings.js');
-var helper_mod = require('helper.js')();
+var settings = require('./server_settings.js');
+var helper_mod = require('./helper.js')();
 var bodyParser = require('body-parser');
 
 var async = require('async');
@@ -12,8 +11,8 @@ var async = require('async');
 var express = require('express');
 var api = express.Router();
 
-var validation = require('validation');
-var queryfunc = require('query_functions');
+var validation = require('./validation');
+var queryfunc = require('./query_functions');
 
 var cookie_signature = require('cookie-signature');
 var apifunc = {};
@@ -340,15 +339,21 @@ apifunc.get_user_by_name = (username,callback)=>{
 };
 
 apifunc.get_user = (uid)=>{
+  let temp;
   return queryfunc.doc_load(uid,'users')
-  .then(doc=>{
-    //desensitize
+    .then(user => {
+      temp = user;
+      return queryfunc.doc_load(uid, 'usersSubscribe')
+    })
+    .then(usersSubscribe => {
+      //desensitize
+      let doc = Object.assign(temp, usersSubscribe);
+      console.log(doc)
+      doc.password = undefined;
+      doc.password2 = undefined;
+      doc.hashtype = undefined;
 
-    doc.password = undefined;
-    doc.password2 = undefined;
-    doc.hashtype = undefined;
-
-    return doc;
+      return doc;
   })
 };
 

@@ -1,18 +1,18 @@
 //interface handlers
-module.paths.push('./nkc_modules'); //enable require-ment for this path
+
 
 var fs=require('fs');
 var moment = require('moment');
 
-var settings = require('server_settings.js');
-var helper_mod = require('helper.js')();
+var settings = require('./server_settings.js');
+var helper_mod = require('./helper.js')();
 
-var jaderender = require('jaderender');
+var jaderender = require('./jaderender');
 
 var express = require('express');
 var iface = express.Router();
 
-var apifunc = require('api_functions');
+var apifunc = require('./api_functions');
 var async = require('async');
 
 ///------------

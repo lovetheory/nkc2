@@ -9,8 +9,7 @@ module.exports = {
     {
       name      : 'nkc2',
       script    : 'server.js',
-      instances: 8,
-      exec_mode: 'cluster',
+      exec_mode: 'fork',
       watch: false,
       cron_restart: '0 0/30 * * * ',
       env: {

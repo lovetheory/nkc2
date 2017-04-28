@@ -1,6 +1,4 @@
-//helper module
 
-module.paths.push(__projectroot + 'nkc_modules');
 //dependencies
 var moment = require('moment');
 var os = require('os');

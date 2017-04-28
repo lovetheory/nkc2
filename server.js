@@ -1,9 +1,9 @@
 require('./global_env.js')
 
-module.paths.push(__projectroot + 'nkc_modules'); //enable require-ment for this path
 
-var settings = require('server_settings');
-require('helper')();
+
+var settings = require('./nkc_modules/server_settings');
+require('./nkc_modules/helper')();
 
 dash()
 report(settings.server.copyright)
@@ -13,7 +13,7 @@ var moment = require('moment');
 var fs = require('fs');
 var net = require('net');
 
-var jaderender = require('jaderender');
+var jaderender = require('./nkc_modules/jaderender');
 
 var compression = require('compression');
 var express = require('express');
@@ -24,8 +24,8 @@ var cookieparser = require('cookie-parser');
 var session = require('express-session');
 var RedisStore = require('connect-redis')(session);
 
-var apifunc = require('api_functions');
-var queryfunc = require('query_functions');
+var apifunc = require('./nkc_modules/api_functions');
+var queryfunc = require('./nkc_modules/query_functions');
 
 queryfunc.db_init();
 
@@ -195,7 +195,7 @@ nkc.use((req,res,next)=>{
     }
   })
   .then(()=>{
-    var layer = require('layer')
+    var layer = require('./nkc_modules/layer')
     var psnl = new layer.Personal(req.user._key)
     var u = new layer.User(req.user._key)
     return psnl.load()
@@ -216,15 +216,15 @@ nkc.use((req,res,next)=>{
 //8. routes
 
 //api serving
-var api_handlers = require('api_handlers.js');
+var api_handlers = require('./nkc_modules/api_handlers.js');
 nkc.use('/api',api_handlers.route_handler);
 
-var interface_handlers = require('interface_handlers');
+var interface_handlers = require('./nkc_modules/interface_handlers.js');
 nkc.use('/interface',interface_handlers.route_handler);
 
 // chatroom serving
 // WE DONT USE THIS ANYMORE
-var chat_handlers = require('chat_handlers.js');
+var chat_handlers = require('./nkc_modules/chat_handlers.js');
 nkc.use('/chat',chat_handlers.route_handler);//routing
 
 // //chatroom socket

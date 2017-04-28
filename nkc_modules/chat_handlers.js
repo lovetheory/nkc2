@@ -1,10 +1,10 @@
 //chat request handlers
-module.paths.push('./nkc_modules'); //enable require-ment for this path
+
 
 var moment = require('moment');
 
-var settings = require('server_settings.js');
-var helper_mod = require('helper.js')();
+var settings = require('./server_settings.js');
+var helper_mod = require('./helper.js')();
 
 var nano = require('nano')('http://'+settings.couchdb.address+':'+settings.couchdb.port.toString());
 var posts = nano.use("posts");

@@ -1,12 +1,12 @@
 //api resources request handlers
-module.paths.push(__projectroot + 'nkc_modules'); //enable require-ment for this path
+
 
 var moment = require('moment')
 var path = require('path')
 var fs = require('fs.extra')
-var nkcfs = require('nkc_fs')
-var settings = require('server_settings.js');
-var helper_mod = require('helper.js')();
+var nkcfs = require('./nkc_fs')
+var settings = require('./server_settings.js');
+var helper_mod = require('./helper.js')();
 var bodyParser = require('body-parser');
 var multer = require('multer'); //multi-part parser, for upload
 
@@ -14,10 +14,10 @@ var async = require('async');
 var express = require('express');
 var api = express.Router();
 
-var validation = require('validation');
-var apifunc = require('api_functions');
-var queryfunc = require('query_functions');
-var im = require('im_functions');
+var validation = require('./validation');
+var apifunc = require('./api_functions');
+var queryfunc = require('./query_functions');
+var im = require('./im_functions');
 
 ///------------
 ///something here to be executed before all handlers below

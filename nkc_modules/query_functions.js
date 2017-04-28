@@ -1,11 +1,11 @@
 //query functions
 //equivalent ORM-Layer
-module.paths.push('./nkc_modules'); //enable require-ment for this path
+
 var colors = require('colors');
 var moment = require('moment');
 
-var settings = require('server_settings.js');
-var helper_mod = require('helper.js')();
+var settings = require('./server_settings.js');
+var helper_mod = require('./helper.js')();
 var bodyParser = require('body-parser');
 
 var db = require('arangojs')(settings.arango);
@@ -15,7 +15,7 @@ var users = db.collection('users');
 var express = require('express');
 var api = express.Router();
 
-var validation = require('validation');
+var validation = require('./validation');
 
 let aql = require('arangojs').aql;
 

@@ -1,6 +1,6 @@
 require('./global_env')
 
-module.paths.push(__projectroot + 'nkc_modules'); //enable require-ment for this path
+
 
 var es = require('elasticsearch');
 var client = new es.Client({

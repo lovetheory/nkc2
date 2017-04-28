@@ -16,10 +16,10 @@ function nkc_render(options){
     console.log('nkc_render.js running in browser.');
   }else{
     //nodejs
-    module.paths.push(__projectroot + 'nkc_modules'); //enable require-ment for this path
+
 
     var commonmark = require('commonmark');
-    var plain_escape = require('jade/plain_escaper');
+    var plain_escape = require('./jade/plain_escaper');
     var XBBCODE = require('xbbcode-parser');
 
     var xss = require('xss')

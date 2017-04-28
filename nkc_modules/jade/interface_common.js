@@ -429,10 +429,11 @@ function edInsertContent(which, myValue) {
 }
 
 function subscribeUserSwitch(uid) {
+  var button = geid('subscribeButton');
+  button.className = button.className = 'btn btn-sm disabled';
   nkcAPI('subscribeUser',{uid})
     .then(function() {
       screenTopAlert('关注成功');
-      var button = geid('subscribeButton');
       button.innerHTML = '取关';
       button.className = 'btn btn-sm btn-danger';
     })
