@@ -57,7 +57,7 @@ block content
                       span 版主：
                         - var moderators = data.forum.moderators
                         each k in moderators
-                          a.d-inline.margin-right(href='/user_profile_byname/#{k}') #{k}
+                          a.d-inline.margin-right(href='/user_activities_byname/#{k}') #{k}
 
                   if data.forumthreadtypes && data.forumthreadtypes.length
                     .ForumNavigation1
@@ -142,7 +142,7 @@ block content
               if data.toppedThreads && data.toppedThreads.length > 0 && !data.cat
                 .ForumThreadList
                   each thread,index in data.toppedThreads
-                    include interface_forum_singlethread.jade
+                    include interface_personal_forum_single_thread
                 //hr.hrNarrowSpace
                 .ForumToppedSplitter - 以上是置顶 -
 
@@ -151,7 +151,7 @@ block content
                   if data.toppedThreads && (data.toppedThreads.map(item => item._key).indexOf(thread._key) >= 0)
                     //exclude threads that are shown in topped area.
                   else
-                    include interface_forum_singlethread.jade
+                    include interface_personal_forum_single_thread
 
               .row
                 .col-md-12

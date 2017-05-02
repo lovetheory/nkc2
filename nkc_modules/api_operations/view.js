@@ -11,6 +11,7 @@ var apifunc = require('../api_functions')
 var svgCaptcha = require('svg-captcha');
 let db = require('arangojs')(settings.arango);
 let aql = require('arangojs').aql;
+let tools = require('../tools');
 
 var jadeDir = __projectroot + 'nkc_modules/jade/'
 
@@ -802,16 +803,6 @@ table.viewPersonalForum = {
     data.sortby = params.sortby
     data.digest = params.digest
 
-    var filter = `
-    filter
-    t.uid == @uid
-    ${params.digest?'&& t.digest==true':''}
-
-    sort
-    ${params.sortby?'t.toc':'t.tlm'} desc
-
-    `
-
      var userclass = new layer.User(uid)
      return userclass.load()
         .then(()=> {
@@ -822,7 +813,6 @@ table.viewPersonalForum = {
        .then(forum => {
          data.forum = forum;
 
-         var uid = user._key;
          return db.query(aql`
           LET po = (FOR p IN posts
             FILTER p.uid == ${uid}
@@ -1241,9 +1231,9 @@ table.viewSelf = {
       LET sFs = usersSub.subscribeForums
       FOR o IN usersBehavior
         SORT o.time DESC
-        FILTER POSITION(sUs, TO_NUMBER(o.uid)) ||
-        POSITION(sFs, TO_NUMBER(o.fid)) || o.mid == ${uid} ||
-        o.toMid == ${uid}
+        FILTER POSITION(sUs, o.uid) ||
+        POSITION(sFs, o.fid) || o.mid == ${uid} ||
+        o.toMid == ${uid} || o.uid == ${uid}
         LIMIT ${page*30}, 30
         LET thread = DOCUMENT(threads, o.tid)
         LET oc = DOCUMENT(posts, thread.oc)
@@ -1296,7 +1286,16 @@ table.viewSelf = {
         })
     `)*/
       .then(res => {
-        data.activities = res._result;
+        let result = res._result;
+        for(obj of result) {
+          if(!obj.user) {
+            console.log(obj);
+          }
+        }
+        data.activities = res._result.map(obj => {
+          obj.post.c = tools.contentFilter(obj.post.c);
+          return obj
+        });
         if(params.page) return res._result;
         return data
       })
@@ -1309,10 +1308,23 @@ table.viewPersonalActivities = {
     let data = defaultData(params);
     data.template = jadeDir + 'interface_activities_personal.jade';
     let uid = params.uid;
+    let username = params.username;
+    let targetUser;
     let page = params.page;
-    let targetUser = new layer.User(uid.toString());
-    return targetUser.load()
+    return Promise.resolve()
       .then(() => {
+        if(uid){
+          targetUser = new layer.User(uid.toString())
+          return targetUser.load()
+        }else if(username){
+          targetUser = new layer.User();
+          return targetUser.loadByName(username.toString())
+        }else{
+          throw 'please specify uid or username'
+        }
+      })
+      .then(user => {
+        uid = user.model._key;
         data.targetUser = targetUser.model;
         return db.query(aql`
           FOR o IN usersBehavior
@@ -1338,9 +1350,11 @@ table.viewPersonalActivities = {
         `)
       })
       .then(res => {
-        data.activities = res._result;
+        data.activities = res._result.map(obj => {
+          obj.post.c = tools.contentFilter(obj.post.c);
+          return obj
+        });
         if(page) return res._result;
-
         return data;
       })
       .catch(e => {

@@ -88,7 +88,7 @@ block content
                       span 版主：
                         - var moderators = data.forum.moderators
                         each k in moderators
-                          a.d-inline.margin-right(href='/user_profile_byname/#{k}') #{k}
+                          a.d-inline.margin-right(href='/user_activities_byname/#{k}') #{k}
                         
                   if data.forumthreadtypes && data.forumthreadtypes.length
                     .ForumNavigation1
@@ -253,7 +253,7 @@ block content
                 -var moderators = forum.moderators || []
                   span 版主:
                 for moderator in moderators
-                  a(href='/user_profile_byname/#{moderator}')  #{moderator}
+                  a(href='/user_activities_byname/#{moderator}')  #{moderator}
                 //hr.hrNarrowSpace
                 //.ForumThreadList
                 //  each thread,index in forum.threads

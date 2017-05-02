@@ -11,7 +11,7 @@ if !post.disabled || (post.disabled && po.enablePost)
   .parent.clearfix(id='p#{post._key}')
     .avatar-left
       - var title = user?getUserDescription(user):''
-      a(href='/user_profile/#{uid}' title='#{title}')
+      a(href='/m/#{uid}' title='#{title}')
         img.ThreadPostAvatar(src='/avatar/#{post.uid}')
 
     .content-right
@@ -20,7 +20,7 @@ if !post.disabled || (post.disabled && po.enablePost)
 
       .threadOneLine
         .ThreadPostTitleMeta
-          a.ThreadPostTitleUsername(href='/user_profile/#{uid}') #{user?user.username:''}
+          a.ThreadPostTitleUsername(href='/m/#{uid}') #{user?user.username:''}
 
           span.lighttext #{fromNow(post.toc)} -
           span.lighttext #{dateTimeString(post.toc)}
@@ -75,7 +75,7 @@ if !post.disabled || (post.disabled && po.enablePost)
         .nkcpanel.ThreadPostCredits
           each c,index in post.credits
             -var username = c.username||c.uid
-            -var profile = (c.uid&&c.uid!='0')?'/user_profile/'+c.uid:'/user_profile_byname/'+c.username      
+            -var profile = (c.uid&&c.uid!='0')?'/m/'+c.uid:'/user_activities_byname/'+c.username
             .ThreadPostCreditItem
               span.TPCQ #{(c.q>0?'+':'-')}#{c.q} &nbsp;
               span.TPCType #{creditString(c.type)} &nbsp;&nbsp;

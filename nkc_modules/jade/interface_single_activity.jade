@@ -8,7 +8,7 @@
       div.activity-type-text #{type}
       div.activity-type-date #{fromNow(obj.time)}
     .activity-user
-      a(href='/activities/#{obj.uid')
+      a(href='/activities/#{obj.uid}')
         img.activity-user-avatar(src='/avatar/#{obj.uid}')
       a(href='/activities/#{obj.user._key}') #{obj.user.username}
     .activity-info

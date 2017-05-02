@@ -26,7 +26,7 @@
     .avatar-left
       - var user = ocuser
       - var title = user?getUserDescription(user):''
-      a(href='/user_profile/#{uid}' title='#{title}')
+      a(href='/m/#{uid}' title='#{title}')
         img.ForumThreadAvatar(src='/avatar/#{uid}')
     
     .content-right
@@ -81,7 +81,7 @@
         if 1
           span.hidden-xs.lighttext.ForumThreadItemCreationTime #{dateTimeString(thread.toc).split(' ')[0]} from
         
-        a.ForumThreadItemUsername(href='/user_profile/#{ocuser._key}') #{ocuser.username}
+        a.ForumThreadItemUsername(href='/m/#{ocuser._key}') #{ocuser.username}
         
         if Date.now()-thread.tlm<86400000
           span.lighttext.reddish #{fromNow(thread.tlm)} 
@@ -90,76 +90,5 @@
           //帖子最后回复时间和回复者
 
         span.lighttext(style='margin-right:7px;')   by
-        a.ForumThreadItemUsername(href='/user_profile/#{lmuser._key}') #{lmuser.username}
+        a.ForumThreadItemUsername(href='/m/#{lmuser._key}') #{lmuser.username}
         
-      
-    
-    
-        
-        
-      
-if 0
-  .ForumThreadItem
-    .CollectionCategoryThreadActions
-
-      input.ThreadCheckboxes(id='#{(item?item._key:null)||thread._key}' type='checkbox' style="#{showTicks?'':'display:none;'}")
-
-
-    if 0
-      .ForumThreadItemAvatar
-        a(href='#{url}')
-          img.ForumThreadAvatar(src='#{avatar}')
-    .ForumThreadItemContent
-      .row
-        .col-lg-9.col-md-9.col-sm-8
-          .ForumThreadTitle
-            .tbl(style='display:table-cell;width:72px;')
-              .ForumThreadItemReplyCount #{thread.count-1?(thread.count-1):''}
-              
-              if 1
-                .ForumThreadItemAvatar
-                  -var uurl = '/user_profile/'+uid
-                  -var avatar = '/avatar_small/'+uid
-                    a(href='#{uurl}')
-                      img.HomeThreadAvatar(src='#{avatar}')
-            
-            .tbl2(style='display:table-cell')
-              - var brief = oc.c.replace(/\[.*?]/g,'').trim().slice(0,100)
-              //span.f12.ForumThreadDigestText [精]
-              
-              if belong_forum
-                span.ForumThreadHasImage(style='background-color:#{forumcolor};') #{belong_forum.abbr||belong_forum.display_name}
-              
-              if topped
-                span.ForumThreadHasImage.ForumThreadTopped 顶
-                
-              a(class='#{digest?"ForumThreadDigestText":""}' href="#{url}" title="#{brief}") #{oc.t} 
-              if has_image
-                span.ForumThreadHasImage 图
-              if has_file
-                span.ForumThreadHasImage.ForumThreadHasFile 附
-                  
-              //帖子标题链接
-            
-              .ForumThreadCreatorInfo
-
-                if 0
-                  span.lighttext.ForumThreadItemCreationTime #{dateTimeString(thread.toc)}
-                
-                a.lighttext.ForumThreadItemUsername(href='/user_profile/#{ocuser._key}') #{ocuser.username}
-                //帖子发布时间和发布者
-
-            //楼数
-            
-        .col-lg-3.col-md-3.col-sm-4
-          
-          .ForumThreadItemReplyInfo
-            //.ForumThreadItemReplyCount #{thread.count-1?(thread.count-1) + ' 回复':''}
-          
-            if Date.now()-thread.tlm<86400000
-              span.reddish #{fromNow(thread.tlm)} 
-            else
-              span #{fromNow(thread.tlm)} 
-              //帖子最后回复时间和回复者
-
-            span.ForumThreadItemUsername(href='/user_threads/#{lmuser._key}') #{lmuser.username}

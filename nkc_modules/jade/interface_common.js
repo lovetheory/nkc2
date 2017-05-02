@@ -428,16 +428,31 @@ function edInsertContent(which, myValue) {
   }
 }
 
-function subscribeUserSwitch(uid) {
+function subscribeUserSwitch(targetUid) {
   var button = geid('subscribeButton');
-  button.className = button.className = 'btn btn-sm disabled';
-  nkcAPI('subscribeUser',{uid})
-    .then(function() {
-      screenTopAlert('关注成功');
-      button.innerHTML = '取关';
-      button.className = 'btn btn-sm btn-danger';
-    })
-    .catch(function(e) {
-      screenTopWarning(e);
-    })
+  button.className = 'btn btn-sm disabled';
+  if(button.innerHTML === '关注') {
+    nkcAPI('subscribeUser', {targetUid})
+      .then(function () {
+        screenTopAlert('关注成功');
+        button.innerHTML = '取关';
+        button.className = 'btn btn-sm btn-danger';
+      })
+      .catch(function (e) {
+        screenTopWarning(e);
+      })
+  }
+  else if(button.innerHTML === '取关') {
+    nkcAPI('unsubscribeUser', {targetUid})
+      .then(function() {
+        screenTopAlert('成功取消关注');
+        button.innerHTML = '关注';
+        button.className = 'btn btn-sm btn-info';
+      })
+      .catch(function(e) {
+        screenTopWarning(e);
+      })
+  }else{
+    screenTopWarning('未定义的操作.')
+  }
 }

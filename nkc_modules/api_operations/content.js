@@ -531,7 +531,6 @@ table.updateAllForums = {
       `
     )
       .then(() => {
-      console.log('ksjdf')
         return AQL(`
           FOR f IN forums
             FILTER f.type == 'forum'
@@ -782,7 +781,6 @@ update_thread = (tid)=>{
 };
 
 let userBehaviorRec = obj => {
-  console.log(obj);
   return queryfunc.doc_save(obj, 'usersBehavior')
 }
 

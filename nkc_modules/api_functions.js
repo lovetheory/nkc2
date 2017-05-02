@@ -347,14 +347,24 @@ apifunc.get_user = (uid)=>{
     })
     .then(usersSubscribe => {
       //desensitize
-      let doc = Object.assign(temp, usersSubscribe);
-      console.log(doc)
+      let doc = Object.assign(temp, usersSubscribe)
       doc.password = undefined;
       doc.password2 = undefined;
       doc.hashtype = undefined;
 
       return doc;
   })
+    .catch(() => {
+      return queryfunc.doc_load(uid, 'users')
+        .then(user => {
+          user.password = undefined;
+          user.password2 = undefined;
+          user.hashtype = undefined;
+          user.subscribeForums = [];
+          user.subscribeUsers = [];
+          return user;
+        })
+    })
 };
 
 function user_exist_by_name(username){
@@ -449,7 +459,6 @@ apifunc.exam_gen = function(options){
     }
   })
   .then(function(){
-    console.log(qarr);
 
     for(i in qarr){
       var qobj = {};

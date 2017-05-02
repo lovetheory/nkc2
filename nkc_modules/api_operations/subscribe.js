@@ -14,16 +14,16 @@ let table = {};
 table.subscribeUser = {
   operation: params => {
     let user = params.user;
-    let subUid = params.subUid;
+    let subUid = params.targetUid;
     return db.collection('users').document(subUid)
       .then(() => {
         return db.query(aql`
           UPSERT {_key: ${user._key}}
           INSERT {
             _key: ${user._key},
-            subUsers: [${subUid}]
+            subscribeUsers: [${subUid}]
           }
-          UPDATE {subUsers: PUSH(OLD.subUsers, ${subUid}, true)}
+          UPDATE {subscribeUsers: PUSH(OLD.subscribeUsers, ${subUid}, true)}
           IN usersSubscribe
         `)
       })
@@ -32,12 +32,13 @@ table.subscribeUser = {
 };
 
 table.unsubscribeUser = {
-  operations: params => {
+  operation: params => {
     let user = params.user;
-    let unSubUid = params.unSubUid;
+    let unSubUid = params.targetUid;
     return db.query(aql`
-      UPDATE DOCUMENT(usersSubscribe, ${user._key}) WITH {
-        subUsers: REMOVE_VALUE(OLD.subUsers, ${unSubUid})
+    LET o = DOCUMENT(usersSubscribe, ${user._key})
+      UPDATE o WITH {
+        subscribeUsers: REMOVE_VALUE(o.subscribeUsers, ${unSubUid})
       } IN usersSubscribe
     `)
   }

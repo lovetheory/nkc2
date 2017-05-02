@@ -95,10 +95,9 @@ function Activity(obj) {
 }
 function loadNextPage() {
   var path = location.pathname.match(/\/([^0~9&^\/]*)/);
-  console.log(location.pathname)
-  console.log(path);
   var operation;
   var parameter;
+  var username;
   if(path[1] === 'activities') {
     operation = 'viewPersonalActivities';
     parameter = location.pathname.match(/\/([^0~9&^\/]*)\/(\d*)/)[2];
@@ -106,12 +105,17 @@ function loadNextPage() {
   else if(path[1] === 'self'){
     operation = 'viewSelf';
   }
+  else if(path[1] === 'user_activities_byname') {
+    operation = 'viewPersonalActivities';
+    username = location.pathname.replace(/\/user_activities_byname\//, '');
+  }
   else {
     throw new Error('unknown operation type.')
   }
 
   nkcAPI(operation, {
     uid: parameter,
+    username: username,
     page: _nowAtPage ++
   })
     .then(function(res) {

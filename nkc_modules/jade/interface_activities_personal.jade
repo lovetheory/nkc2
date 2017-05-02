@@ -5,7 +5,7 @@ block title
 
 block content
   .container
-    -var thatuser = data.targetUser;
+    -var thatuser = data.targetUser || data.user._key;
     if data.user == undefined
       .row
         .col-sm-12
