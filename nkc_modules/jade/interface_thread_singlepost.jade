@@ -84,7 +84,14 @@ if !post.disabled || (post.disabled && po.enablePost)
                   img.TPCIAI(src='/avatar_small/#{c.uid}') 
               span.TPCIssuer #{username} &nbsp;&nbsp;
               span.TPCDate #{dateTimeString(c.toc).split(' ')[0]} &nbsp;&nbsp;
-              span.TPCReason #{c.reason} 
+              span.TPCReason #{c.reason}
+
+      -var recUsers = post.recUsers || []
+      if data.user
+        if recUsers.indexOf(data.user.username) > -1
+          a.btn.btn-danger(href='javascript:;' onclick='recommendPostSwitch(event, #{post._key})') 取消推荐
+        else
+          a.btn.btn-info(href='javascript:;' onclick='recommendPostSwitch(event, #{post._key})') 推荐(#{recUsers.length})
                 
 
 - var po = data.permittedOperations

@@ -193,6 +193,8 @@ var certificates={
       listCart:true,
       clearCart:true,
       viewPersonalActivities: true,
+      recommendPost: true,
+      unrecommendPost: true,
       subscribeUser: true,
       unsubscribeUser: true,
       subscribeForum: true,

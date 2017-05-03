@@ -94,7 +94,7 @@ var layer = (function () {
                     })
                 `)
           .then(res => {
-            _this.model = res._result;
+            _this.model = res._result[0];
             return _this;
           })
           .catch(e => console.log(e))

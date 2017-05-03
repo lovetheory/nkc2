@@ -28,7 +28,7 @@ block title
     }
 
 block content
-  -var isModerator = (data.forum.moderators.indexOf(data.user.username) > -1)
+  -var isModerator = data.user? (data.forum.moderators.indexOf(data.user.username) > -1) : false
   if (data.user == undefined)
     h2(style="margin-left:8%;") 请先登录后查看，谢谢~
   else

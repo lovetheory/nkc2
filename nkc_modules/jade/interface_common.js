@@ -433,12 +433,12 @@ function subscribeUserSwitch(targetUid) {
   button.className = 'btn btn-sm disabled';
   if(button.innerHTML === '关注') {
     nkcAPI('subscribeUser', {targetUid})
-      .then(function () {
+      .then(function() {
         screenTopAlert('关注成功');
         button.innerHTML = '取关';
         button.className = 'btn btn-sm btn-danger';
       })
-      .catch(function (e) {
+      .catch(function(e) {
         screenTopWarning(e);
       })
   }
@@ -452,7 +452,40 @@ function subscribeUserSwitch(targetUid) {
       .catch(function(e) {
         screenTopWarning(e);
       })
-  }else{
+  }
+  else {
+    screenTopWarning('未定义的操作.')
+  }
+}
+
+
+function recommendPostSwitch(e, targetPid) {
+  var button = e.target;
+  var content = button.innerHTML.replace(/\(.*\)/, '')
+  button.className = 'btn btn-sm disabled';
+  if(content === '推荐') {
+    nkcAPI('recommendPost', {targetPid})
+      .then(function() {
+        screenTopAlert('推荐成功');
+        button.innerHTML = '取消推荐';
+        button.className = 'btn btn-danger';
+      })
+      .catch(function(e) {
+        screenTopWarning(e);
+      })
+  }
+  else if(content === '取消推荐') {
+    nkcAPI('unrecommendPost', {targetPid})
+      .then(function(msg) {
+        screenTopAlert('成功取消推荐');
+        button.innerHTML = '推荐(' + msg.message + ')';
+        button.className = 'btn btn-info';
+      })
+      .catch(function(e) {
+        screenTopWarning(e);
+      })
+  }
+  else {
     screenTopWarning('未定义的操作.')
   }
 }
