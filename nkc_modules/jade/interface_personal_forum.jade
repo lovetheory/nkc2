@@ -20,13 +20,6 @@ block title
   if data.threads.length>0
     meta(property='article:modified_time' content='#{(new Date(data.threads[0].toc)).toISOString()}')
 
-  style.
-    .marginless {
-      margin-top:7px;
-      margin-bottom:7px;
-      margin-right:15px;
-    }
-
 block content
   -var isModerator = data.user? (data.forum.moderators.indexOf(data.user.username) > -1) : false
   if (data.user == undefined)
@@ -74,6 +67,20 @@ block content
                       span 分类: (暂无分类)
                       hr.hrNarrowSpace
 
+          ul.nav.nav-tabs.nav-justified
+            li.active
+              a(href='/m/#{data.forum._key}') 个人板块
+            li
+              a(href='/activities/#{data.forum._key}') 动态
+          ul.nav.nav-tabs.nav-justified
+            li(class='#{data.tab == "all"? "active" : ""}')
+              a(href='?&tab=all') 全部
+            li(class='#{data.tab == "own"? "active" : ""}')
+              a(href='?&tab=own') 只看版主
+            li(class='#{data.tab == "reply"? "active" : ""}')
+              a(href='?&tab=reply') 只看回复
+            li(class='#{data.tab == "recommend"? "active" : ""}')
+              a(href='?&recommend') 只看推荐
             .panel
               .row
                 .col-xs-12
@@ -125,16 +132,16 @@ block content
                     ul.pagination.NavigationPaging
                       - var page = paging?paging.page:null
                       li(class="#{class_str_all}")
-                        a(href='#{toQueryString({cat})}') 俱
+                        a(href='?&tab=#{data.tab}#{data.sortby? "&sortby=toc": ""}') 俱
 
                       li(class="#{class_str_digest}")
-                        a(href='#{toQueryString({cat, digest: true})}') 精
+                        a(href='?&tab=#{data.tab}&digest=true#{data.sortby? "&sortby=toc": ""}') 精
 
                     ul.pagination.NavigationPaging
                       li(class='#{class_str_sortby_tlm}')
-                        a(href='#{toQueryString({cat, digest})}') 复序
+                        a(href='?&tab=#{data.tab}#{data.digest? "&digest=true": ""}') 复序
                       li(class='#{class_str_sortby_toc}')
-                        a(href='#{toQueryString({cat, digest, sortby: "toc"})}') 帖序
+                        a(href='?&tab=#{data.tab}&sortby=toc#{data.digest? "&digest=true": ""}') 帖序
 
 
                   hr.hrNarrowSpace
@@ -167,7 +174,7 @@ block content
         .col-md-3.hidden-xs.hidden-sm
           .nkcpanel
             include forum_logo_wisdom.jade
-          -var user = data.user
+          -var user = data.targetUser
           if user
             include interface_thread_userpatch.jade
           //-var active_user_title = '学院活跃用户'

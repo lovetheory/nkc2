@@ -18,15 +18,10 @@ table.recommendPost = {
           throw '无法推荐已经被禁用的post'
         }
         return db.query(aql`
-          UPSERT {_key: ${user._key}}
-          INSERT {
-            recs: [${recPid}],
-            _key: ${user._key}
-          }
-          UPDATE {
-            recPosts: PUSH(OLD.recPosts, ${recPid}, true)
-          }
-          INTO usersRecommend
+          LET obj = DOCUMENT(personalForums, ${user._key})
+          UPDATE obj WITH {
+            recPosts: PUSH(doc.recPosts, ${recPid}, true)
+          } IN personalForums
         `)
       })
       .then(() => {
@@ -48,7 +43,7 @@ table.recommendPost = {
         return db.query(aql`
           LET post = DOCUMENT(posts, ${recPid})
           UPDATE post WITH {
-            recUsers: PUSH(post.recUsers, ${user.username}, true)
+            recUsers: PUSH(post.recUsers, ${user._key}, true)
           } IN posts
         `)
       })
@@ -66,10 +61,10 @@ table.unrecommendPost = {
       .then(doc => {
         post = doc;
         return db.query(aql`
-          LET obj = DOCUMENT(usersRecommend, ${user._key})
+          LET obj = DOCUMENT(personalForums, ${user._key})
           UPDATE obj WITH {
             recPosts: REMOVE_VALUE(obj.recPosts, ${unrecPid})
-          } IN usersRecommend
+          } IN personalForums
         `)
       })
       .then(() => {
@@ -91,7 +86,7 @@ table.unrecommendPost = {
         return db.query(aql`
           LET post = DOCUMENT(posts, ${unrecPid})
           UPDATE post WITH {
-            recUsers: REMOVE_VALUE(post.recUsers, ${user.username})
+            recUsers: REMOVE_VALUE(post.recUsers, ${user._key})
           } IN posts
           RETURN LENGTH(NEW.recUsers)
         `)

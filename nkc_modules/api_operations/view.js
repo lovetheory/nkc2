@@ -792,22 +792,21 @@ table.viewPersonalForum = {
     })
   },
   operation:function(params){
-    var data=defaultData(params)
-    data.template = jadeDir + 'interface_personal_forum.jade'
-    data.operation='viewUserThreads';
+    var data=defaultData(params);
+    var uid = params.uid;
     let user;
+    data.tab = params.tab || 'all';
+    data.template = jadeDir + 'interface_personal_forum.jade';
+    data.operation='viewUserThreads';
     data.replytarget = 'm/' + params.uid;
-
-    var uid = params.uid
-
-    data.sortby = params.sortby
-    data.digest = params.digest
+    data.sortby = params.sortby;
+    data.digest = params.digest;
 
      var userclass = new layer.User(uid)
      return userclass.load()
         .then(()=> {
-
-          user = userclass.model
+          data.targetUser = userclass.model;
+          user = userclass.model;
           return db.collection('personalForums').document(uid)
         })
        .then(forum => {
@@ -1326,6 +1325,10 @@ table.viewPersonalActivities = {
       .then(user => {
         uid = user.model._key;
         data.targetUser = targetUser.model;
+        return db.collection('personalForums').document(uid)
+      })
+      .then(forum => {
+        data.forum = forum;
         return db.query(aql`
           FOR o IN usersBehavior
             SORT o.time DESC
