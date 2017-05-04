@@ -20,7 +20,7 @@ table.recommendPost = {
         return db.query(aql`
           LET obj = DOCUMENT(personalForums, ${user._key})
           UPDATE obj WITH {
-            recPosts: PUSH(doc.recPosts, ${recPid}, true)
+            recPosts: PUSH(obj.recPosts, ${recPid}, true)
           } IN personalForums
         `)
       })
