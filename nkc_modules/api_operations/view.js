@@ -812,48 +812,177 @@ table.viewPersonalForum = {
         data.forum = forum;
         if(params.tab === 'reply') {
           return db.query(aql`
-          LET pAll = (FOR p IN posts
-            SORT p.${params.sortby? 'toc' : 'tlm'} DESC
-            FILTER p.uid == ${uid}
-            RETURN p)
-          LET tAll = (FOR p IN pAll
-            RETURN DOCUMENT(threads, p.tid)
-          )
-          LET p2d = (FOR p IN pAll
-            RETURN (FOR t IN tAll
-              FILTER t.oc != p._key
-              LIMIT 1
-              RETURN MERGE(t, {pid: p._key}))
-          )
-          LET po = (FOR t IN p2d
-            RETURN t[0]
-          )
-          LET pt = (FOR t IN po
-            FILTER t.${params.digest ? 'digest' : 'disabled'} == ${params.digest ? true : null}
-            RETURN t
-          )
-          LET toMid = (FOR t IN threads
-            FILTER t.toMid == ${uid} &&
-            t.${params.digest ? 'digest' : 'disabled'} == ${params.digest ? true : null}
-            RETURN t._key
-          )
-          LET ts = APPEND(pt, toMid, true)
-          LET uts = UNIQUE(ts)
-          LET result = (FOR tid IN uts
-            LET thread = DOCUMENT(threads, tid)
-            SORT thread.${params.sortby ? 'toc' : 'tlm'} DESC
-            LET oc = DOCUMENT(posts, thread.oc)
-            LET ocuser = DOCUMENT(users, oc.uid)
-            LET lm = DOCUMENT(posts, thread.lm)
-            LET lmuser = DOCUMENT(users, lm.uid)
-            RETURN MERGE(thread, {oc,ocuser,lmuser}))
-          RETURN {
-            threads: SLICE(result, ${params.page * settings.paging.perpage}, ${settings.paging.perpage}),
-            count: LENGTH(result)
+            LET p1 = (
+              FOR p IN posts
+                SORT p.tlm DESC
+                FILTER p.uid == ${uid}
+                RETURN p
+            )
+            LET tAll = (
+              FOR p IN p1
+                COLLECT tid = p.tid INTO group = p
+                RETURN {
+                  tid,
+                  group
+                }
+            )
+            LET threadsAll = (
+              FOR t IN tAll
+                RETURN MERGE(DOCUMENT(threads, t.tid), {lastPid: t.group[0]._key})
+            )
+            LET result = (
+              FOR t IN threadsAll
+                SORT t.${params.sortby ? 'toc' : 'tlm'} DESC
+                FILTER t.${params.digest ? 'digest' : 'disabled'} == ${params.digest ? true : null}
+                LET oc = DOCUMENT(posts, t.oc)
+                LET ocuser = DOCUMENT(users, oc.uid)
+                LET lm = DOCUMENT(posts, t.lm)
+                LET lmuser = DOCUMENT(users, lm.uid)
+                FILTER t.uid != ${uid}
+                RETURN MERGE(t, {
+                  oc,
+                  ocuser,
+                  lm,
+                  lmuser
+                })
+              )
+            RETURN {
+              threads: SLICE(result, ${params.page * settings.paging.perpage}, ${settings.paging.perpage}),
+              length: LENGTH(result)
+          }
+        `)
+        }
+        else if(params.tab === 'own') {
+          return db.query(aql`
+            LET p1 = (
+              FOR p IN posts
+                SORT p.tlm DESC
+                FILTER p.uid == ${uid}
+                RETURN p
+            )
+            LET tAll = (
+              FOR p IN p1
+                COLLECT tid = p.tid INTO group = p
+                RETURN {
+                  tid,
+                  group
+                }
+            )
+            LET threadsAll = (
+              FOR t IN tAll
+                RETURN MERGE(DOCUMENT(threads, t.tid), {lastPid: t.group[0]._key})
+            )
+            LET result = (
+              FOR t IN threadsAll
+                SORT t.${params.sortby ? 'toc' : 'tlm'} DESC
+                FILTER t.${params.digest ? 'digest' : 'disabled'} == ${params.digest ? true : null}
+                LET oc = DOCUMENT(posts, t.oc)
+                LET ocuser = DOCUMENT(users, oc.uid)
+                LET lm = DOCUMENT(posts, t.lm)
+                LET lmuser = DOCUMENT(users, lm.uid)
+                FILTER t.uid == ${uid}
+                RETURN MERGE(t, {
+                  oc,
+                  ocuser,
+                  lm,
+                  lmuser
+                })
+              )
+            RETURN {
+              threads: SLICE(result, ${params.page * settings.paging.perpage}, ${settings.paging.perpage}),
+              length: LENGTH(result)
+          }
+        `)
+        }
+        else if(params.tab === 'recommend') {
+          return db.query(aql`
+            LET p3 = (
+              FOR pid IN DOCUMENT(personalForums, ${uid}).recPosts
+                RETURN DOCUMENT(posts, pid)
+            )
+            LET tAll = (
+              FOR p IN p3
+                COLLECT tid = p.tid INTO group = p
+                RETURN {
+                  tid,
+                  group
+                }
+            )
+            LET threadsAll = (
+              FOR t IN tAll
+                RETURN MERGE(DOCUMENT(threads, t.tid), {lastPid: t.group[0]._key})
+            )
+            LET result = (
+              FOR t IN threadsAll
+                SORT t.${params.sortby ? 'toc' : 'tlm'} DESC
+                FILTER t.${params.digest ? 'digest' : 'disabled'} == ${params.digest ? true : null}
+                LET oc = DOCUMENT(posts, t.oc)
+                LET ocuser = DOCUMENT(users, oc.uid)
+                LET lm = DOCUMENT(posts, t.lm)
+                LET lmuser = DOCUMENT(users, lm.uid)
+                RETURN MERGE(t, {
+                  oc,
+                  ocuser,
+                  lm,
+                  lmuser
+                })
+              )
+            RETURN {
+              threads: SLICE(result, ${params.page * settings.paging.perpage}, ${settings.paging.perpage}),
+              length: LENGTH(result)
           }
         `)
         }
         return db.query(aql`
+          LET p1 = (
+            FOR p IN posts
+              SORT p.tlm DESC
+              FILTER p.uid == ${uid}
+              RETURN p
+          )
+          LET p2 = (
+            FOR o IN usersBehavior
+              FILTER o.toMid == ${uid} && o.type == '1'
+              RETURN DOCUMENT(posts, o.pid)
+          )
+          LET p3 = (
+            FOR pid IN DOCUMENT(personalForums, ${uid}).recPosts
+              RETURN DOCUMENT(posts, pid)
+          )
+          LET pAll = UNION(p1, p2, p3)
+          LET tAll = (
+            FOR p IN pAll
+              COLLECT tid = p.tid INTO group = p
+              RETURN {
+                tid,
+                group
+              }
+          )
+          LET threadsAll = (
+            FOR t IN tAll
+              RETURN MERGE(DOCUMENT(threads, t.tid), {lastPid: t.group[0]._key})
+          )
+          LET result = (
+            FOR t IN threadsAll
+              SORT t.${params.sortby ? 'toc' : 'tlm'} DESC
+              FILTER t.${params.digest ? 'digest' : 'disabled'} == ${params.digest ? true : null}
+              LET oc = DOCUMENT(posts, t.oc)
+              LET ocuser = DOCUMENT(users, oc.uid)
+              LET lm = DOCUMENT(posts, t.lm)
+              LET lmuser = DOCUMENT(users, lm.uid)
+              RETURN MERGE(t, {
+                oc,
+                ocuser,
+                lm,
+                lmuser
+              })
+            )
+          RETURN {
+            threads: SLICE(result, ${params.page * settings.paging.perpage}, ${settings.paging.perpage}),
+            length: LENGTH(result)
+          }
+        `)
+        /*return db.query(aql`
           LET po = (FOR p IN posts
             FILTER p.uid == ${uid}
             RETURN DOCUMENT(threads, p.tid))
@@ -880,13 +1009,13 @@ table.viewPersonalForum = {
             threads: SLICE(result, ${params.page * settings.paging.perpage}, ${settings.paging.perpage}),
             count: LENGTH(result)
           }
-        `)
+        `)*/
       })
       .then(res => res._result[0])
       .then(res => {
         //if nothing went wrongvar paging = new layer.Paging(params.page)
         let paging = new layer.Paging(params.page);
-        data.paging = paging.getPagingParams(res.count);
+        data.paging = paging.getPagingParams(res.length);
         data.threads = res.threads;
         //return apifunc.get_all_forums()
 
@@ -1257,6 +1386,10 @@ table.viewSelf = {
     queryfunc.createIndex('usersBehavior', {
       type: 'skiplist',
       fields: ['mid', 'toMid']
+    }),
+    queryfunc.createIndex('usersBehavior', {
+      type: 'skiplist',
+      fields: ['toMid', 'type']
     })
   ]),
   operation: params => {

@@ -68,11 +68,6 @@ block content
                       hr.hrNarrowSpace
 
           ul.nav.nav-tabs.nav-justified
-            li.active
-              a(href='/m/#{data.forum._key}') 个人板块
-            li
-              a(href='/activities/#{data.forum._key}') 动态
-          ul.nav.nav-tabs.nav-justified
             li(class='#{data.tab == "all"? "active" : ""}')
               a(href='?&tab=all') 全部
             li(class='#{data.tab == "own"? "active" : ""}')
@@ -80,7 +75,9 @@ block content
             li(class='#{data.tab == "reply"? "active" : ""}')
               a(href='?&tab=reply') 只看回复
             li(class='#{data.tab == "recommend"? "active" : ""}')
-              a(href='?&recommend') 只看推荐
+              a(href='?&tab=recommend') 只看推荐
+            li
+              a(href='/activities/#{data.forum._key}') 动态
             .panel
               .row
                 .col-xs-12
