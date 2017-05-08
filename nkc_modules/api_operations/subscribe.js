@@ -1,8 +1,8 @@
-let settings = require('../server_settings');
-let permissions = require('../permissions');
-let arango = require('arangojs');
-let aql = arango.aql;
-let db = arango(settings.arango);
+const settings = require('../server_settings');
+const permissions = require('../permissions');
+const arango = require('arangojs');
+const aql = arango.aql;
+const db = arango(settings.arango);
 
 let table = {};
 

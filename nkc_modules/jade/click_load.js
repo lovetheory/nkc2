@@ -8,7 +8,7 @@ function Activity(obj) {
   activityContent.appendChild(activityContentText);
   activityContent.style = 'overflow: hidden;';
   activityContent.href = '/t/'+obj.tid+'#'+obj.pid;
-  var activityTitleText = document.createElement('div');
+  var activityTitleText = document.createElement('span');
   activityTitleText.innerHTML = obj.oc.t;
   activityTitleText.style = 'overflow: hidden;';
   var activityTitle = document.createElement('div');
@@ -75,6 +75,11 @@ function Activity(obj) {
     case 2:
       type = 'Re';
       break;
+    case 4:
+      type = 'Rc';
+      break;
+    default:
+      type = 'X';
   }
   var activityType = document.createElement('div');
   activityType.className = 'activity-type';

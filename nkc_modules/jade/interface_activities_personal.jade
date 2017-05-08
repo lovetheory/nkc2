@@ -75,12 +75,10 @@ block content
               a(href='/m/#{data.user._key}?&tab=recommend') 只看推荐
             li.active
               a(href='/activities/#{data.forum._key}') 动态
-            .panel
-              .row
-                .container
-                  for obj in data.activities
-                    include interface_single_activity
-                  include click_load
+            .panel#activities
+              for obj in data.activities
+                include interface_single_activity
+              include click_load
 
         .col-md-3.hidden-xs.hidden-sm
           .nkcpanel

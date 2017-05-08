@@ -1,7 +1,7 @@
-let arango = require('arangojs');
-let aql = arango.aql;
-let settings = require('../server_settings');
-let db = arango(settings.arango);
+const arango = require('arangojs');
+const aql = arango.aql;
+const settings = require('../server_settings');
+const db = arango(settings.arango);
 
 let table = {};
 
@@ -65,21 +65,6 @@ table.unrecommendPost = {
           UPDATE obj WITH {
             recPosts: REMOVE_VALUE(obj.recPosts, ${unrecPid})
           } IN personalForums
-        `)
-      })
-      .then(() => {
-        return db.query(aql`
-          LET thread = DOCUMENT(threads, ${post.tid})
-          INSERT {
-            uid: ${user._key},
-            pid: ${unrecPid},
-            fid: thread.fid,
-            tid: thread._key,
-            time: ${time},
-            type: 5,
-            toMid: thread.toMid,
-            mid: thread.mid
-          } INTO usersBehavior
         `)
       })
       .then(() => {

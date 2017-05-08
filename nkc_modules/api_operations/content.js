@@ -80,7 +80,6 @@ var postToThread = function(params,tid,user, type){
         }
       });
     }
-    if(type === 1)
     return userBehaviorRec({
       pid,
       tid,
@@ -139,7 +138,6 @@ var postToThread = function(params,tid,user, type){
 
 var postToForum = function(params,fid,user,cat){
   var post = params.post
-
   if(typeof post.t !=='string')throw '请填写标题！'
 
   post.t = post.t.trim();

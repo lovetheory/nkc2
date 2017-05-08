@@ -6,12 +6,12 @@ var helper_mod = require('../helper.js')();
 var queryfunc = require('../query_functions')
 var validation = require('../validation')
 var AQL = queryfunc.AQL
-let layer = require('../layer');
+const layer = require('../layer');
 var apifunc = require('../api_functions')
 var svgCaptcha = require('svg-captcha');
-let db = require('arangojs')(settings.arango);
-let aql = require('arangojs').aql;
-let tools = require('../tools');
+const db = require('arangojs')(settings.arango);
+const aql = require('arangojs').aql;
+const tools = require('../tools');
 
 var jadeDir = __projectroot + 'nkc_modules/jade/'
 
@@ -1397,24 +1397,88 @@ table.viewSelf = {
     let uid = params.user._key;
     data.template = jadeDir + 'self.jade';
     let page = params.page || 0;
-    return db.query(aql`
-      LET usersSub = DOCUMENT(usersSubscribe, ${uid})
+    if(page === 0) {
+      return db.query(aql`
+        LET usersSub = document(usersSubscribe, ${uid})
+        LET sUs = usersSub.subscribeUsers
+        LET sFs = usersSub.subscribeForums
+        LET BHV = (FOR o IN usersBehavior
+          SORT o.time DESC
+          FILTER o.uid == ${uid} || POSITION(sUs, o.uid) || o.mid == ${uid} || o.toMid == ${uid}
+          LIMIT 30
+          RETURN o
+        )
+        LET subForumBHV = (
+        FOR o IN usersBehavior
+          FILTER o.time > (DATE_NOW() - 604800000) && position(sFs, o.fid)
+          RETURN o)
+        LET FBHV = (
+          FOR o IN subForumBHV
+          COLLECT tid = o.tid INTO groups = o
+          FILTER LENGTH(groups[*]) > 6
+          RETURN {
+            tid,
+            threadsInGroup: groups
+          }
+        )
+        LET FBHL = (
+          FOR forumB IN FBHV
+          RETURN MERGE(LAST(forumB.threadsInGroup), {actInThread: LENGTH(forumB.threadsInGroup)})
+        )
+        LET res = UNION(FBHL, BHV)
+          FOR action IN res
+          SORT action.time DESC
+          LET thread = DOCUMENT(threads, action.tid)
+          LET oc = DOCUMENT(posts, thread.oc)
+          LET post = DOCUMENT(posts, action.pid)
+          LET forum = DOCUMENT(forums, action.fid)
+          LET myForum = DOCUMENT(personalForums, action.mid)
+          LET toMyForum = DOCUMENT(personalForums, action.toMid)
+          LET user = DOCUMENT(users, action.uid)
+          RETURN MERGE(action, {
+            thread,
+            oc,
+            post,
+            forum,
+            myForum,
+            toMyForum,
+            user
+          })
+      `)
+        .then(res => {
+          let result = res._result;
+          for (obj of result) {
+            if (!obj.user) {
+              console.log(obj);
+            }
+          }
+          data.activities = res._result.map(obj => {
+            obj.post.c = tools.contentFilter(obj.post.c);
+            return obj
+          });
+          return data;
+        })
+    }
+    else return db.query(aql`
+      LET usersSub = document(usersSubscribe, ${uid})
       LET sUs = usersSub.subscribeUsers
       LET sFs = usersSub.subscribeForums
-      FOR o IN usersBehavior
+      LET BHV = (FOR o IN usersBehavior
         SORT o.time DESC
-        FILTER POSITION(sUs, o.uid) ||
-        POSITION(sFs, o.fid) || o.mid == ${uid} ||
-        o.toMid == ${uid} || o.uid == ${uid}
+        FILTER o.uid == ${uid} || POSITION(sUs, o.uid) || o.mid == ${uid} || o.toMid == ${uid}
         LIMIT ${page * 30}, 30
-        LET thread = DOCUMENT(threads, o.tid)
+        RETURN o
+      )
+        FOR action IN BHV
+        SORT action.time DESC
+        LET thread = DOCUMENT(threads, action.tid)
         LET oc = DOCUMENT(posts, thread.oc)
-        LET post = DOCUMENT(posts, o.pid)
-        LET forum = DOCUMENT(forums, o.fid)
-        LET myForum = DOCUMENT(personalForums, o.mid)
-        LET toMyForum = DOCUMENT(personalForums, o.toMid)
-        LET user = DOCUMENT(users, o.uid)
-        RETURN MERGE(o,{
+        LET post = DOCUMENT(posts, action.pid)
+        LET forum = DOCUMENT(forums, action.fid)
+        LET myForum = DOCUMENT(personalForums, action.mid)
+        LET toMyForum = DOCUMENT(personalForums, action.toMid)
+        LET user = DOCUMENT(users, action.uid)
+        RETURN MERGE(action, {
           thread,
           oc,
           post,
@@ -1473,7 +1537,7 @@ table.viewSelf = {
       })
       .catch(e => console.log(e))
   },
-}
+};
 
 table.viewPersonalActivities = {
   operation: params => {
