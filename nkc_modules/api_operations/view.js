@@ -1399,6 +1399,10 @@ table.viewSelf = {
     let page = params.page || 0;
     if(page === 0) {
       return db.query(aql`
+        LET user = DOCUMENT(users, ${uid})
+        
+      `)
+      return db.query(aql`
         LET usersSub = document(usersSubscribe, ${uid})
         LET sUs = usersSub.subscribeUsers
         LET sFs = usersSub.subscribeForums
@@ -1446,18 +1450,13 @@ table.viewSelf = {
           })
       `)
         .then(res => {
-          let result = res._result;
-          for (obj of result) {
-            if (!obj.user) {
-              console.log(obj);
-            }
-          }
           data.activities = res._result.map(obj => {
             obj.post.c = tools.contentFilter(obj.post.c);
             return obj
           });
-          return data;
+          return db.collection('users').update(uid, {lastVisit: Date.now()})
         })
+        .then(() => data)
     }
     else return db.query(aql`
       LET usersSub = document(usersSubscribe, ${uid})

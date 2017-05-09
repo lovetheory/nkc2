@@ -1,11 +1,9 @@
 window._nowAtPage = 1;
 moment.locale('zh-cn');
 function Activity(obj) {
-  var activityContentText = document.createElement('div');
-  activityContentText.innerHTML = obj.post.c;
-  activityContentText.className = 'activity-content';
   var activityContent = document.createElement('a');
-  activityContent.appendChild(activityContentText);
+  activityContent.innerHTML = obj.post.c;
+  activityContent.className = 'activity-content';
   activityContent.style = 'overflow: hidden;';
   activityContent.href = '/t/'+obj.tid+'#'+obj.pid;
   var activityTitleText = document.createElement('span');

@@ -48,6 +48,5 @@ else
               span.activity-title-forum(style='background-color: #{color};') &nbsp;#{obj.myForum.abbr}&nbsp;
           a(href='/t/#{obj.tid}')
             span(style='overflow: hidden;') #{obj.oc.t}
-        a(href='/t/#{obj.tid}##{obj.pid}' style='overflow: hidden;')
-          .activity-content #{obj.post.c}
+        a.activity-content(href='/t/#{obj.tid}##{obj.pid}' style='overflow: hidden;') #{obj.post.c}
 
