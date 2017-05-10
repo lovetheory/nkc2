@@ -468,6 +468,8 @@ table.viewHome = {
         contentClasses[param] = true;
       }
     }
+    let content = params.content || 'forum';
+    data.content = content;
     return AQL(`
     for t in threads
     LET f = DOCUMENT(forums, t.fid)
@@ -496,6 +498,7 @@ table.viewHome = {
         data.newestDigestThreads = res;
 
         //add homepage posts      17-03-13  lzszone
+
         if (!global.allThreadsCount) {
           return AQL(`
             LET nCount = (FOR t IN threads
@@ -519,30 +522,58 @@ table.viewHome = {
         }
         return params.digest ? global.allThreadsCount.dCount : global.allThreadsCount.nCount
       })
-      .then(length => {
-        var paging = new layer.Paging(params.page).getPagingParams(length);
-        data.paging = paging
-        if (params.digest) {
-          ;
-          data.digest = true;
-        }
-        data.sortby = params.sortby;
-        return queryfunc.getIndexThreads(params, paging)
-      })
-      .then(res => {
-        data.indexThreads = res._result;
-        return queryfunc.getActiveUsers();
-      })
-      .then(res => {
-        data.activeUsers = res._result;
-        return queryfunc.getIndexForumList(contentClasses);
-      })
-      .then(res => {
-        data.indexForumList = res._result;
-        data.fTarget = 'home'
-      })
-      .then(() => data)
-      .catch(e => console.log(e))
+        .then(length => {
+          var paging = new layer.Paging(params.page).getPagingParams(length);
+          data.paging = paging;
+          data.digest = params.digest;
+          data.sortby = params.sortby;
+          if(params.content === 'personal') {
+            return db.query(aql`
+              LET result = (FOR t IN threads
+                SORT t.${params.sortby? 'toc' : 'tlm'} DESC
+                FILTER t.${params.digest? 'digest' :'disabled'} == ${params.digest? true : null} &&
+                t.fid == null
+                LET oc = DOCUMENT(posts, t.oc)
+                LET ocuser = DOCUMENT(users, oc.uid)
+                LET lm = DOCUMENT(posts, t.lm)
+                LET lmuser = DOCUMENT(users, lm.uid)
+                RETURN MERGE(t, {
+                  oc,
+                  ocuser,
+                  lm,
+                  lmuser
+                })
+              )
+              RETURN {
+                threads: SLICE(result, ${params.page * settings.paging.perpage}, ${settings.paging.perpage}),
+                length: LENGTH(result)
+              }
+            `)
+              .then(res => {
+                let result = res._result[0];
+                let paging = new layer.Paging(params.page).getPagingParams(result.length);
+                data.paging = paging;
+                return {
+                  _result: result.threads,
+                }
+              })
+          }
+          return queryfunc.getIndexThreads(params, paging)
+        })
+        .then(res => {
+          data.indexThreads = res._result;
+          return queryfunc.getActiveUsers();
+        })
+        .then(res => {
+          data.activeUsers = res._result;
+          return queryfunc.getIndexForumList(contentClasses);
+        })
+        .then(res => {
+          data.indexForumList = res._result;
+          data.fTarget = 'home'
+        })
+        .then(() => data)
+        .catch(e => console.log(e))
   }
 };
 
@@ -933,6 +964,37 @@ table.viewPersonalForum = {
           }
         `)
         }
+        else if(params.tab === 'discuss') {
+          return db.query(aql`
+            LET result = (FOR t IN threads
+              SORT t.${params.sortby? 'toc' : 'tlm'} DESC
+              FILTER t.toMid == ${uid} ||
+              (t.uid == ${uid} && t.toMid > null)
+              LET oc = DOCUMENT(posts, t.oc)
+              LET ocuser = DOCUMENT(users, oc.uid)
+              LET lm = DOCUMENT(posts, t.lm)
+              LET lmuser = DOCUMENT(users, lm.uid)
+              RETURN MERGE(t, {
+                oc,
+                ocuser,
+                lm,
+                lmuser
+              })
+            )
+            RETURN {
+              threads: SLICE(result, ${params.page * settings.paging.perpage}, ${settings.paging.perpage}),
+              length: LENGTH(result)
+            }
+          `)
+        }
+        else if(params.tab === 'subscribe') {
+          return db.query(aql`
+            LET subU = DOCUMENT(usersSubscribe, ${uid}).subscribeUsers
+            FOR p IN posts
+              SORT
+              
+          `)
+        }
         return db.query(aql`
           LET p1 = (
             FOR p IN posts
@@ -942,7 +1004,7 @@ table.viewPersonalForum = {
           )
           LET p2 = (
             FOR o IN usersBehavior
-              FILTER o.toMid == ${uid} && o.type == '1'
+              FILTER o.toMid == ${uid} && o.type == 1
               RETURN DOCUMENT(posts, o.pid)
           )
           LET p3 = (
@@ -1398,63 +1460,63 @@ table.viewSelf = {
     data.template = jadeDir + 'self.jade';
     let page = params.page || 0;
     if(page === 0) {
-      return db.query(aql`
-        LET user = DOCUMENT(users, ${uid})
-        
-      `)
-      return db.query(aql`
-        LET usersSub = document(usersSubscribe, ${uid})
-        LET sUs = usersSub.subscribeUsers
-        LET sFs = usersSub.subscribeForums
-        LET BHV = (FOR o IN usersBehavior
-          SORT o.time DESC
-          FILTER o.uid == ${uid} || POSITION(sUs, o.uid) || o.mid == ${uid} || o.toMid == ${uid}
-          LIMIT 30
-          RETURN o
-        )
-        LET subForumBHV = (
-        FOR o IN usersBehavior
-          FILTER o.time > (DATE_NOW() - 604800000) && position(sFs, o.fid)
-          RETURN o)
-        LET FBHV = (
-          FOR o IN subForumBHV
-          COLLECT tid = o.tid INTO groups = o
-          FILTER LENGTH(groups[*]) > 6
-          RETURN {
-            tid,
-            threadsInGroup: groups
-          }
-        )
-        LET FBHL = (
-          FOR forumB IN FBHV
-          RETURN MERGE(LAST(forumB.threadsInGroup), {actInThread: LENGTH(forumB.threadsInGroup)})
-        )
-        LET res = UNION(FBHL, BHV)
-          FOR action IN res
-          SORT action.time DESC
-          LET thread = DOCUMENT(threads, action.tid)
-          LET oc = DOCUMENT(posts, thread.oc)
-          LET post = DOCUMENT(posts, action.pid)
-          LET forum = DOCUMENT(forums, action.fid)
-          LET myForum = DOCUMENT(personalForums, action.mid)
-          LET toMyForum = DOCUMENT(personalForums, action.toMid)
-          LET user = DOCUMENT(users, action.uid)
-          RETURN MERGE(action, {
-            thread,
-            oc,
-            post,
-            forum,
-            myForum,
-            toMyForum,
-            user
-          })
-      `)
+      return db.collection('users').document(uid)
+        .then(doc => {
+          let lastTime = doc.lastVisitSelf || Date.now();
+          return db.query(aql`
+            LET usersSub = document(usersSubscribe, ${uid})
+            LET sUs = usersSub.subscribeUsers
+            LET sFs = usersSub.subscribeForums
+            LET BHV = (FOR o IN usersBehavior
+              SORT o.time DESC
+              FILTER o.uid == ${uid} || POSITION(sUs, o.uid) || o.mid == ${uid} || o.toMid == ${uid}
+              LIMIT 30
+              RETURN o
+            )
+            LET subForumBHV = (
+            FOR o IN usersBehavior
+              FILTER o.time > ${lastTime} && position(sFs, o.fid)
+              RETURN o)
+            LET FBHV = (
+              FOR o IN subForumBHV
+              COLLECT tid = o.tid INTO groups = o
+              FILTER LENGTH(groups[*]) > 6
+              RETURN {
+                tid,
+                threadsInGroup: groups
+              }
+            )
+            LET FBHL = (
+              FOR forumB IN FBHV
+              RETURN MERGE(LAST(forumB.threadsInGroup), {actInThread: LENGTH(forumB.threadsInGroup)})
+            )
+            LET res = UNION(FBHL, BHV)
+              FOR action IN res
+              SORT action.time DESC
+              LET thread = DOCUMENT(threads, action.tid)
+              LET oc = DOCUMENT(posts, thread.oc)
+              LET post = DOCUMENT(posts, action.pid)
+              LET forum = DOCUMENT(forums, action.fid)
+              LET myForum = DOCUMENT(personalForums, action.mid)
+              LET toMyForum = DOCUMENT(personalForums, action.toMid)
+              LET user = DOCUMENT(users, action.uid)
+              RETURN MERGE(action, {
+                thread,
+                oc,
+                post,
+                forum,
+                myForum,
+                toMyForum,
+                user
+              })
+          `)
+        })
         .then(res => {
           data.activities = res._result.map(obj => {
             obj.post.c = tools.contentFilter(obj.post.c);
             return obj
           });
-          return db.collection('users').update(uid, {lastVisit: Date.now()})
+          return db.collection('users').update(uid, {lastVisitSelf: Date.now()})
         })
         .then(() => data)
     }

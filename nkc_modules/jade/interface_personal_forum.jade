@@ -70,12 +70,16 @@ block content
           ul.nav.nav-tabs.nav-justified
             li(class='#{data.tab == "all"? "active" : ""}')
               a(href='?&tab=all') 全部
+            li(class='#{data.tab == "discuss" ? "active" : ""}')
+              a(href='?&tab=discuss') 讨论
             li(class='#{data.tab == "own"? "active" : ""}')
-              a(href='?&tab=own') 只看版主
+              a(href='?&tab=own') 版主
             li(class='#{data.tab == "reply"? "active" : ""}')
-              a(href='?&tab=reply') 只看回复
+              a(href='?&tab=reply') 回复
             li(class='#{data.tab == "recommend"? "active" : ""}')
-              a(href='?&tab=recommend') 只看推荐
+              a(href='?&tab=recommend') 推荐
+            li(class='#{data.tab == "subscribe" ? "active" : ""}')
+              a(href='?&tab=subscribe') 关注
             li
               a(href='/activities/#{data.forum._key}') 动态
             .panel

@@ -68,11 +68,15 @@ block content
             li
               a(href='/m/#{data.targetUser._key}?&tab=all') 全部
             li
-              a(href='/m/#{data.targetUser._key}?&tab=own') 只看版主
+              a(href='/m/#{data.targetUser._key}?&tab=discuss') 讨论
             li
-              a(href='/m/#{data.targetUser._key}?&tab=reply') 只看回复
+              a(href='/m/#{data.targetUser._key}?&tab=own') 版主
             li
-              a(href='/m/#{data.targetUser._key}?&tab=recommend') 只看推荐
+              a(href='/m/#{data.targetUser._key}?&tab=reply') 回复
+            li
+              a(href='/m/#{data.targetUser._key}?&tab=recommend') 推荐
+            li
+              a(href='/m/#{data.targetUser._key}?&tab=subscribe') 关注
             li.active
               a(href='/activities/#{data.forum._key}') 动态
             .panel#activities

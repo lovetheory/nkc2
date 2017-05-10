@@ -36,26 +36,30 @@ block content
             - var digest = data.digest
             - var class_str_all = digest?'':'active'
             - var class_str_digest = digest?'active':''
-
             - var cat = data.cat
             - var sortby = data.sortby
             - var class_str_sortby_toc = sortby?'active':''
             - var class_str_sortby_tlm = sortby?'':'active'
 
             ul.pagination.NavigationPaging
+              li(class='#{data.content == "forum"? "active" : ""}')
+                a(href='?&content=forum#{data.digest? "&digest=true":""}#{data.sortby? "&sortby=toc":""}') 板块
+              li(class='#{data.content == "personal"? "active" : ""}')
+                a(href='?&content=personal#{data.digeset? "&digest=true": ""}#{data.sortby? "&sortby=toc":""}') 专栏
+
+            ul.pagination.NavigationPaging
               - var page = paging?paging.page:null
               li(class="#{class_str_all}")
-                a(href='#{toQueryString({cat})}') 俱
+                a(href='?&content=#{data.content}#{data.sortby? "&sortby=toc": ""}') 全部
 
               li(class="#{class_str_digest}")
-                a(href='#{toQueryString({cat, digest: true})}') 精
+                a(href='?&content=#{data.content}&digest=true#{data.sortby? "&sortby=toc":""}') 精华
 
             ul.pagination.NavigationPaging
               li(class='#{class_str_sortby_tlm}')
-                a(href='#{toQueryString({cat, digest})}') 复序
+                a(href='?&content=#{data.content}#{data.digest? "&digest=true":""}') 复序
               li(class='#{class_str_sortby_toc}')
-                a(href='#{toQueryString({cat, digest, sortby: "toc"})}') 帖序
-
+                a(href='?&content=#{data.content}#{data.digest? "&digest=true":""}&sortby=toc') 帖序
 
           hr.hrNarrowSpace
           for thread in data.indexThreads
