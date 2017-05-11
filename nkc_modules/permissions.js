@@ -443,6 +443,35 @@ var calculateThenConcatCerts = function(user){
   return certs
 }
 
+let getContentClassesByCert = cert => {
+  let classes = [];
+  let certificate = certificates[cert];
+  if(certificate.contentClasses) {
+    let contentClasses = certificate.contentClasses;
+    for(attr of contentClasses) {
+      if(contentClasses[attr]) {
+        classes.push(attr)
+      }
+    }
+  }
+  if(certificate.inheritFrom) {
+    let inheritClasses = getContentClassesByCerts(certificate.inheritFrom);
+    classes = classes.concat(inheritClasses)
+  }
+  return classes;
+};
+
+let getContentClassesByCerts = certs => {
+  let classes = [];
+  let arr = certs.map(cert => getContentClassesByCert(cert));
+  for(let contentClasses of arr) {
+    classes = classes.concat(contentClasses);
+  }
+  return classes;
+};
+
+permissions.getContentClassesByCerts = getContentClassesByCerts;
+
 permissions.calculateThenConcatCerts = calculateThenConcatCerts
 
 permissions.certificates = certificates

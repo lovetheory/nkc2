@@ -67,6 +67,10 @@ block content
                       span 分类: (暂无分类)
                       hr.hrNarrowSpace
 
+        .col-md-9
+          .panel
+            include interface_easy_post
+
           ul.nav.nav-tabs.nav-justified
             li(class='#{data.tab == "all"? "active" : ""}')
               a(href='?&tab=all') 全部

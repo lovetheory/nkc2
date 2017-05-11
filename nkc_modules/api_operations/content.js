@@ -853,3 +853,21 @@ table.configPersonalForum = {
 //!!!danger!!! will make the database very busy.
 update_all_threads = () => {
 };
+
+table.getForumsList = {
+  operation: params => {
+    let uid = params.user._key;
+    return db.collection('users').document(uid)
+      .then(user => permissions.getContentClassesByCerts(user.certs))
+      .then(contentClasses => db.query(aql`
+        FOR f in forums
+          FILTER POSITION(${contentClasses}, f.class) && f._key != 'recycle'
+          COLLECT parent = f.parentid INTO group = f
+          RETURN {
+            parent,
+            group
+          }
+      `))
+      .then(res => res._result)
+  }
+};
