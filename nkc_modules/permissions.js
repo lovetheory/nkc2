@@ -276,6 +276,7 @@ var certificates={
       exampleOperation:true,
 
       getGalleryRecent:true,
+      getForumsList: true,
 
       viewPage:true,
       viewTemplate:true,
@@ -448,7 +449,7 @@ let getContentClassesByCert = cert => {
   let certificate = certificates[cert];
   if(certificate.contentClasses) {
     let contentClasses = certificate.contentClasses;
-    for(attr of contentClasses) {
+    for(attr in contentClasses) {
       if(contentClasses[attr]) {
         classes.push(attr)
       }

@@ -860,14 +860,21 @@ table.getForumsList = {
     return db.collection('users').document(uid)
       .then(user => permissions.getContentClassesByCerts(user.certs))
       .then(contentClasses => db.query(aql`
+        LET classes = PUSH(UNIQUE(${contentClasses}), null)
         FOR f in forums
-          FILTER POSITION(${contentClasses}, f.class) && f._key != 'recycle'
+          FILTER POSITION(classes, f.class) && f._key != 'recycle'
           COLLECT parent = f.parentid INTO group = f
           RETURN {
             parent,
             group
           }
+          /*COLLECT class = f.class INTO group = f
+          RETURN {
+            class,
+            group
+          }*/
       `))
       .then(res => res._result)
+      .catch(e => {throw e})
   }
 };
