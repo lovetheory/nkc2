@@ -320,7 +320,7 @@ table.postTo = {
     validation.validatePost(post);
 
     //2. target extraction
-    var targets = params.target.split(',')
+    var targets = params.target.split(',');
     for(target of targets) {
       target = target.split('/');
       if(target.length!=2)throw 'Bad target format, expect "targetType/targetKey"'
@@ -874,7 +874,12 @@ table.getForumsList = {
             group
           }*/
       `))
-      .then(res => res._result)
+      .then(res => {
+        return {
+          forumsList: res._result,
+          uid
+        }
+      })
       .catch(e => {throw e})
   }
 };
