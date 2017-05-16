@@ -15,7 +15,7 @@ var EasyPost = function() {
 };
 EasyPost.prototype.init = function() {
   var self = this;
-  var path = window.location.pathname.match(/^\/(.)\/([0-9]+)/);
+  var path = window.location.pathname.match(/^\/(.)\/([0-9]|[a-z]+)/);
   if(path && path[1] === 'm') {
     this.parents.style.display = 'none';
     this.children.style.display = 'none';
@@ -39,6 +39,11 @@ EasyPost.prototype.init = function() {
           parents.appendChild(createOption(forumsList[i].display_name));
         }
         for(var i in forumsList) {
+          if(forumsList[i]._key === self.id) {
+            parents.value = forumsList[i].display_name;
+            parentsOnChange(self)();
+            return
+          }
           for(var j in forumsList[i].children) {
             if(forumsList[i].children[j]._key === self.id) {
               parents.value = forumsList[i].display_name;
@@ -49,35 +54,39 @@ EasyPost.prototype.init = function() {
         }
       })
       .then(function(value) {
-        self.children.value = value;
-        childrenOnChange(self)();
+        if(value) {
+          self.children.value = value;
+          childrenOnChange(self)();
+        }
       })
   }
   geid('onlyM').onchange = onlyMOnChange(self);
   parents.onchange = parentsOnChange(self);
   children.onchange = childrenOnChange(self);
   post.onclick = onPost(self);
-  title.focusin = titleFocusIn(self);
-  easyPost.addEventListener('focusout', easyPostFocusOut(self));
+  easyPost.addEventListener('focusin', easyPostFocusIn(self));
+  //easyPost.addEventListener('focusout', easyPostFocusOut(self)); 暂时无法解决事件问题
   $('#postController').hide();
 };
 
-var titleFocusIn = function(that) {
-  return function() {
+
+var easyPostFocusIn = function(that) {
+  return function(e) {
+    e.stopPropagation();
     $('#postController').show('fast');
     that.title.placeholder = '标题';
   }
 };
 
-var easyPostFocusIn = function(that) {
-  
-}
-
 var easyPostFocusOut = function(that) {
-  return function() {
-    console.log('triggered')
-    $('#postController').hide('fast');
-    that.title.placeholder = '发一个新帖吧';
+  return function(e) {
+    console.log('trigger focus out' + e.target);
+    e.stopPropagation();
+    if(!that.hasOwnProperty(document.activeElement)) {
+      console.log(document.activeElement);
+      $('#postController').hide('fast');
+      that.title.placeholder = '发一个新帖吧';
+    }
   }
 };
 
