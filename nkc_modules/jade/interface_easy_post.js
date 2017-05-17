@@ -15,7 +15,7 @@ var EasyPost = function() {
 };
 EasyPost.prototype.init = function() {
   var self = this;
-  var path = window.location.pathname.match(/^\/(.)\/([0-9]|[a-z]+)/);
+  var path = window.location.pathname.match(/^\/(.)\/(\w+)/);
   if(path && path[1] === 'm') {
     this.parents.style.display = 'none';
     this.children.style.display = 'none';
@@ -45,7 +45,7 @@ EasyPost.prototype.init = function() {
             return
           }
           for(var j in forumsList[i].children) {
-            if(forumsList[i].children[j]._key === self.id) {
+            if(forumsList[i].children[j]._key == self.id) {
               parents.value = forumsList[i].display_name;
               parentsOnChange(self)();
               return forumsList[i].children[j].display_name
@@ -105,7 +105,9 @@ var childrenOnChange = function(that) {
       }
     }
     if(!result) screenTopWarning('在当前学院下未找到所选专业,请重新选择.');
-    else that.id = result;
+    else {
+      that.id = result;
+    }
   }
 };
 
@@ -180,18 +182,19 @@ var onPost = function(that) {
     };
     if(onlyM) {
       postObj = {
-        post,
+        post: post,
         target: 'm/' + that.uid
       }
     }
     else {
+      console.log(target);
       if (target === 'f/undefined') {
         screenTopWarning('未指定正确的发送目标, 请选择正确的学院 -> 专业');
         return;
       }
       postObj = {
-        target,
-        post
+        target: target,
+        post: post
       }
     }
     that.post.className = 'btn btn-primary disabled';

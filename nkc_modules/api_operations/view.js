@@ -558,7 +558,25 @@ table.viewHome = {
                 }
               })
           }
-          return queryfunc.getIndexThreads(params, paging)
+          else if(params.content === 'all') {
+            let paging = new layer.Paging(params.page).getPagingParams();
+            data.paging = paging;
+            return db.query(aql`
+              FOR t IN threads
+                SORT t.${params.sortby? 'toc' : 'tlm'} DESC
+                FILTER t.${params.digest? 'digest' : 'disabled'}==${params.digest? true : null}
+                LET forum = DOCUMENT(forums, t.fid)
+                FILTER ((HAS(${contentClasses}, forum.class) || forum.isVisibleForNCC == true) &&
+                forum.visibility == true) || t.fid == null
+                LIMIT ${paging.start}, ${paging.count}
+                LET oc = DOCUMENT(posts, t.oc)
+                LET ocuser = DOCUMENT(users, oc.uid)
+                LET lm = DOCUMENT(posts, t.lm)
+                LET lmuser = DOCUMENT(users, lm.uid)
+                RETURN MERGE(t, {oc, lm, forum, ocuser, lmuser})
+            `)
+          }
+          return queryfunc.getForumThreads(params, paging)
         })
         .then(res => {
           data.indexThreads = res._result;
@@ -988,11 +1006,35 @@ table.viewPersonalForum = {
           `)
         }
         else if(params.tab === 'subscribe') {
+          let contentClasses = params.contentClasses;
           return db.query(aql`
             LET subU = DOCUMENT(usersSubscribe, ${uid}).subscribeUsers
-            FOR p IN posts
-              SORT
-              
+            LET tAll = (FOR t IN threads
+              SORT t.${params.sortby? 'toc' : 'tlm'} DESC
+              FILTER t.${params.digest? 'digest' : 'disabled'} == ${params.digest? true : null} &&
+              POSITION(subU, t.uid)
+              LET forum = DOCUMENT(forums, t.fid)
+              FILTER HAS(${contentClasses}, forum.class)
+              RETURN t)
+            LET selected = SLICE(tAll, ${(params.page || 0) * settings.paging.perpage}, ${settings.paging.perpage})
+            LET length = LENGTH(tAll)
+            LET result = (
+              FOR t IN selected
+                LET oc = DOCUMENT(posts, t.oc)
+                LET ocuser = DOCUMENT(users, oc.uid)
+                LET lm = DOCUMENT(posts, t.lm)
+                LET lmuser = DOCUMENT(users, lm.uid)
+              RETURN MERGE(t, {
+                oc,
+                ocuser,
+                lm,
+                lmuser
+              })
+            )
+            RETURN {
+              threads: result,
+              length
+            }
           `)
         }
         return db.query(aql`

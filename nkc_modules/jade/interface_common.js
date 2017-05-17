@@ -432,7 +432,7 @@ function subscribeUserSwitch(targetUid) {
   var button = geid('subscribeButton');
   button.className = 'btn btn-sm disabled';
   if(button.innerHTML === '关注') {
-    nkcAPI('subscribeUser', {targetUid})
+    nkcAPI('subscribeUser', {targetUid: targetUid})
       .then(function() {
         screenTopAlert('关注成功');
         button.innerHTML = '取关';
@@ -443,7 +443,7 @@ function subscribeUserSwitch(targetUid) {
       })
   }
   else if(button.innerHTML === '取关') {
-    nkcAPI('unsubscribeUser', {targetUid})
+    nkcAPI('unsubscribeUser', {targetUid: targetUid})
       .then(function() {
         screenTopAlert('成功取消关注');
         button.innerHTML = '关注';
@@ -464,7 +464,7 @@ function recommendPostSwitch(e, targetPid) {
   var content = button.innerHTML.replace(/\(.*\)/, '')
   button.className = 'btn btn-sm disabled';
   if(content === '推荐') {
-    nkcAPI('recommendPost', {targetPid})
+    nkcAPI('recommendPost', {targetPid: targetPid})
       .then(function() {
         screenTopAlert('推荐成功');
         button.innerHTML = '取消推荐';
@@ -475,7 +475,7 @@ function recommendPostSwitch(e, targetPid) {
       })
   }
   else if(content === '取消推荐') {
-    nkcAPI('unrecommendPost', {targetPid})
+    nkcAPI('unrecommendPost', {targetPid: targetPid})
       .then(function(msg) {
         screenTopAlert('成功取消推荐');
         button.innerHTML = '推荐(' + msg.message + ')';

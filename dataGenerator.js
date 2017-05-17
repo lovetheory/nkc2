@@ -2,7 +2,7 @@ const arango = require('arangojs');
 const aql = arango.aql;
 const db = arango({
   url: 'http://root:@127.0.0.1:8529',
-  databaseName: 'rescue',    //数据库名称
+  databaseName: 'db05',    //数据库名称
   arangoVersion: 20800
 });
 console.log('generating...');
@@ -93,7 +93,8 @@ let usersSubscribeGen = db.query(aql`
   FOR u IN users
     INSERT {
       _key: u._key,
-      subscribeForums: SPLIT(u.focus_forums, ',')
+      subscribeForums: SPLIT(u.focus_forums, ','),
+      subscribeUsers: []
     } IN usersSubscribe
   collect with count into length
   return {
