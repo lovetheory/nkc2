@@ -15,54 +15,59 @@ var EasyPost = function() {
 };
 EasyPost.prototype.init = function() {
   var self = this;
-  var path = window.location.pathname.match(/^\/(.)\/(\w+)/);
-  if(path && path[1] === 'm') {
-    this.parents.style.display = 'none';
-    this.children.style.display = 'none';
-    this.type = 'm';
-    this.id = path[2];
-  }
-  else {
-    nkcAPI('getForumsList', {})
-      .then(function(result) {
-        self.uid = result.uid;
+  nkcAPI('getForumsList', {})
+    .then(function(result) {
+      var path = window.location.pathname.match(/^\/(.)\/(\w+)/);
+      if(path && path[1] === 'm') {
+        self.parents.style.display = 'none';
+        self.children.style.display = 'none';
+        self.type = 'm';
+        self.id = path[2];      //temp of the path key
+        self.key = path[2];     //real target key when posting
+      }
+      else{
         self.type = 'f';
-        if(path && path[1] === 'f') {
-          self.id = path[2];
+      }
+      self.uid = result.uid;
+      if(path && path[1] === 'f') {
+        self.id = path[2];
+      }
+      return groupingForums(result.forumsList, self);
+    })
+    .then(function() {
+      var parents = self.parents;
+      var forumsList = self.forumsList;
+      for(var i in forumsList) {
+        parents.appendChild(createOption(forumsList[i].display_name));
+      }
+      for(var i in forumsList) {
+        if(forumsList[i]._key === self.id) {
+          parents.value = forumsList[i].display_name;
+          parentsOnChange(self)();
+          return
         }
-        return groupingForums(result.forumsList, self);
-      })
-      .then(function() {
-        var parents = self.parents;
-        var forumsList = self.forumsList;
-        for(var i in forumsList) {
-          parents.appendChild(createOption(forumsList[i].display_name));
-        }
-        for(var i in forumsList) {
-          if(forumsList[i]._key === self.id) {
+        for(var j in forumsList[i].children) {
+          if(forumsList[i].children[j]._key == self.id) {
             parents.value = forumsList[i].display_name;
             parentsOnChange(self)();
-            return
-          }
-          for(var j in forumsList[i].children) {
-            if(forumsList[i].children[j]._key == self.id) {
-              parents.value = forumsList[i].display_name;
-              parentsOnChange(self)();
-              return forumsList[i].children[j].display_name
-            }
+            return forumsList[i].children[j].display_name
           }
         }
-      })
-      .then(function(value) {
-        if(value) {
-          self.children.value = value;
-          childrenOnChange(self)();
-        }
-      })
-  }
+      }
+    })
+    .then(function(value) {
+      if(value) {
+        self.children.value = value;
+        childrenOnChange(self)();
+      }
+    })
+    .catch(function(e) {
+      console.log(e);
+    })
   geid('onlyM').onchange = onlyMOnChange(self);
   parents.onchange = parentsOnChange(self);
   children.onchange = childrenOnChange(self);
+  content.onchange = contentOnChange(self);
   post.onclick = onPost(self);
   easyPost.addEventListener('focusin', easyPostFocusIn(self));
   //easyPost.addEventListener('focusout', easyPostFocusOut(self)); 暂时无法解决事件问题
@@ -75,6 +80,15 @@ var easyPostFocusIn = function(that) {
     e.stopPropagation();
     $('#postController').show('fast');
     that.title.placeholder = '标题';
+  }
+};
+
+var contentOnChange = function(that) {
+  var btn = geid('goEditor');
+  return function() {
+    btn.href = that.key?
+      '/editor?target=' + that.type + '/' + that.key + '&content=' + that.content.value :
+      '/editor?content=' + that.content.value;
   }
 };
 
@@ -104,10 +118,17 @@ var childrenOnChange = function(that) {
         }
       }
     }
-    if(!result) screenTopWarning('在当前学院下未找到所选专业,请重新选择.');
-    else {
-      that.id = result;
+    if(!result) {
+      that.key = undefined;
+      screenTopWarning('在当前学院下未找到所选专业,请重新选择.');
     }
+    else {
+      that.key = result;
+    }
+    var btn = geid('goEditor');
+    btn.href = that.key?
+      '/editor?target=' + that.type + '/' + that.key + '&content=' + that.content.value :
+      '/editor?content=' + that.content.value;
   }
 };
 
@@ -149,13 +170,13 @@ var onlyMOnChange = function(that) {
       that.children.removeAttribute('disabled');
     }
   }
-}
+};
 
 var onPost = function(that) {
   return function() {
     var content = that.content.value.trim();
     var title = that.title.value.trim();
-    var target = that.type + '/' + that.id;
+    var target = that.type + '/' + that.key;
     var language = gv('lang').toLowerCase().trim();
     var onlyM = that.onlyM.checked;
     var postObj;
@@ -187,7 +208,6 @@ var onPost = function(that) {
       }
     }
     else {
-      console.log(target);
       if (target === 'f/undefined') {
         screenTopWarning('未指定正确的发送目标, 请选择正确的学院 -> 专业');
         return;

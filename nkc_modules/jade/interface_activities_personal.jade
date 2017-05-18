@@ -30,18 +30,16 @@ block content
               .col-xs-12
                 form(role='form')
                   .form-group
-                    img(src='/avatar/#{data.forum._key}' style='height: 70px; width: 70px; border-radius: 6px;')
+                    img(src='/avatar/#{data.forum._key}' style='height: 70px; width: 70px; border-radius: 6px; float: right;')
                     .displayShit.ForumName #{forum.display_name}
-                    input.configShit#forumName(style='font-size: 16px; display: none;' value='#{forum.display_name}' name='forumName')
+                    input.configShit#forumName(style='font-size: 16px; display: none;' value='#{forum.display_name}' name='forumName' placeholder='请输入专栏名称')
                   .form-group
                     if data.forum.description
-                      .displayShit() #{data.forum.description}
-                      input.configShit#description(value='#{forum.description}' style='display: none;' name='description')
+                      span 介绍:&nbsp;
+                      span.displayShit #{data.forum.description}
+                      input.configShit#description(value='#{forum.description}' style='display: none;' name='description' placeholder='请输入专栏介绍')
                   .form-group
                     a.btn.configShit.btn-default(style='display: none;' href='javascript: submitConfig();') 保存
-
-                div
-                  span(style='margin-right:20px;') 今日: #{data.forum.count_posts_today || 0} 主题: #{data.forum.count_threads || 0} 回复: #{data.forum.count_posts || 0}
 
                   if data.forum.moderators && data.forum.moderators.length
                     span 版主：
@@ -49,22 +47,7 @@ block content
                       each k in moderators
                         a.d-inline.margin-right(href='/user_activities_byname/#{k}') #{k}
 
-                if data.forumthreadtypes && data.forumthreadtypes.length
-                  .ForumNavigation1
-                    hr.hrNarrowSpace
-                    span 分类:
-                    a(href='/f/#{data.forum._key}' class='#{data.cat ? "" : "active"}') 所有帖子
-                    each ftt in data.forumthreadtypes
-                      -var active = ftt._key==data.cat
-                      a(href='/f/#{data.forum._key}?cat=#{ftt._key}' class='#{active ? "active" : ""}' ) #{ftt.name}
-                    hr.hrNarrowSpace
-                else
-                  .ForumNavigation1
-                    hr.hrNarrowSpace
-                    span 分类: (暂无分类)
-                    hr.hrNarrowSpace
-
-          ul.nav.nav-tabs.nav-justified
+          ul.nav.nav-tabs
             li
               a(href='/m/#{data.targetUser._key}?&tab=all') 全部
             li
@@ -79,10 +62,10 @@ block content
               a(href='/m/#{data.targetUser._key}?&tab=subscribe') 关注
             li.active
               a(href='/activities/#{data.forum._key}') 动态
-            .panel#activities
-              for obj in data.activities
-                include interface_single_activity
-              include click_load
+          .panel#activities
+            for obj in data.activities
+              include interface_single_activity
+            include click_load
 
         .col-md-3.hidden-xs.hidden-sm
           .nkcpanel

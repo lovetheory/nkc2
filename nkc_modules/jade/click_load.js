@@ -124,12 +124,14 @@ function loadNextPage() {
     .then(function(res) {
       var activities = geid('activities');
       var oldButton = geid('loadNextPage');
-      oldButton.remove();
-      for(var activity of res) {
-        activities.append(Activity(activity));
+      activities.removeChild(oldButton.parentNode);
+      for(var i in res) {
+        var activity = res[i];
+        activities.appendChild(Activity(activity));
       }
       var div = document.createElement('div');
-      div.style = 'width: 100%; text-align: center';
+      div.style.width = '100%';
+      div.style.textAlign = 'center';
       var lButton = document.createElement('a');
       lButton.href = 'javascript: loadNextPage();'
       lButton.className = 'btn btn-default';

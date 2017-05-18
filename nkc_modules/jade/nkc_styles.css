@@ -1335,7 +1335,7 @@ margin-left: 5px;
 
 .nkcshade{box-shadow: rgba(0, 0, 0, 0.14) 0px 3px 10px;}
 
-/* Lets add an arrow after each link */
+/* Lets add an arrow after each link  */
 
 .notusing .ThreadPostBody a[href]:after {
     position: relative; /* Prevent underline of arrow */
@@ -1397,6 +1397,65 @@ margin-left: 5px;
     display: block;
     text-align: center;
 }
-
+@media screen and (max-width: 768px) {
+    .nav.nav-tabs > li > a {
+        padding: 10px 10px;
+    }
+    activity {
+        padding: 2px;
+        height: 80px;
+        border-bottom: 1px solid #eee;
+        overflow: hidden;
+    }
+    .activity-info {
+        display: inline-block;
+        height: 70px;
+        vertical-align: middle;
+        width: 80%;
+    }
+    .activity-title {
+        font-size: 14px;
+    }
+    .activity-content {
+        color: grey;
+        text-decoration: none;
+        display: inline-block;
+        max-height: 34px;
+        font-size: 12px;
+    }
+    .activity-type {
+        width: 8%;
+        display: inline-block;
+        vertical-align: middle;
+    }
+    .activity-user {
+        display: inline-block;
+        width: 8%;
+        vertical-align: middle;
+        overflow: hidden;
+    }
+    .activity-type-text {
+        font-size: 16px;
+    }
+    .activity-type-date {
+        color: silver;
+        font-size: 8px;
+    }
+    .activity-user-avatar {
+        width: 25px;
+        height: 25px;
+    }
+    .activity-title-forum {
+        border-radius: 2px;
+        color: white;
+        font-size: 14px;
+        margin: 3px 3px;
+    }
+    .activity-user > a {
+        display: block;
+        text-align: center;
+        font-size: 12px;
+    }
+}
 
 /*activity*/

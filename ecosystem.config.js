@@ -11,7 +11,7 @@ module.exports = {
       script    : 'server.js',
       exec_mode: 'fork',
       watch: false,
-      cron_restart: '0 0/30 * * * ',
+      cron_restart: '* * 2 * * * ',
       env: {
         NODE_ENV: 'development'
       },

@@ -76,9 +76,9 @@ let personalForumGen = db.query(aql`
     INSERT {
       _key: u._key,
       type: 'forum',
-      abbr: SUBSTRING(u.username, 0, 4),
-      display_name: CONCAT(u.username, '的个人专栏'),
-      description: CONCAT(u.username, '的个人专栏'),
+      abbr: SUBSTRING(u.username, 0, 6),
+      display_name: CONCAT(u.username, '的专栏'),
+      description: CONCAT(u.username, '的专栏'),
       moderators: [u.username],
       recPosts: []
     } INTO personalForums

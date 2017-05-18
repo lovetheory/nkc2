@@ -182,6 +182,7 @@ var postToForum = function(params,fid,user,cat){
     return incrementForumOnNewThread(newtid)
   })
   .then((result)=>{
+    console.log('!!!!!');
     return postToThread(params,newtid,user, 1)
   })
     .catch(e => console.log(e))
@@ -794,7 +795,7 @@ let postToPersonalForum = (params, targetKey) => {
 
   let newtid;
 
-  //check existence
+  //check
   return queryfunc.doc_load(targetKey, 'users')
     .then(() => apifunc.get_new_tid())
     .then(gottid => {

@@ -10,20 +10,18 @@ $(document).ready(function(){
   }
 })
 
+/*
 function switchFunc(){
   var flag = false;
   console.log(flag);
   return function() {
+    console.log('hi')
     if (!flag) {
-      $('.ThreadCheckboxes').show();
-      $('.ForumManagement').show();
       $('.displayShit').hide();
       $('.configShit').show();
       flag = true;
       return;
     }
-    $('.ThreadCheckboxes').hide();
-    $('.ForumManagement').hide();
     $('.configShit').hide();
     $('.displayShit').show();
     flag = false;
@@ -31,6 +29,7 @@ function switchFunc(){
 }
 
 var switchManagementMode = switchFunc();
+*/
 
 function applyAll(f){
   return common.mapWithPromise(extractSelectedCheckboxArrayOfID(),f)

@@ -79,6 +79,12 @@ table.disablePost = {
       if(po['toggleAllPosts']){
         return
       }
+      let thread = new layer.Thread(post.model.tid);
+      thread.load().then(t => thread.model = t);
+      let model = thread.model;
+      if(!model.fid && model.toMid === params.user._key || !model.fid && !model.toMid && model.mid === params.user._key) {
+        return
+      }
       //else we have to check: do you own the original forum?
       return origforum.testModerator(params.user.username)
     })

@@ -805,7 +805,7 @@ table.viewThread = {
           //if no posts exist on that page, goto 1th page
         }
 
-        data.posts = posts
+        data.posts = posts;
         data.thread = thread.model
       })
       .then(result => {
