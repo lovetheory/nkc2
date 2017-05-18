@@ -124,7 +124,7 @@ block content
             each i in data.byuser
               -var username = i.username;var number = i.number;
               div(style='margin:5px')
-                a(href='/user_profile_byname/#{username}') #{username}
+                a(href='/user_activities_byname/#{username}') #{username}
                 | : #{number}
             
             hr

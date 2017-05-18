@@ -222,7 +222,7 @@ function InitThreadControl(options){
 
               <a href={'/f/'+item.fid}> 版:{item.fid} </a>
 
-              <a href={'/user_profile/'+item.uid}> 户:{item.oc.uid} </a>
+              <a href={'/m/'+item.uid}> 户:{item.oc.uid} </a>
 
             </div>
             <div className="ItemText"><span className='lighttext'>{(new Date(item.tlm)).getHours()}时</span> {item.oc.t}</div>
@@ -237,7 +237,7 @@ function InitThreadControl(options){
 
               <a href={'/t/'+item.tid}> 帖: {item.tid} </a>
 
-              <a href={'/user_profile/'+item.uid}> 户:{item.uid} </a>
+              <a href={'/m/'+item.uid}> 户:{item.uid} </a>
 
             </div>
             <div className="ItemText"><span className='lighttext'>{(new Date(item.tlm)).getHours()}时</span> {item.t} - {item.c.trim().replace(/\n/g,' ').slice(0,50)}</div>

@@ -1,14 +1,14 @@
 //api request handlers
-module.paths.push(__projectroot + 'nkc_modules'); //enable require-ment for this path
+
 
 var moment = require('moment')
 var path = require('path')
 var fs = require('fs.extra')
-var settings = require('server_settings.js');
-var helper_mod = require('helper.js')();
+var settings = require('./server_settings.js');
+var helper_mod = require('./helper.js')();
 var bodyparser = require('body-parser');
-
-var jaderender = require('jaderender');
+let apiResourcesHandlers = require('./api_resources_handlers.js');
+var jaderender = require('./jaderender');
 
 var express = require('express');
 var api = express.Router();
@@ -19,7 +19,7 @@ api.use(function(req,res,next){
 });
 
 //api_resouces_handlers
-api.use(require('api_resources_handlers'));
+api.use(apiResourcesHandlers);
 
 var multer = require('multer'); //multi-part parser, for upload
 var upload = multer({limits:{files:0,parts:100}})
@@ -56,7 +56,7 @@ api.use(function(req,res,next){
 });
 
 //new API
-api.use(require('api_operation_handlers'));
+api.use(require('./api_operation_handlers.js'));
 
 //send apidata back to client
 api.use((req,res,next)=>{

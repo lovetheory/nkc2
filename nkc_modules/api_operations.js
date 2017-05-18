@@ -1,10 +1,10 @@
 //api content request handlers
-module.paths.push(__projectroot + 'nkc_modules'); //enable require-ment for this path
+
 
 var moment = require('moment')
-var settings = require('server_settings.js');
-var helper_mod = require('helper.js')();
-var queryfunc = require('query_functions')
+var settings = require('./server_settings.js');
+var helper_mod = require('./helper.js')();
+var queryfunc = require('./query_functions')
 var AQL = queryfunc.AQL
 
 var operations = {}
@@ -45,8 +45,8 @@ operations.listAll = function(){
   return ops;
 }
 
-require('permissions').certificates.dev.permittedOperations = Object.assign(
-  require('permissions').certificates.dev.permittedOperations,
+require('./permissions').certificates.dev.permittedOperations = Object.assign(
+  require('./permissions').certificates.dev.permittedOperations,
   operations.listAll()
 ) //grandmaster
 

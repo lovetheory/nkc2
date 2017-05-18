@@ -26,12 +26,12 @@ block content
         div(class="tab-content")
           if oneUser
             div#SearchOneUser(class="tab-pane fade in active" style="margin-top:2%;margin-bottom:5%;")
-              a(href='/user_profile/#{oneUser._key}')
+              a(href='/m/#{oneUser._key}')
                 img.ForumThreadAvatar2(src='/avatar/#{oneUser._key}')
               
               div(style="display:inline-block;vertical-align:top;margin-left:1%;")
                 div
-                  a(href='/user_profile/#{oneUser._key}' style="font-size:34px;") #{oneUser.username}
+                  a(href='/m/#{oneUser._key}' style="font-size:34px;") #{oneUser.username}
                 div
                   if oneUser.description
                     div!=markdown_safe(oneUser.description)
@@ -46,12 +46,12 @@ block content
             div#SearchUsers(class="tab-pane fade" style="margin-top:2%;margin-bottom:5%;") 
               each user in Users
                 div#UsersList
-                  a(href='/user_profile/#{user._key}')
+                  a(href='/m/#{user._key}')
                     img.ForumThreadAvatar3(src='/avatar/#{user._key}')
                   
                   div(style="display:inline-block;vertical-align:top;margin-left:1%;")
                     div
-                      a(href='/user_profile/#{user._key}' style="font-size:22px;") #{user.username}
+                      a(href='/m/#{user._key}' style="font-size:22px;") #{user.username}
                     div
                       if user.description
                         div!=markdown_safe(user.description)

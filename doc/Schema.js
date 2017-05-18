@@ -115,7 +115,7 @@ var activeusers = {
 var personalForum = {
   uid: 123,
   tid: 123,
-  type: 1, //1发帖 2回thread 3修改POST 4推荐 5收藏
+  type: 1, //1发帖 2回thread 3修改POST 4推荐 5取消推荐
   time: 123,// 触发时间
   pid: 123,//POSTid
   fid:123//板块ID

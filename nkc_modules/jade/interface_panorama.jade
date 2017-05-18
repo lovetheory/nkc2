@@ -57,9 +57,9 @@ block content
           -var postHeight = '150px'
           div
             p
-              a(href='/user_profile/#{p.user._key}') #{p.user.username}
+              a(href='/m/#{p.user._key}') #{p.user.username}
               |  在 
-              a(href='/user_profile/#{p.thread.ocuser._key}') #{p.thread.ocuser.username}
+              a(href='/m/#{p.thread.ocuser._key}') #{p.thread.ocuser.username}
               |  的帖子 
               a(href='/t/#{p.thread._key}') #{title}
               //a(href='/user_profile/#{p.thread.ocuser._key}') #{p.thread.ocuser.username}
@@ -71,7 +71,7 @@ block content
         each p,index in data.latestReplies2
           -var user = p.user
           p
-            a(href='/user_profile/#{user._key}') #{user.username}
+            a(href='/m/#{user._key}') #{user.username}
             |  回复了帖子
             a(href='/t/#{p.tid}') #{p.thread.oc.t}
             //a(href='/user_profile/#{p.thread.ocuser._key}') #{p.thread.ocuser.username}
@@ -89,7 +89,7 @@ block content
         h4 在线网友
         hr.hrNarrowSpace
         each u in data.latestVisitUsers
-          -var url = '/user_profile/'+u._key
+          -var url = '/m/'+u._key
           -var avatar = '/avatar_small/'+u._key
           .PanoLVUList
             a(href='#{url}' title='#{fromNowAbbr(u.tlv)}')

@@ -1,7 +1,7 @@
-module.paths.push(__projectroot + 'nkc_modules'); //enable require-ment for this path
+
 
 var fs = require('fs-extra')
-var Promisify = require('promisify')
+var Promisify = require('./promisify')
 
 
 var nkc_fs = {}

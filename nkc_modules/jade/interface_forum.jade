@@ -88,7 +88,7 @@ block content
                       span 版主：
                         - var moderators = data.forum.moderators
                         each k in moderators
-                          a.d-inline.margin-right(href='/user_profile_byname/#{k}') #{k}
+                          a.d-inline.margin-right(href='/user_activities_byname/#{k}') #{k}
                         
                   if data.forumthreadtypes && data.forumthreadtypes.length
                     .ForumNavigation1
@@ -144,6 +144,7 @@ block content
               .row
                 .col-xs-12
                   .form-group(style='margin-top:0px;margin-bottom:6px')
+                    include interface_easy_post
                     if data.replytarget && !hasChildren
 
                       a.btn.btn-default(href='/editor?target=#{data.replytarget}') 新帖
@@ -253,7 +254,7 @@ block content
                 -var moderators = forum.moderators || []
                   span 版主:
                 for moderator in moderators
-                  a(href='/user_profile_byname/#{moderator}')  #{moderator}
+                  a(href='/user_activities_byname/#{moderator}')  #{moderator}
                 //hr.hrNarrowSpace
                 //.ForumThreadList
                 //  each thread,index in forum.threads
@@ -273,6 +274,7 @@ block scripts
   script(src='/interface_common.js')
   script(src='/interface_collections.js')
   script(src='/interface_forum.js')
+  script(src='/interface_easy_post.js')
   //script(src='/gallery.js')
   
 

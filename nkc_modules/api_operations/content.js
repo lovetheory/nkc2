@@ -1,23 +1,25 @@
-module.paths.push(__projectroot + 'nkc_modules'); //enable require-ment for this path
+
 
 var moment = require('moment')
 var path = require('path')
 var fs = require('fs.extra')
-var settings = require('server_settings.js');
-var helper_mod = require('helper.js')();
-var queryfunc = require('query_functions')
-var validation = require('validation')
+var settings = require('../server_settings.js');
+var helper_mod = require('../helper.js')();
+var queryfunc = require('../query_functions')
+var validation = require('../validation')
 var AQL = queryfunc.AQL
-var apifunc = require('api_functions')
+var apifunc = require('../api_functions')
 var layer = require('../layer')
-var permissions = require('permissions')
-let operations = require('api_operations');
+var permissions = require('../permissions')
+let operations = require('../api_operations');
+let db = require('arangojs')(settings.arango);
+let aql = require('arangojs').aql;
 
 var table = {};
 module.exports = table;
 
 function createReplyRelation(frompid,topid){
-  var operations = require('api_operations')
+  var operations = require('../api_operations.js')
   report('create reply relation '+frompid+' to '+topid)
   return operations.table.createReplyRelation.operation({frompid,topid})
 }
@@ -27,6 +29,7 @@ var postToThread = function(params,tid,user, type){
   let pid;
   var post = params.post
   var tobject = null
+  let timestamp = Date.now();
 
   //check existence
   return queryfunc.doc_load(tid,'threads')
@@ -36,9 +39,8 @@ var postToThread = function(params,tid,user, type){
     //apply for a new pid
     return apifunc.get_new_pid();
   })
-  .then((newpid) =>{
+  .then((newpid) => {
     //create a new post
-    var timestamp = Date.now();
     var newpost = { //accept only listed attribute
       _key:newpid,
       tid,
@@ -78,8 +80,16 @@ var postToThread = function(params,tid,user, type){
         }
       });
     }
-
-    return Promise.resolve()
+    return userBehaviorRec({
+      pid,
+      tid,
+      mid: tobject.mid,
+      toMid: tobject.toMid,
+      uid: user._key,
+      fid: tobject.fid,
+      time: timestamp,
+      type: type
+    })
     .then(()=>{
       if(user._key==tobject.uid){
         //if the reply was to oneself
@@ -128,7 +138,6 @@ var postToThread = function(params,tid,user, type){
 
 var postToForum = function(params,fid,user,cat){
   var post = params.post
-
   if(typeof post.t !=='string')throw '请填写标题！'
 
   post.t = post.t.trim();
@@ -162,6 +171,7 @@ var postToForum = function(params,fid,user,cat){
       fid:fid.toString(),
       category:cat,
       cid:cat,
+      mid: user._key,
     };
 
     //save this new thread
@@ -172,6 +182,7 @@ var postToForum = function(params,fid,user,cat){
     return incrementForumOnNewThread(newtid)
   })
   .then((result)=>{
+    console.log('!!!!!');
     return postToThread(params,newtid,user, 1)
   })
     .catch(e => console.log(e))
@@ -184,6 +195,7 @@ var postToPost = function(params,pid,user){ //modification.
   var post = params.post
   var fid;
   var timestamp,newpost={},original_key,tid;
+  let origthread;
 
   return queryfunc.doc_load(pid,'posts')
   .catch(err=>{
@@ -199,7 +211,7 @@ var postToPost = function(params,pid,user){ //modification.
     //params, isSelf, timeofcreation
 
     //test to see if he owns the forum
-    var origthread = new layer.Thread(tid)
+    origthread = new layer.Thread(tid)
     return origthread.load()
     .then(origthread=>{
       return new layer.Forum(origthread.model.fid).load()
@@ -248,7 +260,19 @@ var postToPost = function(params,pid,user){ //modification.
       return queryfunc.doc_save(original_post,'histories')
     })
   })
-  .then((back)=>{
+  .then((back)=> {
+    return userBehaviorRec({
+      pid: newpost._key,
+      tid: newpost.tid,
+      mid: origthread.mid,
+      toMid: origthread.toMid,
+      fid: origthread.fid,
+      type: 3,
+      uid: newpost.uidlm,
+      time: newpost.tlm
+    })
+  })
+    .then(() => {
     //now update the existing with the newly created:
     return queryfunc.doc_update(original_key,'posts',newpost);
   })
@@ -297,7 +321,7 @@ table.postTo = {
     validation.validatePost(post);
 
     //2. target extraction
-    var targets = params.target.split(',')
+    var targets = params.target.split(',');
     for(target of targets) {
       target = target.split('/');
       if(target.length!=2)throw 'Bad target format, expect "targetType/targetKey"'
@@ -309,7 +333,7 @@ table.postTo = {
         .then(()=>{
           switch (targetType) {
             case 'f':
-              return postToForum(params,targetKey,user,cat,1) //throws if notexist
+              return postToForum(params,targetKey,user,cat) //throws if notexist
             case 't':
               return postToThread(params,targetKey,user,2)
             case 'post':
@@ -506,7 +530,6 @@ table.updateAllForums = {
       `
     )
       .then(() => {
-      console.log('ksjdf')
         return AQL(`
           FOR f IN forums
             FILTER f.type == 'forum'
@@ -756,17 +779,12 @@ update_thread = (tid)=>{
   })
 };
 
-let postToMine = (obj, type) => {
-  return queryfunc.doc_save({
-    uid: obj.uid,
-    tid: obj.tid,
-    pid: obj._key,
-    time: obj.tlm,
-    type: type.toString()
-  }, 'personal_forum')
+let userBehaviorRec = obj => {
+  return queryfunc.doc_save(obj, 'usersBehavior')
 }
 
 let postToPersonalForum = (params, targetKey) => {
+  targetKey = targetKey.toString();
   let user = params.user;
   let post = params.post;
 
@@ -777,7 +795,7 @@ let postToPersonalForum = (params, targetKey) => {
 
   let newtid;
 
-  //check existence
+  //check
   return queryfunc.doc_load(targetKey, 'users')
     .then(() => apifunc.get_new_tid())
     .then(gottid => {
@@ -789,9 +807,11 @@ let postToPersonalForum = (params, targetKey) => {
         {
           _key: newtid.toString(),//key must be string.
           uid: user._key,
-          mid: targetKey.toString(),
+          mid: user._key,
         };
-
+      if(user._key !== targetKey) {
+        newthread.toMid = targetKey
+      }
       //save this new thread
       return queryfunc.doc_save(newthread, 'threads')
     })
@@ -815,7 +835,52 @@ let postToPersonalForum = (params, targetKey) => {
 //   return params
 // }
 
+table.configPersonalForum = {
+  operation: params => {
+    let description = params.description;
+    let forumName = params.forumName;
+    return db.query(aql`
+      UPDATE DOCUMENT(personalForums, ${params.user._key}) WITH {
+        description: ${description},
+        display_name: ${forumName}
+      } IN personalForums
+      RETURN NEW
+    `)
+      .then(res => res._result[0])
+      .catch(e => e)
+  }
+}
 
 //!!!danger!!! will make the database very busy.
 update_all_threads = () => {
+};
+
+table.getForumsList = {
+  operation: params => {
+    let uid = params.user._key;
+    return db.collection('users').document(uid)
+      .then(user => permissions.getContentClassesByCerts(user.certs))
+      .then(contentClasses => db.query(aql`
+        LET classes = PUSH(UNIQUE(${contentClasses}), null)
+        FOR f in forums
+          FILTER POSITION(classes, f.class) && f._key != 'recycle'
+          COLLECT parent = f.parentid INTO group = f
+          RETURN {
+            parent,
+            group
+          }
+          /*COLLECT class = f.class INTO group = f
+          RETURN {
+            class,
+            group
+          }*/
+      `))
+      .then(res => {
+        return {
+          forumsList: res._result,
+          uid
+        }
+      })
+      .catch(e => {throw e})
+  }
 };

@@ -9,31 +9,29 @@ function stamp(str){
 }
 
 global.__projectroot = __dirname + '/';//create global variable for project root directory
-module.paths.push(__projectroot + 'nkc_modules'); //enable require-ment for this path
-module.paths.push(__projectroot ); //enable require-ment for this path
 
 //global.environment = process.env.NODE_ENV||'development';
 global.environment = 'development'
 global.development = environment !== 'production';
 console.log('running in '+environment+' mode');
 
-var settings = require('server_settings')
+var settings = require('./nkc_modules/server_settings')
 settings.server.database_name = 'test'
 
-var apifunc = require('api_functions');
-var queryfunc = require('query_functions');
+var apifunc = require('./nkc_modules/api_functions');
+var queryfunc = require('./nkc_modules/query_functions');
 var mysql = require('mysql')
 var AQL = queryfunc.AQL
 
-var nkcfs = require('nkc_fs')
+var nkcfs = require('./nkc_modules/nkc_fs')
 
 function sqlquery(qstring,placeholders){
   if(!placeholders)placeholders = []
 
-  qstring = qstring.replace(/test/g,require('tEaterSettings.js').sql.database)
+  qstring = qstring.replace(/test/g,require('./tEaterSettings.js').sql.database)
 
   return new Promise(function(resolve,reject){
-    var connection = mysql.createConnection(require('tEaterSettings.js').sql)
+    var connection = mysql.createConnection(require('./tEaterSettings.js').sql)
     connection.connect();
     stamp('query '+qstring+' start')
     connection.query(qstring,placeholders,function(err,rows,fields){

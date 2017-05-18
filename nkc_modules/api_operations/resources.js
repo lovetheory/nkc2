@@ -1,13 +1,13 @@
 var table = {};
 module.exports = table;
 
-module.paths.push(__projectroot + 'nkc_modules'); //enable require-ment for this path
+
 var moment = require('moment') //packages you may need
-var fs = require('nkc_fs')
-var settings = require('server_settings.js');
-var helper_mod = require('helper.js')();
-var queryfunc = require('query_functions')
-var im = require('im_functions')
+var fs = require('../nkc_fs')
+var settings = require('../server_settings.js');
+var helper_mod = require('../helper.js')();
+var queryfunc = require('../query_functions')
+var im = require('../im_functions')
 var AQL = queryfunc.AQL
 
 function sendFile(_res,destFile,opt){

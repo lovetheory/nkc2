@@ -21,7 +21,7 @@
     .avatar-left
       - var user = ocuser
       - var title = user?getUserDescription(user):''
-      a(href='/user_profile/#{uid}' title='#{title}')
+      a(href='/m/#{uid}' title='#{title}')
         img.ForumThreadAvatar(src='/avatar/#{uid}')
 
     .content-right
@@ -76,7 +76,7 @@
         if 1
           span.hidden-xs.lighttext.ForumThreadItemCreationTime #{dateTimeString(thread.toc).split(' ')[0]} from
 
-        a.ForumThreadItemUsername(href='/user_profile/#{ocuser._key}') #{ocuser.username}
+        a.ForumThreadItemUsername(href='/m/#{ocuser._key}') #{ocuser.username}
 
         if Date.now()-thread.tlm<86400000
           span.lighttext.reddish #{fromNow(thread.tlm)}
@@ -85,7 +85,7 @@
           //帖子最后回复时间和回复者
 
         span.lighttext(style='margin-right:7px;')   by
-        a.ForumThreadItemUsername(href='/user_profile/#{lmuser._key}') #{lmuser.username}
+        a.ForumThreadItemUsername(href='/m/#{lmuser._key}') #{lmuser.username}
 
 
 
@@ -113,7 +113,7 @@ if 0
 
               if 1
                 .ForumThreadItemAvatar
-                  -var uurl = '/user_profile/'+uid
+                  -var uurl = '/m/'+uid
                   -var avatar = '/avatar_small/'+uid
                   a(href='#{uurl}')
                     img.HomeThreadAvatar(src='#{avatar}')
@@ -141,7 +141,7 @@ if 0
                 if 0
                   span.lighttext.ForumThreadItemCreationTime #{dateTimeString(thread.toc)}
 
-                a.lighttext.ForumThreadItemUsername(href='/user_profile/#{ocuser._key}') #{ocuser.username}
+                a.lighttext.ForumThreadItemUsername(href='/m/#{ocuser._key}') #{ocuser.username}
                 //帖子发布时间和发布者
 
             //楼数

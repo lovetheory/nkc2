@@ -23,7 +23,7 @@ block content
                     span
                       - var uid = r.fromuser._key
                       - var avatar = '/avatar_small/' + uid
-                        a(href='/user_profile/#{uid}')
+                        a(href='/m/#{uid}')
                           img.HomeThreadAvatar(src='#{avatar}')
                           
                     span #{r.fromuser.username} 回复了 #{r.touser.username} 的 
@@ -68,7 +68,7 @@ block content
                   span
                     - var uid = sender._key
                     - var avatar = '/avatar_small/' + uid
-                      a(href='/user_profile/#{uid}')
+                      a(href='/m/#{uid}')
                         img.HomeThreadAvatar(src='#{avatar}')
 
                   span(onclick="setReceiver('#{sender.username}')") #{sender.username}
@@ -77,7 +77,7 @@ block content
                   span
                     - var uid = receiver._key
                     - var avatar = '/avatar_small/' + uid
-                      a(href='/user_profile/#{uid}')
+                      a(href='/m/#{uid}')
                         img.HomeThreadAvatar(src='#{avatar}')
                       
                   span(onclick="setReceiver('#{receiver.username}')") #{receiver.username} 

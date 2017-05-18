@@ -55,7 +55,7 @@ var gallery = (function(){
     gallery.titleItem.href = '/t/' + thread._key
     gallery.imageA.href = '/t/' + thread._key;
     gallery.authorItem.innerHTML = thread.ocuser.username
-    gallery.authorItem.href = '/user_profile/' + thread.ocuser._key
+    gallery.authorItem.href = '/m/' + thread.ocuser._key
 
     gallery.forumName.innerHTML = f.display_name
     gallery.forumName.href = '/f/' + f._key

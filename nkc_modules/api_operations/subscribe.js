@@ -1,33 +1,41 @@
-let moment = require('moment');
-let settings = require('../server_settings');
-let queryFunc = require('../query_functions');
-let validation = require('../validation');
-let apiFunc = require('../api_functions');
-let permissions = require('../permissions');
-let operations = require('../api_operations');
-let arango = require('arangojs');
-let aql = arango.aql;
-let db = arango(settings.arango);
+const settings = require('../server_settings');
+const permissions = require('../permissions');
+const arango = require('arangojs');
+const aql = arango.aql;
+const db = arango(settings.arango);
 
 let table = {};
 
 table.subscribeUser = {
   operation: params => {
     let user = params.user;
-    let subUid = params.subUid;
+    let subUid = params.targetUid;
     return db.collection('users').document(subUid)
       .then(() => {
         return db.query(aql`
           UPSERT {_key: ${user._key}}
           INSERT {
             _key: ${user._key},
-            subUsers: [${subUid}]
+            subscribeUsers: [${subUid}]
           }
-          UPDATE {subUsers: PUSH(OLD.subUsers, ${subUid}, true)}
-          IN personalForums
+          UPDATE {subscribeUsers: PUSH(OLD.subscribeUsers, ${subUid}, true)}
+          IN usersSubscribe
         `)
       })
       .catch(e => {throw `user ${user._key} does not exist.`})
+  }
+};
+
+table.unsubscribeUser = {
+  operation: params => {
+    let user = params.user;
+    let unSubUid = params.targetUid;
+    return db.query(aql`
+    LET o = DOCUMENT(usersSubscribe, ${user._key})
+      UPDATE o WITH {
+        subscribeUsers: REMOVE_VALUE(o.subscribeUsers, ${unSubUid})
+      } IN usersSubscribe
+    `)
   }
 };
 
@@ -44,10 +52,22 @@ table.subscribeForum = {
             subForums: [${subFid}]
           }
           UPDATE {subForums: PUSH(OLD.subForums, ${subFid}, true)}
-          IN personalForums
+          IN usersSubscribe
         `)
       })
-      .catch(e => {throw `forum ${subscribeFid} does not exist`})
+      .catch(e => {throw `forum ${subFid} does not exist`})
+  }
+};
+
+table.unsubscribeForum = {
+  operation: params => {
+    let user = params.user;
+    let unSubFid = params.unSubFid;
+    return db.query(aql`
+      UPDATE DOCUMENT(usersSubscribe, ${user._key}) WITH {
+        subForums: REMOVE_VALUE(OLD.subForums, ${unSubFid})
+      }
+    `)
   }
 };
 

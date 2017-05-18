@@ -1,10 +1,10 @@
-module.paths.push('./nkc_modules'); //enable require-ment for this path
+
 
 var mycron = {}
 
 mycron.startAllJobs = ()=>{
   var cron = require('node-cron')
-  var queryfunc = require('query_functions')
+  var queryfunc = require('./query_functions')
   var AQL = queryfunc.AQL
 
   cron.schedule('0 0 0 * * *',()=>{

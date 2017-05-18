@@ -1,24 +1,24 @@
-module.paths.push(__projectroot + 'nkc_modules'); //enable require-ment for this path
+
 
 var moment = require('moment')
 var path = require('path')
 var fs = require('fs.extra')
-var settings = require('server_settings.js');
-var helper_mod = require('helper.js')();
-var queryfunc = require('query_functions')
-var validation = require('validation')
+var settings = require('../server_settings.js');
+var helper_mod = require('../helper.js')();
+var queryfunc = require('../query_functions')
+var validation = require('../validation')
 var AQL = queryfunc.AQL
-var apifunc = require('api_functions')
+var apifunc = require('../api_functions')
 var layer = require('../layer')
 var nm = require('nodemailer')
 
 try{
-  var mailSecrets = require('mailSecrets.js');
-  var sendSMS = require('mailSecrets.js').sendSMS;
+  var mailSecrets = require('../mailSecrets.js');
+  var sendSMS = require('../mailSecrets.js').sendSMS;
 }
 catch(e){
-  var mailSecrets = require('mailSecrets_template.js');
-  var sendSMS = require('mailSecrets_template.js').sendSMS;
+  var mailSecrets = require('../mailSecrets_template.js');
+  var sendSMS = require('../mailSecrets_template.js').sendSMS;
 }
 
 var transporter = nm.createTransport(mailSecrets.smtpConfig);
@@ -41,7 +41,7 @@ var exampleMailOptions = {
 var table = {};
 module.exports = table;
 
-var regex_validation = require('nkc_regex_validation');
+var regex_validation = require('../nkc_regex_validation');
 
 var create_user = function(user){
   //check if user exists.

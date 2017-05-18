@@ -1,11 +1,11 @@
-module.paths.push(__projectroot + 'nkc_modules'); //enable require-ment for this path
+
 
 var moment = require('moment')
 var path = require('path')
 var fs = require('fs.extra')
-var settings = require('server_settings.js');
-var helper_mod = require('helper.js')();
-var queryfunc = require('query_functions')
+var settings = require('../server_settings.js');
+var helper_mod = require('../helper.js')();
+var queryfunc = require('../query_functions')
 var AQL = queryfunc.AQL
 
 var layer = require('../layer')
@@ -28,18 +28,21 @@ table.moveThread = {
 
     return thread.load()
     .then(thread=>{
-      origforum = new layer.Forum(thread.model.fid)
-      return origforum.load()
-      .then(origforum=>{
-        return origforum.inheritPropertyFromParent()
-      })
-      .then(origforum=>{
-        if(po['moveAllThreads']){
-          return
-        }
-        //else we have to check: do you own the original forum?
-        return origforum.testModerator(params.user.username)
-      })
+      if(thread.model.tid) {
+        origforum = new layer.Forum(thread.model.fid)
+        return origforum.load()
+          .then(origforum => {
+            return origforum.inheritPropertyFromParent()
+          })
+          .then(origforum => {
+            if (po['moveAllThreads']) {
+              return
+            }
+            //else we have to check: do you own the original forum?
+            return origforum.testModerator(params.user.username)
+          })
+      }
+      return
     })
     .then(()=>{
       return destforum.load()
@@ -76,13 +79,19 @@ table.disablePost = {
       if(po['toggleAllPosts']){
         return
       }
+      let thread = new layer.Thread(post.model.tid);
+      thread.load().then(t => thread.model = t);
+      let model = thread.model;
+      if(!model.fid && model.toMid === params.user._key || !model.fid && !model.toMid && model.mid === params.user._key) {
+        return
+      }
       //else we have to check: do you own the original forum?
       return origforum.testModerator(params.user.username)
     })
     .then(()=>{
       return post.update({disabled:true})
       .then(post=>{
-        var op = require('api_operations')
+        var op = require('../api_operations.js')
         return op.table.updateThread.operation({tid:post.model.tid})
         .then(()=>{
           return 'success'
@@ -365,7 +374,7 @@ table.addCredit = {
         toc:Date.now(),
       })
       .then(cl=>{
-        var operations = require('api_operations')
+        var operations = require('../api_operations.js')
         return operations.table.updatePost.operation(params)
       })
       .then(()=>{

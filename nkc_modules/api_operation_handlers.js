@@ -1,12 +1,12 @@
 
-module.paths.push(__projectroot + 'nkc_modules'); //enable require-ment for this path
+
 
 var express = require('express');
-var jaderender = require('jaderender')
+var jaderender = require('./jaderender')
 var api = express.Router();
-var helper_mod = require('helper')()
-var settings = require('server_settings');
-var queryfunc = require('query_functions')
+var helper_mod = require('./helper')()
+var settings = require('./server_settings');
+var queryfunc = require('./query_functions')
 
 api.use('/operation', (req,res,next)=>{
   if(req.method=='POST'){
@@ -105,9 +105,9 @@ module.exports = api;
 
 //---------------------------------------------------------------------------------
 
-var operations = require('api_operations')
+var operations = require('./api_operations.js')
 var table = operations.table
-var permission = require('permissions')
+var permission = require('./permissions.js')
 
 function verifySubmittedParams(params){
   //verify whether the submitted object is valid

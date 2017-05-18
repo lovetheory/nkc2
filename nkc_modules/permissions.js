@@ -1,6 +1,6 @@
-module.paths.push('./nkc_modules'); //enable require-ment for this path
 
-var operations = require('api_operations');
+
+var operations = require('./api_operations');
 var table = operations.table;
 
 var permissions = {};
@@ -186,12 +186,19 @@ var certificates={
       non_broadcast:true,
     },
     permittedOperations:{
+      configPersonalForum: true,
       viewSMS:true,
       sendShortMessageByUsername:true,
 
       listCart:true,
       clearCart:true,
-
+      viewPersonalActivities: true,
+      recommendPost: true,
+      unrecommendPost: true,
+      subscribeUser: true,
+      unsubscribeUser: true,
+      subscribeForum: true,
+      unsubscribeForum: true,
       //postTo:true, //////////////////////////////////// may cancel in the future
       //getPostContent:true,/////////////////////////////
 
@@ -241,7 +248,7 @@ var certificates={
       viewForum:true,
       viewHome:true,
       viewUser:true,
-      viewUserThreads:true, ////////////////these are for test purpose only
+      viewPersonalForum:true, ////////////////these are for test purpose only
       //move to visitor afterwards
 
       useSearch:true,
@@ -269,6 +276,7 @@ var certificates={
       exampleOperation:true,
 
       getGalleryRecent:true,
+      getForumsList: true,
 
       viewPage:true,
       viewTemplate:true,
@@ -435,6 +443,35 @@ var calculateThenConcatCerts = function(user){
 
   return certs
 }
+
+let getContentClassesByCert = cert => {
+  let classes = [];
+  let certificate = certificates[cert];
+  if(certificate.contentClasses) {
+    let contentClasses = certificate.contentClasses;
+    for(attr in contentClasses) {
+      if(contentClasses[attr]) {
+        classes.push(attr)
+      }
+    }
+  }
+  if(certificate.inheritFrom) {
+    let inheritClasses = getContentClassesByCerts(certificate.inheritFrom);
+    classes = classes.concat(inheritClasses)
+  }
+  return classes;
+};
+
+let getContentClassesByCerts = certs => {
+  let classes = [];
+  let arr = certs.map(cert => getContentClassesByCert(cert));
+  for(let contentClasses of arr) {
+    classes = classes.concat(contentClasses);
+  }
+  return classes;
+};
+
+permissions.getContentClassesByCerts = getContentClassesByCerts;
 
 permissions.calculateThenConcatCerts = calculateThenConcatCerts
 

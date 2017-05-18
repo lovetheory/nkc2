@@ -1,11 +1,11 @@
 //query functions
 //equivalent ORM-Layer
-module.paths.push('./nkc_modules'); //enable require-ment for this path
+
 var colors = require('colors');
 var moment = require('moment');
 
-var settings = require('server_settings.js');
-var helper_mod = require('helper.js')();
+var settings = require('./server_settings.js');
+var helper_mod = require('./helper.js')();
 var bodyParser = require('body-parser');
 
 var db = require('arangojs')(settings.arango);
@@ -15,7 +15,7 @@ var users = db.collection('users');
 var express = require('express');
 var api = express.Router();
 
-var validation = require('validation');
+var validation = require('./validation');
 
 let aql = require('arangojs').aql;
 
@@ -43,8 +43,10 @@ queryfunc.db_init = function(){
     'threadtypes',
     'mailcodes',
     'invites',
-    'personalForum',
-    'usersOperation'
+    'personalForums',
+    'usersSubscribe',
+    'usersBehavior',
+    'activeusers'
   ];
   return db.listCollections()
     .then(collections => {
@@ -348,7 +350,7 @@ queryfunc.ftp_join = (opt)=>{
  * @return: ...
  * @author: lzszone 03-17-2017
 * */
-queryfunc.getIndexThreads = (params, paging) => {
+queryfunc.getForumThreads = (params, paging) => {
   var contentClasses = {};
   for(var param in params.contentClasses) {
     if(params.contentClasses[param] == true) {
@@ -356,19 +358,18 @@ queryfunc.getIndexThreads = (params, paging) => {
     }
   }
   return db.query(aql`
-  FOR t IN threads
-    SORT t.disabled DESC, t.${params.sortby? 'toc' : 'tlm'} DESC
-    FILTER t.disabled==null &&
-    t.${params.digest? 'digest' : 'disabled'}==${params.digest? true : null}
-    LET forum = DOCUMENT(forums, t.fid)
-    FILTER (HAS(${contentClasses}, forum.class) || forum.isVisibleForNCC == true) &&
-    forum.visibility == true
-    LIMIT ${paging.start}, ${paging.count}
-    LET oc = DOCUMENT(posts, t.oc)
-    LET ocuser = DOCUMENT(users, oc.uid)
-    LET lm = DOCUMENT(posts, t.lm)
-    LET lmuser = DOCUMENT(users, lm.uid)
-    RETURN MERGE(t, {oc, lm, forum, ocuser, lmuser})
+    FOR t IN threads
+      SORT t.${params.sortby? 'toc' : 'tlm'} DESC
+      FILTER t.${params.digest? 'digest' : 'disabled'}==${params.digest? true : null}
+      LET forum = DOCUMENT(forums, t.fid)
+      FILTER (HAS(${contentClasses}, forum.class) || forum.isVisibleForNCC == true) &&
+      forum.visibility == true
+      LIMIT ${paging.start}, ${paging.count}
+      LET oc = DOCUMENT(posts, t.oc)
+      LET ocuser = DOCUMENT(users, oc.uid)
+      LET lm = DOCUMENT(posts, t.lm)
+      LET lmuser = DOCUMENT(users, lm.uid)
+      RETURN MERGE(t, {oc, lm, forum, ocuser, lmuser})
  `).catch(e => report(e));
 };
 

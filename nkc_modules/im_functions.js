@@ -1,12 +1,12 @@
 //ImageMagick wrapper
 
-module.paths.push('./nkc_modules'); //enable require-ment for this path
+
 
 const spawn = require('child_process').spawn; //introduce the spawn function
 const exec = require('child_process').exec; //introduce the exec function
 
 var im = {};
-var settings = require('server_settings');
+var settings = require('./server_settings');
 
 function run_async(pathname,args,options){
   return new Promise((resolve,reject)=>{
