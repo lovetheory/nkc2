@@ -31,10 +31,11 @@ if !post.disabled || (post.disabled && po.enablePost)
         .ThreadTitleAuxillaryLink.PostTitleAuxillaryLink
           -var recUsers = post.recUsers || []
           if data.user && post.uid != data.user._key
+            -console.log(post._key)
             if recUsers.indexOf(data.user._key) > -1
-              a(href='javascript:;' onclick='recommendPostSwitch(event, #{post._key})') 取消推荐
+              a(href='javascript:;' onclick='recommendPostSwitch(event, "#{post._key}")') 取消推荐
             else
-              a(href='javascript:;' onclick='recommendPostSwitch(event, #{post._key})') 推荐(#{recUsers.length})
+              a(href='javascript:;' onclick='recommendPostSwitch(event, "#{post._key}")') 推荐(#{recUsers.length})
 
           - var po = data.permittedOperations
           - if(po.postTo)

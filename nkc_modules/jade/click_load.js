@@ -1,7 +1,7 @@
 window._nowAtPage = 1;
 moment.locale('zh-cn');
 function Activity(obj) {
-  var activityContent = document.createElement('a');
+  var activ ityContent = document.createElement('a');
   activityContent.innerHTML = obj.post.c;
   activityContent.className = 'activity-content';
   activityContent.style = 'overflow: hidden;';

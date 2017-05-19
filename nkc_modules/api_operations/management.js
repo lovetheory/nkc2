@@ -127,6 +127,10 @@ table.enablePost = {
     .then(()=>{
       return post.update({disabled:null})
     })
+      .then(post => {
+        var op = require('../api_operations.js');
+        return op.table.updateThread.operation({tid: post.model.tid})
+      })
   },
   requiredParams:{
     pid:String,

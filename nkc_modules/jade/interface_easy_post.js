@@ -12,6 +12,7 @@ var EasyPost = function() {
   this.onlyM = geid('onlyM');
   this.postController = geid('postController');
   this.easyPost = geid('easyPost');
+  this.goEditor = geid('goEditor');
 };
 EasyPost.prototype.init = function() {
   var self = this;
@@ -63,12 +64,12 @@ EasyPost.prototype.init = function() {
     })
     .catch(function(e) {
       console.log(e);
-    })
+    });
   geid('onlyM').onchange = onlyMOnChange(self);
   parents.onchange = parentsOnChange(self);
   children.onchange = childrenOnChange(self);
-  content.onchange = contentOnChange(self);
   post.onclick = onPost(self);
+  self.goEditor.onclick = onGoEditor(self);
   easyPost.addEventListener('focusin', easyPostFocusIn(self));
   //easyPost.addEventListener('focusout', easyPostFocusOut(self)); 暂时无法解决事件问题
   $('#postController').hide();
@@ -80,15 +81,6 @@ var easyPostFocusIn = function(that) {
     e.stopPropagation();
     $('#postController').show('fast');
     that.title.placeholder = '标题';
-  }
-};
-
-var contentOnChange = function(that) {
-  var btn = geid('goEditor');
-  return function() {
-    btn.href = that.key?
-      '/editor?target=' + that.type + '/' + that.key + '&content=' + that.content.value :
-      '/editor?content=' + that.content.value;
   }
 };
 
@@ -227,6 +219,21 @@ var onPost = function(that) {
         jwarning(err.detail);
         that.post.className = 'btn btn-primary';
       })
+  }
+};
+
+var onGoEditor = function(that) {
+  return function() {
+    var url;
+    var content = that.content.value;
+    var type = that.type;
+    var key = that.key;
+    if(!key) {
+      screenTopWarning('未指定正确的发送目标, 请选择正确的学院 -> 专业');
+      return;
+    }
+    url = '/editor?content=' + content + '&target=' + type + '/' + key;
+    window.location.href = url;
   }
 };
 
