@@ -1,6 +1,6 @@
 require('./global_env.js')
 
-
+require('./nkc_modules/globalData')();
 
 var settings = require('./nkc_modules/server_settings');
 require('./nkc_modules/helper')();

@@ -499,27 +499,6 @@ table.viewHome = {
 
         //add homepage posts      17-03-13  lzszone
 
-        if (!global.allThreadsCount) {
-          return AQL(`
-            LET nCount = (FOR t IN threads
-              FILTER t.disabled == null && t.fid != 'recycle'
-              LET forum = DOCUMENT(forums, t.fid)
-              FILTER forum.visibility == true
-              COLLECT WITH COUNT INTO length
-            RETURN length)[0]
-            LET dCount = (FOR t IN threads
-              FILTER t.disabled == null && t.digest == true && t.fid != 'recycle'
-              LET forum = DOCUMENT(forums, t.fid)
-              FILTER forum.visibility == true
-              COLLECT WITH COUNT INTO length
-              RETURN length)[0]
-            RETURN {dCount, nCount}
-            `)
-            .then(count => {
-              global.allThreadsCount = count[0];
-              return params.digest ? global.allThreadsCount.dCount : global.allThreadsCount.nCount
-            })
-        }
         return params.digest ? global.allThreadsCount.dCount : global.allThreadsCount.nCount
       })
         .then(length => {
@@ -757,8 +736,8 @@ table.viewThread = {
     return layer.Thread.buildIndex()
   },
   operation: function (params) {
-    var data = defaultData(params)
-    data.template = jadeDir + 'interface_thread.jade'
+    var data = defaultData(params);
+    data.template = jadeDir + 'interface_thread.jade';
     var tid = params.tid
 
     var thread = new layer.Thread(tid)
