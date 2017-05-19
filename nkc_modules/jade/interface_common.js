@@ -461,14 +461,12 @@ function subscribeUserSwitch(targetUid) {
 
 function recommendPostSwitch(e, targetPid) {
   var button = e.target;
-  var content = button.innerHTML.replace(/\(.*\)/, '')
-  button.className = 'btn btn-sm disabled';
+  var content = button.innerHTML.replace(/\(.*\)/, '');
   if(content === '推荐') {
     nkcAPI('recommendPost', {targetPid: targetPid})
       .then(function() {
         screenTopAlert('推荐成功');
         button.innerHTML = '取消推荐';
-        button.className = 'btn btn-danger btn-sm';
       })
       .catch(function(e) {
         screenTopWarning(e);
@@ -479,7 +477,6 @@ function recommendPostSwitch(e, targetPid) {
       .then(function(msg) {
         screenTopAlert('成功取消推荐');
         button.innerHTML = '推荐(' + msg.message + ')';
-        button.className = 'btn btn-info btn-sm';
       })
       .catch(function(e) {
         screenTopWarning(e);
