@@ -436,7 +436,7 @@ var rs = require('random-seed')
 apifunc.exam_gen = function(options){
   var seed = options.iptrim + Math.floor(Date.now()/settings.exam.refresh_period).toString() + '123457'
   var category = options.category
-  var layer = require('layer')
+  var layer = require('./layer')
 
   var qarr = []
 

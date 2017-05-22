@@ -1,7 +1,7 @@
 window._nowAtPage = 1;
 moment.locale('zh-cn');
 function Activity(obj) {
-  var activ ityContent = document.createElement('a');
+  var activityContent = document.createElement('a');
   activityContent.innerHTML = obj.post.c;
   activityContent.className = 'activity-content';
   activityContent.style = 'overflow: hidden;';
@@ -115,7 +115,6 @@ function loadNextPage() {
   else {
     throw new Error('unknown operation type.')
   }
-
   nkcAPI(operation, {
     uid: parameter,
     username: username,

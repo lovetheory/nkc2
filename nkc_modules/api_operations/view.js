@@ -1100,6 +1100,7 @@ table.viewPersonalForum = {
         let paging = new layer.Paging(params.page);
         data.paging = paging.getPagingParams(res.length);
         data.threads = res.threads;
+        console.log(data.threads);
         //return apifunc.get_all_forums()
 
         return getForumList(params)
