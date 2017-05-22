@@ -116,11 +116,8 @@ var childrenOnChange = function(that) {
     }
     else {
       that.key = result;
+      that.forumID = result;
     }
-    var btn = geid('goEditor');
-    btn.href = that.key?
-      '/editor?target=' + that.type + '/' + that.key + '&content=' + that.content.value :
-      '/editor?content=' + that.content.value;
   }
 };
 
@@ -156,10 +153,14 @@ var onlyMOnChange = function(that) {
     if(this.checked) {
       that.parents.setAttribute('disabled', 'disabled');
       that.children.setAttribute('disabled', 'disabled');
+      that.type = 'm';
+      that.key = that.uid;
     }
     else {
       that.parents.removeAttribute('disabled');
       that.children.removeAttribute('disabled');
+      that.type = 'f';
+      that.key = that.forumID;
     }
   }
 };

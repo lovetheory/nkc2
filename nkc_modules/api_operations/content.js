@@ -182,7 +182,6 @@ var postToForum = function(params,fid,user,cat){
     return incrementForumOnNewThread(newtid)
   })
   .then((result)=>{
-    console.log('!!!!!');
     return postToThread(params,newtid,user, 1)
   })
     .catch(e => console.log(e))
@@ -260,17 +259,18 @@ var postToPost = function(params,pid,user){ //modification.
       return queryfunc.doc_save(original_post,'histories')
     })
   })
-  .then((back)=> {
-    return userBehaviorRec({
-      pid: newpost._key,
-      tid: newpost.tid,
-      mid: origthread.mid,
-      toMid: origthread.toMid,
-      fid: origthread.fid,
+  .then(()=> {
+    let obj = {
+      pid: original_key,
+      tid,
+      mid: origthread.model.mid,
+      toMid: origthread.model.toMid,
+      fid: origthread.model.fid,
       type: 3,
       uid: newpost.uidlm,
       time: newpost.tlm
-    })
+    };
+    return userBehaviorRec(obj)
   })
     .then(() => {
     //now update the existing with the newly created:
