@@ -48,7 +48,7 @@ table.kamikaze = {
 table.gitpull={
   operation:function(params){
     var elapsed = Date.now()
-    var im = require('im_functions')
+    var im = require('../im_functions')
     return im.gitpull()
     .then(res=>{
       elapsed = Date.now()-elapsed
@@ -60,7 +60,7 @@ table.gitpull={
 table.npminstall={
   operation:function(params){
     var elapsed = Date.now()
-    var im = require('im_functions')
+    var im = require('../im_functions')
     return im.npminstall()
     .then(res=>{
       elapsed = Date.now()-elapsed
