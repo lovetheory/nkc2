@@ -60,9 +60,7 @@ function register_submit(){
       throw({detail:'请填写手机号码！'})
       return;
     }
-    if(userobj.phone.length < 11 ||
-      !userobj.phone.length
-        .match(/^0?(13[0-9]|15[012356789]|17[013678]|18[0-9]|14[57])[0-9]{8}$/))
+    if(userobj.phone.length !== 11)
     {
       getFocus("#phone")
       throw({detail:'手机号码格式不正确！'})
@@ -89,6 +87,7 @@ function register_submit(){
 
   })
   .catch(function(err){
+    console.log(err)
     if(err.detail == '用户名已存在，请输入其他用户名'){
       refreshICode();
       getFocus("#username")
@@ -105,7 +104,7 @@ function register_submit(){
       refreshICode();
       getFocus("#phone")
     }
-    error_report(err.detail);
+    error_report(err);
   })
 
 }
@@ -130,8 +129,7 @@ function getMcode(){
     getFocus("#password2")
     return error_report('请再次填写密码！')
   }
-  if(phone == '' || phone.length < 11 ||
-    !phone.match(/^0?(13[0-9]|15[012356789]|17[013678]|18[0-9]|14[57])[0-9]{8}$/))
+  if(phone == '' || phone.length !== 11 )
   {
     getFocus("#phone")
     return error_report('手机号码为空或者格式不正确！')

@@ -7,7 +7,10 @@ var settings = require('../server_settings.js');
 var helper_mod = require('../helper.js')();
 var queryfunc = require('../query_functions')
 var validation = require('../validation')
-var AQL = queryfunc.AQL
+var AQL = queryfunc.AQL;
+let arango = require('arangojs');
+let db = arango(settings.arango);
+let aql = arango.aql;
 var apifunc = require('../api_functions')
 var layer = require('../layer')
 var nm = require('nodemailer')
@@ -101,6 +104,7 @@ var create_user = function(user){
 
 
 var create_phoneuser = function(user){
+  let uid;
   return AQL(`for u in users filter u.username_lowercase == @newusername return u`,
     {newusername:user.username.toLowerCase()}
   )
@@ -109,10 +113,12 @@ var create_phoneuser = function(user){
     return apifunc.get_new_uid()
   })
   .then((newuid)=>{
+    uid = newuid;
+    console.log(newuid);
     var timestamp = Date.now();
 
     var newuser = {
-      _key:newuid,
+      _key: uid,
       username:user.username,
       username_lowercase:user.username.toLowerCase(),
       toc:timestamp,
@@ -124,7 +130,7 @@ var create_phoneuser = function(user){
     var hash = sha256HMAC(user.password,salt)
 
     var newuser_personal = {
-      _key:newuid,
+      _key:uid,
       email:user.email,
       hashtype:'sha256HMAC',
       mobile:user.mobile, //if from mobile entry
@@ -139,8 +145,20 @@ var create_phoneuser = function(user){
       return queryfunc.doc_save(newuser_personal,'users_personal')
     })
     .then(res=>{
-      return res
+      return db.query(aql`
+        INSERT {
+          _key: ${uid},
+          type: 'forum',
+          abbr: SUBSTRING(${user.username}, 0, 6),
+          display_name: CONCAT(${user.username}, '的专栏'),
+          description: CONCAT(${user.username}, '的专栏'),
+          moderators: [${user.username}],
+          recPosts: []
+        } INTO personalForums
+        RETURN NEW
+        `)
     })
+      .then(res => res._result[0])
   })
 }
 
@@ -279,7 +297,7 @@ table.userRegister = {
 
 
 
-//手机用户注册
+//手机用户注册 **
 table.userPhoneRegister = {
   operation:function(params){
     var userobj = {
@@ -325,7 +343,7 @@ table.userPhoneRegister = {
 
 
 
-//使用邮箱注册
+//使用邮箱注册 **
 table.userMailRegister = {
   operation:function(params){
     var userobj = {
@@ -744,6 +762,7 @@ table.getMcode = {
         sendSMS(phone, code , 'register',function(err,res){//调用注册方法
           if(err){
             console.log(err)
+            console.log(code);
           }else{
             console.log(res)
           }

@@ -96,7 +96,7 @@ api.post('/resources', upload.single('file'), function (req, res, next) {
 
     return nkcfs.ensureDir(destination_path)
     .then(()=>{
-      var Promisify = require('promisify')
+      var Promisify = require('./promisify')
       return Promisify(fs.rename)(tempFilePath,destination_file)
     })
     .then(()=>{

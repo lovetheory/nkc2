@@ -96,7 +96,9 @@ table.viewRegister2 = {
     var captcha = svgCaptcha.create();  //创建验证码
     params._req.session.icode = captcha.text;  //验证码text保存到session中
     var road = path.resolve(__dirname, '../..')
-    fs.writeFile(road + '/static/captcha/captcha.svg', captcha.data, {'flag': 'w'});  //保存验证码图片
+    fs.writeFile(road + '/static/captcha/captcha.svg', captcha.data, {'flag': 'w'}, function (e) {
+      if(e) console.error(e.stack)
+    });  //保存验证码图片
     //console.log(captcha.text);
     data.template = 'nkc_modules/jade/interface_user_register2.jade'
 
@@ -113,7 +115,6 @@ table.viewActiveEmail = {
     var data = defaultData(params)
     //data.template = 'nkc_modules/jade/viewActiveEmail.jade'
     data.template = 'nkc_modules/jade/interface_user_login.jade'
-
     return AQL(`
       for u in emailRegister
       filter u.email==@email && u.ecode==@ecode && u.toc > @toc
@@ -131,7 +132,7 @@ table.viewActiveEmail = {
           }
           create_muser(user)
             .then(k => {
-              //console.log(k)
+              console.log(k)
             })
           data.activeInfo1 = '邮箱注册成功，赶紧登录吧~'
         } else {
@@ -151,7 +152,9 @@ table.refreshicode = {
     var captcha = svgCaptcha.create();  //创建验证码
     params._req.session.icode = captcha.text;  //验证码text保存到session中
     var road = path.resolve(__dirname, '../..')
-    fs.writeFile(road + '/static/captcha/captcha.svg', captcha.data, {'flag': 'w'});  //保存验证码图片
+    fs.writeFile(road + '/static/captcha/captcha.svg', captcha.data, {'flag': 'w'}, function (e) {
+      if(e) console.log(e.stack)
+    });  //保存验证码图片
     return {'resCode': 0}
   }
 }
@@ -2001,12 +2004,14 @@ function sha256HMAC(password, salt) {
 
 
 function create_muser(user) {
+  let uid;
   return apifunc.get_new_uid()
     .then((newuid) => {
+      uid = newuid;
       var timestamp = Date.now();
 
       var newuser = {
-        _key: newuid,
+        _key: uid,
         username: user.username,
         username_lowercase: user.username.toLowerCase(),
         toc: timestamp,
@@ -2015,7 +2020,7 @@ function create_muser(user) {
       }
 
       var newuser_personal = {
-        _key: newuid,
+        _key: uid,
         email: user.email,
         hashtype: user.hashtype,
         password: user.password
@@ -2025,7 +2030,17 @@ function create_muser(user) {
           return queryfunc.doc_save(newuser_personal, 'users_personal')
         })
         .then(res => {
-          return res
+          return db.query(aql`
+            INSERT {
+              _key: ${uid},
+              type: 'forum',
+              abbr: SUBSTRING(${user.username}, 0, 6),
+              display_name: CONCAT(${user.username}, '的专栏'),
+              description: CONCAT(${user.username}, '的专栏'),
+              moderators: [${user.username}],
+              recPosts: []
+            } INTO personalForums
+          `)
         })
     })
 }
