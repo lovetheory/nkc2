@@ -71,7 +71,7 @@ EasyPost.prototype.init = function() {
   post.onclick = onPost(self);
   self.goEditor.onclick = onGoEditor(self);
   easyPost.addEventListener('focusin', easyPostFocusIn(self));
-  //easyPost.addEventListener('focusout', easyPostFocusOut(self)); 暂时无法解决事件问题
+  easyPost.addEventListener('focusout', easyPostFocusOut(self));
   $('#postController').hide();
 };
 
@@ -79,20 +79,22 @@ EasyPost.prototype.init = function() {
 var easyPostFocusIn = function(that) {
   return function(e) {
     e.stopPropagation();
+    if(window.__TIMEOUT) {
+      clearTimeout(window.__TIMEOUT);
+    }
     $('#postController').show('fast');
-    that.title.placeholder = '标题';
   }
 };
 
 var easyPostFocusOut = function(that) {
   return function(e) {
-    console.log('trigger focus out' + e.target);
     e.stopPropagation();
-    if(!that.hasOwnProperty(document.activeElement)) {
-      console.log(document.activeElement);
-      $('#postController').hide('fast');
-      that.title.placeholder = '发一个新帖吧';
-    }
+    that.title.placeholder = '发一个新帖吧';
+      __TIMEOUT = setTimeout(function () { //如果直接使用hide会出现问题
+        if(!that.hasOwnProperty(document.activeElement)) {
+          $('#postController').hide('fast');
+        }
+      }, 200);
   }
 };
 
