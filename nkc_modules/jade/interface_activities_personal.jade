@@ -9,13 +9,11 @@ block title
       -var processed=forum.description.replace(/\[.*?]|\#|\n|\<.*?>/gm,'').trim().slice(0,140)
     else
       -var processed = forum.display_name
-
-    meta(name='description' content='#{processed}')
-
-    meta(property='og:image' content='http://bbs.kechuang.org/resources/site_specific/umaru_chem_300x200.png')
-    meta(property='og:title' content='#{forum.display_name}')
-    meta(property='og:site_name' content='科创论坛')
-    meta(property='og:description' content='#{processed}')
+  meta(name='description' content='#{processed}')
+  meta(property='og:image' content='http://bbs.kechuang.org/resources/site_specific/umaru_chem_300x200.png')
+  meta(property='og:title' content='#{forum.display_name}')
+  meta(property='og:site_name' content='科创论坛')
+  meta(property='og:description' content='#{processed}')
 
 block content
   -var isModerator = data.user? (data.forum.moderators.indexOf(data.user.username) > -1) : false

@@ -4,11 +4,11 @@ function Activity(obj) {
   var activityContent = document.createElement('a');
   activityContent.innerHTML = obj.post.c;
   activityContent.className = 'activity-content';
-  activityContent.style = 'overflow: hidden;';
+  activityContent.overflow = 'hidden';
   activityContent.href = '/t/'+obj.tid+'#'+obj.pid;
   var activityTitleText = document.createElement('span');
   activityTitleText.innerHTML = obj.oc.t;
-  activityTitleText.style = 'overflow: hidden;';
+  activityTitleText.style.overflow = 'hidden';
   var activityTitle = document.createElement('div');
   activityTitle.className = 'activity-title';
   var activityTitleA = document.createElement('a');
@@ -22,7 +22,7 @@ function Activity(obj) {
     forum.href= '/f/'+obj.fid;
     var forumText = document.createElement('span');
     forumText.className = 'activity-title-forum';
-    forumText.style = 'background-color: '+color;
+    forumText.style.backgroundColor = color;
     forumText.innerHTML = '&nbsp;'+obj.forum.abbr+'&nbsp;';
     forum.appendChild(forumText);
     activityTitle.appendChild(forum);
@@ -30,10 +30,10 @@ function Activity(obj) {
   if(obj.toMyForum) {
     var color = obj.toMyForum.color || 'orange';
     var toMyForum = document.createElement('a');
-    toMyForum.href= '/f/'+obj.toMyForum._key;
+    toMyForum.href= '/m/'+obj.toMyForum._key;
     var toMyForumText = document.createElement('span');
     toMyForumText.className = 'activity-title-forum';
-    toMyForumText.style = 'background-color: '+color;
+    toMyForumText.style.backgroundColor = color;
     toMyForumText.innerHTML = '&nbsp;'+obj.toMyForum.abbr+'&nbsp;';
     toMyForum.appendChild(toMyForumText);
     activityTitle.appendChild(toMyForum);
@@ -41,10 +41,10 @@ function Activity(obj) {
   if(obj.myForum) {
     var color = obj.myForum.color || 'orange';
     var myForum = document.createElement('a');
-    myForum.href= '/f/'+obj.myForum._key;
+    myForum.href= '/m/'+obj.myForum._key;
     var myForumText = document.createElement('span');
     myForumText.className = 'activity-title-forum';
-    myForumText.style = 'background-color: '+color;
+    myForumText.style.backgroundColor = color;
     myForumText.innerHTML = '&nbsp;'+obj.myForum.abbr+'&nbsp;';
     myForum.appendChild(myForumText);
     activityTitle.appendChild(myForum);
@@ -136,7 +136,7 @@ function loadNextPage() {
       lButton.className = 'btn btn-default';
       lButton.innerHTML = '加载更多';
       lButton.id = 'loadNextPage';
-      lButton.style = 'margin-top: 5px;'
+      lButton.style.marginTop = '5px'
       div.appendChild(lButton);
       activities.appendChild(div);
     })
