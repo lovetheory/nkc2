@@ -489,16 +489,14 @@ table.viewHome = {
     return merge(t,{oc:oc,lm:lm,forum,ocuser})
     `)
       .then(res => {
-        let rand = function () {
-          return Math.floor(Math.random() * 100)
-        };
-        let randArr = [rand(), rand(), rand(), rand(), rand(), rand(), rand(), rand(), rand(), rand()];
         let temp = [];
-        randArr.map(ele => {
-          temp.push(res[ele])
-        });
-        res = temp;
-        data.newestDigestThreads = res;
+        for(let i = 0; i < 10; i++) {
+          let j = 100 - i;
+          let index = Math.round(Math.random() * j);
+          temp.push(res[index]);
+          res.splice(index, 1);
+        }
+        data.newestDigestThreads = temp;
 
         //add homepage posts      17-03-13  lzszone
 

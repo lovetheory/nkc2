@@ -49,6 +49,8 @@ block content
                         each k in moderators
                           a.d-inline.margin-right(href='/user_activities_byname/#{k}') #{k}
 
+                    if isModerator
+                      button#enterManagementMode.btn.btn-default(onclick='switchManagementMode()') 管理
 
           include interface_easy_post
 
@@ -70,11 +72,6 @@ block content
           .panel
             .row
               .col-xs-12
-                .form-group(style='margin-top:0px;margin-bottom:6px')
-
-                  //if isModerator
-                  //  button#enterManagementMode.btn.btn-default(onclick='switchManagementMode()') 管理
-
                 .ForumManagement(style='display:none;margin-top:12px;margin-bottom:12px')
 
                   .form-inline(style='margin-top:10px')
@@ -179,4 +176,3 @@ block scripts
   script(src='/interface_collections.js')
   script(src='/interface_personal_forum.js')
   script(src='/interface_easy_post.js')
-  //script(src='/gallery.js')
