@@ -858,6 +858,7 @@ update_all_threads = () => {
 
 table.getForumsList = {
   operation: params => {
+    if(!params.user) throw `未登录用户不能发帖`;
     let uid = params.user._key;
     return db.collection('users').document(uid)
       .then(user => permissions.getContentClassesByCerts(user.certs))
