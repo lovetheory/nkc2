@@ -20,154 +20,152 @@ block title
 
 block content
   -var isModerator = data.user? (data.forum.moderators.indexOf(data.user.username) > -1) : false
-  if (data.user == undefined)
-    h2(style="margin-left:8%;") 请先登录后查看，谢谢~
-  else
-    .container-fluid(style='max-width:1400px;')
-      .row
-        .col-md-9
-          .panel
-              .row
-                .col-xs-12
-                  form(role='form')
-                    .form-group
-                      img(src='/avatar/#{data.forum._key}' style='height: 70px; width: 70px; border-radius: 6px; float: right;')
-                      .displayShit.ForumName #{forum.display_name}&nbsp;&nbsp;&nbsp;&nbsp;
-                      //a.btn.btn-default.btn-sm.displayShit(href='javascript: ;' onclick='switchManagementMode()') 设置
-                      input.configShit#forumName(style='font-size: 16px; display: none;' value='#{forum.display_name}' name='forumName' placeholder='请输入专栏名称')
-                    .form-group
-                      if data.forum.description
-                        span 介绍:&nbsp;
-                        span.displayShit #{data.forum.description}
-                        input.configShit#description(value='#{forum.description}' style='display: none;' name='description' placeholder='请输入专栏介绍')
-                    .form-group
-                      a.btn.configShit.btn-default(style='display: none;' href='javascript: submitConfig();') 保存
 
-                    if data.forum.moderators && data.forum.moderators.length
-                      span 版主：
-                        - var moderators = data.forum.moderators
-                        each k in moderators
-                          a.d-inline.margin-right(href='/user_activities_byname/#{k}') #{k}
-
-                    if isModerator
-                      button#enterManagementMode.btn.btn-default(onclick='switchManagementMode()') 管理
-
-          include interface_easy_post
-
-          ul.nav.nav-tabs
-            li(class='#{data.tab == "all"? "active" : ""}')
-              a(href='?&tab=all') 全部
-            li(class='#{data.tab == "discuss" ? "active" : ""}')
-              a(href='?&tab=discuss') 讨论
-            li(class='#{data.tab == "own"? "active" : ""}')
-              a(href='?&tab=own') 版主
-            li(class='#{data.tab == "reply"? "active" : ""}')
-              a(href='?&tab=reply') 回复
-            li(class='#{data.tab == "recommend"? "active" : ""}')
-              a(href='?&tab=recommend') 推荐
-            li(class='#{data.tab == "subscribe" ? "active" : ""}')
-              a(href='?&tab=subscribe') 关注
-            li
-              a(href='/activities/#{data.forum._key}') 动态
-          .panel
+  .container-fluid(style='max-width:1400px;')
+    .row
+      .col-md-9
+        .panel
             .row
               .col-xs-12
-                .ForumManagement(style='display:none;margin-top:12px;margin-bottom:12px')
+                form(role='form')
+                  .form-group
+                    img(src='/avatar/#{data.forum._key}' style='height: 70px; width: 70px; border-radius: 6px; float: right;')
+                    .displayShit.ForumName #{forum.display_name}&nbsp;&nbsp;&nbsp;&nbsp;
+                    //a.btn.btn-default.btn-sm.displayShit(href='javascript: ;' onclick='switchManagementMode()') 设置
+                    input.configShit#forumName(style='font-size: 16px; display: none;' value='#{forum.display_name}' name='forumName' placeholder='请输入专栏名称')
+                  .form-group
+                    if data.forum.description
+                      span 介绍:&nbsp;
+                      span.displayShit #{data.forum.description}
+                      input.configShit#description(value='#{forum.description}' style='display: none;' name='description' placeholder='请输入专栏介绍')
+                  .form-group
+                    a.btn.configShit.btn-default(style='display: none;' href='javascript: submitConfig();') 保存
 
-                  .form-inline(style='margin-top:10px')
+                  if data.forum.moderators && data.forum.moderators.length
+                    span 版主：
+                      - var moderators = data.forum.moderators
+                      each k in moderators
+                        a.d-inline.margin-right(href='/user_activities_byname/#{k}') #{k}
 
-                    if data.permittedOperations.addThreadToCollection
-                      .form-group
-                        button#addSelectedToMyCollection.btn-xs.btn.btn-default(onclick='addSelectedToMyCollection()') 添加到个人收藏
+                  if isModerator
+                    button#enterManagementMode.btn.btn-default(onclick='switchManagementMode()') 管理
 
+        include interface_easy_post
+
+        ul.nav.nav-tabs
+          li(class='#{data.tab == "all"? "active" : ""}')
+            a(href='?&tab=all') 全部
+          li(class='#{data.tab == "discuss" ? "active" : ""}')
+            a(href='?&tab=discuss') 讨论
+          li(class='#{data.tab == "own"? "active" : ""}')
+            a(href='?&tab=own') 版主
+          li(class='#{data.tab == "reply"? "active" : ""}')
+            a(href='?&tab=reply') 回复
+          li(class='#{data.tab == "recommend"? "active" : ""}')
+            a(href='?&tab=recommend') 推荐
+          li(class='#{data.tab == "subscribe" ? "active" : ""}')
+            a(href='?&tab=subscribe') 关注
+          li
+            a(href='/activities/#{data.forum._key}') 动态
+        .panel
+          .row
+            .col-xs-12
+              .ForumManagement(style='display:none;margin-top:12px;margin-bottom:12px')
+
+                .form-inline(style='margin-top:10px')
+
+                  if data.permittedOperations.addThreadToCollection
                     .form-group
-                      button.btn.btn-xs.btn-default(onclick='selectbtn()') 全选/不选
-                    .form-group
-                      include forumlist_dropdown.jade
-                      button#moveThreadTo(onclick="javascript:moveThreadTo()") 移动
+                      button#addSelectedToMyCollection.btn-xs.btn.btn-default(onclick='addSelectedToMyCollection()') 添加到个人收藏
 
-                    .form-group
-                      button#recyclebtn.btn.btn-xs.btn-danger(style='margin-left:20px;margin-right:20px;' onclick='recyclebtn()') 送回收站
+                  .form-group
+                    button.btn.btn-xs.btn-default(onclick='selectbtn()') 全选/不选
+                  .form-group
+                    include forumlist_dropdown.jade
+                    button#moveThreadTo(onclick="javascript:moveThreadTo()") 移动
 
-                    if data.permittedOperations.modifyThreadType
-                      -var ffid = data.forum._key
-                      button(onclick="renameForumCategory('#{ffid}')") 重命名分类
-                      button(onclick="addForumCategory('#{ffid}')") 增加分类
-                      button(onclick="deleteForumCategory('#{ffid}')") 删除分类
+                  .form-group
+                    button#recyclebtn.btn.btn-xs.btn-danger(style='margin-left:20px;margin-right:20px;' onclick='recyclebtn()') 送回收站
+
+                  if data.permittedOperations.modifyThreadType
+                    -var ffid = data.forum._key
+                    button(onclick="renameForumCategory('#{ffid}')") 重命名分类
+                    button(onclick="addForumCategory('#{ffid}')") 增加分类
+                    button(onclick="deleteForumCategory('#{ffid}')") 删除分类
 
 
 
-              .col-xs-12
-                nav
-                  include interface_navigation_paging.jade
+            .col-xs-12
+              nav
+                include interface_navigation_paging.jade
 
-                  - var paging = data.paging
-                  - var digest = data.digest
-                  - var class_str_all = digest?'':'active'
-                  - var class_str_digest = digest?'active':''
+                - var paging = data.paging
+                - var digest = data.digest
+                - var class_str_all = digest?'':'active'
+                - var class_str_digest = digest?'active':''
 
-                  - var cat = data.cat
-                  - var sortby = data.sortby
-                  - var class_str_sortby_toc = sortby?'active':''
-                  - var class_str_sortby_tlm = sortby?'':'active'
+                - var cat = data.cat
+                - var sortby = data.sortby
+                - var class_str_sortby_toc = sortby?'active':''
+                - var class_str_sortby_tlm = sortby?'':'active'
 
-                  if data.replytarget
-                    ul.pagination.NavigationPaging
-                      li
-                        a.btn.btn-default(href='/editor?target=#{data.replytarget}') 新帖
+                if data.replytarget
                   ul.pagination.NavigationPaging
-                    - var page = paging?paging.page:null
-                    li(class="#{class_str_all}")
-                      a(href='?&tab=#{data.tab}#{data.sortby? "&sortby=toc": ""}') 俱
+                    li
+                      a.btn.btn-default(href='/editor?target=#{data.replytarget}') 新帖
+                ul.pagination.NavigationPaging
+                  - var page = paging?paging.page:null
+                  li(class="#{class_str_all}")
+                    a(href='?&tab=#{data.tab}#{data.sortby? "&sortby=toc": ""}') 俱
 
-                    li(class="#{class_str_digest}")
-                      a(href='?&tab=#{data.tab}&digest=true#{data.sortby? "&sortby=toc": ""}') 精
+                  li(class="#{class_str_digest}")
+                    a(href='?&tab=#{data.tab}&digest=true#{data.sortby? "&sortby=toc": ""}') 精
 
-                  ul.pagination.NavigationPaging
-                    li(class='#{class_str_sortby_tlm}')
-                      a(href='?&tab=#{data.tab}#{data.digest? "&digest=true": ""}') 复序
-                    li(class='#{class_str_sortby_toc}')
-                      a(href='?&tab=#{data.tab}&sortby=toc#{data.digest? "&digest=true": ""}') 帖序
+                ul.pagination.NavigationPaging
+                  li(class='#{class_str_sortby_tlm}')
+                    a(href='?&tab=#{data.tab}#{data.digest? "&digest=true": ""}') 复序
+                  li(class='#{class_str_sortby_toc}')
+                    a(href='?&tab=#{data.tab}&sortby=toc#{data.digest? "&digest=true": ""}') 帖序
 
 
-                hr.hrNarrowSpace
+              hr.hrNarrowSpace
 
-            if data.toppedThreads && data.toppedThreads.length > 0 && !data.cat
-              .ForumThreadList
-                each thread,index in data.toppedThreads
-                  include interface_personal_forum_single_thread
-              //hr.hrNarrowSpace
-              .ForumToppedSplitter - 以上是置顶 -
-
+          if data.toppedThreads && data.toppedThreads.length > 0 && !data.cat
             .ForumThreadList
-              each thread,index in data.threads
-                if data.toppedThreads && (data.toppedThreads.map(item => item._key).indexOf(thread._key) >= 0)
-                  //exclude threads that are shown in topped area.
-                else
-                  include interface_personal_forum_single_thread
+              each thread,index in data.toppedThreads
+                include interface_personal_forum_single_thread
+            //hr.hrNarrowSpace
+            .ForumToppedSplitter - 以上是置顶 -
 
-            .row
-              .col-md-12
-                nav
-                  include interface_navigation_paging.jade
+          .ForumThreadList
+            each thread,index in data.threads
+              if data.toppedThreads && (data.toppedThreads.map(item => item._key).indexOf(thread._key) >= 0)
+                //exclude threads that are shown in topped area.
+              else
+                include interface_personal_forum_single_thread
 
-                if data.replytarget && !hasChildren
-                  a.btn.btn-default(style="margin-top:13px" href='/editor?target=#{data.replytarget}') 发表新帖
+          .row
+            .col-md-12
+              nav
+                include interface_navigation_paging.jade
+
+              if data.replytarget && !hasChildren
+                a.btn.btn-default(style="margin-top:13px" href='/editor?target=#{data.replytarget}') 发表新帖
 
 
 
 
-        .col-md-3.hidden-xs.hidden-sm
-          .nkcpanel
-            include forum_logo_wisdom.jade
-          -var user = data.targetUser
-          if user
-            include interface_thread_userpatch.jade
-          //-var active_user_title = '学院活跃用户'
-          //include interface_active_users
-          .nkcpanel
-            ul.HomeFriendlyLink
-              include nkc_footer_links.jade
+      .col-md-3.hidden-xs.hidden-sm
+        .nkcpanel
+          include forum_logo_wisdom.jade
+        -var user = data.targetUser
+        if user
+          include interface_thread_userpatch.jade
+        //-var active_user_title = '学院活跃用户'
+        //include interface_active_users
+        .nkcpanel
+          ul.HomeFriendlyLink
+            include nkc_footer_links.jade
 
     include debug_output.jade
 

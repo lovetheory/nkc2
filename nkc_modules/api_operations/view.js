@@ -464,6 +464,7 @@ table.viewHome = {
   operation: params => {
     var data = defaultData(params);
     var contentClasses = {};
+    let count;
     data.template = jadeDir + 'interface_home.jade';
     data.navbar = {highlight: 'home'};
     for (var param in params.contentClasses) {
@@ -490,17 +491,121 @@ table.viewHome = {
     `)
       .then(res => {
         let temp = [];
-        for(let i = 0; i < 10; i++) {
+        for (let i = 0; i < 10; i++) {
           let j = 100 - i;
-          let index = Math.round(Math.random() * j);
+          let index = Math.floor(Math.random() * j);
           temp.push(res[index]);
           res.splice(index, 1);
         }
         data.newestDigestThreads = temp;
 
         //add homepage posts      17-03-13  lzszone
-
-        return params.digest ? global.allThreadsCount.dCount : global.allThreadsCount.nCount
+        return params.digest ? global.personalThreadsCount.digest : global.personalThreadsCount.normal
+      })
+      .then(length => {
+        count = length;
+        return queryfunc.getVisibleChildForums(params)
+      })
+      .then(arr => {
+        let forumArr = Array.from(arr); //deep copy from all the forum that can be visited
+        arr.push(null); //push null to origin arr for personal forum
+        data.digest = params.digest;
+        data.sortby = params.sortby;
+        if(params.content === 'personal') {
+          let paging = new layer.Paging(params.page).getPagingParams(count);
+          data.paging = paging;
+          return db.query(aql`
+            FOR t IN threads
+              SORT t.${params.sortby? 'toc' : 'tlm'} DESC
+              FILTER t.${params.digest? 'digest' :'disabled'} == ${params.digest? true : null} &&
+              t.fid == null
+              limit ${paging.start}, ${paging.perpage}
+              LET oc = DOCUMENT(posts, t.oc)
+              LET ocuser = DOCUMENT(users, oc.uid)
+              LET lm = DOCUMENT(posts, t.lm)
+              LET lmuser = DOCUMENT(users, lm.uid)
+              RETURN MERGE(t, {
+                oc,
+                ocuser,
+                lm,
+                lmuser
+              })
+          `)
+        }
+        if(params.content === 'all') {
+          return db.query(aql`
+            FOR fid IN ${forumArr}
+              LET forum = DOCUMENT(forums, fid)
+              RETURN forum.tCount.${params.digest? 'digest' : 'normal'}
+          `)
+            .then(arr => {
+              let temp = 0;
+              for(ele of arr._result) {
+                temp += ele;
+              }
+              return temp
+            })
+            .then(length => {
+              let paging = new layer.Paging(params.page).getPagingParams(count + length);
+              data.paging = paging;
+              return db.query(aql`
+                FOR t IN threads
+                  SORT t.${params.sortby ? 'toc' : 'tlm'} DESC
+                  FILTER t.${params.digest ? 'digest' : 'disabled'} == ${params.digest ? true : null} &&
+                  POSITION(${arr}, t.fid)
+                  limit ${paging.start}, ${paging.perpage}
+                  LET forum = DOCUMENT(forums, t.fid)
+                  LET oc = DOCUMENT(posts, t.oc)
+                  LET ocuser = DOCUMENT(users, oc.uid)
+                  LET lm = DOCUMENT(posts, t.lm)
+                  LET lmuser = DOCUMENT(users, lm.uid)
+                  RETURN MERGE(t, {
+                    forum,
+                    oc,
+                    ocuser,
+                    lm,
+                    lmuser
+                  })
+              `)
+            })
+        }
+        return db.query(aql`
+            FOR fid IN ${forumArr}
+              LET forum = DOCUMENT(forums, fid)
+              RETURN forum.tCount.${params.digest? 'digest' : 'normal'}
+          `)
+          .then(arr => {
+            let temp = 0;
+            for(ele of arr._result) {
+              temp += ele;
+            }
+            return temp
+          })
+          .then(length => {
+            let paging = new layer.Paging(params.page).getPagingParams(length);
+            data.paging = paging;
+            return db.query(aql`
+              FOR t IN threads
+              SORT t.${params.sortby ? 'toc' : 'tlm'} DESC
+                FILTER t.${params.digest ? 'digest' : 'disabled'} == ${params.digest ? true : null} &&
+                POSITION(${forumArr}, t.fid)
+                limit ${paging.start}, ${paging.perpage}
+                LET forum = DOCUMENT(forums, t.fid)
+                LET oc = DOCUMENT(posts, t.oc)
+                LET ocuser = DOCUMENT(users, oc.uid)
+                LET lm = DOCUMENT(posts, t.lm)
+                LET lmuser = DOCUMENT(users, lm.uid)
+                RETURN MERGE(t, {
+                  forum,
+                  oc,
+                  ocuser,
+                  lm,
+                  lmuser
+                })
+            `)
+          })
+      })
+      /*  return params.digest ? global.allThreadsCount.dCount : global.allThreadsCount.nCount
       })
         .then(length => {
           var paging = new layer.Paging(params.page).getPagingParams(length);
@@ -557,7 +662,7 @@ table.viewHome = {
             `)
           }
           return queryfunc.getForumThreads(params, paging)
-        })
+        })*/
         .then(res => {
           data.indexThreads = res._result;
           return queryfunc.getActiveUsers();
@@ -839,6 +944,11 @@ table.viewPersonalForum = {
       })
       .then(forum => {
         data.forum = forum;
+        return queryfunc.getVisibleChildForums(params)
+      })
+      .then(arr => {
+        let forumArr = Array.from(arr); //deep copy from all the forum that can be visited
+        arr.push(null); //push null to origin arr for personal forum
         if(params.tab === 'reply') {
           return db.query(aql`
             LET p1 = (
@@ -863,6 +973,7 @@ table.viewPersonalForum = {
               FOR t IN threadsAll
                 SORT t.${params.sortby ? 'toc' : 'tlm'} DESC
                 FILTER t.${params.digest ? 'digest' : 'disabled'} == ${params.digest ? true : null}
+                && POSITION(${arr}, t.fid)
                 LET oc = DOCUMENT(posts, t.oc)
                 LET ocuser = DOCUMENT(users, oc.uid)
                 LET lm = DOCUMENT(posts, t.lm)
@@ -878,7 +989,7 @@ table.viewPersonalForum = {
             RETURN {
               threads: SLICE(result, ${params.page * settings.paging.perpage}, ${settings.paging.perpage}),
               length: LENGTH(result)
-          }
+            }
         `)
         }
         else if(params.tab === 'own') {
@@ -905,6 +1016,7 @@ table.viewPersonalForum = {
               FOR t IN threadsAll
                 SORT t.${params.sortby ? 'toc' : 'tlm'} DESC
                 FILTER t.${params.digest ? 'digest' : 'disabled'} == ${params.digest ? true : null}
+                && POSITION(${arr}, t.fid)
                 LET oc = DOCUMENT(posts, t.oc)
                 LET ocuser = DOCUMENT(users, oc.uid)
                 LET lm = DOCUMENT(posts, t.lm)
@@ -945,6 +1057,7 @@ table.viewPersonalForum = {
               FOR t IN threadsAll
                 SORT t.${params.sortby ? 'toc' : 'tlm'} DESC
                 FILTER t.${params.digest ? 'digest' : 'disabled'} == ${params.digest ? true : null}
+                && POSITION(${arr}, t.fid)
                 LET oc = DOCUMENT(posts, t.oc)
                 LET ocuser = DOCUMENT(users, oc.uid)
                 LET lm = DOCUMENT(posts, t.lm)
@@ -993,6 +1106,7 @@ table.viewPersonalForum = {
               SORT t.${params.sortby? 'toc' : 'tlm'} DESC
               FILTER t.${params.digest? 'digest' : 'disabled'} == ${params.digest? true : null} &&
               POSITION(subU, t.uid)
+              && POSITION(${arr}, t.fid)
               LET forum = DOCUMENT(forums, t.fid)
               FILTER HAS(${contentClasses}, forum.class)
               RETURN t)
@@ -1050,6 +1164,7 @@ table.viewPersonalForum = {
             FOR t IN threadsAll
               SORT t.${params.sortby ? 'toc' : 'tlm'} DESC
               FILTER t.${params.digest ? 'digest' : 'disabled'} == ${params.digest ? true : null}
+              && POSITION(${arr}, t.fid)
               LET oc = DOCUMENT(posts, t.oc)
               LET ocuser = DOCUMENT(users, oc.uid)
               LET lm = DOCUMENT(posts, t.lm)
@@ -1649,10 +1764,15 @@ table.viewPersonalActivities = {
       })
       .then(forum => {
         data.forum = forum;
+        return queryfunc.getVisibleChildForums(params)
+      })
+      .then(arr => {
+        let forumArr = Array.from(arr); //deep copy from all the forum that can be visited
+        arr.push(null); //push null to origin arr for personal forum
         return db.query(aql`
           FOR o IN usersBehavior
             SORT o.time DESC
-            FILTER o.uid == ${uid}
+            FILTER o.uid == ${uid} && POSITION(${arr}, o.fid)
             LIMIT ${page ? page * 30 : 0}, 30
             LET thread = DOCUMENT(threads, o.tid)
             LET oc = DOCUMENT(posts, thread.oc)

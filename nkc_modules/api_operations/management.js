@@ -203,6 +203,7 @@ table.clearCart={
 
 table.setDigest={
   operation:function(params){
+    let forum;
     var tid = params.tid
     var thread = new layer.Thread(tid)
     var po = params.permittedOperations
@@ -212,6 +213,7 @@ table.setDigest={
       return thread.loadForum()
     })
     .then(origforum=>{
+      forum = origforum;
       if(po['toggleDigestAllThreads']){
         return
       }
@@ -222,6 +224,7 @@ table.setDigest={
     .then(()=>{
       return thread.update({digest:thread.model.digest?null:true})
     })
+    .then(() => queryfunc.setDigestHook(forum.model._key, thread.model.digest))
     .then(()=>{
       return {message:thread.model.digest?'设为精华':'撤销精华'}
     })
