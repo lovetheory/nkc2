@@ -192,7 +192,6 @@ var certificates={
 
       listCart:true,
       clearCart:true,
-      viewPersonalActivities: true,
       recommendPost: true,
       unrecommendPost: true,
       subscribeUser: true,
@@ -243,6 +242,7 @@ var certificates={
       non_public:false,
     },
     permittedOperations:{
+      viewPersonalActivities: true,
       viewEditor:true,
       viewThread:true,
       viewForum:true,

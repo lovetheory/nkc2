@@ -5,23 +5,19 @@ const aql = arango.aql;
 
 module.exports = function() {
   db.query(aql`
-    LET nCount = (FOR t IN threads
-      FILTER t.disabled == null && t.fid != 'recycle'
-      LET forum = DOCUMENT(forums, t.fid)
-      FILTER forum.visibility == true
+    LET normal = (FOR t IN threads
+      FILTER t.fid == null
       COLLECT WITH COUNT INTO length
       RETURN length)[0]
-      LET dCount = (FOR t IN threads
-      FILTER t.disabled == null && t.digest == true && t.fid != 'recycle'
-      LET forum = DOCUMENT(forums, t.fid)
-      FILTER forum.visibility == true
+      LET digest = (FOR t IN threads
+      FILTER t.fid == null && t.digest == true
       COLLECT WITH COUNT INTO length
       RETURN length)[0]
-      RETURN {dCount, nCount}
+      RETURN {digest, normal}
   `)
     .then(res => res._result[0])
     .then(count => {
-      global.allThreadsCount = count;
+      global.personalThreadsCount = count;
     })
     .catch(e => console.error(e.stack))
 };

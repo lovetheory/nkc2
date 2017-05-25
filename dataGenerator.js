@@ -2,9 +2,12 @@ const arango = require('arangojs');
 const aql = arango.aql;
 const db = arango({
   url: 'http://root:@127.0.0.1:8529',
-  databaseName: 'db05',    //数据库名称
+  databaseName: 'rescue',    //数据库名称
   arangoVersion: 20800
 });
+
+//05-18
+/*
 console.log('generating...');
 console.log('creating collections...');
 
@@ -108,7 +111,62 @@ Promise.all([threadGen, gen1, gen2, personalForumGen, usersSubscribeGen])
     console.log('done!');
     return res.map(result => console.log(`共生成${result._result[0].length}条数据在${result._result[0].collection}`))
   })
+ .catch(e => console.log(e));
+*/
+
+//5-25
+db.query(aql`
+  FOR f IN forums
+    UPDATE f WITH {
+      tCount: null
+    } IN forums
+`)
+  .then(() => db.query(aql`
+    FOR f IN forums  
+      UPDATE f WITH {
+        tCount: {
+          normal: 0,
+          digest: 0
+        }
+      } IN forums
+  `))
+  .then(() => db.query(aql`
+    FOR f IN forums
+      LET groups = (FOR t IN threads
+        FILTER t.fid == f._key
+        COLLECT digest = t.digest INTO group = t
+        RETURN {
+          digest,
+          count: LENGTH(group)
+        })
+      FOR data IN groups
+        FILTER data.digest
+        UPDATE f WITH {
+          tCount: {
+            digest: data.count
+          }
+        } IN forums
+  `))
+  .then(() => db.query(aql`
+    FOR f IN forums
+      LET groups = (FOR t IN threads
+        FILTER t.fid == f._key
+        COLLECT digest = t.digest INTO group = t
+        RETURN {
+          digest,
+          count: LENGTH(group)
+        })
+      FOR data IN groups
+        FILTER !data.digest
+        UPDATE f WITH {
+          tCount: {
+            normal: data.count
+          }
+        } IN forums  
+  `))
   .catch(e => console.log(e));
+
+
 /**
  * Created by lzszo on 2017/5/8.
  */

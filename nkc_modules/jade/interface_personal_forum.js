@@ -10,7 +10,7 @@ $(document).ready(function(){
   }
 })
 
-/*
+
 function switchFunc(){
   var flag = false;
   console.log(flag);
@@ -29,7 +29,7 @@ function switchFunc(){
 }
 
 var switchManagementMode = switchFunc();
-*/
+
 
 function applyAll(f){
   return common.mapWithPromise(extractSelectedCheckboxArrayOfID(),f)

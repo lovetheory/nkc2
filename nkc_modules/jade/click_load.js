@@ -4,7 +4,7 @@ function Activity(obj) {
   var activityContent = document.createElement('a');
   activityContent.innerHTML = obj.post.c;
   activityContent.className = 'activity-content';
-  activityContent.overflow = 'hidden';
+  activityContent.style.overflow = 'hidden';
   activityContent.href = '/t/'+obj.tid+'#'+obj.pid;
   var activityTitleText = document.createElement('span');
   activityTitleText.innerHTML = obj.oc.t;

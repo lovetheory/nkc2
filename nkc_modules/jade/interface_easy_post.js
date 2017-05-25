@@ -260,6 +260,15 @@ var groupingForums = function(forumsList, that) {
       }
     }
   }
+  that.forumsList.sort(function(a, b) {
+    return a.order - b.order;
+  });
+  for(var i in that.forumsList) {
+    if(that.forumsList[i].children)
+    that.forumsList[i].children.sort(function(a, b) {
+      return a.order - b.order;
+    })
+  }
 };
 
 var createOption = function(text) {

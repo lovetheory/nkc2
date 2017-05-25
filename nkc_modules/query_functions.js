@@ -567,17 +567,40 @@ queryfunc.getIndexForumList = contentClasses => {
 };
 
 queryfunc.threadsCount = function(fid) {
-  global.allThreadsCount.nCount++;
   return db.query(aql`
     LET f = DOCUMENT(forums, ${fid})
-    LET count = f.tCount.nCount + 1
+    LET normal = f.tCount.normal + 1
+    LET digest = f.tCount.digest
     UPDATE f WITH {
       tCount:{
-        nCount: count,
-        dCount: f.tCount.dCount
+        normal,
+        digest
       }
     } IN forums
   `)
-}
+};
+
+queryfunc.setDigestHook = function(fid, digest) {
+  return db.query(aql`
+    LET f = DOCUMENT(forums, ${fid})
+    LET ${digest? 'digest' : 'normal'} = f.tCount.${digest? 'digest' : 'normal'} - 1
+    LET ${digest? 'normal' : 'digest'} = f.tCount.${digest? 'normal' : 'digest'} + 1
+    UPDATE f WITH {
+      tCount:{
+        normal,
+        digest
+      }
+    } IN forums
+  `)
+};
+
+queryfunc.getVisibleChildForums = function(params) {
+  return db.query(aql`
+    FOR f IN forums
+      FILTER f.type == 'forum' && HAS(${params.contentClasses}, f.class)
+      RETURN f._key
+  `)
+    .then(res => res._result)
+};
 
 module.exports = queryfunc;

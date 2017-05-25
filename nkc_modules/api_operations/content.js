@@ -812,6 +812,7 @@ let postToPersonalForum = (params, targetKey) => {
       if(user._key !== targetKey) {
         newthread.toMid = targetKey
       }
+      global.personalThreadsCount.normal ++; //count ++
       //save this new thread
       return queryfunc.doc_save(newthread, 'threads')
     })
