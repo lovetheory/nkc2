@@ -7,6 +7,8 @@ var settings = require('../server_settings.js');
 var helper_mod = require('../helper.js')();
 var queryfunc = require('../query_functions')
 var AQL = queryfunc.AQL
+const db = queryfunc.getDB();
+const aql = queryfunc.getAql();
 
 var layer = require('../layer')
 
@@ -313,7 +315,7 @@ table.banUser = {
       }
 
       if(certs.indexOf('banned')>=0){
-        throw '这人被封过了吧。。。'
+        throw '这人被封过了吧。。。刷新试试'
       }
 
       certs = certs.concat(['banned'])
@@ -412,5 +414,65 @@ table.forumIsVisibleForNCCSwitch = {
     var forum = new layer.Forum(params.fid);
     return forum.isVisibleForNCCSwitch()
       .then(res => res._result[0]);
+  }
+};
+
+table.moveToPersonalForum = {
+  operation: params => {
+    if('moveToPersonalForum' in params.permittedOperations) {
+      return db.collection('threads').document(params.tid)
+        .then(t => {
+          if(!t.fid || !t.mid) throw '操作有误,请报告论坛';
+          return db.collection('threads').update(t, {fid: null})
+        })
+        .catch(e => {throw e})
+    }
+    throw `权限不足`
+  }
+};
+
+table.switchVInPersonalForum = {
+  operation: params => {
+    const po = params.permittedOperations;
+    const tid = params.tid;
+    const user = params.user;
+    if('switchVInPersonalForum' in po) {
+      return db.collection('threads').document(tid)
+        .then(t => {
+          if(t.toMid === user._key) {
+            return db.collection('threads').update(t, {hideInToMid: !t.hideInToMid})
+              .catch(e => {throw e})
+          }
+          else if(t.mid === user._key) {
+            return db.collection('threads').update(t, {hideInMid: !t.hideInMid})
+              .catch(e => {throw e});
+          }
+          throw '操作有误,请报告论坛' + t.mid
+        })
+    }
+    throw '权限不足'
+  }
+};
+
+table.switchDInPersonalForum = {
+  operation: params => {
+    const po = params.permittedOperations;
+    const tid = params.tid;
+    const user = params.user;
+    if('switchDInPersonalForum' in po) {
+      return db.collection('threads').document(tid)
+        .then(t => {
+          if(t.toMid === user._key) {
+            return db.collection('threads').update(t, {digestInToMid: !t.digestInToMid})
+              .catch(e => {throw e})
+          }
+          else if(t.mid === user._key) {
+            return db.collection('threads').update(t, {digestInMid: !t.digestInMid})
+              .catch(e => {throw e});
+          }
+          throw '操作有误,请报告论坛' + t.mid
+        })
+    }
+    throw '权限不足'
   }
 };

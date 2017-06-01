@@ -26,6 +26,7 @@ var RedisStore = require('connect-redis')(session);
 
 var apifunc = require('./nkc_modules/api_functions');
 var queryfunc = require('./nkc_modules/query_functions');
+const timeout = require('connect-timeout');
 
 queryfunc.db_init();
 
@@ -55,8 +56,11 @@ if(use_https){
 }else {
   var target_server = require('http').Server(nkc);
 }
+
+//nkc.use(timeout('5s'));
 //-------------------------------
 //3. gzip
+
 nkc.use(compression({level:9}));//enable compression
 
 nkc.use(session({  //session用于存储图片验证码
@@ -259,6 +263,7 @@ nkc.get('*',(req,res)=>{
 
 //unhandled error handler
 //aka 500 handling
+
 nkc.use((err,req,res,next)=>{
   report('not handled',err.stack);
   var data = {};

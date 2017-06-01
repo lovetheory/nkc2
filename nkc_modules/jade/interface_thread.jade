@@ -94,17 +94,33 @@ block content
                     a(href="javascript:setTopped('#{data.thread._key}')") 设置置顶
                     
                 a(href='/t/#{data.thread._key}') 本帖地址
-                
                 if po.moveThread
                   .form-inline
                     .form-group
-
                       include forumlist_dropdown.jade
                       button(onclick="javascript:moveThreadTo('#{data.thread._key}')") 移动
-                  
                     .form-group
                       button#recyclebtn.btn.btn-xs.btn-danger(onclick="recycleThread('#{data.thread._key}')") 送回收站
-            
+
+                if data.user
+                  if(data.thread.fid && po.moveToPersonalForum)
+                    a#moveToPersonal(href='javascript:;' onclick='moveToPersonalForum("#{data.thread._key}")') 移至个人版
+                  if data.thread.toMid === data.user._key || data.thread.mid === data.user._key
+                    -var text
+                    if data.thread.toMid === data.user._key && data.thread.hideInToMid || data.thread.mid === data.user._key && data.thread.hideInMid
+                      -text = '恢复专栏显示'
+                    else
+                      -text = '在专栏隐藏'
+                    a#visibility(href='javascript:;' onclick='switchVInPersonalForum("#{data.thread._key}")') #{text}
+                  if data.thread.toMid === data.user._key || data.thread.mid === data.user._key
+                    -var text2
+                    if data.thread.toMid === data.user._key && data.thread.digestInToMid || data.thread.mid === data.user._key && data.thread.digestInToMid
+                      -text2 = '取消专栏加精'
+                    else
+                      -text2 = '在专栏加精'
+                    a#digest(href='javascript:;' onclick='switchDInPersonalForum("#{data.thread._key}")') #{text2}
+
+
             .ThreadTitle2(style="display:inline-block;width:16%;vertical-align:top;")
               .ThreadTitle22(style="border:1px solid #ddd;border-radius:10px;")
                 p.lighttext#airnum1(style="font-size:21px;text-align:center;margin-top:0px;margin-bottom:0px;") 文 号

@@ -12,8 +12,8 @@ var apifunc = require('../api_functions')
 var layer = require('../layer')
 var permissions = require('../permissions')
 let operations = require('../api_operations');
-let db = require('arangojs')(settings.arango);
-let aql = require('arangojs').aql;
+const db = queryfunc.getDB();
+const aql = queryfunc.getAql();
 
 var table = {};
 module.exports = table;
@@ -187,9 +187,6 @@ var postToForum = function(params,fid,user,cat){
     .catch(e => console.log(e))
 };
 
-
-
-
 var postToPost = function(params,pid,user){ //modification.
   var post = params.post
   var fid;
@@ -213,11 +210,30 @@ var postToPost = function(params,pid,user){ //modification.
     origthread = new layer.Thread(tid)
     return origthread.load()
     .then(origthread=>{
-      return new layer.Forum(origthread.model.fid).load()
+      if(origthread.model.fid) {
+        return new layer.Forum(origthread.model.fid).load()
+      }
+      return db.query(aql`
+        LET pf1 = DOCUMENT(personalForums, ${origthread.model.toMid})
+        LET pf2 = DOCUMENT(personalForums, ${origthread.model.mid})
+        RETURN UNION(pf1.moderators, pf2.moderators)
+      `)
+        .then(cursor => cursor.all())
+        .then(moderators => ({
+          testModerator: username => {
+            if(moderators.includes(username)) {
+              return
+            }
+            throw `权限不足`
+          }
+        }))
     })
     .then(origforum=>{
-      fid = origforum.model._key;
-      return origforum.inheritPropertyFromParent()
+      if(origforum.model) {
+        fid = origforum.model._key;
+        return origforum.inheritPropertyFromParent()
+      }
+      return origforum
     })
     .then(origforum=>{
       if(params.permittedOperations['editAllThreads']){
@@ -838,15 +854,28 @@ let postToPersonalForum = (params, targetKey) => {
 
 table.configPersonalForum = {
   operation: params => {
-    let description = params.description;
-    let forumName = params.forumName;
+    let description = params.description.trim();
+    let forumName = params.forumName.trim();
     return db.query(aql`
-      UPDATE DOCUMENT(personalForums, ${params.user._key}) WITH {
-        description: ${description},
-        display_name: ${forumName}
-      } IN personalForums
-      RETURN NEW
+      LET arr1 = (FOR o IN personalForums
+        FILTER o.display_name == ${forumName}
+        RETURN o.display_name)
+      LET arr2 = (FOR o IN forums
+        FILTER o.display_name == ${forumName}
+        RETURN o.display_name)
+      RETURN UNION(arr1, arr2)
     `)
+      .then(res => res._result)
+      .then(arr => {
+        if(arr.length > 0) throw `专栏名称与现有的学院或个人专栏名称重复,不能使用`;
+        return db.query(aql`
+          UPDATE DOCUMENT(personalForums, ${params.user._key}) WITH {
+            description: ${description},
+            display_name: ${forumName}
+          } IN personalForums
+          RETURN NEW
+        `)
+      })
       .then(res => res._result[0])
       .catch(e => e)
   }
