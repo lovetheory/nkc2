@@ -19,7 +19,6 @@ table.moveThread = {
   operation:function(params){
     //check if fid exists
     var po = params.permittedOperations
-
     var fid = params.fid
     var tid = params.tid
     var cid = params.cid
@@ -30,7 +29,8 @@ table.moveThread = {
 
     return thread.load()
     .then(thread=>{
-      if(thread.model.tid) {
+      console.log(thread);
+      if(thread.model.fid) {
         origforum = new layer.Forum(thread.model.fid)
         return origforum.load()
           .then(origforum => {

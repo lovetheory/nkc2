@@ -94,13 +94,15 @@ block content
                     a(href="javascript:setTopped('#{data.thread._key}')") 设置置顶
                     
                 a(href='/t/#{data.thread._key}') 本帖地址
-                if po.moveThread
+              if user
+                if po.moveThread || (thread.fid == null && thread.toMid == null && data.user._key == thread.mid)
                   .form-inline
                     .form-group
                       include forumlist_dropdown.jade
-                      button(onclick="javascript:moveThreadTo('#{data.thread._key}')") 移动
-                    .form-group
-                      button#recyclebtn.btn.btn-xs.btn-danger(onclick="recycleThread('#{data.thread._key}')") 送回收站
+                      button(onclick="javascript:moveThreadTo('#{thread._key}')") #{po.moveThread? '移动' : '转发'}
+                    if po.moveThread
+                      .form-group
+                        button#recyclebtn.btn.btn-xs.btn-danger(onclick="recycleThread('#{data.thread._key}')") 送回收站
 
                 if data.user
                   if(data.thread.fid && po.moveToPersonalForum)
@@ -111,14 +113,14 @@ block content
                       -text = '恢复专栏显示'
                     else
                       -text = '在专栏隐藏'
-                    a#visibility(href='javascript:;' onclick='switchVInPersonalForum("#{data.thread._key}")') #{text}
+                    a#visibility(href='javascript:;' onclick='switchVInPersonalForum("#{data.thread._key}")' style='color: #CBDCEA') #{text}&nbsp;
                   if data.thread.toMid === data.user._key || data.thread.mid === data.user._key
                     -var text2
                     if data.thread.toMid === data.user._key && data.thread.digestInToMid || data.thread.mid === data.user._key && data.thread.digestInToMid
                       -text2 = '取消专栏加精'
                     else
                       -text2 = '在专栏加精'
-                    a#digest(href='javascript:;' onclick='switchDInPersonalForum("#{data.thread._key}")') #{text2}
+                    a#digest(href='javascript:;' onclick='switchDInPersonalForum("#{data.thread._key}")' style='color: #CBDCEA') &nbsp;#{text2}
 
 
             .ThreadTitle2(style="display:inline-block;width:16%;vertical-align:top;")

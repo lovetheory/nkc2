@@ -472,7 +472,7 @@ table.viewHome = {
         contentClasses[param] = true;
       }
     }
-    let content = params.content || 'forum';
+    let content = params.content || 'all';
     data.content = content;
     return AQL(`
     for t in threads
@@ -532,44 +532,8 @@ table.viewHome = {
               })
           `)
         }
-        if(params.content === 'all') {
+        if(params.content === 'forum') {
           return db.query(aql`
-            FOR fid IN ${forumArr}
-              LET forum = DOCUMENT(forums, fid)
-              RETURN forum.tCount.${params.digest? 'digest' : 'normal'}
-          `)
-            .then(arr => {
-              let temp = 0;
-              for(ele of arr._result) {
-                temp += ele;
-              }
-              return temp
-            })
-            .then(length => {
-              let paging = new layer.Paging(params.page).getPagingParams(count + length);
-              data.paging = paging;
-              return db.query(aql`
-                FOR t IN threads
-                  SORT t.${params.sortby ? 'toc' : 'tlm'} DESC
-                  FILTER t.${params.digest ? 'digest' : 'disabled'} == ${params.digest ? true : null} &&
-                  POSITION(${arr}, t.fid)
-                  limit ${paging.start}, ${paging.perpage}
-                  LET forum = DOCUMENT(forums, t.fid)
-                  LET oc = DOCUMENT(posts, t.oc)
-                  LET ocuser = DOCUMENT(users, oc.uid)
-                  LET lm = DOCUMENT(posts, t.lm)
-                  LET lmuser = DOCUMENT(users, lm.uid)
-                  RETURN MERGE(t, {
-                    forum,
-                    oc,
-                    ocuser,
-                    lm,
-                    lmuser
-                  })
-              `)
-            })
-        }
-        return db.query(aql`
             FOR fid IN ${forumArr}
               LET forum = DOCUMENT(forums, fid)
               RETURN forum.tCount.${params.digest? 'digest' : 'normal'}
@@ -589,6 +553,42 @@ table.viewHome = {
               SORT t.${params.sortby ? 'toc' : 'tlm'} DESC
                 FILTER t.${params.digest ? 'digest' : 'disabled'} == ${params.digest ? true : null} &&
                 POSITION(${forumArr}, t.fid)
+                limit ${paging.start}, ${paging.perpage}
+                LET forum = DOCUMENT(forums, t.fid)
+                LET oc = DOCUMENT(posts, t.oc)
+                LET ocuser = DOCUMENT(users, oc.uid)
+                LET lm = DOCUMENT(posts, t.lm)
+                LET lmuser = DOCUMENT(users, lm.uid)
+                RETURN MERGE(t, {
+                  forum,
+                  oc,
+                  ocuser,
+                  lm,
+                  lmuser
+                })
+            `)
+          })
+        }
+        return db.query(aql`
+          FOR fid IN ${forumArr}
+            LET forum = DOCUMENT(forums, fid)
+            RETURN forum.tCount.${params.digest? 'digest' : 'normal'}
+        `)
+          .then(arr => {
+            let temp = 0;
+            for(ele of arr._result) {
+              temp += ele;
+            }
+            return temp
+          })
+          .then(length => {
+            let paging = new layer.Paging(params.page).getPagingParams(count + length);
+            data.paging = paging;
+            return db.query(aql`
+              FOR t IN threads
+                SORT t.${params.sortby ? 'toc' : 'tlm'} DESC
+                FILTER t.${params.digest ? 'digest' : 'disabled'} == ${params.digest ? true : null} &&
+                POSITION(${arr}, t.fid)
                 limit ${paging.start}, ${paging.perpage}
                 LET forum = DOCUMENT(forums, t.fid)
                 LET oc = DOCUMENT(posts, t.oc)
@@ -930,7 +930,7 @@ table.viewPersonalForum = {
     const user = params.user;
     const po = params.permittedOperations;
     let targetUser;
-    data.tab = params.tab || 'all';
+    data.tab = params.tab || 'own';
     data.template = jadeDir + 'interface_personal_forum.jade';
     data.operation = 'viewUserThreads';
     data.replytarget = 'm/' + params.uid;

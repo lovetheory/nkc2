@@ -57,12 +57,12 @@ block content
         include interface_easy_post
 
         ul.nav.nav-tabs
+          li(class='#{data.tab == "own"? "active" : ""}')
+            a(href='?&tab=own') 版主
           li(class='#{data.tab == "all"? "active" : ""}')
             a(href='?&tab=all') 全部
           li(class='#{data.tab == "discuss" ? "active" : ""}')
             a(href='?&tab=discuss') 讨论
-          li(class='#{data.tab == "own"? "active" : ""}')
-            a(href='?&tab=own') 版主
           li(class='#{data.tab == "reply"? "active" : ""}')
             a(href='?&tab=reply') 回复
           li(class='#{data.tab == "recommend"? "active" : ""}')
