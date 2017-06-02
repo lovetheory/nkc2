@@ -3,7 +3,7 @@
 var settings = require('./server_settings.js');
 var helper_mod = require('./helper.js')();
 var queryfunc = require('./query_functions');
-var db = require('arangojs')(settings.arango);
+const db = queryfunc.getDB();
 var AQL = queryfunc.AQL;
 module.exports = (function () {
   var BaseDao = (function () {

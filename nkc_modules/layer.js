@@ -5,11 +5,11 @@ var apifunc = require('./api_functions');
 var validation = require('./validation');
 var rs = require('random-seed');
 var AQL = queryfunc.AQL;
-var db = require('arangojs')(settings.arango);
+const db = queryfunc.getDB();
 var permission = require('./permissions');
 var crypto = require('crypto');
 var BaseDao = require('./BaseDao');
-var aql = require('arangojs').aql;
+const aql = queryfunc.getAql();
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() {
@@ -408,6 +408,18 @@ var layer = (function () {
         type: 'skiplist',
         unique: 'false',
         sparse: 'false',
+      }),
+      queryfunc.createIndex('posts', {
+        fields: ['uid', 'disabled'],
+        type: 'skiplist',
+        unique: 'false',
+        sparse: 'false'
+      }),
+      queryfunc.createIndex('posts', {
+        fields: ['uid'],
+        type: 'skiplist',
+        unique: 'false',
+        sparse: 'false'
       })
     ]);
     /*function () {
@@ -433,11 +445,27 @@ var layer = (function () {
      };*/
     Thread.prototype.loadForum = function () {
       var t = this.model;
-      var f = new Forum(t.fid);
-      return f.load()
-        .then(function (res) {
-          return f.inheritPropertyFromParent();
-        });
+      if(t.fid) {
+        let f = new Forum(t.fid);
+        return f.load()
+          .then(function (res) {
+            return f.inheritPropertyFromParent();
+          });
+      }
+      return db.query(aql`
+        LET pf1 = DOCUMENT(personalForums, ${t.toMid})
+        LET pf2 = DOCUMENT(personalForums, ${t.mid})
+        RETURN UNION(pf1.moderators, pf2.moderators)
+      `)
+        .then(cursor => cursor.all())
+        .then(moderators => ({
+          testModerator: username => {
+            if(moderators.includes(username)) {
+              return
+            }
+            throw `权限不足`
+          }
+        }))
     };
     Thread.prototype.loadOthersForum = function () {
       let t = this.model;

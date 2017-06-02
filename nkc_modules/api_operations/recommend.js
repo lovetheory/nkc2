@@ -1,7 +1,6 @@
-const arango = require('arangojs');
-const aql = arango.aql;
-const settings = require('../server_settings');
-const db = arango(settings.arango);
+const queryFunc = require('../query_functions');
+const aql = queryFunc.getAql();
+const db = queryFunc.getDB();
 
 let table = {};
 

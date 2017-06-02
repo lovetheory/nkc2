@@ -13,20 +13,25 @@ $(document).ready(function(){
 
 function switchFunc(){
   var flag = false;
-  console.log(flag);
-  return function() {
-    console.log('hi')
+  var checkboxes = $('.ThreadCheckboxes');
+  var forumManagement = $('.ForumManagement');
+  return function () {
+    console.log(flag);
     if (!flag) {
       $('.displayShit').hide();
       $('.configShit').show();
+      if(checkboxes) checkboxes.show();
+      if(forumManagement) forumManagement.show();
       flag = true;
       return;
     }
     $('.configShit').hide();
     $('.displayShit').show();
+    if(checkboxes) checkboxes.hide();
+    if(forumManagement) forumManagement.hide();
     flag = false;
   }
-}
+};
 
 var switchManagementMode = switchFunc();
 

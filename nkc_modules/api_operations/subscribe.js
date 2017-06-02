@@ -1,8 +1,7 @@
-const settings = require('../server_settings');
 const permissions = require('../permissions');
-const arango = require('arangojs');
-const aql = arango.aql;
-const db = arango(settings.arango);
+const queryFunc = require('../query_functions');
+const aql = queryFunc.getAql();
+const db = queryFunc.getDB();
 
 let table = {};
 

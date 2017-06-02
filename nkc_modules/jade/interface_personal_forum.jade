@@ -46,19 +46,23 @@ block content
                       - var moderators = data.forum.moderators
                       each k in moderators
                         a.d-inline.margin-right(href='/user_activities_byname/#{k}') #{k}
-
-                  //if isModerator
-                  //  button#enterManagementMode.btn.btn-default(onclick='switchManagementMode()') 管理
+                  if data.permittedOperations.banUser
+                    if data.targetUser.certs.indexOf('banned') > -1
+                      a(href='javascript:;' onclick='nkcAPI("unbanUser", {uid: "#{data.targetUser._key}"}).then(jalert).catch(jwarning)') 解除封禁
+                    else
+                      a(href='javascript:;' onclick='nkcAPI("banUser", {uid: "#{data.targetUser._key}"}).then(jalert).catch(jwarning)') &nbsp;封禁此人&nbsp;
+                  if isModerator
+                    a#enterManagementMode.btn.btn-default(href='javascript:;' onclick='switchManagementMode()') 管理
 
         include interface_easy_post
 
         ul.nav.nav-tabs
+          li(class='#{data.tab == "own"? "active" : ""}')
+            a(href='?&tab=own') 版主
           li(class='#{data.tab == "all"? "active" : ""}')
             a(href='?&tab=all') 全部
           li(class='#{data.tab == "discuss" ? "active" : ""}')
             a(href='?&tab=discuss') 讨论
-          li(class='#{data.tab == "own"? "active" : ""}')
-            a(href='?&tab=own') 版主
           li(class='#{data.tab == "reply"? "active" : ""}')
             a(href='?&tab=reply') 回复
           li(class='#{data.tab == "recommend"? "active" : ""}')
@@ -77,23 +81,15 @@ block content
                   if data.permittedOperations.addThreadToCollection
                     .form-group
                       button#addSelectedToMyCollection.btn-xs.btn.btn-default(onclick='addSelectedToMyCollection()') 添加到个人收藏
-
                   .form-group
                     button.btn.btn-xs.btn-default(onclick='selectbtn()') 全选/不选
-                  .form-group
-                    include forumlist_dropdown.jade
-                    button#moveThreadTo(onclick="javascript:moveThreadTo()") 移动
+                  if data.permittedOperations.moveAllThreads
+                    .form-group
+                      include forumlist_dropdown.jade
+                      button#moveThreadTo(onclick="javascript:moveThreadTo()") 移动
 
-                  .form-group
-                    button#recyclebtn.btn.btn-xs.btn-danger(style='margin-left:20px;margin-right:20px;' onclick='recyclebtn()') 送回收站
-
-                  if data.permittedOperations.modifyThreadType
-                    -var ffid = data.forum._key
-                    button(onclick="renameForumCategory('#{ffid}')") 重命名分类
-                    button(onclick="addForumCategory('#{ffid}')") 增加分类
-                    button(onclick="deleteForumCategory('#{ffid}')") 删除分类
-
-
+                    .form-group
+                      button#recyclebtn.btn.btn-xs.btn-danger(style='margin-left:20px;margin-right:20px;' onclick='recyclebtn()') 送回收站
 
             .col-xs-12
               nav

@@ -238,3 +238,49 @@ window.onscroll = function () {
   }
 }
 
+function switchVInPersonalForum(tid) {
+  var hidden = '恢复专栏显示';
+  var visible = '在专栏隐藏';
+  var target = geid('visibility');
+  nkcAPI('switchVInPersonalForum',{tid: tid})
+    .then(() => {
+      if(target.innerHTML === hidden) {
+        target.innerHTML = visible;
+        screenTopWarning('已恢复该帖在专栏的显示');
+        return
+      }
+      target.innerHTML = hidden;
+      screenTopWarning('已在专栏屏蔽该帖');
+      return
+    })
+    .catch(e => screenTopWarning(e))
+}
+
+function moveToPersonalForum(tid) {
+  var target = geid('moveToPersonal')
+  nkcAPI('moveToPersonalForum', {tid: tid})
+    .then(() => {
+      screenTopWarning('已将该帖送回个人专栏')
+      target.innerHTML = '';
+    })
+      .catch(e => screenTopWarning(e))
+}
+
+function switchDInPersonalForum(tid) {
+  var digest = '取消专栏加精';
+  var normal = '在专栏加精';
+  var target = geid('digest');
+  nkcAPI('switchDInPersonalForum', {tid: tid})
+    .then(() => {
+      if(target.innerHTML === normal) {
+        screenTopWarning('已将该帖在个人专栏加精');
+        target.innerHTML = digest;
+        return
+      }
+      screenTopWarning('已取消专栏加精');
+      target.innerHTML = normal;
+      return
+    })
+    .catch(e => screenTopWarning(e))
+}
+

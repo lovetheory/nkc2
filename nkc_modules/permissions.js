@@ -83,6 +83,7 @@ var certificates={
     },
 
     permittedOperations:{
+      moveToPersonalForum: true,
       addThreadToCart:true,
       addPostToCart:true,
       setDigest:true,
@@ -186,6 +187,8 @@ var certificates={
       non_broadcast:true,
     },
     permittedOperations:{
+      switchDInPersonalForum: true,
+      switchVInPersonalForum: true,
       configPersonalForum: true,
       viewSMS:true,
       sendShortMessageByUsername:true,
@@ -406,7 +409,7 @@ permissions.testModifyTimeLimit = function(params,ownership,toc){
 
   // if you can modify others in 1y,
   // you should be able to do that to yourself,
-  // regardless of settings.
+  // regardless of settings. // wtf r u talking about   wtf r u talking about!!!! --lzszone
   if(smtl<emtl){
     smtl = emtl
   }

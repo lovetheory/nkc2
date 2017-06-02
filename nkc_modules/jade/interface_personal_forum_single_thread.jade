@@ -5,7 +5,8 @@ if thread
   - var oc = thread.oc
   - var avatar = '/avatar_small/' + oc.uid
   - var uid = oc.uid
-  - var digest = thread.digest
+  - var digest = thread.digest || (data.tab === 'own' && thread.digestInMid) || (data.tab === 'discuss' && thread.digestInToMid)
+  -var hide = (data.tab === 'own' && thread.hideInMid) || (data.tab === 'discuss' && thread.hideInToMid)
   -var has_file = thread.has_file
   -var has_image = thread.has_image
   -var topped = thread.topped
@@ -22,7 +23,7 @@ if thread
 
   -var threadtype = data.threadtypes?data.threadtypes.filter(k=>k._key==thread.cid)[0]:null;
 
-  .ForumThreadItem
+  .ForumThreadItem(style='background-color: #{hide? "#cfd2da" : "white"}')
     .parent.clearfix(id='')
       .avatar-left
         - var user = ocuser

@@ -79,6 +79,7 @@ EasyPost.prototype.init = function() {
 var easyPostFocusIn = function(that) {
   return function(e) {
     e.stopPropagation();
+    that.title.placeholder = '标题';
     if(window.__TIMEOUT) {
       clearTimeout(window.__TIMEOUT);
     }

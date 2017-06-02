@@ -7,8 +7,8 @@ var moment = require('moment');
 var settings = require('./server_settings.js');
 var helper_mod = require('./helper.js')();
 var bodyParser = require('body-parser');
-
-var db = require('arangojs')(settings.arango);
+const arango = require('arangojs');
+const db = arango(settings.arango);
 
 var users = db.collection('users');
 
@@ -17,7 +17,7 @@ var api = express.Router();
 
 var validation = require('./validation');
 
-let aql = require('arangojs').aql;
+const aql = arango.aql;
 
 var queryfunc = {};
 
@@ -601,6 +601,14 @@ queryfunc.getVisibleChildForums = function(params) {
       RETURN f._key
   `)
     .then(res => res._result)
+};
+
+queryfunc.getDB = function() {
+  return db;
+};
+
+queryfunc.getAql = function() {
+  return aql;
 };
 
 module.exports = queryfunc;
