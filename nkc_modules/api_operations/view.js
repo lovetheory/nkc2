@@ -951,7 +951,7 @@ table.viewPersonalForum = {
       .then(arr => {
         let forumArr = Array.from(arr); //deep copy from all the forum that can be visited
         arr.push(null); //push null to origin arr for personal forum
-        if(params.tab === 'reply') {
+        if(data.tab === 'reply') {
           return db.query(aql`
             LET p1 = (
               FOR p IN posts
@@ -994,7 +994,8 @@ table.viewPersonalForum = {
             }
         `)
         }
-        else if(params.tab === 'own') {
+        else if(data.tab === 'own') {
+          console.log('hi')
           if(user && user._key === uid || 'moveAllThreads' in po) {
             return db.query(aql`
               LET p1 = (
@@ -1080,7 +1081,7 @@ table.viewPersonalForum = {
           }
         `)
         }
-        else if(params.tab === 'recommend') {
+        else if(data.tab === 'recommend') {
           return db.query(aql`
             LET p3 = (
               FOR pid IN DOCUMENT(personalForums, ${uid}).recPosts
@@ -1120,7 +1121,7 @@ table.viewPersonalForum = {
           }
         `)
         }
-        else if(params.tab === 'discuss') {
+        else if(data.tab === 'discuss') {
           if (user && user._key === uid || 'moveAllThreads' in po) {
             return db.query(aql`
               LET result = (FOR t IN threads
@@ -1164,7 +1165,7 @@ table.viewPersonalForum = {
             }
           `)
         }
-        else if(params.tab === 'subscribe') {
+        else if(data.tab === 'subscribe') {
           let contentClasses = params.contentClasses;
           return db.query(aql`
             LET subU = DOCUMENT(usersSubscribe, ${uid}).subscribeUsers
@@ -1944,7 +1945,6 @@ table.viewPostHistory = {
     data.template = jadeDir + 'interface_post_history.jade'
 
     var pid = params.pid
-
     var p = new layer.Post(pid)
     return p.load()
       .then(p => {
