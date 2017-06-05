@@ -1,5 +1,3 @@
-
-//移动端，文号改变样式
 $(document).ready(function(){
   if($(window).width()<750){
     $('.ThreadTitleText').css('font-size','20px');
@@ -243,7 +241,7 @@ function switchVInPersonalForum(tid) {
   var visible = '在专栏隐藏';
   var target = geid('visibility');
   nkcAPI('switchVInPersonalForum',{tid: tid})
-    .then(() => {
+    .then(function() {
       if(target.innerHTML === hidden) {
         target.innerHTML = visible;
         screenTopWarning('已恢复该帖在专栏的显示');
@@ -253,17 +251,21 @@ function switchVInPersonalForum(tid) {
       screenTopWarning('已在专栏屏蔽该帖');
       return
     })
-    .catch(e => screenTopWarning(e))
+    .catch(function(e) {
+      screenTopWarning(e)
+    })
 }
 
 function moveToPersonalForum(tid) {
   var target = geid('moveToPersonal')
   nkcAPI('moveToPersonalForum', {tid: tid})
-    .then(() => {
+    .then(function() {
       screenTopWarning('已将该帖送回个人专栏')
       target.innerHTML = '';
     })
-      .catch(e => screenTopWarning(e))
+      .catch(function(e) {
+        screenTopWarning(e)
+      })
 }
 
 function switchDInPersonalForum(tid) {
@@ -271,7 +273,7 @@ function switchDInPersonalForum(tid) {
   var normal = '在专栏加精';
   var target = geid('digest');
   nkcAPI('switchDInPersonalForum', {tid: tid})
-    .then(() => {
+    .then(function() {
       if(target.innerHTML === normal) {
         screenTopWarning('已将该帖在个人专栏加精');
         target.innerHTML = digest;
@@ -281,6 +283,8 @@ function switchDInPersonalForum(tid) {
       target.innerHTML = normal;
       return
     })
-    .catch(e => screenTopWarning(e))
+    .catch(function(e) {
+      screenTopWarning(e)
+    })
 }
 

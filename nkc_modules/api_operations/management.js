@@ -81,6 +81,7 @@ table.disablePost = {
       if(po['toggleAllPosts']){
         return
       }
+    console.log(post.model.tid)
       let thread = new layer.Thread(post.model.tid);
       thread.load().then(t => thread.model = t);
       let model = thread.model;
@@ -226,9 +227,12 @@ table.setDigest={
     .then(()=>{
       return thread.update({digest:thread.model.digest?null:true})
     })
-    .then(() => queryfunc.setDigestHook(forum.model._key, thread.model.digest))
+    .then(() => {
+      if(!forum.model) return
+      queryfunc.setDigestHook(forum.model._key, thread.model.digest)
+    })
     .then(()=>{
-      return {message:thread.model.digest?'设为精华':'撤销精华'}
+      return {message:thread.model.digest?'设置精华':'撤销精华'}
     })
   },
   requiredParams:{

@@ -453,7 +453,7 @@ var layer = (function () {
           });
       }
       return db.query(aql`
-        LET pf1 = DOCUMENT(personalForums, ${t.toMid})
+        LET pf1 = DOCUMENT(personalForums, ${t.toMid || null})
         LET pf2 = DOCUMENT(personalForums, ${t.mid})
         RETURN UNION(pf1.moderators, pf2.moderators)
       `)
@@ -507,6 +507,7 @@ var layer = (function () {
     };
     Thread.prototype.testView = function (contentClasses) {
       var _this = this;
+      if(!this.model.fid) return _this;
       var f = new Forum(this.model.fid);
       return f.load()
         .then(function (f) {

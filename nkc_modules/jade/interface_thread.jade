@@ -113,14 +113,15 @@ block content
                       -text = '恢复专栏显示'
                     else
                       -text = '在专栏隐藏'
-                    a#visibility(href='javascript:;' onclick='switchVInPersonalForum("#{data.thread._key}")' style='color: #CBDCEA') #{text}&nbsp;
+                    a#visibility(href='javascript:;' onclick='switchVInPersonalForum("#{data.thread._key}")' style='color: #CBDCEA') #{text}
+                    span &nbsp;&nbsp;
                   if data.thread.toMid === data.user._key || data.thread.mid === data.user._key
                     -var text2
-                    if data.thread.toMid === data.user._key && data.thread.digestInToMid || data.thread.mid === data.user._key && data.thread.digestInToMid
+                    if data.thread.toMid === data.user._key && data.thread.digestInToMid || data.thread.mid === data.user._key && data.thread.digestInMid
                       -text2 = '取消专栏加精'
                     else
                       -text2 = '在专栏加精'
-                    a#digest(href='javascript:;' onclick='switchDInPersonalForum("#{data.thread._key}")' style='color: #CBDCEA') &nbsp;#{text2}
+                    a#digest(href='javascript:;' onclick='switchDInPersonalForum("#{data.thread._key}")' style='color: #CBDCEA') #{text2}
 
 
             .ThreadTitle2(style="display:inline-block;width:16%;vertical-align:top;")

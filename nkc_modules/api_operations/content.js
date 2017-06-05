@@ -214,7 +214,7 @@ var postToPost = function(params,pid,user){ //modification.
         return new layer.Forum(origthread.model.fid).load()
       }
       return db.query(aql`
-        LET pf1 = DOCUMENT(personalForums, ${origthread.model.toMid})
+        LET pf1 = DOCUMENT(personalForums, ${origthread.model.toMid || null})
         LET pf2 = DOCUMENT(personalForums, ${origthread.model.mid})
         RETURN UNION(pf1.moderators, pf2.moderators)
       `)
@@ -865,9 +865,9 @@ table.configPersonalForum = {
         RETURN o.display_name)
       RETURN UNION(arr1, arr2)
     `)
-      .then(res => res._result)
+      .then(cursor => cursor.all())
       .then(arr => {
-        if(arr.length > 0) throw `专栏名称与现有的学院或个人专栏名称重复,不能使用`;
+        if(arr[0].length > 0) throw `专栏名称与现有的学院或个人专栏名称重复,不能使用`;
         return db.query(aql`
           UPDATE DOCUMENT(personalForums, ${params.user._key}) WITH {
             description: ${description},
@@ -876,7 +876,8 @@ table.configPersonalForum = {
           RETURN NEW
         `)
       })
-      .then(res => res._result[0])
+      .then(cursor => cursor.all())
+      .then(f => f)
       .catch(e => e)
   }
 }

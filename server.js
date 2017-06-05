@@ -26,7 +26,6 @@ var RedisStore = require('connect-redis')(session);
 
 var apifunc = require('./nkc_modules/api_functions');
 var queryfunc = require('./nkc_modules/query_functions');
-const timeout = require('connect-timeout');
 
 queryfunc.db_init();
 
@@ -57,7 +56,6 @@ if(use_https){
   var target_server = require('http').Server(nkc);
 }
 
-//nkc.use(timeout('5s'));
 //-------------------------------
 //3. gzip
 
