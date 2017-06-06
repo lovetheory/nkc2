@@ -228,6 +228,7 @@ var submitConfig = function() {
       location.reload();
     })
     .catch(function(e) {
-      screenTopWarning(e);
+      console.log(e)
+      screenTopWarning(e.detail);
     })
 };

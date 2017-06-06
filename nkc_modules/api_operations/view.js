@@ -995,7 +995,6 @@ table.viewPersonalForum = {
         `)
         }
         else if(data.tab === 'own') {
-          console.log('hi')
           if(user && user._key === uid || 'moveAllThreads' in po) {
             return db.query(aql`
               LET p1 = (
@@ -1808,15 +1807,17 @@ table.viewPersonalActivities = {
       .then(arr => {
         let forumArr = Array.from(arr); //deep copy from all the forum that can be visited
         arr.push(null); //push null to origin arr for personal forum
+        console.log(params.contentClasses)
         return db.query(aql`
           FOR o IN usersBehavior
             SORT o.time DESC
             FILTER o.uid == ${uid} && POSITION(${arr}, o.fid)
             LIMIT ${page ? page * 30 : 0}, 30
             LET thread = DOCUMENT(threads, o.tid)
+            LET forum = DOCUMENT(forums, thread.fid)
+            FILTER HAS(${params.contentClasses}, forum.class)
             LET oc = DOCUMENT(posts, thread.oc)
             LET post = DOCUMENT(posts, o.pid)
-            LET forum = DOCUMENT(forums, o.fid)
             LET myForum = DOCUMENT(personalForums, o.mid)
             LET toMyForum = DOCUMENT(personalForums, o.toMid)
             LET user = DOCUMENT(users, o.uid)
