@@ -284,16 +284,13 @@ table.unbanUser = {
   operation:function(params) {
     var u = new layer.User(params.uid)
     return u.load()
-    .then(u=>{
-      var certs = (u.model.certs||[])
-
-      certs = certs.filter(c=>c!='banned')
-
-      return u.update({certs})
-    })
-    .then(u=>{
-      return 'success'
-    })
+      .then(u=>{
+        var certs = (u.model.certs||[])
+        certs = certs.filter(c=>c!='banned')
+        return u.update({certs})
+      })
+      .then(u => queryfunc.computeActiveUser(u.model))
+      .then(() => 'success')
   },
   requiredParams:{
     uid:String,
@@ -304,31 +301,44 @@ table.banUser = {
   operation:function(params){
     var u = new layer.User(params.uid)
     return u.load()
-    .then(u=>{
-      var certs = (u.model.certs||[])
+      .then(u=>{
+        var certs = (u.model.certs||[])
 
-      if(
-        certs.indexOf('moderator')>=0||
-        certs.indexOf('editor')>=0||
-        certs.indexOf('dev')>=0||
-        certs.indexOf('scholar')>=0||
+        if(
+          certs.indexOf('moderator')>=0||
+          certs.indexOf('editor')>=0||
+          certs.indexOf('dev')>=0||
+          certs.indexOf('scholar')>=0||
 
-        u.model.xsf>0
-      ){
-        throw '为什么？你为何要封禁此用户？你是怎么了？'
-      }
+          u.model.xsf>0
+        ){
+          throw '为什么？你为何要封禁此用户？你是怎么了？'
+        }
 
-      if(certs.indexOf('banned')>=0){
-        throw '这人被封过了吧。。。刷新试试'
-      }
+        if(certs.indexOf('banned')>=0){
+          throw '这人被封过了吧。。。刷新试试'
+        }
 
-      certs = certs.concat(['banned'])
+        certs = certs.concat(['banned'])
 
-      return u.update({certs})
-    })
-    .then(u=>{
-      return 'success'
-    })
+        return u.update({certs})
+      })
+      .then(u=>{
+        return db.collection('activeusers').all()
+          .then(cursor => cursor.all())
+          .then(result => {
+            for(let user of result) {
+              if(user.uid === u.model._key) {
+                return true
+              }
+            }
+            return false
+          })
+      })
+      .then(flag => {
+        if(flag) return queryfunc.rebuildActiveUsers();
+      })
+      .then(message => 'success' + message)
   },
   requiredParams:{
     uid:String,

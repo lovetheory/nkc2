@@ -858,10 +858,10 @@ table.configPersonalForum = {
     let forumName = params.forumName.trim();
     return db.query(aql`
       LET arr1 = (FOR o IN personalForums
-        FILTER o.display_name == ${forumName}
+        FILTER o.display_name == ${forumName} && o._key != ${params.user._key}
         RETURN o.display_name)
       LET arr2 = (FOR o IN forums
-        FILTER o.display_name == ${forumName}
+        FILTER o.display_name == ${forumName} && o._key != ${params.user._key}
         RETURN o.display_name)
       RETURN UNION(arr1, arr2)
     `)
@@ -878,7 +878,6 @@ table.configPersonalForum = {
       })
       .then(cursor => cursor.all())
       .then(f => f)
-      .catch(e => e)
   }
 }
 

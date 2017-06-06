@@ -373,7 +373,7 @@ queryfunc.getForumThreads = (params, paging) => {
  `).catch(e => report(e));
 };
 
-queryfunc.computeActiveUser = (triggerUser) => {
+queryfunc.computeActiveUser = triggerUser => {
   var lWThreadUsers = [];
   var lWPostUsers = [];
   var activeUL = [];
@@ -610,5 +610,70 @@ queryfunc.getDB = function() {
 queryfunc.getAql = function() {
   return aql;
 };
+
+queryfunc.rebuildActiveUsers = () => {
+  let userList = [];
+  return db.query(aql`
+  LET timeStamp = DATE_NOW() - 6048000000
+  LET postUserList = (FOR p IN posts
+    SORT p.tlm DESC
+    FILTER p.tlm > timeStamp && p.disabled == null
+    COLLECT uid = p.uid INTO group = p
+    LET user = DOCUMENT(users, uid)
+    FILTER !POSITION(user.certs, 'banned')
+    LIMIT 100
+    RETURN {
+      uid,
+      lWPostCount: LENGTH(group),
+      lWThreadCount: 0,
+      xsf: DOCUMENT(users, uid).xsf
+    })
+  LET threadUserList = (FOR t IN threads
+    SORT t.tlm DESC
+    FILTER t.oc > timeStamp && t.disabled == null
+    COLLECT uid = t.uid INTO group = t
+    LET user = DOCUMENT(users, uid)
+    FILTER !POSITION(user.certs, 'banned')
+    LIMIT 100
+    RETURN {
+      uid,
+      lWThreadCount: LENGTH(group),
+      lWPostCount: 0,
+      xsf: DOCUMENT(users, uid).xsf
+    })
+  RETURN {
+    threadUserList,
+    postUserList
+  }
+`)
+    .then(cursor => cursor.next())
+    .then(obj => {
+      console.log(obj);
+      let threadUserList = obj.threadUserList;
+      let postUserList = obj.postUserList;
+      userList.concat(threadUserList);
+      for (let postUser of postUserList) {
+        let flag = true;
+        for (let user of userList) {
+          if (user.uid === postUser.uid) {
+            user.lWPostCount = postUser.lWPostCount - user.lWThreadCount; //posting a post when creating a thread,
+            flag = false;
+            break;
+          }
+        }
+        if(flag) userList.push(postUser);
+      }
+      for (let user of userList) {
+        user.vitality = settings.user.vitalityArithmetic(user.lWThreadCount, user.lWPostCount, user.xsf);
+        delete user.xsf
+      }
+      userList.sort((a, b) => a.vitality - b.vitality);
+      userList = userList.slice(0, 12);
+      return db.collection('activeusers').truncate()
+    })
+    .then(() => db.collection('activeusers').import(userList))
+    .then(result => `\n刷新了活跃用户集合, 有${result.created}条数据被创建`)
+};
+
 
 module.exports = queryfunc;
