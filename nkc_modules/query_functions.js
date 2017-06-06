@@ -374,157 +374,77 @@ queryfunc.getForumThreads = (params, paging) => {
 };
 
 queryfunc.computeActiveUser = triggerUser => {
-  var lWThreadUsers = [];
-  var lWPostUsers = [];
-  var activeUL = [];
   var user = {};
-  return db.listCollections()
-    .then(collections => {
-      for (var index in collections) {
-        if (collections[index].name === 'activeusers') {
-          return db.query(aql`
-            LET lWThreadCount = (
-              FOR t IN threads
-                FILTER t.toc > ${Date.now() - 604800000} && t.disabled == NULL
-                && t.fid != 'recycle' && t.uid == ${triggerUser._key}
-                COLLECT WITH COUNT INTO length
-                RETURN length)[0]
-            LET lWPostCount = (
-              FOR p IN posts
-              LET t = DOCUMENT(threads, p.tid)
-                FILTER p.tlm > ${Date.now() - 604800000} && t.fid != 'recycle'
-                && p.uid == ${triggerUser._key} && p.disabled == NULL
-                COLLECT WITH COUNT INTO length
-                RETURN length)
-            LET xsf = DOCUMENT(users, ${triggerUser._key}).xsf
-            RETURN {
-              xsf,
-              uid: ${triggerUser._key},
-              lWThreadCount,
-              lWPostCount
+  return db.collection('activeusers').all()
+    .then(cursor => cursor.all())
+    .then(arr => {
+      if(arr.length) {
+        return db.query(aql`
+          LET lWThreadCount = (
+            FOR t IN threads
+              FILTER t.toc > ${Date.now() - 604800000} && t.disabled == NULL
+              && t.fid != 'recycle' && t.uid == ${triggerUser._key}
+              COLLECT WITH COUNT INTO length
+              RETURN length)[0]
+          LET lWPostCount = (
+            FOR p IN posts
+            LET t = DOCUMENT(threads, p.tid)
+              FILTER p.tlm > ${Date.now() - 604800000} && t.fid != 'recycle'
+              && p.uid == ${triggerUser._key} && p.disabled == NULL
+              COLLECT WITH COUNT INTO length
+              RETURN length)
+          LET xsf = DOCUMENT(users, ${triggerUser._key}).xsf
+          RETURN {
+            xsf,
+            uid: ${triggerUser._key},
+            lWThreadCount,
+            lWPostCount
+          }
+        `)
+          .then(res => {
+            user = res._result[0];
+            user.lWPostCount = user.lWPostCount - user.lWThreadCount;    //creating a post when creating a thread by default
+            user.vitality = settings.user.vitalityArithmetic(user.lWThreadCount, user.lWPostCount, user.xsf);
+            delete user.xsf;
+            return user
+          })
+          .then(user => db.query(aql`
+            FOR u IN activeusers
+              FILTER u.uid == ${user.uid}
+              UPDATE u WITH {
+                lWThreadCount: ${user.lWThreadCount},
+                lWPostCount: ${user.lWPostCount},
+                vitality: ${user.vitality}
+              } IN activeusers
+              RETURN NEW
+          `))
+          .then(res => {
+            if(res._result.length) {
+              return
             }
-          `)
-            .then(res => {
-              user = res._result[0];
-              user.lWPostCount = user.lWPostCount - user.lWThreadCount;    //creating a post when creating a thread by default
-              user.vitality = settings.user.vitalityArithmetic(user.lWThreadCount, user.lWPostCount, user.xsf);
-              delete user.xsf;
-              return user
-            })
-            .then(user => db.query(aql`
+            return db.query(aql`
               FOR u IN activeusers
-                FILTER u.uid == ${user.uid}
+                SORT u.vitality
+                LIMIT 1
                 UPDATE u WITH {
                   lWThreadCount: ${user.lWThreadCount},
                   lWPostCount: ${user.lWPostCount},
-                  vitality: ${user.vitality}
+                  vitality: ${user.vitality},
+                  uid: ${user.uid}
                 } IN activeusers
-                RETURN NEW
-            `))
-            .then(res => {
-              if(res._result.length) {
-                return
-              }
-              return db.query(aql`
-                FOR u IN activeusers
-                  SORT u.vitality
-                  LIMIT 1
-                  UPDATE u WITH {
-                    lWThreadCount: ${user.lWThreadCount},
-                    lWPostCount: ${user.lWPostCount},
-                    vitality: ${user.vitality},
-                    uid: ${user.uid}
-                  } IN activeusers
-              `)
-            })
-            .catch(e => console.log(e))
-        }
+            `)
+          })
+          .catch(e => console.log(e))
       }
-      return db.collection('activeusers').create()
-        .then(() => {
-          db.query(aql`
-            FOR t IN threads
-              FILTER t.toc > ${Date.now() - 604800000} && t.fid != 'recycle'
-              && t.disabled == NULL
-              LET lWThreadCount = 0
-              LET lWPostCount = 0
-              LET user = DOCUMENT(users, t.uid)
-              LET certs = user.certs
-              FILTER !POSITION(certs, 'banned')
-              LET xsf = user.xsf
-              RETURN {uid: t.uid, lWThreadCount: lWThreadCount, lWPostCount: lWPostCount, xsf: xsf}
-          `)
-            .then(res => {
-              lWThreadUsers = res._result;
-              return db.query(aql`
-                FOR p IN posts
-                  LET t = DOCUMENT(threads, p.tid)
-                  FILTER p.tlm > ${Date.now() - 604800000} && t.fid != 'recycle'
-                  && p.disabled == NULL
-                  LET lWThreadCount = 0
-                  LET lWPostCount = 0
-                  LET user = DOCUMENT(users, p.uid)
-                  LET certs = user.certs
-                  FILTER !POSITION(certs, 'banned')
-                  LET xsf = user.xsf
-                  RETURN {uid: p.uid, lWThreadCount: lWThreadCount, lWPostCount: lWPostCount, xsf: xsf}
-              `)
-            })  //6048000000 = 1week
-            .then(res => {   //merge user array
-              lWPostUsers = res._result;
-              for (var oUser of lWThreadUsers) { //original
-                var flag = true;
-                for (var nUser of activeUL) { //new
-                  if (nUser.uid === oUser.uid) {
-                    nUser.lWThreadCount += 1;
-                    flag = false;
-                    break;
-                  }
-                }
-                if (flag) {
-                  oUser.lWThreadCount = 1;
-                  activeUL.push(oUser);
-                }
-              }
-              for (var oUser of lWPostUsers) { //original
-                var flag = true;
-                for (var nUser of activeUL) { //new
-                  if (nUser.uid === oUser.uid) {
-                    nUser.lWPostCount += 1;
-                    flag = false;
-                    break;
-                  }
-                }
-                if (flag) {
-                  oUser.lWPostCount = 1;
-                  activeUL.push(oUser);
-                }
-              }
-              for (var user of activeUL) {
-                user.lWPostCount = user.lWPostCount - user.lWThreadCount;    //creating a post when creating a thread by default
-                user.vitality = settings.user.vitalityArithmetic(user.lWThreadCount, user.lWPostCount, user.xsf);
-                delete user.xsf;
-              }
-              activeUL.sort((a, b) => {
-                return b.vitality - a.vitality;
-              });
-              activeUL = activeUL.slice(0, 12);
-            })
-            .then(() => {
-              for (var user of activeUL) {
-                db.collection('activeusers').save(user)
-                  .catch(e => console.log('error occurred'.red + e))
-              }
-            })
-            .then(() => queryfunc.createIndex('activeusers',{
-                fields:['vitality'],
-                type:'skiplist',
-                unique:'false',
-                sparse:'false',
-              })
-            )
-            .catch((e) => console.log(e))
-        })
+      return queryfunc.rebuildActiveUsers()
+        .then(() => queryfunc.createIndex('activeusers',{
+            fields:['vitality'],
+            type:'skiplist',
+            unique:'false',
+            sparse:'false',
+          })
+        )
+        .catch((e) => console.log(e))
     })
 };
 
@@ -621,7 +541,6 @@ queryfunc.rebuildActiveUsers = () => {
     COLLECT uid = p.uid INTO group = p
     LET user = DOCUMENT(users, uid)
     FILTER !POSITION(user.certs, 'banned')
-    LIMIT 100
     RETURN {
       uid,
       lWPostCount: LENGTH(group),
@@ -634,7 +553,6 @@ queryfunc.rebuildActiveUsers = () => {
     COLLECT uid = t.uid INTO group = t
     LET user = DOCUMENT(users, uid)
     FILTER !POSITION(user.certs, 'banned')
-    LIMIT 100
     RETURN {
       uid,
       lWThreadCount: LENGTH(group),
@@ -667,7 +585,7 @@ queryfunc.rebuildActiveUsers = () => {
         user.vitality = settings.user.vitalityArithmetic(user.lWThreadCount, user.lWPostCount, user.xsf);
         delete user.xsf
       }
-      userList.sort((a, b) => a.vitality - b.vitality);
+      userList.sort((a, b) => b.vitality - a.vitality);
       userList = userList.slice(0, 12);
       return db.collection('activeusers').truncate()
     })
