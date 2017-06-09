@@ -335,6 +335,9 @@ table.postTo = {
     var cat = post.cat
     //1. validation
     validation.validatePost(post);
+    if(!params.permittedOperations['postTo']) {
+      throw `权限错误`
+    }
 
     //2. target extraction
     var targets = params.target.split(',');
