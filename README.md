@@ -5,9 +5,6 @@
 nkc community project, version 2.
 Will always be under development.
 
-## Recruitment
-
-We are no longer recruiting. @ctmakro If you wanna make friend with me. Leave me alone if you have an idea for the next Facebook.
 
 ## Why this is written in English
 
