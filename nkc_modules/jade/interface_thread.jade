@@ -115,15 +115,21 @@ block content
                       -text = '在专栏隐藏'
                     a#visibility(href='javascript:;' onclick='switchVInPersonalForum("#{data.thread._key}")' style='color: #CBDCEA') #{text}
                     span &nbsp;&nbsp;
-                  if data.thread.toMid === data.user._key || data.thread.mid === data.user._key
+
                     -var text2
                     if data.thread.toMid === data.user._key && data.thread.digestInToMid || data.thread.mid === data.user._key && data.thread.digestInMid
                       -text2 = '取消专栏加精'
                     else
                       -text2 = '在专栏加精'
                     a#digest(href='javascript:;' onclick='switchDInPersonalForum("#{data.thread._key}")' style='color: #CBDCEA') #{text2}
+                    span &nbsp;&nbsp;
 
-
+                    -var text3
+                    if thread.toppedUsers && thread.toppedUsers.indexOf(user._key) > -1
+                      - text3 = '取消专栏置顶'
+                    else
+                      - text3 = '在专栏置顶'
+                    a#topped(href='javascript:;' onclick='switchTInPersonalForum("#{data.thread._key}")' style='color: #CBDCEA') #{text3}
             .ThreadTitle2(style="display:inline-block;width:16%;vertical-align:top;")
               .ThreadTitle22(style="border:1px solid #ddd;border-radius:10px;")
                 p.lighttext#airnum1(style="font-size:21px;text-align:center;margin-top:0px;margin-bottom:0px;") 文 号

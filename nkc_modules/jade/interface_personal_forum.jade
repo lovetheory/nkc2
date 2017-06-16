@@ -17,6 +17,8 @@ block title
   meta(property='og:site_name' content='科创论坛')
   meta(property='og:description' content='#{processed}')
 
+  style(type='text/css') .configShit{width: 600px;}
+
 
 block content
   -var isModerator = data.user? (data.forum.moderators.indexOf(data.user.username) > -1) : false
@@ -28,16 +30,33 @@ block content
             .row
               .col-xs-12
                 form(role='form')
+                  - var description = data.forum.description
+                  - var announcement = data.forum.announcement
+                  - var display_name = data.forum.display_name
                   .form-group
-                    img(src='/avatar/#{data.forum._key}' style='height: 70px; width: 70px; border-radius: 6px; float: right;')
-                    .displayShit.ForumName #{forum.display_name}&nbsp;&nbsp;&nbsp;&nbsp;
+                    div(style='float: right;')
+                      img(src='/avatar/#{data.forum._key}' style='height: 70px; width: 70px; border-radius: 6px;')
+                      - var user = data.targetUser
+                        if(data.user)
+                          if(user._key != data.user._key)
+                            if(data.user.subscribeUsers.indexOf(user._key) > -1)
+                              div
+                                a.btn.btn-sm.btn-danger(href='javascript:;' onclick='subscribeUserSwitch("#{user._key}");' style='margin-top: 5px; margin-left: 10px;')#subscribeButton 取关
+                            else
+                              div
+                                a.btn.btn-sm.btn-info(href='javascript:;' onclick='subscribeUserSwitch("#{user._key}");' style='margin-top: 5px; margin-left: 10px;')#subscribeButton 关注
+                    .displayShit.ForumName #{display_name}&nbsp;&nbsp;&nbsp;&nbsp;
                     //a.btn.btn-default.btn-sm.displayShit(href='javascript: ;' onclick='switchManagementMode()') 设置
                     input.configShit#forumName(style='font-size: 16px; display: none;' value='#{forum.display_name}' name='forumName' placeholder='请输入专栏名称')
                   .form-group
-                    if data.forum.description
-                      span 介绍:&nbsp;
-                      span.displayShit #{data.forum.description}
-                      input.configShit#description(value='#{forum.description}' style='display: none;' name='description' placeholder='请输入专栏介绍')
+                    if description
+                      span.displayShit #{'介绍: ' + description}
+                      input.configShit#description(value='#{description}' style='display: none;' name='description' placeholder='请输入专栏介绍')
+                  .form-group
+                    if announcement && announcement != ''
+                      div.displayShit #{'公告: ' + announcement}
+                    div
+                      textarea.configShit#announcement(style='display: none;' name = 'announcement' placeholder='请输入专栏公告') #{announcement}
                   .form-group
                     a.btn.configShit.btn-default(style='display: none;' href='javascript: submitConfig();') 保存
 

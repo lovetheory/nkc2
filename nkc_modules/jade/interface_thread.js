@@ -284,7 +284,27 @@ function switchDInPersonalForum(tid) {
       return
     })
     .catch(function(e) {
-      screenTopWarning(e)
+      screenTopWarning(e.detail)
+    })
+}
+
+function switchTInPersonalForum(tid) {
+  var topped = '取消专栏置顶';
+  var normal = '在专栏置顶';
+  var target = geid('topped');
+  nkcAPI('switchTInPersonalForum', {tid: tid})
+    .then(function() {
+      if(target.innerHTML === normal) {
+        screenTopWarning('已将该帖在个人专栏置顶');
+        target.innerHTML = topped;
+        return
+      }
+      screenTopWarning('已取消专栏置顶');
+      target.innerHTML = normal;
+      return
+    })
+    .catch(function(e) {
+      screenTopWarning(e.detail)
     })
 }
 
