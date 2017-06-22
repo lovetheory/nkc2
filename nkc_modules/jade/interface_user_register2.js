@@ -21,8 +21,9 @@ function register_submit(){
       password : gv('password'),
       password2 : gv('password2'),
       email:gv('email'),
-      icode:gv('icode')
-    }
+      icode:gv('icode'),
+      regCode: gv('regCode')
+    };
 
     if(userobj.username == ''){
       getFocus("#username")
@@ -70,6 +71,11 @@ function register_submit(){
       getFocus("#password2")
       throw({detail:'两遍密码不一致！'})
       return;
+    }
+    if(userobj.regCode === '') {
+      getFocus('#regCode');
+      throw {detail: '请输入注册码'};
+      return
     }
 
     return nkcAPI('userMailRegister',userobj)

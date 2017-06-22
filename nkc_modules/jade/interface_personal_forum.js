@@ -218,6 +218,7 @@ var submitConfig = function() {
   var config = {
     forumName: gv('forumName').trim(),
     description: gv('description').trim(),
+    announcement: gv('announcement').trim()
   }
   if(!config.description || !config.forumName) {
     screenTopWarning('请完善信息.');

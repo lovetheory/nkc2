@@ -100,7 +100,8 @@ table.viewRegister2 = {
       if(e) console.error(e.stack)
     });  //保存验证码图片
     //console.log(captcha.text);
-    data.template = 'nkc_modules/jade/interface_user_register2.jade'
+    data.template = 'nkc_modules/jade/interface_user_register2.jade';
+    data.regCode = params.code;
 
     return data
   }
@@ -936,6 +937,7 @@ table.viewPersonalForum = {
     data.replytarget = 'm/' + params.uid;
     data.sortby = params.sortby;
     data.digest = params.digest;
+    let forumObj;
 
     var userclass = new layer.User(uid);
     return userclass.load()
@@ -946,6 +948,7 @@ table.viewPersonalForum = {
       })
       .then(forum => {
         data.forum = forum;
+        forumObj = forum;
         return queryfunc.getVisibleChildForums(params)
       })
       .then(arr => {
@@ -1250,12 +1253,32 @@ table.viewPersonalForum = {
       })
       .then(res => res._result[0])
       .then(res => {
-        //if nothing went wrongvar paging = new layer.Paging(params.page)
         let paging = new layer.Paging(params.page);
         data.paging = paging.getPagingParams(res.length);
+        if((data.tab === 'own' || data.tab === 'discuss' || data.tab === 'all') && forumObj.toppedThreads && forumObj.toppedThreads.length > 0) {
+          const threads = res.threads.filter(element => !forumObj.toppedThreads.includes(element._key));
+          data.threads = threads;
+          return db.query(aql`
+            FOR tid IN ${forumObj.toppedThreads}
+              LET thread = DOCUMENT(threads, tid)
+              LET oc = DOCUMENT(posts, thread.oc)
+              LET ocuser = DOCUMENT(users, thread.ocuser)
+              LET lm = DOCUMENT(posts, thread.lm)
+              LET lmuser = DOCUMENT(users, thread.lmuser)
+            RETURN MERGE(thread, {
+              oc,
+              ocuser,
+              lm,
+              lmuser
+            })
+          `)
+            .then(cursor => cursor.all())
+            .then(toppedThreads => {
+              data.toppedThreads = toppedThreads;
+              return getForumList(params)
+            })
+        }
         data.threads = res.threads;
-        //return apifunc.get_all_forums()
-
         return getForumList(params)
       })
       .then(forumlist => {

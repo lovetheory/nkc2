@@ -859,6 +859,7 @@ table.configPersonalForum = {
   operation: params => {
     let description = params.description.trim();
     let forumName = params.forumName.trim();
+    const announcement = params.announcement.trim();
     return db.query(aql`
       LET arr1 = (FOR o IN personalForums
         FILTER o.display_name == ${forumName} && o._key != ${params.user._key}
@@ -874,7 +875,8 @@ table.configPersonalForum = {
         return db.query(aql`
           UPDATE DOCUMENT(personalForums, ${params.user._key}) WITH {
             description: ${description},
-            display_name: ${forumName}
+            display_name: ${forumName},
+            announcement: ${announcement}
           } IN personalForums
           RETURN NEW
         `)
@@ -916,5 +918,45 @@ table.getForumsList = {
         }
       })
       .catch(e => {throw e})
+  }
+};
+
+table.switchTInPersonalForum = {
+  operation: params => {
+    const uid = params.user._key;
+    const tid = params.tid;
+    return db.query(aql`
+      LET pf = DOCUMENT(personalForums, ${uid})
+      RETURN pf.toppedThreads
+    `)
+      .then(cursor => cursor.next())
+      .then(toppedThreads => {
+        const threads = toppedThreads || [];
+        const index = threads.findIndex(element => element === tid);
+        if(index > -1) {
+          threads.splice(index, 1);
+          return db.collection('personalForums').update(uid, {toppedThreads: threads})
+            .then(() => db.collection('threads').document(tid))
+            .then(thread => {
+              const toppedUsers = thread.toppedUsers || [];
+              const index = toppedUsers.findIndex(element => element === uid);
+              if(index > -1) {
+                toppedUsers.splice(index, 1);
+                return db.collection('threads').update(tid, {toppedUsers})
+              }
+            })
+        }
+        threads.push(tid);
+        return db.collection('personalForums').update(uid, {toppedThreads: threads})
+          .then(() => db.collection('threads').document(tid))
+          .then(thread => {
+            const toppedUsers = thread.toppedUsers || [];
+            toppedUsers.push(uid);
+            return db.collection('threads').update(tid, {toppedUsers})
+          })
+      })
+      .catch(e => {
+        throw e
+      })
   }
 };

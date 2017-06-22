@@ -28,7 +28,15 @@ block content
               label.control-label.col-sm-3 用户名
               .col-sm-4
                 input#username.form-control(type='text' placeholder='字母、数字、汉字，不区分大小写')
-                
+
+            .form-group
+              label.control-label.col-sm-3
+                span 注册码(可通过
+                a(href='/register?getcode=true') 考试
+                span 获得)
+              .col-sm-4
+                input#regCode.form-control(type='text' placeholder='请输入注册码' value='#{data.regCode || ""}')
+
             .form-group
               label.control-label.col-sm-3 邮箱
               .col-sm-4
