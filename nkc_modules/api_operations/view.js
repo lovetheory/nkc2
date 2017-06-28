@@ -468,28 +468,29 @@ table.viewHome = {
     let count;
     data.template = jadeDir + 'interface_home.jade';
     data.navbar = {highlight: 'home'};
-    for (var param in params.contentClasses) {
-      if (params.contentClasses[param] == true) {
+    for (let param in params.contentClasses) {
+      if (params.contentClasses[param] === true) {
         contentClasses[param] = true;
       }
     }
     let content = params.content || 'all';
     data.content = content;
-    return AQL(`
-    for t in threads
-    LET f = DOCUMENT(forums, t.fid)
-    FILTER t.disabled != true && t.fid != '97' && t.digest == true
-    && t.fid != 'recycle' && f.visibility == true
-    sort t.toc desc
-    
-    limit 100
-    let oc = document(posts,t.oc)
-    let lm = document(posts,t.lm)
-    let forum = document(forums,t.fid)
-    let ocuser = document(users,t.uid)
+    return db.query(aql`
+      FOR t IN threads
+      LET f = DOCUMENT(forums, t.fid)
+      FILTER t.disabled != true && t.fid != '97' && t.digest == true
+      && t.fid != 'recycle' && f.visibility == true
+      sort t.toc desc
+      let forum = document(forums,t.fid)
+      FILTER HAS(${contentClasses}, forum.class)
+      limit 100
+      let oc = document(posts,t.oc)
+      let lm = document(posts,t.lm)
+      let ocuser = document(users,t.uid)
 
     return merge(t,{oc:oc,lm:lm,forum,ocuser})
     `)
+      .then(cursor => cursor.all())
       .then(res => {
         let temp = [];
         for (let i = 0; i < 10; i++) {
@@ -1329,24 +1330,27 @@ table.viewLogin = {
 
 table.viewExperimental = {
   operation: params => {
-    var data = defaultData(params)
-    var contentClasses = {};
-    data.template = jadeDir + 'interface_experimental.jade'
-    for (var param in params.contentClasses) {
-      if (params.contentClasses[param] === true) {
-        contentClasses[param] = true;
+    if ('setDigest' in params.permittedOperations) {
+      var data = defaultData(params)
+      var contentClasses = {};
+      data.template = jadeDir + 'interface_experimental.jade'
+      for (var param in params.contentClasses) {
+        if (params.contentClasses[param] === true) {
+          contentClasses[param] = true;
+        }
       }
-    }
-    return getForumList(params)
-      .then(forumlist => {
+      return getForumList(params)
+        .then(forumlist => {
 
-        data.forumlist = forumlist
-      })
-      .then(() => queryfunc.getForumList(contentClasses))
-      .then(res => data.forumTree = res._result)
-      .then(() => data)
+          data.forumlist = forumlist
+        })
+        .then(() => queryfunc.getForumList(contentClasses))
+        .then(res => data.forumTree = res._result)
+        .then(() => data)
+    }
+    throw '权限不足';
   }
-}
+};
 
 
 table.viewEditor = {
