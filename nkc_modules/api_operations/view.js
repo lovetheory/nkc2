@@ -1330,25 +1330,22 @@ table.viewLogin = {
 
 table.viewExperimental = {
   operation: params => {
-    if ('setDigest' in params.permittedOperations) {
-      var data = defaultData(params)
-      var contentClasses = {};
-      data.template = jadeDir + 'interface_experimental.jade'
-      for (var param in params.contentClasses) {
-        if (params.contentClasses[param] === true) {
-          contentClasses[param] = true;
-        }
+    var data = defaultData(params)
+    var contentClasses = {};
+    data.template = jadeDir + 'interface_experimental.jade'
+    for (var param in params.contentClasses) {
+      if (params.contentClasses[param] === true) {
+        contentClasses[param] = true;
       }
-      return getForumList(params)
-        .then(forumlist => {
-
-          data.forumlist = forumlist
-        })
-        .then(() => queryfunc.getForumList(contentClasses))
-        .then(res => data.forumTree = res._result)
-        .then(() => data)
     }
-    throw '权限不足';
+    return getForumList(params)
+      .then(forumlist => {
+
+        data.forumlist = forumlist
+      })
+      .then(() => queryfunc.getForumList(contentClasses))
+      .then(res => data.forumTree = res._result)
+      .then(() => data)
   }
 };
 
