@@ -1353,7 +1353,7 @@ table.viewExperimental = {
 table.viewEditor = {
   operation: params => {
     var data = defaultData(params)
-    data.template = jadeDir + 'interface_editor.jade'
+    data.template = jadeDir + 'interface_editor2.jade'
 
     var target = params.target || "";
 
