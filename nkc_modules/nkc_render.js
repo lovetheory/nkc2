@@ -4,40 +4,66 @@ var in_browser = (typeof document !== 'undefined');
 //render source to HTML.
 function nkc_render(options){
   var render = {};
-
+  var commonmark;
+  var plain_escape;
+  var XBBCODE;
+  var xss;
   if(in_browser){
     //browser mode
     //inclusion here done by <script>
-    var commonmark = window.commonmark;
-    var plain_escape = window.plain_escape;
-    var XBBCODE = window.XBBCODE;
-    var xss = window.filterXSS;
+    commonmark = window.commonmark;
+    plain_escape = window.plain_escape;
+    XBBCODE = window.XBBCODE;
+    xss = window.filterXSS;
 
     console.log('nkc_render.js running in browser.');
   }else{
-    //nodejs
-
-
-    var commonmark = require('commonmark');
-    var plain_escape = require('./jade/plain_escaper');
-    var XBBCODE = require('xbbcode-parser');
-
-    var xss = require('xss')
+    commonmark = require('commonmark');
+    plain_escape = require('./jade/plain_escaper');
+    XBBCODE = require('xbbcode-parser');
+    xss = require('xss')
   }
 
   //xss-----------------
 
-  var default_whitelist = xss.whiteList
+  var default_whitelist = xss.whiteList;
+
   //console.log(default_whitelist);
   default_whitelist.font = ['color']
   default_whitelist.code = ['class']
-  default_whitelist.span = ['class']
+  default_whitelist.span = ['class', 'style', 'aria-hidden'];
+  default_whitelist.a = ['href', 'title', 'target', 'style'];
+  default_whitelist.div = ['style'];
+  default_whitelist.math = [];
+  default_whitelist.semantics = [];
+  default_whitelist.mrow = [];
+  default_whitelist.msup = [];
+  default_whitelist.mn = [];
+  default_whitelist.annotation = ['encoding'];
   if(!in_browser){
     //default_whitelist.iframe = ['height','width','src','frameborder','allowfullscreen']
   }
 
   var xssoptions = {
-    whiteList:default_whitelist
+    whiteList:default_whitelist,
+    css: {
+      whiteList: {
+        position: /^fixed|relative$/,
+        top: true,
+        left: true,
+        fontSize: true,
+        display: true
+      }
+    },
+    onTagAttr: (tag, name, value, isWhiteAttr) => {
+      if(isWhiteAttr) {
+        if(tag === 'a' && name === 'href') {
+          let valueHandled = value.replace(/\s+/g, '');
+          valueHandled = valueHandled.replace('javascript', '');
+          return `href="${valueHandled}"`
+        }
+      }
+    }
   }
 
   //according to liuhu's blame for inconvenience
@@ -62,7 +88,6 @@ function nkc_render(options){
       return $.html()
     }
   }
-
   var custom_xss = new xss.FilterXSS(xssoptions)
   var custom_xss_process = function(str){
     return custom_xss.process(str)
@@ -382,9 +407,7 @@ function nkc_render(options){
     else{
       html = custom_xss_process(content)
     }
-
     html = render.hiddenReplaceHTML(html)
-
     // fix for older posts where they forgot to inject attachments.
     var count = 0
     for(i in post.r){
@@ -401,7 +424,6 @@ function nkc_render(options){
         html+=getHTMLForResource(r,allthumbnail)
       }
     }
-
     return html
   }
 

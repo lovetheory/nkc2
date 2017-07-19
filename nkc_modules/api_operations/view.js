@@ -1392,6 +1392,42 @@ table.viewEditor = {
   }
 }
 
+/*table.viewEditor2 = {
+  operation: params => {
+    const data = defaultData(params);
+    data.template = jadeDir + 'interface_editor2.jade';
+
+    const target = params.target || "";
+
+    data.replytarget = target;
+    data.navbar = {};
+    data.navbar.highlight = 'editor'; //navbar highlight
+
+    if (target.indexOf('post/') === 0) {
+      const pid = target.slice(5);
+      return apifunc.get_a_post(pid)
+        .then(back => {
+          data.original_post = back;
+          return data;
+        })
+    }
+
+    data.original_post = {
+      c: params.content ? decodeURI(params.content) : '',
+      //l:'pwbb',
+    };
+
+    const a = target.split('/')[1];  //版块号
+    return getOneThreadTypes(a)
+      .then(res => {
+        if (res.length !== 0) {
+          res.splice(0, 0, {"_key": '0', "name": "--默认无分类--", "order": -1});  //添加到第一个位置
+        }
+        data.threadtypes = res;
+        return data;
+      });
+  }
+};*/
 
 table.viewDanger = {
   operation: params => {

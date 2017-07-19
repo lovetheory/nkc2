@@ -110,9 +110,20 @@ function submit(){
 function quotePost(pid){
   nkcAPI('getPostContent',{pid:pid})
   .then(function(pc){
-    length_limit = 100
+    length_limit = 100;
+    var content = pc.c;
+    var replaceArr = [
+      {reg: /<[^>]*>/gm, rep: ''},
+      {reg: /<\/[^>]*>/, rep: ' '}
+    ];
+    if(pc.l === 'html') {
+      for(var i in replaceArr) {
+        var obj = replaceArr[i];
+        content = content.replace(obj.reg, obj.rep)
+      }
+    }
 
-    var str = pc.c.replace(/\[quote.*?][^]*?\[\/quote]/g,'').slice(0,length_limit).trim()
+    var str = content.replace(/\[quote.*?][^]*?\[\/quote]/g,'').slice(0,length_limit).trim()
     if(str.length==length_limit)str+='……'
 
     str = '[quote='+pc.username+','+pc._key+']'+ str + '[/quote]'

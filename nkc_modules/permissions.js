@@ -187,6 +187,7 @@ var certificates={
       non_broadcast:true,
     },
     permittedOperations:{
+      switchTInPersonalForum: true,
       switchDInPersonalForum: true,
       switchVInPersonalForum: true,
       configPersonalForum: true,
