@@ -1567,5 +1567,12 @@ margin-left: 5px;
   right: 30px;
 }
 
-
+.editor-tool-panel {
+  position: fixed;
+}
+@media screen and (max-width: 768px) {
+  .editor-tool-panel {
+    position: relative;
+  }
+}
 /*new editor*/
