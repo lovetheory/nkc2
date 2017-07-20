@@ -18,6 +18,7 @@ function register_submit(){
   .then(function(){
     var userobj={
       username : gv('username'),
+      regCode: gv('regCode'),
       password : gv('password'),
       password2 : gv('password2'),
       email:gv('email'),
@@ -28,6 +29,11 @@ function register_submit(){
     if(userobj.username == ''){
       getFocus("#username")
       throw({detail:'请填写用户名！'})
+      return;
+    }
+    if(userobj.regCode === '') {
+      getFocus('#regCode');
+      throw({detail: '请输入注册码'})
       return;
     }
     if(userobj.email == ''){

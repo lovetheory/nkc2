@@ -20,6 +20,7 @@ function register_submit(){
       username : gv('username'),
       password : gv('password'),
       password2 : gv('password2'),
+      regCode: gv('regCode'),
       phone:gv('phone'),
       mcode:gv('mcode'),
       icode:gv('icode')
@@ -54,6 +55,11 @@ function register_submit(){
       getFocus("#password2")
       throw({detail:'两遍密码不一致！'})
       return;
+    }
+    if(userobj.regCode === '') {
+      getFocus('#regCode');
+      throw({detail: '请输入注册码'});
+      return
     }
     if(userobj.phone == ''){
       getFocus("#phone")
@@ -104,7 +110,7 @@ function register_submit(){
       refreshICode();
       getFocus("#phone")
     }
-    error_report(err);
+    error_report(err.detail);
   })
 
 }
