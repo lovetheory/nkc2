@@ -16,7 +16,7 @@ block content
             //if success
             .f12
               text 恭喜你通过测试。你的注册码是:
-              a(href='/register2?code=#{data.result}') #{data.result}
+              a(href='/register?code=#{data.result}') #{data.result}
               text &nbsp←点击跳转到注册页面。
           else
             //if failed

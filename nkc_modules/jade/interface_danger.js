@@ -6,7 +6,7 @@ var DangerEditor = (function(){
   me.btnload=geid('LoadDoc')
   me.btnsubmit=geid('SaveDoc')
   me.btnLoadFromUsername=geid('LoadDocAsUsername')
-
+  me.btnLoadMobile = geid('loadMobile');
   me.btnloadforum = geid('LoadDocFromSelection')
 
   me.btnban=geid('BanThisUser')
@@ -20,7 +20,7 @@ var DangerEditor = (function(){
 
     me.btnload.addEventListener('click',me.load);
     me.btnLoadFromUsername.addEventListener('click',me.loadFromUsername);
-
+    me.btnLoadMobile.addEventListener('click', me.loadMobile);
     me.btnsubmit.addEventListener('click',me.submit);
     me.inputid.addEventListener('keypress', me.onkeypressID);
 
@@ -43,6 +43,10 @@ var DangerEditor = (function(){
   me.loadFromUsername=function(){
     window.location = '/danger?username=' +　me.inputid.value.trim()
   }
+
+  me.loadMobile = function() {
+    window.location = '/danger?info=' + me.inputid.value.trim()
+  };
 
   me.submit=function(){
     try{

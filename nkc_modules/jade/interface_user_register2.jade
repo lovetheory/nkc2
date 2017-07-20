@@ -66,7 +66,7 @@ block content
                 //offset 2 grids
                 button.btn.btn-primary(onclick='register_submit()') 提交
               .col-sm-offset-3.col-sm-10(style="margin-top:1%;")
-                a(href="/register").lighttext 遇到问题？
+                a(href="/register#{data.regCode? '?code=' + data.regCode : ''}").lighttext 遇到问题？
                 
             .form-group
               .col-sm-offset-3.col-sm-6

@@ -81,7 +81,7 @@ table.viewRegister = {
     fs.writeFile(road + '/static/captcha/captcha.svg', captcha.data, {'flag': 'w'});  //保存验证码图片
     //console.log(captcha.text);
     data.getcode = params.getcode
-    data.code = params.code
+    data.regCode = params.code
     data.template = 'nkc_modules/jade/interface_user_register.jade'
 
     return data
@@ -1435,7 +1435,8 @@ table.viewDanger = {
     data.template = jadeDir + 'interface_danger.jade'
 
     var doc_id = params.id
-    var username = params.username
+    var username = params.username;
+    const info = params.info;
 
     return Promise.resolve()
       .then(() => {
@@ -1469,6 +1470,43 @@ table.viewDanger = {
             .catch(err => {
               return data
             })
+        }
+
+        if(info) {
+          const p = info.split('/');
+          if(p.length === 2) {
+            const collection = p[0];
+            const key = p[1];
+            const doc = new layer.BaseDao(collection, key);
+            return db.query(aql`
+              FOR obj IN mobilecodes
+                FILTER obj.uid == ${key}
+                RETURN obj
+            `)
+              .then(cursor => cursor.next())
+              .then(doc => {
+                data.doc = doc;
+                return data
+              })
+              .catch(err => report('no doc to load/bad id'))
+          }
+          else {
+            const user = new layer.User();
+            return user.loadByName(info)
+              .then(u => {
+                const key = u.model._key;
+                return db.query(aql`
+                  FOR obj IN mobilecodes
+                  FILTER obj.uid == ${key}
+                  RETURN obj
+                `)
+              })
+              .then(cursor => cursor.next())
+              .then(doc => {
+                data.doc = doc;
+                return data
+              })
+          }
         }
 
         return data

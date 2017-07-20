@@ -72,7 +72,15 @@ block content
                 label.control-label.col-sm-3 再次输入密码
                 .col-sm-4
                   input#password2.form-control(type='password' placeholder='重复一次')
-                    
+
+              .form-group
+                label.control-label.col-sm-3
+                  span 注册码(可通过
+                  a(href='/register?getcode=true') 考试
+                  span 获得)
+                .col-sm-4
+                  input#regCode.form-control(type='text' placeholder='请输入注册码' value='#{data.regCode || ""}')
+
               .form-group
                 label.control-label.col-sm-3 手机号码
                 .col-sm-4
@@ -98,7 +106,7 @@ block content
                   //offset 2 grids
                   button.btn.btn-primary(onclick='register_submit()') 提交
                 .col-sm-offset-3.col-sm-10(style="margin-top:1%;")
-                  a(href="/register2").lighttext 遇到问题？
+                  a(href="/register2#{data.regCode? '?code=' + data.regCode : ''}").lighttext 遇到问题？
             
               
               .form-group
