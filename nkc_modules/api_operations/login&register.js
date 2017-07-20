@@ -784,48 +784,61 @@ table.getMcode = {
   operation:function(params){
     var phone = params.phone;
     var icode = params.icode;
+    const regCode = params.regCode;
     var code = random(6);
     var time = new Date().getTime();
     var time2 = Date.now()-24*60*60*1000;
     //console.log(phone,code);
+    const c = new layer.BaseDao('answersheets', regCode);
+    return c.load()
+      .catch(err => {
+        throw ('验证注册码失败，请检查！')
+      })
+      .then(c => {
+        return c.model
+      })
+      .then(ans => {
+        if (ans.uid) throw ('答卷的注册码过期，可能要重新参加考试')
+        if (Date.now() - ans.tsm > settings.exam.time_before_register)
+          throw ('答卷的注册码过期，可能要重新参加考试')
 
-    return AQL(`
-      for u in smscode
-      filter u.phone == @phone && u.toc > @time2
-      return u
-      `,{phone, time2}
-    )
-    .then(j=>{
-      if(icode.toLowerCase() != params._req.session.icode.toLowerCase() ) throw '图片验证码不正确，请检查'
-      if(j.length >= 5) throw '短信发送次数已达上限，请隔天再试'
-      return AQL(`
-        for u in mobilecodes
-        filter u.mobile == @phone
-        return u
-        `,{phone}
-      )
-    })
-    .then(k=>{
-      if(k.length>0){
-        throw '此号码已经用于其他用户注册，请检查或更换'
-      }else{
-        sendSMS(phone, code , 'register',function(err,res){//调用注册方法
-          if(err){
-            console.log(err)
-            console.log(code);
-          }else{
-            console.log(res)
-          }
-        })
-      }
-      return AQL(`
-        INSERT {
-          phone: @phone, code: @code, toc: @time, type:1
-        } IN smscode
-        `,{phone,code,time}
-      )
-
-    })
+        return AQL(`
+          for u in smscode
+          filter u.phone == @phone && u.toc > @time2
+          return u
+          `, {phone, time2}
+        )
+      })
+      .then(j=>{
+        if(icode.toLowerCase() != params._req.session.icode.toLowerCase() ) throw '图片验证码不正确，请检查'
+        if(j.length >= 5) throw '短信发送次数已达上限，请隔天再试'
+        return AQL(`
+          for u in mobilecodes
+          filter u.mobile == @phone
+          return u
+          `,{phone}
+        )
+      })
+      .then(k=>{
+        if(k.length>0){
+          throw '此号码已经用于其他用户注册，请检查或更换'
+        }else{
+          sendSMS(phone, code , 'register',function(err,res){//调用注册方法
+            if(err){
+              console.log(err)
+              console.log(code);
+            }else{
+              console.log(res)
+            }
+          })
+        }
+        return AQL(`
+          INSERT {
+            phone: @phone, code: @code, toc: @time, type:1
+          } IN smscode
+          `,{phone,code,time}
+        )
+      })
   },
   requiredParams:{
     phone:String,

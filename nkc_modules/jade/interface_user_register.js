@@ -98,6 +98,14 @@ function register_submit(){
       refreshICode();
       getFocus("#username")
     }
+    if(err.detail == '验证注册码失败，请检查！'){
+      refreshICode();
+      getFocus("#regCode")
+    }
+    if(err.detail === '答卷的注册码过期，可能要重新参加考试') {
+      refreshICode();
+      getFocus('#regCode')
+    }
     if(err.detail == '手机验证码不正确，请检查'){
       refreshICode();
       getFocus("#mcode")
@@ -122,6 +130,7 @@ function getMcode(){
   var password = geid('password').value.trim();
   var password2 = geid('password2').value.trim();
   var icode = geid('icode').value.trim();
+  var regCode = gv('regCode').trim();
 
   if(username == ''){
     getFocus("#username")
@@ -144,9 +153,13 @@ function getMcode(){
     getFocus("#icode")
     return error_report('请填写图片验证码！')
   }
+  if(regCode === '') {
+    getFocus('#regCode');
+    return error_report('请填写注册码')
+  }
 
   else{
-    nkcAPI('getMcode',{phone:phone, icode:icode })
+    nkcAPI('getMcode',{phone:phone, icode:icode, regCode: regCode})
     .then(function(res){
       var count = 120;
       var countdown = setInterval(CountDown, 1000);
@@ -173,6 +186,14 @@ function getMcode(){
       if(err.detail == '此号码已经用于其他用户注册，请检查或更换查'){
         refreshICode()
         getFocus("#phone")
+      }
+      if(err.detail === '验证注册码失败，请检查！'){
+        refreshICode()
+        getFocus("#regCode")
+      }
+      if(err.detail === '答卷的注册码过期，可能要重新参加考试') {
+        refreshICode();
+        getFocus('#regCode')
       }
       error_report(err.detail);
     })
