@@ -58,7 +58,7 @@ block content
                     div
                       textarea.configShit#announcement(style='display: none;' name = 'announcement' placeholder='请输入专栏公告') #{announcement}
                   .form-group
-                    a.btn.configShit.btn-default(style='display: none;' href='javascript: submitConfig();') 保存
+                    a.btn.configShit.btn-default(style='display: none;' href='javascript:;' onclick='submitConfig()') 保存
 
                   if data.forum.moderators && data.forum.moderators.length
                     span 版主：

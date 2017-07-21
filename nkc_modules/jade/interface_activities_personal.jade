@@ -34,7 +34,7 @@ block content
                     span.displayShit #{data.forum.description}
                     input.configShit#description(value='#{forum.description}' style='display: none;' name='description' placeholder='请输入专栏介绍')
                 .form-group
-                  a.btn.configShit.btn-default(style='display: none;' href='javascript: submitConfig();') 保存
+                  a.btn.configShit.btn-default(style='display: none;' href='javascript:;' onclick='submitConfig()') 保存
 
                 if data.forum.moderators && data.forum.moderators.length
                   span 版主：

@@ -22,8 +22,8 @@ function register_submit(){
       password2 : gv('password2'),
       regCode: gv('regCode'),
       phone:gv('phone'),
-      mcode:gv('mcode'),
-      icode:gv('icode')
+      mcode:gv('mcode')/*,
+      icode:gv('icode')*/
     }
 
     if(userobj.username == ''){
@@ -77,11 +77,11 @@ function register_submit(){
       throw({detail:'请填写手机验证码！'})
       return;
     }
-    if(userobj.icode == ''){
+   /* if(userobj.icode == ''){
       getFocus("#icode")
       throw({detail:'请填写图片验证码！'})
       return;
-    }
+    }*/
 
     return nkcAPI('userPhoneRegister',userobj)
   })
@@ -95,27 +95,27 @@ function register_submit(){
   .catch(function(err){
     console.log(err)
     if(err.detail == '用户名已存在，请输入其他用户名'){
-      refreshICode();
+      //refreshICode();
       getFocus("#username")
     }
     if(err.detail == '验证注册码失败，请检查！'){
-      refreshICode();
+      //refreshICode();
       getFocus("#regCode")
     }
     if(err.detail === '答卷的注册码过期，可能要重新参加考试') {
-      refreshICode();
+      //refreshICode();
       getFocus('#regCode')
     }
     if(err.detail == '手机验证码不正确，请检查'){
-      refreshICode();
+      //refreshICode();
       getFocus("#mcode")
     }
-    if(err.detail == '图片验证码不正确，请检查'){
-      refreshICode();
+   /* if(err.detail == '图片验证码不正确，请检查'){
+      //refreshICode();
       getFocus("#icode")
-    }
+    }*/
     if(err.detail == '此号码已经用于其他用户注册，请检查或更换查'){
-      refreshICode();
+      //refreshICode();
       getFocus("#phone")
     }
     error_report(err.detail);
@@ -129,7 +129,7 @@ function getMcode(){
   var username = geid('username').value.trim();
   var password = geid('password').value.trim();
   var password2 = geid('password2').value.trim();
-  var icode = geid('icode').value.trim();
+  /*var icode = geid('icode').value.trim();*/
   var regCode = gv('regCode').trim();
 
   if(username == ''){
@@ -149,17 +149,17 @@ function getMcode(){
     getFocus("#phone")
     return error_report('手机号码为空或者格式不正确！')
   }
-  if(icode == ''){
+ /* if(icode == ''){
     getFocus("#icode")
     return error_report('请填写图片验证码！')
-  }
+  }*/
   if(regCode === '') {
     getFocus('#regCode');
     return error_report('请填写注册码')
   }
 
   else{
-    nkcAPI('getMcode',{phone:phone, icode:icode, regCode: regCode})
+    nkcAPI('getMcode',{phone:phone/*, icode:icode*/, regCode: regCode})
     .then(function(res){
       var count = 120;
       var countdown = setInterval(CountDown, 1000);
@@ -176,23 +176,23 @@ function getMcode(){
     })
     .catch(function(err){
       if(err.detail == '手机验证码不正确，请检查'){
-        refreshICode();
+        //refreshICode();
         getFocus("#mcode")
       }
-      if(err.detail == '图片验证码不正确，请检查'){
-        refreshICode();
+     /* if(err.detail == '图片验证码不正确，请检查'){
+        //refreshICode();
         getFocus("#icode")
-      }
+      }*/
       if(err.detail == '此号码已经用于其他用户注册，请检查或更换查'){
-        refreshICode()
+        //refreshICode()
         getFocus("#phone")
       }
       if(err.detail === '验证注册码失败，请检查！'){
-        refreshICode()
+        //refreshICode()
         getFocus("#regCode")
       }
       if(err.detail === '答卷的注册码过期，可能要重新参加考试') {
-        refreshICode();
+        //refreshICode();
         getFocus('#regCode')
       }
       error_report(err.detail);
@@ -201,17 +201,19 @@ function getMcode(){
 }
 
 
-function refreshICode() {
-  nkcAPI('refreshicode')
+/*function refreshICode() {
+  nkcAPI('//refreshICode')
     .then(function(res) {
       $('#icodeImg').attr('src', '/static/captcha/captcha.svg?' + Math.random())
     })
-}
+}*/
 
 //点击刷新图片验证码
+/*
 $(document).ready(function() {
-	 $("#icodeImg").click(refreshICode)
+	 $("#icodeImg").click(//refreshICode)
 })
+*/
 
 
 function getFocus(a){

@@ -132,7 +132,8 @@ function loadNextPage() {
       div.style.width = '100%';
       div.style.textAlign = 'center';
       var lButton = document.createElement('a');
-      lButton.href = 'javascript: loadNextPage();'
+      lButton.href = 'javascript:;';
+      lButton.onclick = loadNextPage;
       lButton.className = 'btn btn-default';
       lButton.innerHTML = '加载更多';
       lButton.id = 'loadNextPage';

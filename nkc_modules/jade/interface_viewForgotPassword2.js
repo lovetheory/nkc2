@@ -33,8 +33,8 @@ function submit(){
     var userobj={
       username : gv('username'),
       phone:gv('phone'),
-      mcode:gv('mcode'),
-      icode:gv('icode')
+      mcode:gv('mcode')//,
+      //icode:gv('icode')
     }
 
     if(userobj.username == ''){
@@ -48,17 +48,17 @@ function submit(){
       return;
     }
     if(userobj.phone.length < 11){
-      refreshICode();
+      //refreshICode();
       getFocus("#phone")
       throw({detail:'手机号码格式不正确！'})
       return;
     }
-    if(userobj.mcode == ''){
-      refreshICode();
+    /*if(userobj.mcode == ''){
+      //refreshICode();
       getFocus("#mcode")
       throw({detail:'请填写手机验证码！'})
       return;
-    }
+    }*/
 
     window.location = '/forgotPassword2?phone='+userobj.phone+'&mcode='+userobj.mcode
   })
@@ -119,7 +119,7 @@ function submit2(){
 function getMcode(){
   var phone = geid('phone').value.trim();
   var username = geid('username').value.trim();
-  var icode = geid('icode').value.trim();
+  //var icode = geid('icode').value.trim();
 
   if(username == ''){
     getFocus("#username")
@@ -131,13 +131,13 @@ function getMcode(){
     getFocus("#phone")
     return error_report('手机号码为空或者格式不正确！')
   }
-  if(icode == ''){
+  /*if(icode == ''){
     getFocus("#icode")
     return error_report('请填写图片验证码！')
-  }
+  }*/
 
   else{
-    nkcAPI('getMcode2',{phone:phone, username:username, icode:icode })
+    nkcAPI('getMcode2',{phone:phone, username:username/*, icode:icode */})
     .then(function(res){
       var count = 120;
       var countdown = setInterval(CountDown, 1000);
@@ -154,27 +154,29 @@ function getMcode(){
     })
     .catch(function(err){
       if(err.detail === '没有找到该手机号码，请检查') {
-        refreshICode3();
+        ////refreshICode3();
       }
       else if(err.detail === '用户名和手机号码不对应，请检查') {
-        refreshICode3();
+        ////refreshICode3();
       }
       error_report(err.detail);
     })
   }
 }
 
-function refreshICode3() {
-  nkcAPI('refreshicode3')
+/*function //refreshICode3() {
+  nkcAPI('//refreshICode3')
     .then(function(res){
       $("#icodeImg").attr("src","/static/captcha/captcha3.svg?"+ Math.random() );
     })
-}
+}*/
 
 //点击刷新图片验证码
+/*
 $(document).ready(function() {
-	 $("#icodeImg").click(refreshICode3)
+	 $("#icodeImg").click(//refreshICode3)
 	 })
+*/
 
 
 function getFocus(a){

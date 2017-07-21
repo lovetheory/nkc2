@@ -304,8 +304,8 @@ table.userPhoneRegister = {
       password:params.password,
       regCode: params.regCode,
       phone:params.phone,
-      mcode:params.mcode,
-      icode:params.icode
+      mcode:params.mcode/*,
+      icode:params.icode*/
     }
     let uid;
     let user;
@@ -340,7 +340,7 @@ table.userPhoneRegister = {
       .then(res=>{
         //console.log(res)
         if(res.length == 0) throw '手机验证码不正确，请检查'
-        if( params.icode.toLowerCase() != params._req.session.icode.toLowerCase() ) throw '图片验证码不正确，请检查'
+        //if( params.icode.toLowerCase() != params._req.session.icode.toLowerCase() ) throw '图片验证码不正确，请检查'
         return create_phoneuser(userobj)
       })
       .then(newuser=>{
@@ -361,8 +361,8 @@ table.userPhoneRegister = {
     username:String,
     password:String,
     phone:String,
-    mcode:String,
-    icode:String
+    mcode:String/*,
+    icode:String*/
   }
 }
 
@@ -374,8 +374,8 @@ table.userMailRegister = {
     var userobj = {
       username: params.username,
       password: params.password,
-      email: params.email,
-      icode: params.icode
+      email: params.email//,
+      //icode: params.icode
     };
     const code = params.regCode;
     const c = new layer.BaseDao('answersheets', code);
@@ -424,7 +424,7 @@ table.userMailRegister = {
       })
       .then(res => {
         if (res.length > 0) throw "此邮箱已注册过，请检查或更换"
-        if (params.icode.toLowerCase() != params._req.session.icode.toLowerCase()) throw '图片验证码不正确，请检查'
+        //if (params.icode.toLowerCase() != params._req.session.icode.toLowerCase()) throw '图片验证码不正确，请检查'
 
         var ecode = random(14);
         let salt = Math.floor(Math.random() * 65536).toString(16);
@@ -476,8 +476,8 @@ table.userMailRegister = {
   requiredParams:{
     username:String,
     password:String,
-    email:String,
-    icode:String
+    email:String//,
+    //icode:String
   }
 }
 
@@ -783,7 +783,7 @@ table.getRegcodeFromMobile = {
 table.getMcode = {
   operation:function(params){
     var phone = params.phone;
-    var icode = params.icode;
+    //var icode = params.icode;
     const regCode = params.regCode;
     var code = random(6);
     var time = new Date().getTime();
@@ -810,7 +810,7 @@ table.getMcode = {
         )
       })
       .then(j=>{
-        if(icode.toLowerCase() != params._req.session.icode.toLowerCase() ) throw '图片验证码不正确，请检查'
+        //if(icode.toLowerCase() != params._req.session.icode.toLowerCase() ) throw '图片验证码不正确，请检查'
         if(j.length >= 5) throw '短信发送次数已达上限，请隔天再试'
         return AQL(`
           for u in mobilecodes
@@ -850,9 +850,11 @@ table.getMcode = {
 //手机找回密码的验证码
 table.getMcode2 = {
   operation:function(params){
+    const ip = params._req.iptrim;
+    const incIpTry = require('../ip_validation');
     var phone = params.phone;
     var username = params.username;
-    var icode = params.icode;
+    //var icode = params.icode;
     var code = random(6);
     var time = new Date().getTime();
     var time2 = Date.now()-24*60*60*1000;
@@ -865,7 +867,7 @@ table.getMcode2 = {
       `,{phone, time2}
     )
     .then(j=>{
-      if(icode.toLowerCase() != params._req.session.icode3.toLowerCase() ) throw '图片验证码不正确，请检查'
+      //if(icode.toLowerCase() != params._req.session.icode3.toLowerCase() ) throw '图片验证码不正确，请检查'
       if(j.length >= 5) throw '短信发送次数已达上限，请隔天再试'
       return AQL(`
         for u in mobilecodes
@@ -875,7 +877,10 @@ table.getMcode2 = {
       )
     })
     .then(k=>{
-      if(k.length == 0) throw '没有找到该手机号码，请检查'
+      if(k.length == 0) {
+        incIpTry(ip);
+        throw '没有找到该手机号码，请检查'
+      }
       return AQL(`
         for u in users
         filter u._key == @uid
@@ -884,7 +889,10 @@ table.getMcode2 = {
       )
     })
     .then(m=>{
-      if(m[0].username != username) throw '用户名和手机号码不对应，请检查'
+      if(m[0].username != username) {
+        incIpTry(ip);
+        throw '用户名和手机号码不对应，请检查'
+      }
       sendSMS(phone, code , 'reset', function(err,res){ //2调用修改密码方法
         if(err){
           console.log(err)

@@ -22,7 +22,7 @@ function register_submit(){
       password : gv('password'),
       password2 : gv('password2'),
       email:gv('email'),
-      icode:gv('icode'),
+      /*icode:gv('icode'),*/
       regCode: gv('regCode')
     };
 
@@ -51,15 +51,15 @@ function register_submit(){
       throw({detail:'请再次填写密码！'})
       return;
     }
-    if(userobj.icode == ''){
-      refreshICode();
+    /*if(userobj.icode == ''){
+      //refreshICode();
       getFocus("#icode");
       throw({detail:'请填写图片验证码！'})
       return;
-    }
+    }*/
     if( !userobj.email.match(/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/) ){
       getFocus("#email")
-      refreshICode();
+      //refreshICode();
       throw({detail:'邮箱格式不正确！'})
       return;
     }
@@ -88,41 +88,41 @@ function register_submit(){
 
   })
   .then(function(result){
-    nkcAPI('refreshicode')  //再刷新一次图片验证码
+    nkcAPI('//refreshICode')  //再刷新一次图片验证码
     .then(function(res){
-      $("#icodeImg").attr("src","/static/captcha/captcha.svg?"+ Math.random() );
+      //$("#icodeImg").attr("src","/static/captcha/captcha.svg?"+ Math.random() );
     })
     info_report('注册邮件发送成功，请点击邮件链接来激活您的账户！')
   })
   .catch(function(err){
     if(err.detail == '此用户名已存在，请更换一个'){
-      refreshICode();
+      //refreshICode();
       getFocus("#username")
     }
     if(err.detail == '此邮箱已注册过，请检查或更换'){
-      refreshICode();
+      //refreshICode();
       getFocus("#email")
     }
-    if(err.detail == '图片验证码不正确，请检查'){
-      refreshICode();
+    /*if(err.detail == '图片验证码不正确，请检查'){
+      //refreshICode();
       getFocus("#icode")
-    }
+    }*/
     error_report(err.detail);
   })
 
 }
 
-function refreshICode() {
-  nkcAPI('refreshicode')
+/*function refreshICode() {
+  nkcAPI('//refreshICode')
     .then(function(res) {
       $('#icodeImg').attr('src', '/static/captcha/captcha.svg?' + Math.random())
     })
-}
+}*/
 
 //点击刷新图片验证码
-$(document).ready(function() {
-	 $("#icodeImg").click(refreshICode)
-});
+/*$(document).ready(function() {
+	 $("#icodeImg").click(//refreshICode)
+});*/
 
 
 

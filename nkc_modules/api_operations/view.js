@@ -75,10 +75,10 @@ table.viewExam = {
 table.viewRegister = {
   operation: function (params) {
     var data = defaultData(params)
-    var captcha = svgCaptcha.create();  //创建验证码
-    params._req.session.icode = captcha.text;  //验证码text保存到session中
-    var road = path.resolve(__dirname, '../..')
-    fs.writeFile(road + '/static/captcha/captcha.svg', captcha.data, {'flag': 'w'});  //保存验证码图片
+    //var captcha = svgCaptcha.create();  //创建验证码
+   // params._req.session.icode = captcha.text;  //验证码text保存到session中
+    //var road = path.resolve(__dirname, '../..')
+    //fs.writeFile(road + '/static/captcha/captcha.svg', captcha.data, {'flag': 'w'});  //保存验证码图片
     //console.log(captcha.text);
     data.getcode = params.getcode
     data.regCode = params.code
@@ -93,12 +93,12 @@ table.viewRegister = {
 table.viewRegister2 = {
   operation: function (params) {
     var data = defaultData(params)
-    var captcha = svgCaptcha.create();  //创建验证码
-    params._req.session.icode = captcha.text;  //验证码text保存到session中
-    var road = path.resolve(__dirname, '../..')
-    fs.writeFile(road + '/static/captcha/captcha.svg', captcha.data, {'flag': 'w'}, function (e) {
-      if(e) console.error(e.stack)
-    });  //保存验证码图片
+    //var captcha = svgCaptcha.create();  //创建验证码
+    //params._req.session.icode = captcha.text;  //验证码text保存到session中
+    //var road = path.resolve(__dirname, '../..')
+    //fs.writeFile(road + '/static/captcha/captcha.svg', captcha.data, {'flag': 'w'}, function (e) {
+      //if(e) console.error(e.stack)
+    //});  //保存验证码图片
     //console.log(captcha.text);
     data.template = 'nkc_modules/jade/interface_user_register2.jade';
     data.regCode = params.code;
@@ -2160,16 +2160,15 @@ table.viewForgotPassword = {
 table.viewForgotPassword2 = {
   operation: function (params) {
     var data = defaultData(params)
-    var captcha = svgCaptcha.create();  //创建验证码
-    params._req.session.icode3 = captcha.text;  //验证码text保存到session中
-    var road = path.resolve(__dirname, '../..')
-    fs.writeFile(road + '/static/captcha/captcha3.svg', captcha.data, {'flag': 'w'});  //保存验证码图片
+    //var captcha = svgCaptcha.create();  //创建验证码
+    //params._req.session.icode3 = captcha.text;  //验证码text保存到session中
+    //var road = path.resolve(__dirname, '../..')
+    //fs.writeFile(road + '/static/captcha/captcha3.svg', captcha.data, {'flag': 'w'});  //保存验证码图片
     data.template = jadeDir + 'interface_viewForgotPassword2.jade'
 
     data.username = params.username  //url后面的参数
     data.phone = params.phone
     data.mcode = params.mcode
-
     if (data.phone != undefined && data.mcode != undefined) {
       return AQL(`
         for u in mobilecodes

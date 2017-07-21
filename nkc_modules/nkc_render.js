@@ -73,16 +73,17 @@ function nkc_render(options){
     }else{
       var cheerio = require('cheerio')
       var $ = cheerio.load(html)
-
       //for all <a> s
       $('a').each(function(i,elem){
         var href = $(elem).attr('href')
-        //check its href
-        var isExternalLink =
-        !(href.match(/kechuang\.org/i)||href.match(/^\/[^\/]/))
-        //open in new window
-        if(isExternalLink){
-          $(elem).attr('target','_blank')
+        if(href) {
+          //check its href
+          var isExternalLink =
+            !(href.match(/kechuang\.org/i)||href.match(/^\/[^\/]/))
+          //open in new window
+          if(isExternalLink){
+            $(elem).attr('target','_blank')
+          }
         }
       })
       return $.html()
@@ -442,7 +443,7 @@ function nkc_render(options){
   render.experimental_render = function(post){
     var content = post.c||''
     var lang = post.l||''
-
+console.log(content);
     var renderedHTML = ''
 
     switch (lang) {
@@ -451,6 +452,9 @@ function nkc_render(options){
       break;
 
       case 'pwbb':
+        renderedHTML = pwbb_experimental(post,false)
+        break;
+
       case 'bbcode':
       renderedHTML = pwbb_experimental(post,false)
       break;
@@ -462,8 +466,9 @@ function nkc_render(options){
       default:
       renderedHTML = plain_escape(content)
     }
-
+    console.log(renderedHTML);
     renderedHTML = linkAlienate(renderedHTML) //please check linkAlienate()
+    console.log(renderedHTML);
     return renderedHTML
   }
 
