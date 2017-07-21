@@ -47,6 +47,8 @@ table.testMail = {
 
 table.forgotPassword = {
   operation:function(params){
+    const ip = params._req.iptrim;
+    const incIpTry = require('../ip_validation');
     var u = new layer.User()
     //console.log(params.username)
     return u.loadByName(params.username)
@@ -56,9 +58,15 @@ table.forgotPassword = {
     .then(p=>{
       //the person does exist
       var email=p.model.email
-      if(!email||!email.length)throw '该账户没有记录有效的邮件信息。'
+      if(!email||!email.length){
+        incIpTry(ip);
+        throw '该账户没有记录有效的邮件信息。'
+      }
 
-      if(email!==params.email)throw '邮箱地址和账户无法对应。可能拼写有误，或者不是这个邮箱。'
+      if(email!==params.email){
+        incIpTry(ip);
+        throw '邮箱地址和账户无法对应。可能拼写有误，或者不是这个邮箱。'
+      }
 
       //generate a random token and save it
       var token = Math.floor((Math.random()*(65536*65536))).toString(16)
