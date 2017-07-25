@@ -67,7 +67,7 @@ var create_user = function(user){
       username_lowercase:user.username.toLowerCase(),
       toc:timestamp,
       tlv:timestamp,
-      certs:[user.mobile?'mobile':'examinated'],
+      certs:[user.mobile?'mobile':'mail', 'examinated'],
     }
 
     var salt = Math.floor((Math.random()*65536)).toString(16)
@@ -122,7 +122,7 @@ var create_phoneuser = function(user){
       username_lowercase:user.username.toLowerCase(),
       toc:timestamp,
       tlv:timestamp,
-      certs:['mobile'],
+      certs:['mobile', 'examinated'],
     }
 
     var salt = Math.floor((Math.random()*65536)).toString(16)

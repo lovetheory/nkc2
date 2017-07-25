@@ -857,26 +857,40 @@ let postToPersonalForum = (params, targetKey) => {
 
 table.configPersonalForum = {
   operation: params => {
-    let description = params.description.trim();
-    let forumName = params.forumName.trim();
+    const user = params.user;
+    const description = params.description.trim();
+    const forumName = params.forumName.trim();
     const announcement = params.announcement.trim();
-    return db.query(aql`
-      LET arr1 = (FOR o IN personalForums
-        FILTER o.display_name == ${forumName} && o._key != ${params.user._key}
-        RETURN o.display_name)
-      LET arr2 = (FOR o IN forums
-        FILTER o.display_name == ${forumName} && o._key != ${params.user._key}
-        RETURN o.display_name)
-      RETURN UNION(arr1, arr2)
+    const moderators = params.moderators.map(moderator => moderator.trim());
+    return Promise.all(moderators.map(moderator => db.query(aql`
+      FOR u IN users
+        FILTER u.username == ${moderator}
+        RETURN u
     `)
+      .then(cursor => cursor.all())
+      .then(users => {
+        if(users.length === 0) throw '副版主含有不存在的用户名'
+      })
+    ))
+      .then(() => db.query(aql`
+        LET arr1 = (FOR o IN personalForums
+          FILTER o.display_name == ${forumName} && o._key != ${user._key}
+          RETURN o.display_name)
+        LET arr2 = (FOR o IN forums
+          FILTER o.display_name == ${forumName} && o._key != ${user._key}
+          RETURN o.display_name)
+        RETURN UNION(arr1, arr2)
+      `))
       .then(cursor => cursor.all())
       .then(arr => {
         if(arr[0].length > 0) throw `专栏名称与现有的学院或个人专栏名称重复,不能使用`;
         return db.query(aql`
-          UPDATE DOCUMENT(personalForums, ${params.user._key}) WITH {
+          LET doc = DOCUMENT(personalForums, ${user._key}) 
+          UPDATE doc WITH {
             description: ${description},
             display_name: ${forumName},
-            announcement: ${announcement}
+            announcement: ${announcement},
+            moderators: APPEND([${user.username}], ${moderators}, true)
           } IN personalForums
           RETURN NEW
         `)
@@ -884,7 +898,7 @@ table.configPersonalForum = {
       .then(cursor => cursor.all())
       .then(f => f)
   }
-}
+};
 
 //!!!danger!!! will make the database very busy.
 update_all_threads = () => {

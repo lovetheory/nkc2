@@ -48,6 +48,7 @@ block content
                     .displayShit.ForumName #{display_name}&nbsp;&nbsp;&nbsp;&nbsp;
                     //a.btn.btn-default.btn-sm.displayShit(href='javascript: ;' onclick='switchManagementMode()') 设置
                     input.configShit#forumName(style='font-size: 16px; display: none;' value='#{forum.display_name}' name='forumName' placeholder='请输入专栏名称')
+                  .clearfix
                   .form-group
                     if description
                       span.displayShit #{'介绍: ' + description}
@@ -58,20 +59,28 @@ block content
                     div
                       textarea.configShit#announcement(style='display: none;' name = 'announcement' placeholder='请输入专栏公告') #{announcement}
                   .form-group
+                    - var moderators = data.forum.moderators
+                    if moderators && moderators.length
+                      .displayShit
+                        span 版主：
+                          each k in moderators
+                            a.d-inline.margin-right(href='/user_activities_byname/#{k}') #{k}
+                      .configShit(style='display: none;')
+                        -const str = moderators.length === 1? '' : moderators.reduce((pv, cv, ci, arr) => {return ci === 0? '' : pv + cv + ','}, '')
+                          span 版主：
+                          span #{moderators[0]},
+                          input#moderators(placeholder='输入用户名，用,分隔' name='moderators' value='#{str}')
+                  .form-group
                     a.btn.configShit.btn-default(style='display: none;' href='javascript:;' onclick='submitConfig()') 保存
 
-                  if data.forum.moderators && data.forum.moderators.length
-                    span 版主：
-                      - var moderators = data.forum.moderators
-                      each k in moderators
-                        a.d-inline.margin-right(href='/user_activities_byname/#{k}') #{k}
                   if data.permittedOperations.banUser
                     if data.targetUser.certs.indexOf('banned') > -1
                       a(href='javascript:;' onclick='nkcAPI("unbanUser", {uid: "#{data.targetUser._key}"}).then(jalert).catch(jwarning)') 解除封禁
                     else
                       a(href='javascript:;' onclick='nkcAPI("banUser", {uid: "#{data.targetUser._key}"}).then(jalert).catch(jwarning)') &nbsp;封禁此人&nbsp;
                   if isModerator
-                    a#enterManagementMode.btn.btn-default(href='javascript:;' onclick='switchManagementMode()') 管理
+                    div
+                      a#enterManagementMode.btn.btn-default(href='javascript:;' onclick='switchManagementMode()') 管理
 
         include interface_easy_post
 

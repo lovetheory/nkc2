@@ -22,14 +22,13 @@ table.moveThread = {
     var fid = params.fid
     var tid = params.tid
     var cid = params.cid
-
+    const user = params.user;
     var thread = new layer.Thread(tid)
     var destforum = new layer.Forum(fid)
     var origforum
 
     return thread.load()
     .then(thread=>{
-      console.log(thread);
       if(thread.model.fid) {
         origforum = new layer.Forum(thread.model.fid)
         return origforum.load()
@@ -44,7 +43,14 @@ table.moveThread = {
             return origforum.testModerator(params.user.username)
           })
       }
-      return
+      db.query(aql`
+        LET pf = DOCUMENT(personalForums, ${thread.mid})
+        RETURN pf.moderators
+      `)
+        .then(cursor => cursor.all())
+        .then(moderators => {
+          if(moderators.indexOf(user.username) === -1) throw '权限不足'
+        })
     })
     .then(()=>{
       return destforum.load()

@@ -215,10 +215,20 @@ function mix(a,b){
 }
 
 var submitConfig = function() {
+  var moderators = gv('moderators').trim();
+  moderators = moderators.replace('，', ',');
+  var arr = moderators.split(',');
+  for(var i in arr) {
+    var v = arr[i].trim();
+    if(!v) {
+      arr.splice(i, 1)
+    }
+  }
   var config = {
     forumName: gv('forumName').trim(),
     description: gv('description').trim(),
-    announcement: gv('announcement').trim()
+    announcement: gv('announcement').trim(),
+    moderators: arr
   }
   if(!config.description || !config.forumName) {
     screenTopWarning('请完善信息.');
