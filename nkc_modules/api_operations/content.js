@@ -857,26 +857,46 @@ let postToPersonalForum = (params, targetKey) => {
 
 table.configPersonalForum = {
   operation: params => {
-    let description = params.description.trim();
-    let forumName = params.forumName.trim();
+    const user = params.user;
+    const description = params.description.trim();
+    const forumName = params.forumName.trim();
     const announcement = params.announcement.trim();
-    return db.query(aql`
-      LET arr1 = (FOR o IN personalForums
-        FILTER o.display_name == ${forumName} && o._key != ${params.user._key}
-        RETURN o.display_name)
-      LET arr2 = (FOR o IN forums
-        FILTER o.display_name == ${forumName} && o._key != ${params.user._key}
-        RETURN o.display_name)
-      RETURN UNION(arr1, arr2)
-    `)
+    const moderators = params.moderators.map(moderator => moderator.trim());
+    const key = params.key;
+    return db.collection('personalForums').document(key)
+      .then(pf => {
+        const moderators = pf.moderators;
+        if(moderators.indexOf(user.username) === -1) throw '权限错误';
+        return Promise.all(moderators.map(moderator => db.query(aql`
+          FOR u IN users
+            FILTER u.username == ${moderator}
+            RETURN u
+        `)
+          .then(cursor => cursor.all())
+          .then(users => {
+            if(users.length === 0) throw '副版主含有不存在的用户名'
+          })))
+      })
+      .then(() => db.query(aql`
+        LET arr1 = (FOR o IN personalForums
+          FILTER o.display_name == ${forumName} && o._key != ${key}
+          RETURN o.display_name)
+        LET arr2 = (FOR o IN forums
+          FILTER o.display_name == ${forumName} && o._key != ${key}
+          RETURN o.display_name)
+        RETURN UNION(arr1, arr2)
+      `))
       .then(cursor => cursor.all())
       .then(arr => {
         if(arr[0].length > 0) throw `专栏名称与现有的学院或个人专栏名称重复,不能使用`;
         return db.query(aql`
-          UPDATE DOCUMENT(personalForums, ${params.user._key}) WITH {
+          LET doc = DOCUMENT(personalForums, ${key}) 
+          LET owner = DOCUMENT(users, ${key})
+          UPDATE doc WITH {
             description: ${description},
             display_name: ${forumName},
-            announcement: ${announcement}
+            announcement: ${announcement},
+            moderators: APPEND([owner.username], ${moderators}, true)
           } IN personalForums
           RETURN NEW
         `)
@@ -884,7 +904,7 @@ table.configPersonalForum = {
       .then(cursor => cursor.all())
       .then(f => f)
   }
-}
+};
 
 //!!!danger!!! will make the database very busy.
 update_all_threads = () => {
@@ -923,9 +943,14 @@ table.getForumsList = {
 
 table.switchTInPersonalForum = {
   operation: params => {
-    const uid = params.user._key;
+    const user = params.user;
+    const uid = user._key;
     const tid = params.tid;
-    return db.query(aql`
+    const type = params.type;
+    let thread;
+    let myForum;
+    let othersForum;
+    if(!type) return db.query(aql`
       LET pf = DOCUMENT(personalForums, ${uid})
       RETURN pf.toppedThreads
     `)
@@ -957,6 +982,86 @@ table.switchTInPersonalForum = {
       })
       .catch(e => {
         throw e
+      });
+    if(type === 'MF') return db.collection('threads').document(tid)
+      .then(t => {
+        thread = t;
+        return db.collection('personalForums').document(thread.mid)
       })
+      .then(mf => {
+        myForum = mf;
+        if(myForum.moderators.indexOf(user.username) > -1) {
+          const threads = myForum.toppedThreads || [];
+          const index = threads.findIndex(element => element === tid);
+          if(index > -1) {
+            threads.splice(index, 1);
+            return db
+              .collection('personalForums')
+              .update(myForum, {toppedThreads: threads});
+          }
+          else {
+            threads.push(tid);
+            return db.collection('personalForums')
+              .update(myForum, {toppedThreads: threads})
+          }
+        }
+        throw '权限不足'
+      })
+      .then(() => {
+        const toppedUsers = thread.toppedUsers || [];
+        const index = toppedUsers.findIndex(u => u === myForum._key);
+        if(index > -1) {
+          toppedUsers.splice(index, 1);
+          return db
+            .collection('threads')
+            .update(thread, {toppedUsers: toppedUsers});
+        }
+        else {
+          toppedUsers.push(myForum._key);
+          return db.collection('threads')
+            .update(thread, {toppedUsers})
+        }
+      });
+    if(type === 'OF') return db.collection('threads').document(tid)
+      .then(t => {
+        thread = t;
+        if(!thread.toMid) throw '发生异常' + tid;
+        return db.collection('personalForums').document(thread.toMid)
+      })
+      .then(oF => {
+        othersForum = oF;
+        if(othersForum.moderators.indexOf(user.username) > -1) {
+          const threads = othersForum.toppedThreads || [];
+          const index = threads.findIndex(t => t === tid);
+          if(index > -1) {
+            threads.splice(index, 1);
+            return db
+              .collection('personalForums')
+              .update(othersForum, {toppedThreads: threads});
+          }
+          else {
+            threads.push(tid);
+            return db.collection('personalForums')
+              .update(othersForum, {toppedThreads: threads})
+          }
+        }
+        throw '权限不足'
+      })
+      .then(() => {
+        const users = thread.toppedUsers ||[];
+        const index = users.findIndex(u => u === othersForum._key);
+        if(index > -1) {
+          users.splice(index, 1);
+          return db
+            .collection('threads')
+            .update(thread, {toppedUsers: users});
+        }
+        else {
+          users.push(othersForum._key);
+          return db.collection('threads')
+            .update(thread, {toppedUsers: users})
+        }
+      });
+    throw '发生异常' + tid
   }
 };

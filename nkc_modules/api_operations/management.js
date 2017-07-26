@@ -22,14 +22,13 @@ table.moveThread = {
     var fid = params.fid
     var tid = params.tid
     var cid = params.cid
-
+    const user = params.user;
     var thread = new layer.Thread(tid)
     var destforum = new layer.Forum(fid)
     var origforum
 
     return thread.load()
     .then(thread=>{
-      console.log(thread);
       if(thread.model.fid) {
         origforum = new layer.Forum(thread.model.fid)
         return origforum.load()
@@ -44,7 +43,14 @@ table.moveThread = {
             return origforum.testModerator(params.user.username)
           })
       }
-      return
+      db.query(aql`
+        LET pf = DOCUMENT(personalForums, ${thread.mid})
+        RETURN pf.moderators
+      `)
+        .then(cursor => cursor.all())
+        .then(moderators => {
+          if(moderators.indexOf(user.username) === -1) throw '权限不足'
+        })
     })
     .then(()=>{
       return destforum.load()
@@ -450,15 +456,36 @@ table.switchVInPersonalForum = {
     const po = params.permittedOperations;
     const tid = params.tid;
     const user = params.user;
+    let thread;
+    let myForum;
+    let othersForum;
     if('switchVInPersonalForum' in po) {
       return db.collection('threads').document(tid)
         .then(t => {
-          if(t.toMid === user._key) {
-            return db.collection('threads').update(t, {hideInToMid: !t.hideInToMid})
+          thread = t;
+          return db.collection('personalForums').document(thread.mid)
+        })
+        .then(mf => {
+          myForum = mf;
+          if(thread.toMid) return db.collection('personalForums').document(thread.toMid)
+        })
+        .then(oF => {
+          if(oF) othersForum = oF;
+          return true
+        })
+        .then(() => {
+          if(
+            thread.toMid === user._key ||
+            othersForum && othersForum.moderators.indexOf(user.username) > -1
+          ) {
+            return db.collection('threads').update(thread, {hideInToMid: !thread.hideInToMid})
               .catch(e => {throw e})
           }
-          else if(t.mid === user._key) {
-            return db.collection('threads').update(t, {hideInMid: !t.hideInMid})
+          else if(
+            thread.mid === user._key ||
+            myForum.moderators.indexOf(user.username) > -1
+          ) {
+            return db.collection('threads').update(thread, {hideInMid: !thread.hideInMid})
               .catch(e => {throw e});
           }
           throw '操作有误,请报告论坛' + t.mid
@@ -473,15 +500,36 @@ table.switchDInPersonalForum = {
     const po = params.permittedOperations;
     const tid = params.tid;
     const user = params.user;
+    let thread;
+    let myForum;
+    let othersForum;
     if('switchDInPersonalForum' in po) {
       return db.collection('threads').document(tid)
         .then(t => {
-          if(t.toMid === user._key) {
-            return db.collection('threads').update(t, {digestInToMid: !t.digestInToMid})
+          thread = t;
+          return db.collection('personalForums').document(thread.mid)
+        })
+        .then(mf => {
+          myForum = mf;
+          if(thread.toMid) return db.collection('personalForums').document(thread.toMid)
+        })
+        .then(oF => {
+          if(oF) othersForum = oF;
+          return true
+        })
+        .then(() => {
+          if(
+            thread.toMid === user._key ||
+            othersForum && othersForum.moderators.indexOf(user.username) > -1
+          ) {
+            return db.collection('threads').update(thread, {digestInToMid: !thread.digestInToMid})
               .catch(e => {throw e})
           }
-          else if(t.mid === user._key) {
-            return db.collection('threads').update(t, {digestInMid: !t.digestInMid})
+          else if(
+            thread.mid === user._key ||
+            myForum.moderators.indexOf(user.username) > -1
+          ) {
+            return db.collection('threads').update(thread, {digestInMid: !thread.digestInMid})
               .catch(e => {throw e});
           }
           throw '操作有误,请报告论坛' + t.mid

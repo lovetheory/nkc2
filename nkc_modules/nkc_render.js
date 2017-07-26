@@ -443,7 +443,6 @@ function nkc_render(options){
   render.experimental_render = function(post){
     var content = post.c||''
     var lang = post.l||''
-console.log(content);
     var renderedHTML = ''
 
     switch (lang) {
@@ -466,9 +465,7 @@ console.log(content);
       default:
       renderedHTML = plain_escape(content)
     }
-    console.log(renderedHTML);
     renderedHTML = linkAlienate(renderedHTML) //please check linkAlienate()
-    console.log(renderedHTML);
     return renderedHTML
   }
 

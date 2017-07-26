@@ -132,7 +132,7 @@ function testPermission(params){
   report(permissionList);
 
   if(!permissionList.permittedOperations[params.operation]){ //user does not have permission for this operation
-    if(params.operation === 'moveThread') {}
+    if(params.operation === 'moveThread') return
     throw '权限不足。permission denied.'
   }
 
