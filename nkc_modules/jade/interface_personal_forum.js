@@ -214,7 +214,7 @@ function mix(a,b){
   return res;
 }
 
-var submitConfig = function() {
+var submitConfig = function(key) {
   var moderators = gv('moderators').trim();
   moderators = moderators.replace('，', ',');
   var arr = moderators.split(',');
@@ -228,8 +228,9 @@ var submitConfig = function() {
     forumName: gv('forumName').trim(),
     description: gv('description').trim(),
     announcement: gv('announcement').trim(),
-    moderators: arr
-  }
+    moderators: arr,
+    key: key
+  };
   if(!config.description || !config.forumName) {
     screenTopWarning('请完善信息.');
     return;

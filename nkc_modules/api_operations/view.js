@@ -896,8 +896,18 @@ table.viewThread = {
         data.thread = thread.model
       })
       .then(result => {
-        return getForumList(params)
+        if (thread.model.toMid) {
+          return db.collection('personalForums').document(thread.model.toMid)
+        }
       })
+      .then(pf => {
+        data.othersForum = pf;
+        if (thread.model.mid) {
+          return db.collection('personalForums').document(thread.model.mid)
+        }
+      })
+      .then(pf => data.myForum = pf)
+      .then(() => getForumList(params))
       .then(forumlist => {
 
         data.forumlist = forumlist
@@ -999,7 +1009,7 @@ table.viewPersonalForum = {
         `)
         }
         else if(data.tab === 'own') {
-          if(user && user._key === uid || 'moveAllThreads' in po) {
+          if(user && forumObj.moderators.indexOf(user.username) > -1 || 'moveAllThreads' in po) {
             return db.query(aql`
               LET p1 = (
                 FOR p IN posts
@@ -1125,7 +1135,7 @@ table.viewPersonalForum = {
         `)
         }
         else if(data.tab === 'discuss') {
-          if (user && user._key === uid || 'moveAllThreads' in po) {
+          if (user && forumObj.moderators.indexOf(user.username) > -1 || 'moveAllThreads' in po) {
             return db.query(aql`
               LET result = (FOR t IN threads
                 SORT t.${params.sortby ? 'toc' : 'tlm'} DESC

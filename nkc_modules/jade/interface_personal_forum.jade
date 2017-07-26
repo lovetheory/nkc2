@@ -71,7 +71,7 @@ block content
                           span #{moderators[0]},
                           input#moderators(placeholder='输入用户名，用,分隔' name='moderators' value='#{str}')
                   .form-group
-                    a.btn.configShit.btn-default(style='display: none;' href='javascript:;' onclick='submitConfig()') 保存
+                    a.btn.configShit.btn-default(style='display: none;' href='javascript:;' onclick='submitConfig("#{data.forum._key}")') 保存
 
                   if data.permittedOperations.banUser
                     if data.targetUser.certs.indexOf('banned') > -1

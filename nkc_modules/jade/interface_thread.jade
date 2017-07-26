@@ -28,6 +28,8 @@ block content
         #fullwidthpanel.ThreadBox.nkcpanel
           - var thread = data.thread
           - var target = thread.fid || thread.toMid || thread.mid
+          - var isMyForumMdr = user? data.myForum.moderators.indexOf(user.username) > -1 : false
+          - var isOthersForumMdr = user? data.othersForum? data.othersForum.moderators.indexOf(user.username) > -1 : false : false
           
           .ThreadTitle
             .ThreadTitle1(style="display:inline-block;width:82%;")
@@ -95,7 +97,7 @@ block content
                     
                 a(href='/t/#{data.thread._key}') 本帖地址
               if user
-                if po.moveThread || (thread.fid == null && thread.toMid == null && data.user._key == thread.mid)
+                if po.moveThread || (!thread.fid && !thread.toMid && isMyForumMdr)
                   .form-inline
                     .form-group
                       include forumlist_dropdown.jade
@@ -104,10 +106,10 @@ block content
                       .form-group
                         button#recyclebtn.btn.btn-xs.btn-danger(onclick="recycleThread('#{data.thread._key}')") 送回收站
 
-                if data.user
-                  if(data.thread.fid && po.moveToPersonalForum)
-                    a#moveToPersonal(href='javascript:;' onclick='moveToPersonalForum("#{data.thread._key}")') 移至个人版
-                  if data.thread.toMid === data.user._key || data.thread.mid === data.user._key
+                if user
+                  if(thread.fid && po.moveToPersonalForum)
+                    a#moveToPersonal(href='javascript:;' onclick='moveToPersonalForum("#{thread._key}")') 移至个人版
+                  if thread.toMid === user._key || thread.mid === user._key
                     -var text
                     if data.thread.toMid === data.user._key && data.thread.hideInToMid || data.thread.mid === data.user._key && data.thread.hideInMid
                       -text = '恢复专栏显示'
@@ -117,7 +119,7 @@ block content
                     span &nbsp;&nbsp;
 
                     -var text2
-                    if data.thread.toMid === data.user._key && data.thread.digestInToMid || data.thread.mid === data.user._key && data.thread.digestInMid
+                    if thread.toMid === user._key && thread.digestInToMid || thread.mid === user._key && thread.digestInMid
                       -text2 = '取消专栏加精'
                     else
                       -text2 = '在专栏加精'
@@ -130,6 +132,55 @@ block content
                     else
                       - text3 = '在专栏置顶'
                     a#topped(href='javascript:;' onclick='switchTInPersonalForum("#{data.thread._key}")' style='color: #CBDCEA') #{text3}
+                  else
+                    - var visibilityMF //MF=my forum
+                    - var digestMF
+                    - var topMF
+                    - var visibilityOF // of=others forum
+                    - var digestOF
+                    - var topOF
+                    if isMyForumMdr
+                      - var displayName = data.myForum.display_name
+                      if thread.hideInMid
+                        - visibilityMF = '在' + displayName + '显示'
+                      else
+                        - visibilityMF = '在' + displayName + '隐藏'
+                      if thread.digestInMid
+                        - digestMF = '在' + displayName + '取消加精'
+                      else
+                        - digestMF = '在' + displayName + '加精'
+                      if thread.toppedUsers && thread.toppedUsers.indexOf(data.myForum._key) > -1
+                        - topMF = '在' + displayName + '取消置顶'
+                      else
+                        - topMF = '在' + displayName + '置顶'
+                      a#MFVisibility(href='javascript:;' onclick='switchVInPersonalForum("#{thread._key}","#{displayName}","MF")' style='color: #CBDCEA') #{visibilityMF}
+                      span &nbsp;&nbsp;
+                      a#MFDigest(href='javascript:;' onclick='switchDInPersonalForum("#{thread._key}","#{displayName}","MF")' style='color: #CBDCEA') #{digestMF}
+                      span &nbsp;&nbsp;
+                      a#MFTopped(href='javascript:;' onclick='switchTInPersonalForum("#{thread._key}","#{displayName}","MF")' style='color: #CBDCEA') #{topMF}
+                      span &nbsp;&nbsp;
+
+                    if isOthersForumMdr
+                      - var displayName = data.othersForum.display_name
+                      if thread.hideInToMid
+                        - visibilityOF = '在' + displayName + '显示'
+                      else
+                        - visibilityOF = '在' + displayName + '隐藏'
+                      if thread.digestInToMid
+                        - digestOF = '在' + displayName + '取消加精'
+                      else
+                        - digestOF = '在' + displayName + '加精'
+                      if thread.toppedUsers && thread.toppedUsers.indexOf(data.othersForum._key) > -1
+                        - topOF = '在' + displayName + '取消置顶'
+                      else
+                        - topOF = '在' + displayName + '置顶'
+                      a#OFVisibility(href='javascript:;' onclick='switchVInPersonalForum("#{thread._key}","#{displayName}","OF")' style='color: #CBDCEA') #{visibilityOF}
+                      span &nbsp;&nbsp;
+                      a#OFDigest(href='javascript:;' onclick='switchDInPersonalForum("#{thread._key}","#{displayName}","OF")' style='color: #CBDCEA') #{digestOF}
+                      span &nbsp;&nbsp;
+                      a#OFTopped(href='javascript:;' onclick='switchTInPersonalForum("#{thread._key}","#{displayName}","OF")' style='color: #CBDCEA') #{topOF}
+                      span &nbsp;&nbsp;
+
             .ThreadTitle2(style="display:inline-block;width:16%;vertical-align:top;")
               .ThreadTitle22(style="border:1px solid #ddd;border-radius:10px;")
                 p.lighttext#airnum1(style="font-size:21px;text-align:center;margin-top:0px;margin-bottom:0px;") 文 号
