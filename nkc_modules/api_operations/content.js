@@ -865,8 +865,8 @@ table.configPersonalForum = {
     const key = params.key;
     return db.collection('personalForums').document(key)
       .then(pf => {
-        const moderators = pf.moderators;
-        if(moderators.indexOf(user.username) === -1) throw '权限错误';
+        const originalModerators = pf.moderators;
+        if(originalModerators.indexOf(user.username) === -1) throw '权限错误';
         return Promise.all(moderators.map(moderator => db.query(aql`
           FOR u IN users
             FILTER u.username == ${moderator}
