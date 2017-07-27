@@ -107,6 +107,12 @@ block content
                         button#recyclebtn.btn.btn-xs.btn-danger(onclick="recycleThread('#{data.thread._key}')") 送回收站
 
                 if user
+                  - var visibilityMF //MF=my forum
+                  - var digestMF
+                  - var topMF
+                  - var visibilityOF // of=others forum
+                  - var digestOF
+                  - var topOF
                   if(thread.fid && po.moveToPersonalForum)
                     a#moveToPersonal(href='javascript:;' onclick='moveToPersonalForum("#{thread._key}")') 移至个人版
                   if thread.toMid === user._key || thread.mid === user._key
@@ -132,13 +138,8 @@ block content
                     else
                       - text3 = '在专栏置顶'
                     a#topped(href='javascript:;' onclick='switchTInPersonalForum("#{data.thread._key}")' style='color: #CBDCEA') #{text3}
+
                   else
-                    - var visibilityMF //MF=my forum
-                    - var digestMF
-                    - var topMF
-                    - var visibilityOF // of=others forum
-                    - var digestOF
-                    - var topOF
                     if isMyForumMdr
                       - var displayName = data.myForum.display_name
                       if thread.hideInMid
@@ -160,26 +161,26 @@ block content
                       a#MFTopped(href='javascript:;' onclick='switchTInPersonalForum("#{thread._key}","#{displayName}","MF")' style='color: #CBDCEA') #{topMF}
                       span &nbsp;&nbsp;
 
-                    if isOthersForumMdr
-                      - var displayName = data.othersForum.display_name
-                      if thread.hideInToMid
-                        - visibilityOF = '在' + displayName + '显示'
-                      else
-                        - visibilityOF = '在' + displayName + '隐藏'
-                      if thread.digestInToMid
-                        - digestOF = '在' + displayName + '取消加精'
-                      else
-                        - digestOF = '在' + displayName + '加精'
-                      if thread.toppedUsers && thread.toppedUsers.indexOf(data.othersForum._key) > -1
-                        - topOF = '在' + displayName + '取消置顶'
-                      else
-                        - topOF = '在' + displayName + '置顶'
-                      a#OFVisibility(href='javascript:;' onclick='switchVInPersonalForum("#{thread._key}","#{displayName}","OF")' style='color: #CBDCEA') #{visibilityOF}
-                      span &nbsp;&nbsp;
-                      a#OFDigest(href='javascript:;' onclick='switchDInPersonalForum("#{thread._key}","#{displayName}","OF")' style='color: #CBDCEA') #{digestOF}
-                      span &nbsp;&nbsp;
-                      a#OFTopped(href='javascript:;' onclick='switchTInPersonalForum("#{thread._key}","#{displayName}","OF")' style='color: #CBDCEA') #{topOF}
-                      span &nbsp;&nbsp;
+                  if isOthersForumMdr
+                    - var displayName = data.othersForum.display_name
+                    if thread.hideInToMid
+                      - visibilityOF = '在' + displayName + '显示'
+                    else
+                      - visibilityOF = '在' + displayName + '隐藏'
+                    if thread.digestInToMid
+                      - digestOF = '在' + displayName + '取消加精'
+                    else
+                      - digestOF = '在' + displayName + '加精'
+                    if thread.toppedUsers && thread.toppedUsers.indexOf(data.othersForum._key) > -1
+                      - topOF = '在' + displayName + '取消置顶'
+                    else
+                      - topOF = '在' + displayName + '置顶'
+                    a#OFVisibility(href='javascript:;' onclick='switchVInPersonalForum("#{thread._key}","#{displayName}","OF")' style='color: #CBDCEA') #{visibilityOF}
+                    span &nbsp;&nbsp;
+                    a#OFDigest(href='javascript:;' onclick='switchDInPersonalForum("#{thread._key}","#{displayName}","OF")' style='color: #CBDCEA') #{digestOF}
+                    span &nbsp;&nbsp;
+                    a#OFTopped(href='javascript:;' onclick='switchTInPersonalForum("#{thread._key}","#{displayName}","OF")' style='color: #CBDCEA') #{topOF}
+                    span &nbsp;&nbsp;
 
             .ThreadTitle2(style="display:inline-block;width:16%;vertical-align:top;")
               .ThreadTitle22(style="border:1px solid #ddd;border-radius:10px;")
