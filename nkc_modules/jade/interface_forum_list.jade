@@ -1,0 +1,7 @@
+-var defaultColor = 'orange'
+ul.list-group.nkc-transform-box
+  for forum in forums
+    li.list-group-item
+      a.ForumThreadHasImage(href='/f/#{forum._key}' title='#{forum.description}' style='background-color: #{forum.color? forum.color : defaultColor}') #{forum.display_name}
+      for cForum in forum.children
+        a.ForumThreadHasImage(href='/f/#{cForum._key}' title='#{cForum.description}' style='background-color: #{cForum.color ? cForum.color : defaultColor}') #{cForum.display_name}

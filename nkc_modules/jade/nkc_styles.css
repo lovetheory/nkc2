@@ -1576,3 +1576,14 @@ margin-left: 5px;
   }
 }
 /*new editor*/
+
+.nkc-transform-box {
+  display: inline-block;
+  width: 50%;
+}
+@media screen and (max-width: 768px) {
+  .nkc-transform-box {
+    display: block;
+    width: 50%;
+  }
+}
