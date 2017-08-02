@@ -1579,11 +1579,76 @@ margin-left: 5px;
 
 .nkc-transform-box {
   display: inline-block;
-  width: 50%;
+  width: 48%;
 }
+
+.nkc-figure {
+  width: 16%;
+  display: inline-block;
+  border: 1px solid transparent;
+  position: relative;
+}
+
+.nkc-figure-2 {
+  width: 12%;
+  display: inline-block;
+  border: 4px solid transparent;
+  position: relative;
+}
+
+@media screen and (max-width: 1000px) {
+  .nkc-figure {
+    width: 32%;
+  }
+  .nkc-figure-2 {
+    width: 24.5%;
+  }
+}
+
 @media screen and (max-width: 768px) {
   .nkc-transform-box {
     display: block;
-    width: 50%;
+    width: 100%;
   }
+  .nkc-figure {
+    width: 49%;
+  }
+  #indexForumList {
+    display: none;
+  }
+}
+
+.img-4-3 {
+  width: 100%;
+  height: 0;
+  padding-bottom: 75%;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.nkc-figure-text {
+  font-size: 10px;
+  background-color: black;
+  color: white;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+.nkc-table-row {
+  display: table-row;
+  margin: 1px 1px;
+}
+
+.nkc-inline-table {
+  display: inline-table;
+  border-collapse: separate;
+  border-spacing: 10px;
+}
+
+.nkc-bubble {
+  border-radius: 2px;
+  color: white;
 }

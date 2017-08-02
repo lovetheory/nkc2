@@ -448,3 +448,18 @@ function switchTInPersonalForum(tid, name, type) {
   }
 }
 
+function adSwitch(tid) {
+  var btn = geid('adBtn');
+  var nowIsAd = '取消首页置顶';
+  var nowNormal = '首页置顶';
+  nkcAPI('adSwitch', {tid: tid})
+    .then(function() {
+      if(btn.innerHTML === nowIsAd) {
+        btn.innerHTML = nowNormal;
+        return
+      }
+      btn.innerHTML = nowIsAd;
+    })
+    .catch(screenTopWarning)
+}
+

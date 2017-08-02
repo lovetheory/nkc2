@@ -18,6 +18,8 @@ var certificates={
 
     permittedOperations:{
       deleteElseQuestions:true,
+      popPFSwitch: true,
+      adSwitch: true
     },
     // see end of api_operations.js
   },
@@ -246,6 +248,7 @@ var certificates={
       non_public:false,
     },
     permittedOperations:{
+      viewLatest: true,
       viewPersonalActivities: true,
       viewEditor:true,
       viewThread:true,

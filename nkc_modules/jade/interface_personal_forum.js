@@ -244,3 +244,18 @@ var submitConfig = function(key) {
       screenTopWarning(e.detail);
     })
 };
+
+var popPFSwitch = function(id) {
+  var btn = geid('ppfBtn');
+  var nowPopular = '取消热门';
+  var nowNormal = '推至热门';
+  nkcAPI('popPFSwitch', {pfID: id})
+    .then(function() {
+      if(btn.innerHTML === nowPopular) {
+        btn.innerHTML = nowNormal;
+        return
+      }
+      btn.innerHTML = nowPopular;
+    })
+    .catch(screenTopWarning)
+};

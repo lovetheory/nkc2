@@ -70,7 +70,7 @@ table.forgotPassword = {
 
       //generate a random token and save it
       var token = Math.floor((Math.random()*(65536*65536))).toString(16)
-      var mc = new layer.BaseDao('mai lcodes')
+      var mc = new layer.BaseDao('mailcodes')
       return mc.save({
         token,
         toc:Date.now(),

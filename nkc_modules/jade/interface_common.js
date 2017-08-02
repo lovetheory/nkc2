@@ -486,3 +486,19 @@ function recommendPostSwitch(e, targetPid) {
     screenTopWarning('未定义的操作.')
   }
 }
+
+function forumListVisibilitySwitch() {
+  var button = geid('FLVS');
+  var indexForumList = geid('indexForumList');
+  var value = button.innerHTML;
+  var visible = '隐藏学院';
+  var invisible = '显示学院';
+  if(value === visible) {
+    indexForumList.style.display = 'none';
+    button.innerHTML = invisible;
+    return true
+  }
+  indexForumList.style.display = 'block';
+  button.innerHTML = visible;
+  return true
+}

@@ -1,9 +1,8 @@
 //ImageMagick wrapper
 
-
-
 const spawn = require('child_process').spawn; //introduce the spawn function
 const exec = require('child_process').exec; //introduce the exec function
+const fs = require('fs');
 
 var im = {};
 var settings = require('./server_settings');
@@ -192,5 +191,55 @@ im.thumbnailify = function(path,dest,callback){
     dest,
   ]);
 }
+
+im.generateAdPost = function(path, name) {
+  return new Promise((resolve, reject) => {
+    fs.stat(path, (err, stats) => {
+      if(err)
+        resolve(null);
+      resolve(stats)
+    })
+  })
+    .then(stats => {
+      if(stats)
+        return run_async('magick', [
+          'convert',
+          path,
+          '-resize',
+          '640',
+          name
+        ]);
+      return run_async('magick', [
+        'convert',
+        './resources/site_specific/ad_default.jpg',
+        '-resize',
+        '640',
+        name
+      ])
+    })
+    .then(str => {
+      return run_async(`magick identify -format %G ${name}`)
+    })
+    .then(size => {
+      const arr = size.stdout.split('x');
+      const height = arr[1];
+      return run_async('magick', [
+        'convert',
+        name,
+        '-crop',
+        `640x360+0+${Math.round(height/2 - 180)}`,
+        name
+      ])
+    })
+};
+
+im.removeFile = function(path) {
+  return new Promise((resolve, reject) => {
+    fs.unlink(path, err => {
+      if(err) reject(err);
+      resolve(true)
+    })
+  })
+};
 
 module.exports = im;
