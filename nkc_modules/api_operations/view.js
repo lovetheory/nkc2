@@ -432,7 +432,7 @@ table.viewPanorama = {
   }
 }
 
-table.viewHome = {
+table.viewLatest = {
   init: function () {
     queryfunc.createIndex('threads', {
       fields: ['digest'],
@@ -466,7 +466,7 @@ table.viewHome = {
     var data = defaultData(params);
     var contentClasses = {};
     let count;
-    data.template = jadeDir + 'interface_home.jade';
+    data.template = jadeDir + 'interface_latest_threads.jade';
     data.navbar = {highlight: 'home'};
     for (let param in params.contentClasses) {
       if (params.contentClasses[param] === true) {
@@ -475,35 +475,12 @@ table.viewHome = {
     }
     let content = params.content || 'all';
     data.content = content;
-    return db.query(aql`
-      FOR t IN threads
-      LET f = DOCUMENT(forums, t.fid)
-      FILTER t.disabled != true && t.fid != '97' && t.digest == true
-      && t.fid != 'recycle' && f.visibility == true
-      sort t.toc desc
-      let forum = document(forums,t.fid)
-      FILTER HAS(${contentClasses}, forum.class)
-      limit 100
-      let oc = document(posts,t.oc)
-      let lm = document(posts,t.lm)
-      let ocuser = document(users,t.uid)
-
-    return merge(t,{oc:oc,lm:lm,forum,ocuser})
-    `)
-      .then(cursor => cursor.all())
-      .then(res => {
-        let temp = [];
-        for (let i = 0; i < 10; i++) {
-          let j = 100 - i;
-          let index = Math.floor(Math.random() * j);
-          temp.push(res[index]);
-          res.splice(index, 1);
-        }
-        data.newestDigestThreads = temp;
-
         //add homepage posts      17-03-13  lzszone
-        return params.digest ? global.personalThreadsCount.digest : global.personalThreadsCount.normal
-      })
+    return Promise.resolve(
+      params.digest ?
+        global.personalThreadsCount.digest :
+        global.personalThreadsCount.normal
+      )
       .then(length => {
         count = length;
         return queryfunc.getVisibleChildForums(params)
@@ -542,7 +519,7 @@ table.viewHome = {
           `)
           .then(arr => {
             let temp = 0;
-            for(ele of arr._result) {
+            for(let ele of arr._result) {
               temp += ele;
             }
             return temp
@@ -578,7 +555,7 @@ table.viewHome = {
         `)
           .then(arr => {
             let temp = 0;
-            for(ele of arr._result) {
+            for(let ele of arr._result) {
               temp += ele;
             }
             return temp
@@ -607,78 +584,184 @@ table.viewHome = {
             `)
           })
       })
-      /*  return params.digest ? global.allThreadsCount.dCount : global.allThreadsCount.nCount
+      .then(res => {
+        data.indexThreads = res._result;
+        return queryfunc.getIndexForumList(contentClasses);
       })
-        .then(length => {
-          var paging = new layer.Paging(params.page).getPagingParams(length);
-          data.paging = paging;
-          data.digest = params.digest;
-          data.sortby = params.sortby;
-          if(params.content === 'personal') {
-            return db.query(aql`
-              LET result = (FOR t IN threads
-                SORT t.${params.sortby? 'toc' : 'tlm'} DESC
-                FILTER t.${params.digest? 'digest' :'disabled'} == ${params.digest? true : null} &&
-                t.fid == null
-                LET oc = DOCUMENT(posts, t.oc)
-                LET ocuser = DOCUMENT(users, oc.uid)
-                LET lm = DOCUMENT(posts, t.lm)
-                LET lmuser = DOCUMENT(users, lm.uid)
-                RETURN MERGE(t, {
-                  oc,
-                  ocuser,
-                  lm,
-                  lmuser
-                })
-              )
-              RETURN {
-                threads: SLICE(result, ${params.page * settings.paging.perpage}, ${settings.paging.perpage}),
-                length: LENGTH(result)
-              }
-            `)
-              .then(res => {
-                let result = res._result[0];
-                let paging = new layer.Paging(params.page).getPagingParams(result.length);
-                data.paging = paging;
-                return {
-                  _result: result.threads,
-                }
-              })
-          }
-          else if(params.content === 'all') {
-            let paging = new layer.Paging(params.page).getPagingParams();
-            data.paging = paging;
-            return db.query(aql`
-              FOR t IN threads
-                SORT t.${params.sortby? 'toc' : 'tlm'} DESC
-                FILTER t.${params.digest? 'digest' : 'disabled'}==${params.digest? true : null}
-                LET forum = DOCUMENT(forums, t.fid)
-                FILTER ((HAS(${contentClasses}, forum.class) || forum.isVisibleForNCC == true) &&
-                forum.visibility == true) || t.fid == null
-                LIMIT ${paging.start}, ${paging.count}
-                LET oc = DOCUMENT(posts, t.oc)
-                LET ocuser = DOCUMENT(users, oc.uid)
-                LET lm = DOCUMENT(posts, t.lm)
-                LET lmuser = DOCUMENT(users, lm.uid)
-                RETURN MERGE(t, {oc, lm, forum, ocuser, lmuser})
-            `)
-          }
-          return queryfunc.getForumThreads(params, paging)
-        })*/
-        .then(res => {
-          data.indexThreads = res._result;
-          return queryfunc.getActiveUsers();
-        })
-        .then(res => {
-          data.activeUsers = res._result;
-          return queryfunc.getIndexForumList(contentClasses);
-        })
-        .then(res => {
-          data.indexForumList = res._result;
-          data.fTarget = 'home'
-        })
-        .then(() => data)
-        .catch(e => console.log(e))
+      .then(res => {
+        data.indexForumList = res._result;
+        return data
+      })
+      .catch(e => console.log(e))
+  }
+};
+
+table.viewHome = {
+  init: function () {
+    queryfunc.createIndex('threads', {
+      fields: ['digest'],
+      type: 'hash',
+      unique: 'false',
+      sparse: 'true',
+    })
+    queryfunc.createIndex('threads', {
+      fields: ['disabled', 'toc'],
+      type: 'skiplist',
+      unique: 'false',
+      sparse: 'false',
+    })
+
+    queryfunc.createIndex('threads', {
+      fields: ['digest', 'toc'],
+      type: 'skiplist',
+      unique: 'false',
+      sparse: 'false',
+    })
+
+    queryfunc.createIndex('threads', {
+      fields: ['disabled', 'fid', 'tlm'],
+      type: 'skiplist',
+      unique: 'false',
+      sparse: 'false'
+    })
+
+  },
+  operation: params => {
+    let data = defaultData(params);
+    let contentClasses = {};
+    let serverSettings;
+    data.template = jadeDir + 'interface_home.jade';
+    data.navbar = {highlight: 'home'};
+    for (let param in params.contentClasses) {
+      if(params.contentClasses.hasOwnProperty(param)) {
+        if (params.contentClasses[param] === true) {
+          contentClasses[param] = true;
+        }
+      }
+    }
+    data.content = params.content || 'all';
+    return db.query(aql`
+      FOR t IN threads
+        LET f = DOCUMENT(forums, t.fid)
+        FILTER t.disabled == null && t.digest == true != '97' && f.visibility == true
+        && t.fid && t.fid != 'recycle'
+        sort t.toc desc
+        let forum = document(forums,t.fid)
+        FILTER HAS(${contentClasses}, forum.class)
+        let oc = document(posts,t.oc)
+        LET rs = oc.r || []
+        LET resources = (FOR r IN rs
+          LET resource = DOCUMENT(resources, r)
+          FILTER POSITION(['jpg', 'png', 'svg', 'jpeg'], resource.ext, false)
+          RETURN resource
+        )
+        FILTER LENGTH(resources) > 0
+        LIMIT 12
+        let lm = document(posts,t.lm)
+        let ocuser = document(users,t.uid)
+        return merge(t,{oc:oc,lm:lm,forum,ocuser, src: resources[0]._key})
+    `)
+      .then(cursor => cursor.all())
+      .then(res => {
+        /*let temp = [];
+        for (let i = 0; i < 12; i++) {
+          let j = 200 - i;
+          let index = Math.floor(Math.random() * j);
+          temp.push(res[index]);
+          res.splice(index, 1);
+        }*/
+        data.newestDigestThreads = res;
+        return db.query(aql`
+          FOR t IN threads
+            SORT t.tlm DESC
+            FILTER t.fid == null
+            limit 10
+            LET oc = DOCUMENT(posts, t.oc)
+            LET ocuser = DOCUMENT(users, oc.uid)
+            LET lm = DOCUMENT(posts, t.lm)
+            LET lmuser = DOCUMENT(users, lm.uid)
+            RETURN MERGE(t, {
+              oc,
+              ocuser,
+              lm,
+              lmuser
+            })
+        `)
+      })
+      .then(cursor => cursor.all())
+      .then(ts => {
+        data.latestPFThreads = ts;
+        return queryfunc.getVisibleChildForums(params)
+      })
+      .then(arr => {
+        return db.query(aql`
+          FOR t IN threads
+          SORT t.tlm DESC
+            FILTER POSITION(${arr}, t.fid)
+            limit ${settings.indexLatestThreadsLength}
+            LET forum = DOCUMENT(forums, t.fid)
+            LET oc = DOCUMENT(posts, t.oc)
+            LET ocuser = DOCUMENT(users, oc.uid)
+            LET lm = DOCUMENT(posts, t.lm)
+            LET lmuser = DOCUMENT(users, lm.uid)
+            RETURN MERGE(t, {
+              forum,
+              oc,
+              ocuser,
+              lm,
+              lmuser
+            })
+        `)
+      })
+      .then(res => {
+        data.latestThreads = res._result;
+        return queryfunc.getActiveUsers();
+      })
+      .then(res => {
+        data.activeUsers = res._result;
+        return queryfunc.getIndexForumList(contentClasses);
+      })
+      .then(res => {
+        data.indexForumList = res._result;
+        data.fTarget = 'home';
+        return db.query(aql`
+          RETURN DOCUMENT(settings, 'system')
+        `)
+      })
+      .then(cursor => cursor.next())
+      .then(doc => {
+        if(!doc) {
+          return db.collection('settings').save({
+            ads: [],
+            popPersonalForums: [],
+            _key: 'system'
+          })
+            .then(() => db.collection('settings').document('system'))
+        }
+        return doc
+      })
+      .then(sts => {
+        serverSettings = sts;
+        return db.query(aql`
+          FOR key IN ${serverSettings.ads}
+            LET thread = DOCUMENT(threads, key)
+            LET post = DOCUMENT(posts, thread.oc)
+            RETURN MERGE(thread, {post})
+        `)
+      })
+      .then(cursor => cursor.all())
+      .then(ads => {
+        data.ads = ads;
+        return db.query(aql`
+          FOR key IN ${serverSettings.popPersonalForums}
+            LET pf = DOCUMENT(personalForums, key)
+            RETURN pf
+        `)
+      })
+      .then(cursor => cursor.all())
+      .then(pfs => data.popPersonalForums = pfs)
+      .then(() => data)
+      .catch(e => console.log(e))
   }
 };
 
@@ -914,10 +997,12 @@ table.viewThread = {
         data.replytarget = 't/' + tid
 
         return thread.accumulateCountHit()
-          .then(res => {
-            return data
-          })
       })
+      .then(() => db.collection('settings').document('system'))
+      .then(settings => {
+        data.ads = settings.ads;
+      })
+      .then(() => data)
   },
   requiredParams: {
     tid: String,
@@ -1293,9 +1378,14 @@ table.viewPersonalForum = {
         return getForumList(params)
       })
       .then(forumlist => {
-        data.forumlist = forumlist
-        return data
+        data.forumlist = forumlist;
+        return db.collection('settings').document('system')
       })
+      .then(settings => {
+        data.popPersonalForums = settings.popPersonalForums;
+        return true
+      })
+      .then(() => data)
   }
 }
 

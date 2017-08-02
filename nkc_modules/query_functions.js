@@ -46,7 +46,8 @@ queryfunc.db_init = function(){
     'personalForums',
     'usersSubscribe',
     'usersBehavior',
-    'activeusers'
+    'activeusers',
+    'settings'
   ];
   return db.listCollections()
     .then(collections => {

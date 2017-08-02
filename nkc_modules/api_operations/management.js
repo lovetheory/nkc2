@@ -9,6 +9,7 @@ var queryfunc = require('../query_functions')
 var AQL = queryfunc.AQL
 const db = queryfunc.getDB();
 const aql = queryfunc.getAql();
+const im = require('../im_functions');
 
 var layer = require('../layer')
 
@@ -536,5 +537,77 @@ table.switchDInPersonalForum = {
         })
     }
     throw '权限不足'
+  }
+};
+
+table.popPFSwitch = {
+  operation: params => {
+    const pfID = params.pfID;
+    return db.collection('settings').document('system')
+      .then(settings => {
+        const popPersonalForums = settings.popPersonalForums;
+        const index = popPersonalForums.findIndex((elem, i, arr) => elem === pfID);
+        if(index > -1) {
+          popPersonalForums.splice(index, 1);
+          return popPersonalForums
+        }
+        if(popPersonalForums.length === 8)
+          popPersonalForums.shift();
+        popPersonalForums.push(pfID);
+        return popPersonalForums
+      })
+      .then(arr => db.collection('settings').update('system', {popPersonalForums: arr}))
+  }
+};
+
+table.adSwitch = {
+  operation: params => {
+    const tid = params.tid;
+    return db.collection('settings').document('system')
+      .then(settings => {
+        const ads = settings.ads;
+        const index = ads.findIndex((elem, i, arr) => elem === tid);
+        if(index > -1) {
+          ads.splice(index, 1);
+          return im.removeFile(`./resources/ad_posts/${tid}.jpg`)
+            .then(() => ads)
+        }
+        if(ads.length === 6)
+          ads.shift();
+        ads.push(tid);
+        return db.query(aql`
+            LET thread = DOCUMENT(threads, ${tid})
+            LET post = DOCUMENT(posts, thread.oc)
+            LET rs = post.r || []
+            LET resources = (
+              FOR r IN rs
+                LET resource = DOCUMENT(resources, r)
+                FILTER POSITION(['jpg', 'png', 'svg', 'jpeg'], resource.ext, false)
+                return resource
+            )
+            RETURN resources[0]
+          `)
+          .then(cursor => cursor.next())
+          .then(resource => {
+            if(resource) {
+              const name = './resources/ad_posts/' + tid + '.jpg';
+              const path = './resources/upload' + resource.path;
+              return im.generateAdPost(path, name)
+            }
+            return db.query(aql`
+                LET thread = DOCUMENT(threads, ${tid})
+                LET user = DOCUMENT(users, thread.uid)
+                RETURN user._key
+              `)
+              .then(cursor => cursor.next())
+              .then(uid => {
+                let path = './resources/newavatar/' + uid + '.jpg';
+                const name = './resources/ad_posts/' + tid + '.jpg';
+                return im.generateAdPost(path, name)
+              })
+          })
+          .then(() => ads)
+      })
+      .then(arr => db.collection('settings').update('system', {ads: arr}))
   }
 };

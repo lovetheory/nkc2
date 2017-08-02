@@ -21,7 +21,7 @@ block title
 
 
 block content
-  -var isModerator = data.user? (data.forum.moderators.indexOf(data.user.username) > -1) : false
+  -var isModerator = user? (forum.moderators.indexOf(user.username) > -1) : false
 
   .container-fluid(style='max-width:1400px;')
     .row
@@ -29,6 +29,9 @@ block content
         .panel
             .row
               .col-xs-12
+                if data.permittedOperations['popPFSwitch']
+                  -var isPopular = data.popPersonalForums.indexOf(forum._key) > -1
+                  button.btn.btn-default#ppfBtn(onclick="popPFSwitch('#{data.forum._key}')") #{isPopular ? '取消热门' : '推至热门'}
                 form(role='form')
                   - var description = data.forum.description
                   - var announcement = data.forum.announcement

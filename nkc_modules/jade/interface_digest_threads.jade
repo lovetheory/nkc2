@@ -1,0 +1,5 @@
+for thread in newestDigestThreads
+  a.nkc-figure(href='/t/#{thread._key}')
+    .img-4-3
+      img(src='/r/#{thread.src}' width='100%')
+    div.nkc-figure-text &nbsp;#{thread.oc.t}

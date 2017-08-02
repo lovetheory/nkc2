@@ -14,61 +14,44 @@ block content
   .container-fluid(style='max-width: 1400px;')
     .row
       .col-md-9
-        .panel(style='height: 310px; border: none; box-shadow: none;')
-          -var target = 'index'
-          include gallery
-          -var threadlist = data.newestDigestThreads
-          -var listtitle = '推荐阅读'
-          include interface_recommend_thread
-        .clearfix
+        .panel(style='width: 100%;')
+          -var ads = data.ads
+            include interface_ads
 
-        div(style='width: 100%; margin-bottom: 13px;')
-          p(style='color: orange; padding: 5px 5px;')
-            span(style='font-size: 17px;') 学院分区
-            span(style='color: grey;') (发帖请进入对应分区)
-          for cForum in data.indexForumList
-            a(style='margin: 2px 5px;' href='/f/#{cForum._key}') #{cForum.display_name}
-          include interface_easy_post
         .panel
-          nav
-            include interface_navigation_paging.jade
+          div.hidden-sm.hidden-md.hidden-lg
+            span(style='color: silver;') 学院&nbsp;&nbsp;&nbsp;
+            button#FLVS.btn.btn-default.btn-sm(onclick='forumListVisibilitySwitch();' style='float: right;') 显示学院
+            .clearfix
+          -var forums = data.indexForumList
+            div#indexForumList
+              include interface_forum_list
 
-            - var paging = data.paging
-            - var digest = data.digest
-            - var class_str_all = digest?'':'active'
-            - var class_str_digest = digest?'active':''
-            - var cat = data.cat
-            - var sortby = data.sortby
-            - var class_str_sortby_toc = sortby?'active':''
-            - var class_str_sortby_tlm = sortby?'':'active'
+        .panel
+          include interface_easy_post
 
-            ul.pagination.NavigationPaging
-              li(class='#{data.content == "all" ? "active" : ""}')
-                a(href='?&content=all#{data.digeset ? "&digest=true" : ""}#{data.sortby ? "&sortby=toc" : ""}') 所有
-              li(class='#{data.content == "forum"? "active" : ""}')
-                a(href='?&content=forum#{data.digest? "&digest=true":""}#{data.sortby? "&sortby=toc":""}') 板块
-              li(class='#{data.content == "personal"? "active" : ""}')
-                a(href='?&content=personal#{data.digeset? "&digest=true": ""}#{data.sortby? "&sortby=toc":""}') 专栏
-
-            ul.pagination.NavigationPaging
-              - var page = paging?paging.page:null
-              li(class="#{class_str_all}")
-                a(href='?&content=#{data.content}#{data.sortby? "&sortby=toc": ""}') 全部
-
-              li(class="#{class_str_digest}")
-                a(href='?&content=#{data.content}&digest=true#{data.sortby? "&sortby=toc":""}') 精华
-
-            ul.pagination.NavigationPaging
-              li(class='#{class_str_sortby_tlm}')
-                a(href='?&content=#{data.content}#{data.digest? "&digest=true":""}') 复序
-              li(class='#{class_str_sortby_toc}')
-                a(href='?&content=#{data.content}#{data.digest? "&digest=true":""}&sortby=toc') 帖序
-
-          hr.hrNarrowSpace
-          for thread in data.indexThreads
+        .panel
+          div
+            span(style='color: silver;') 最新帖&nbsp;&nbsp;&nbsp;
+            a(style='float: right;' href='/latest?&content=forum') 更多>>>>
+            .clearfix
+          for thread in data.latestThreads
             include interface_index_singlethread
-          nav
-            include interface_navigation_paging.jade
+
+        .panel
+          -var newestDigestThreads = data.newestDigestThreads
+            include interface_digest_threads
+        .panel
+          div
+            span(style='color: silver;') 最新专栏&nbsp;&nbsp;&nbsp;
+            a(style='float: right;' href='/latest?&content=personal') 更多>>>>
+            .clearfix
+          for thread in data.latestPFThreads
+            include interface_index_singlethread
+
+        .panel
+          -var popPersonalForums = data.popPersonalForums
+            include interface_pop_pfs
 
       .col-md-3.hidden-xs.hidden-sm
         .nkcpanel
@@ -100,11 +83,8 @@ block content
                 if child.description != null
                   -var description = child.description
                   p(style='color: grey;') &nbsp;&nbsp;#{description}
-      .row
-        .col-md-12
-          include nkc_friendlies.jade
+
 block scripts
   script(src='/interface_common.js')
-  script(src='/gallery.js')
   script(type='text/javascript') $(document).ready(function () {if($(window).width() < 900){$('.ForumThreadStat').css('font-size','7px');}});
   script(src='/interface_easy_post.js')

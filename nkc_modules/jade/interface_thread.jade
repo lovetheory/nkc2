@@ -82,6 +82,10 @@ block content
                 
                 if po.addThreadToCart
                   a(href="javascript:cartThread('#{data.thread._key}')") 帖入管理车
+
+                if data.permittedOperations['adSwitch']
+                  -var isAd = data.ads.indexOf(thread._key) > -1
+                  a#adBtn(href='javascript:;' onclick="adSwitch('#{thread._key}')") #{isAd ? '取消首页置顶' : '首页置顶'}
                   
                 if (po.setDigest)
                   if thread.digest
