@@ -1587,11 +1587,15 @@ margin-left: 5px;
   display: inline-block;
   border: 1px solid transparent;
   position: relative;
+  height: 0;
 }
 
 .figure-16-9 {
-  height: 0;
-  padding-bottom: 9%;
+  padding-bottom: 9.2%;
+}
+
+.figure-4-3 {
+  padding-bottom: 12.5%;
 }
 
 .nkc-figure-2 {
@@ -1599,17 +1603,24 @@ margin-left: 5px;
   display: inline-block;
   border: 4px solid transparent;
   position: relative;
+  height: 0;
+  padding-bottom: 12.5%;
 }
 
 @media screen and (max-width: 1000px) {
   .nkc-figure {
     width: 33.33%;
   }
+  .figure-4-3 {
+    padding-bottom: 25%;
+  }
   .figure-16-9 {
     padding-bottom: 18.7%;
   }
   .nkc-figure-2 {
     width: 25%;
+    height: 0;
+    padding-bottom: 25%;
   }
 }
 
@@ -1617,6 +1628,9 @@ margin-left: 5px;
   .nkc-transform-box {
     display: block;
     width: 100%;
+  }
+  .figure-4-3 {
+    padding-bottom: 37.5%;
   }
   .figure-16-9 {
     padding-bottom: 28.1%;
@@ -1627,14 +1641,6 @@ margin-left: 5px;
   #indexForumList {
     display: none;
   }
-}
-
-.img-4-3 {
-  width: 100%;
-  height: 0;
-  padding-bottom: 75%;
-  border-radius: 5px;
-  overflow: hidden;
 }
 
 .nkc-figure-text {

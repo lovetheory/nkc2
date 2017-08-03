@@ -590,9 +590,14 @@ table.viewLatest = {
       })
       .then(res => {
         data.indexForumList = res._result;
-        return data
       })
-      .catch(e => console.log(e))
+      .then(() => {
+        if(params.user)
+          return queryfunc.getUsersThreads(params.user._key);
+        return [];
+      })
+      .then(ts => data.userThreads = ts)
+      .then(() => data)
   }
 };
 
@@ -760,8 +765,13 @@ table.viewHome = {
       })
       .then(cursor => cursor.all())
       .then(pfs => data.popPersonalForums = pfs)
+      .then(() => {
+        if(params.user)
+         return queryfunc.getUsersThreads(params.user._key);
+        return [];
+      })
+      .then(ts => data.userThreads = ts)
       .then(() => data)
-      .catch(e => console.log(e))
   }
 };
 
@@ -894,8 +904,14 @@ table.viewForum = {
       })
       .then(res => {
         data.newestDigestThreads = res;
-        return data
       })
+      .then(() => {
+        if(params.user)
+          return queryfunc.getUsersThreads(params.user._key);
+        return [];
+      })
+      .then(ts => data.userThreads = ts)
+      .then(() => data)
   },
   requiredParams: {
     fid: String,
@@ -1002,6 +1018,12 @@ table.viewThread = {
       .then(settings => {
         data.ads = settings.ads;
       })
+      .then(() => {
+        if(params.user)
+          return queryfunc.getUsersThreads(params.user._key);
+        return [];
+      })
+      .then(ts => data.userThreads = ts)
       .then(() => data)
   },
   requiredParams: {
@@ -1385,9 +1407,15 @@ table.viewPersonalForum = {
         data.popPersonalForums = settings.popPersonalForums;
         return true
       })
+      .then(() => {
+        if(params.user)
+          return queryfunc.getUsersThreads(params.user._key);
+        return [];
+      })
+      .then(ts => data.userThreads = ts)
       .then(() => data)
   }
-}
+};
 
 table.viewLogout = {
   operation: function (params) {

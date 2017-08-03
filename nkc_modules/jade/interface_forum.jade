@@ -62,7 +62,7 @@ block content
                           -var stylestr = 'color:'+gpf.color
                           
                           a(href='#{url}' class='parentforum' style='#{stylestr}') #{name} /
-                        
+
                           each f,findex in group.forumgroup
                             -var backcolor=f.color||gpf.color
                             -var name = f.display_name
@@ -108,6 +108,8 @@ block content
             if forumIsParent
               //if forum is category
               .ForumNavigation1(style='margin-bottom:5px;')
+                a(href='/latest?&content=forum' style='color: orange; font-size: 16px; padding: 3px; border-radius: 3px;') 全部
+                span(style='font-size: 18px; color: grey;') /&nbsp;
                 each group,index in data.forumlist
                   -var gpf = group.parentforum
                   -var name = gpf.display_name
@@ -260,7 +262,13 @@ block content
                 //.ForumThreadList
                 //  each thread,index in forum.threads
                 //    include interface_forum_singlethread.jade
-
+          if data.user
+            .nkcpanel
+              a(href='/m/#{data.user._key}') 我的主题
+              br
+              br
+              for thread in data.userThreads
+                include interface_users_latest_threads
 
           .nkcpanel
             ul.HomeFriendlyLink
