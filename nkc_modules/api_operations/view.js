@@ -643,8 +643,8 @@ table.viewHome = {
     return db.query(aql`
       FOR t IN threads
         LET f = DOCUMENT(forums, t.fid)
-        FILTER t.disabled == null && t.digest == true != '97' && f.visibility == true
-        && t.fid && t.fid != 'recycle'
+        FILTER t.disabled == null && t.digest == true && t.fid != '97' && f.visibility == true
+        && t.fid != 'recycle'
         sort t.toc desc
         let forum = document(forums,t.fid)
         FILTER HAS(${contentClasses}, forum.class)
@@ -656,21 +656,21 @@ table.viewHome = {
           RETURN resource
         )
         FILTER LENGTH(resources) > 0
-        LIMIT 12
+        LIMIT 200
         let lm = document(posts,t.lm)
         let ocuser = document(users,t.uid)
         return merge(t,{oc:oc,lm:lm,forum,ocuser, src: resources[0]._key})
     `)
       .then(cursor => cursor.all())
       .then(res => {
-        /*let temp = [];
-        for (let i = 0; i < 12; i++) {
+        let temp = [];
+        for (let i = 0; i < 6; i++) {
           let j = 200 - i;
           let index = Math.floor(Math.random() * j);
           temp.push(res[index]);
           res.splice(index, 1);
-        }*/
-        data.newestDigestThreads = res;
+        }
+        data.newestDigestThreads = temp;
         return db.query(aql`
           FOR t IN threads
             SORT t.tlm DESC
