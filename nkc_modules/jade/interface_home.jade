@@ -70,19 +70,14 @@ block content
                 科创题库现已面向1学术分以上会员开放。为科创入站测试[添加你的题目](/api/operation?&operation=viewQuestions)吧！
         -var active_user_title = '一周活跃用户'
         include interface_active_users
-        for cForum in data.indexForumList
+
+        if data.user
           .nkcpanel
-            div(style='text-align: center; font-size: 16px; margin-left: -15px;')
-              div(style='background-color: #{cForum.color}').HomeForumTitleCircle
-              a(href='f/#{cForum._key}') #{cForum.display_name}
-            hr.hrNarrowSpace
-            for child in cForum.children
-              div
-                a(href='f/#{child._key}' style='font-size: 15px;') #{child.display_name}
-                span(style='color: #d6571c;') (新:#{child.count_posts_today} 总:#{child.count_posts})
-                if child.description != null
-                  -var description = child.description
-                  p(style='color: grey;') &nbsp;&nbsp;#{description}
+            a(href='/m/#{data.user._key}') 我的主题
+            br
+            br
+            for thread in data.userThreads
+              include interface_users_latest_threads
 
 block scripts
   script(src='/interface_common.js')

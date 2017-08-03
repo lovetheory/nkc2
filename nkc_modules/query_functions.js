@@ -594,5 +594,18 @@ queryfunc.rebuildActiveUsers = () => {
     .then(result => `\n刷新了活跃用户集合, 有${result.created}条数据被创建`)
 };
 
+queryfunc.getUsersThreads = uid => db.query(aql`
+  FOR t IN threads
+    SORT t.tlm DESC
+    FILTER t.uid == ${uid} && t.fid != 'recycle'
+    LET lm = DOCUMENT(posts, t.lm)
+    LET forum = DOCUMENT(forums, t.fid)
+    LET lmuser = DOCUMENT(users, lm.uid)
+    LET oc = DOCUMENT(posts, t.oc)
+    LET ocuser = DOCUMENT(users, oc.uid)
+    LIMIT 8
+    RETURN MERGE(t, {lm, forum, oc, ocuser, lmuser})
+`)
+  .then(cursor => cursor.all());
 
 module.exports = queryfunc;

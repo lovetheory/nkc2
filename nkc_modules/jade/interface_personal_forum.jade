@@ -29,9 +29,6 @@ block content
         .panel
             .row
               .col-xs-12
-                if data.permittedOperations['popPFSwitch']
-                  -var isPopular = data.popPersonalForums.indexOf(forum._key) > -1
-                  button.btn.btn-default#ppfBtn(onclick="popPFSwitch('#{data.forum._key}')") #{isPopular ? '取消热门' : '推至热门'}
                 form(role='form')
                   - var description = data.forum.description
                   - var announcement = data.forum.announcement
@@ -81,6 +78,9 @@ block content
                       a(href='javascript:;' onclick='nkcAPI("unbanUser", {uid: "#{data.targetUser._key}"}).then(jalert).catch(jwarning)') 解除封禁
                     else
                       a(href='javascript:;' onclick='nkcAPI("banUser", {uid: "#{data.targetUser._key}"}).then(jalert).catch(jwarning)') &nbsp;封禁此人&nbsp;
+                  if data.permittedOperations['popPFSwitch']
+                    -var isPopular = data.popPersonalForums.indexOf(forum._key) > -1
+                    a#ppfBtn(href='javascript:;' onclick="popPFSwitch('#{data.forum._key}')") #{isPopular ? '取消热门' : '推至热门'}
                   if isModerator
                     div
                       a#enterManagementMode.btn.btn-default(href='javascript:;' onclick='switchManagementMode()') 管理
@@ -190,6 +190,15 @@ block content
           include interface_thread_userpatch.jade
         //-var active_user_title = '学院活跃用户'
         //include interface_active_users
+
+        if data.user && data.user._key !== data.targetUser._key
+          .nkcpanel
+            a(href='/m/#{data.user._key}') 我的主题
+            br
+            br
+            for thread in data.userThreads
+              include interface_users_latest_threads
+
         .nkcpanel
           ul.HomeFriendlyLink
             include nkc_footer_links.jade

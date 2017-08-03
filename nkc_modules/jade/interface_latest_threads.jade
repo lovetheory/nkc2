@@ -15,9 +15,10 @@ block content
     .row
       .col-md-9
         .panel
-          span(style='color: grey;') 全部&nbsp;/&nbsp;&nbsp;
+          span(style='color: orange; font-size: 16px; padding: 3px; border-radius: 3px;') 全部&nbsp;
+          span(style='color: grey; font-size: 18px;') /
           for cForum in data.indexForumList
-            a(style='margin: 2px 5px;' href='/f/#{cForum._key}') #{cForum.display_name}
+            a(style='margin: 2px 5px; color: #909090;' href='/f/#{cForum._key}') #{cForum.display_name}
 
         .panel
           include interface_easy_post
@@ -78,6 +79,14 @@ block content
             if data.permittedOperations.viewQuestions
               :markdown
                 科创题库现已面向1学术分以上会员开放。为科创入站测试[添加你的题目](/api/operation?&operation=viewQuestions)吧！
+
+        if data.user
+          .nkcpanel
+            a(href='/m/#{data.user._key}') 我的主题
+            br
+            br
+            for thread in data.userThreads
+              include interface_users_latest_threads
       .row
         .col-md-12
           include nkc_friendlies.jade
