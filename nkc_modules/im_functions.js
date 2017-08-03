@@ -231,6 +231,13 @@ im.generateAdPost = function(path, name) {
         name
       ])
     })
+    .then(() => run_async('magick',[
+      'convert',
+      name,
+      '-resize',
+      '640x360',
+      name
+    ]))
 };
 
 im.removeFile = function(path) {

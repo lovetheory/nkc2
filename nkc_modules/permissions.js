@@ -18,8 +18,7 @@ var certificates={
 
     permittedOperations:{
       deleteElseQuestions:true,
-      popPFSwitch: true,
-      adSwitch: true
+
     },
     // see end of api_operations.js
   },
@@ -50,6 +49,8 @@ var certificates={
       unbanUser:true,
 
       modifyThreadType:true,
+      popPFSwitch: true,
+      adSwitch: true
     }
   },
 
