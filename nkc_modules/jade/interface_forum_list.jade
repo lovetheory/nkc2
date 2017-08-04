@@ -15,7 +15,7 @@
           a(href='/f/#{forum._key}' title='#{forum.description}' style='font-size: 18px; color: black;') &nbsp;#{forum.display_name}
         div(style='display: table-cell;')
           for cForum in forum.children
-            a.ForumThreadHasImage(href='/f/#{cForum._key}' title='#{cForum.description}' style='color: black;background-color: white; font-size: 12px;')
+            a.ForumThreadHasImage(href='/f/#{cForum._key}' title='#{cForum.description}' style='color: black;background-color: white; font-size: 14px;')
               span.nkc-bubble(style='background-color: #{cForum.color? cForum.color: defaultColor}') &nbsp;#{cForum.count_posts_today}&nbsp;
               span #{cForum.display_name}
 
@@ -32,6 +32,6 @@
           a(href='/f/#{forum._key}' title='#{forum.description}' style='font-size: 18px; color: black;') &nbsp;#{forum.display_name}
         div(style='display: table-cell;')
           for cForum in forum.children
-            a.ForumThreadHasImage(href='/f/#{cForum._key}' title='#{cForum.description}' style='color: black; background-color: white; font-size: 12px;')
+            a.ForumThreadHasImage(href='/f/#{cForum._key}' title='#{cForum.description}' style='color: black; background-color: white; font-size: 14px;')
               span.nkc-bubble(style='background-color: #{cForum.color? cForum.color: defaultColor}') &nbsp;#{cForum.count_posts_today}&nbsp;
               span #{cForum.display_name}

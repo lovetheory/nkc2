@@ -1590,7 +1590,7 @@ margin-left: 5px;
 
 .nkc-transform-box {
   display: inline-block;
-  width: 50%;
+  width: 49%;
 }
 
 .nkc-figure {
@@ -1655,7 +1655,7 @@ margin-left: 5px;
 }
 
 .nkc-figure-text {
-  font-size: 10px;
+  font-size: 14px;
   background-color: rgba(0, 0, 0, 0.5);
   color: white;
   position: absolute;
@@ -1663,6 +1663,8 @@ margin-left: 5px;
   width: 100%;
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
+  height: 20px;
+  overflow: hidden;
 }
 
 .nkc-table-row {
