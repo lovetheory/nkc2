@@ -235,18 +235,6 @@ function widerArea(){
   geid('WiderArea').style.display = 'none'
 }
 
-window.onscroll = function () {
-  var top =  $(this).scrollTop();
-  if(top>700){
-    $("#topB").css("display","block");
-    $("#topB").css("position","fixed"); //固定div的位置
-    $("#topB").css("top","40%");
-  }else{
-    //$("#topB").css("position","relative");
-    $("#topB").css("display","none");
-  }
-}
-
 function switchVInPersonalForum(tid, name, type) {
   var hidden;
   var visible;
