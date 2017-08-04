@@ -48,7 +48,6 @@ block content
                     .displayShit.ForumName #{display_name}&nbsp;&nbsp;&nbsp;&nbsp;
                     //a.btn.btn-default.btn-sm.displayShit(href='javascript: ;' onclick='switchManagementMode()') 设置
                     input.configShit#forumName(style='font-size: 16px; display: none;' value='#{forum.display_name}' name='forumName' placeholder='请输入专栏名称')
-                  .clearfix
                   .form-group
                     if description
                       span.displayShit #{'介绍: ' + description}
@@ -84,6 +83,10 @@ block content
                   if isModerator
                     div
                       a#enterManagementMode.btn.btn-default(href='javascript:;' onclick='switchManagementMode()') 管理
+
+        div
+          input(type='file' onchange='PFBannerOnchange();')
+          img(src='/pfb/#{forum._key}')
 
         include interface_easy_post
 
@@ -179,7 +182,7 @@ block content
               if data.replytarget && !hasChildren
                 a.btn.btn-default(style="margin-top:13px" href='/editor?target=#{data.replytarget}') 发表新帖
 
-
+          .div#bm
 
 
       .col-md-3.hidden-xs.hidden-sm
@@ -202,6 +205,12 @@ block content
         .nkcpanel
           ul.HomeFriendlyLink
             include nkc_footer_links.jade
+
+        .nkcpanel2#topB(style='margin-left: -25px; position: fixed; top: 50%; display: block;')
+          button(class="glyphicon glyphicon-chevron-up btn btn-sm btn-default" style="margin-bottom:10px; padding: 10px 3px;" onclick="javascript:window.scrollTo(0,0);")
+          br
+          button(class="glyphicon glyphicon-chevron-down btn btn-sm btn-default" onclick="location.href='#bm'" style="padding: 10px 3px;")
+
 
     include debug_output.jade
 

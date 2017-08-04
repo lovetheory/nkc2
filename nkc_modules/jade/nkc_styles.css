@@ -745,10 +745,12 @@ font-size: 14pt;
 }
 
 .ThreadPostBody{
+  margin-left: 60px;
   font-size: 16px;
   line-height: 1.9;
   letter-spacing: 0.3px;
   word-wrap: break-word;
+  margin-top: 4px;
 }
 
 .ThreadPostBody img{
@@ -1331,6 +1333,15 @@ margin-left: 5px;
     box-shadow: none;
     border-radius: 0;
   }
+
+  .ThreadPostBody {
+    margin-left: 0;
+    margin-top: 0;
+  }
+
+  .fixThread {
+    height: 60px;
+  }
 }
 
 .nkcshade{box-shadow: rgba(0, 0, 0, 0.14) 0px 3px 10px;}
@@ -1579,13 +1590,13 @@ margin-left: 5px;
 
 .nkc-transform-box {
   display: inline-block;
-  width: 48%;
+  width: 49%;
 }
 
 .nkc-figure {
   width: 16.66%;
   display: inline-block;
-  border: 1px solid transparent;
+  overflow: hidden;
   position: relative;
   height: 0;
 }
@@ -1601,9 +1612,9 @@ margin-left: 5px;
 .nkc-figure-2 {
   width: 12.5%;
   display: inline-block;
-  border: 4px solid transparent;
   position: relative;
   height: 0;
+  overflow: hidden;
   padding-bottom: 12.5%;
 }
 
@@ -1644,7 +1655,7 @@ margin-left: 5px;
 }
 
 .nkc-figure-text {
-  font-size: 10px;
+  font-size: 14px;
   background-color: rgba(0, 0, 0, 0.5);
   color: white;
   position: absolute;
@@ -1652,6 +1663,8 @@ margin-left: 5px;
   width: 100%;
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
+  height: 20px;
+  overflow: hidden;
 }
 
 .nkc-table-row {

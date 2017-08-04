@@ -53,6 +53,8 @@ block content
           -var popPersonalForums = data.popPersonalForums
             include interface_pop_pfs
 
+        div#bm
+
       .col-md-3.hidden-xs.hidden-sm
         .nkcpanel
           include forum_logo_wisdom
@@ -78,6 +80,13 @@ block content
             br
             for thread in data.userThreads
               include interface_users_latest_threads
+
+        .nkcpanel2#topB(style='margin-left: -25px; position: fixed; top: 50%; display: block;')
+          button(class="glyphicon glyphicon-chevron-up btn btn-sm btn-default" style="margin-bottom:10px; padding: 10px 3px;" onclick="javascript:window.scrollTo(0,0);")
+          br
+          button(class="glyphicon glyphicon-chevron-down btn btn-sm btn-default" onclick="location.href='#bm'" style="padding: 10px 3px;")
+
+
 
 block scripts
   script(src='/interface_common.js')
