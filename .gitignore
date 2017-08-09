@@ -4,13 +4,7 @@
 /tmp2
 /tmp_avatar
 /ssl
-/resources/avatar
-/resources/newavatar
-/resources/newavatar_small
-/resources/im_test
-/resources/upload
-/resources/thumbnails
-/resources/site_specific
+/resources
 /secret.txt
 /favicon.psd
 /.idea
