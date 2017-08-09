@@ -15,8 +15,6 @@ if !post.disabled || (post.disabled && po.enablePost)
           - var title = user?getUserDescription(user):''
           a(href='/m/#{uid}' title='#{title}')
             img.ThreadPostAvatar(src='/avatar/#{post.uid}')
-          if(post.t && post.t != '' && index != 0)
-            span.dirt.ThreadPostTitle #{post.t}
         div(style='margin-left: 60px;')
           span.ThreadPostTitleMeta
             a.ThreadPostTitleUsername(href='/m/#{uid}') #{user?user.username:''}
@@ -71,6 +69,8 @@ if !post.disabled || (post.disabled && po.enablePost)
                 //a(href='/t/#{data.thread._key}#{page?"?&page="+data.paging.page.toString():""}##{post._key}').lighttext /#{floornumber}
                 a(href='/t/#{data.thread._key}#{page?"?&page="+data.paging.page.toString():""}##{post._key}').lighttext #{floornumber}阶
             .clearfix
+    if(post.t && post.t != '' && index != 0)
+      div.dirt.ThreadPostTitle.ThreadPostBody #{post.t}
     div.ThreadPostBody(style="#{postHeight?'overflow-y:scroll;max-height:'+postHeight:''}")!= experimental_render(post)
 
       if post.toc!=post.tlm

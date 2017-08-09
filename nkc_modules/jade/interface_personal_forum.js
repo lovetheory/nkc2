@@ -259,3 +259,66 @@ var popPFSwitch = function(id) {
     })
     .catch(screenTopWarning)
 };
+
+function post_upload(target,data,callback)
+{
+  var xhr = new XMLHttpRequest();
+
+  xhr.upload.onprogress = function(e) {
+    var percentComplete = (e.loaded / e.total) * 100;
+    console.log("Uploaded " + percentComplete + "%");
+  };
+
+  xhr.onreadystatechange=function()
+  {
+    if (xhr.readyState==4)
+    {
+      if(xhr.status>=200&&xhr.status<300){
+        callback(null,xhr.responseText);
+      }else {
+        callback(true,xhr.status.toString()+' '+xhr.responseText);
+      }
+    }
+  }
+  xhr.open("POST","/api/"+target.toString().toLowerCase(),true);
+  //xhr.setRequestHeader("Content-type","application/json");
+  xhr.send(data);
+}
+
+function upload_callback(err, back) {
+  if(err){
+    screenTopWarning('failure: '+back);
+  }else{
+    screenTopAlert('上传成功,请刷新查看');
+  }
+}
+
+function uploadForumAvatar() {
+  var ele = geid('personalForumAvatarUploader');
+  var event = document.createEvent('mouseEvents');
+  event.initEvent('click', false, true);
+  ele.dispatchEvent(event);
+}
+
+function avatarOnChange() {
+  var ele = geid('personalForumAvatarUploader');
+  if(!ele.files[0])return screenTopWarning('pick one, okay?');
+  var formData = new FormData();
+  formData.append('file', ele.files[0]);
+  post_upload('/personalForumAvatar',formData,upload_callback);
+}
+
+function bannerOnChange() {
+  var ele = geid('personalForumBannerUploader');
+  if(!ele.files[0])return screenTopWarning('pick one, okay?');
+  var formData = new FormData();
+  formData.append('file', ele.files[0]);
+  post_upload('/personalForumBanner',formData,upload_callback);
+}
+
+function uploadForumBanner() {
+  var ele = geid('personalForumBannerUploader');
+  var event = document.createEvent('mouseEvents');
+  event.initEvent('click', false, true);
+  ele.dispatchEvent(event);
+}

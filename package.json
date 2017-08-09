@@ -24,7 +24,7 @@
     "cookie-signature": "^1.0.6",
     "diff": "^2.2.3",
     "elasticsearch": "^12.0.1",
-    "express": "^4.13.4",
+    "express": "^4.15.4",
     "express-session": "^1.14.2",
     "express-urlrewrite": "^1.2.0",
     "forever": "^0.15.1",

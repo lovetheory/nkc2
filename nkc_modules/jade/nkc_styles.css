@@ -402,6 +402,14 @@ vertical-align: middle;
   display: inline-block;
   vertical-align: middle;
 }
+.forum-name{
+  /* margin-top: 10px; */
+  /* margin-bottom: 0px; */
+  font-size: 18px;
+  font-weight: bold;
+  display: inline-block;
+  vertical-align: middle;
+}
 .ForumsListBody{
   margin-right: 20px;
   /* display: inline-block; */
@@ -1682,4 +1690,13 @@ margin-left: 5px;
   border-radius: 2px;
   color: white;
   margin-right: 2px;
+}
+
+.configShit input {
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+.configShit textarea {
+  border-radius: 4px;
+  border: 1px solid #ccc;
 }
