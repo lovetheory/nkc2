@@ -249,4 +249,23 @@ im.removeFile = function(path) {
   })
 };
 
+im.bannerify = function(path,callback){
+  //avatar square width
+  const size = '1050x260';
+  return run_async('magick',[ //please make sure ImageMagick exists in PATH
+    'convert',
+    path,
+    '-strip',
+    '-thumbnail',
+    `${size}^>`,
+    '-gravity',
+    'Center',
+    '-quality',
+    '90',
+    '-crop',
+    `${size}+0+0`,
+    path,
+  ])
+};
+
 module.exports = im;

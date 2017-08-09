@@ -863,6 +863,9 @@ table.configPersonalForum = {
     const announcement = params.announcement.trim();
     const moderators = params.moderators.map(moderator => moderator.trim());
     const key = params.key;
+    if(forumName.length > 10) throw '专栏名称不能大于10个字';
+    if(announcement.length > 500) throw '公告内容不能大于500字';
+    if(description.length > 30) throw '专栏介绍不能大于30字';
     return db.collection('personalForums').document(key)
       .then(pf => {
         const originalModerators = pf.moderators;

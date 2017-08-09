@@ -165,4 +165,62 @@ api.post('/avatar', avatar_upload.single('file'), function(req,res,next){
   .catch(next)
 });
 
+const UOPFA = multer(settings.uploadOptionsPersonalForumAvatar);
+api.post('/personalForumAvatar', UOPFA.single('file'), function(req, res, next) {
+  if(!req.file)return next('shit not even a file. fuck.');
+
+  report(req.file);
+  if([
+      'image/jpeg',
+      'image/png',
+    ].indexOf(req.file.mimetype)<0)//if not the right type of file
+    return next('wrong mimetype for avatar...jpg or png only.');
+  //obtain user first
+  if(!req.user)return next('who are you? log in first.');
+
+  //otherwise should we allow..
+
+  var upath = req.file.path
+  im.avatarify(upath) // avatarify in place
+    .then((back)=>{
+      var destination_file_small = settings.personalForumAvatarPath+req.user._key+'.jpg';
+      return nkcfs.copy(upath,destination_file_small,{clobber:true})
+    })
+    .then((back)=>{
+      res.obj = 'success';
+      return
+    })
+    .then(next)
+    .catch(next)
+});
+
+const UOPFB = multer(settings.uploadOptionsPersonalForumBanner);
+api.post('/personalForumBanner', UOPFB.single('file'), function(req, res, next) {
+  if(!req.file)return next('shit not even a file. fuck.');
+
+  report(req.file);
+  if([
+      'image/jpeg',
+      'image/png',
+    ].indexOf(req.file.mimetype)<0)//if not the right type of file
+    return next('wrong mimetype for avatar...jpg or png only.');
+  //obtain user first
+  if(!req.user)return next('who are you? log in first.');
+
+  //otherwise should we allow..
+
+  var upath = req.file.path
+  im.bannerify(upath) // avatarify in place
+    .then((back)=>{
+      var destination_file = settings.personalForumBannerPath+req.user._key+'.jpg';
+      return nkcfs.copy(upath,destination_file,{clobber:true})
+    })
+    .then((back)=>{
+      res.obj = 'success';
+      return
+    })
+    .then(next)
+    .catch(next)
+});
+
 module.exports = api;

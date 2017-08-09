@@ -5,6 +5,9 @@ require('./nkc_modules/globalData')();
 var settings = require('./nkc_modules/server_settings');
 require('./nkc_modules/helper')();
 
+function headerController(res, path, stat) {
+  res.setHeader('Last-Modified', stat.mtime.toDateString())
+}
 dash()
 report(settings.server.copyright)
 if(development)report('server secret is: '+settings.cookie_secret.slice(0,32)+"...")
@@ -114,7 +117,6 @@ for(i in settings.root_serve_static){
 
   if(settings.root_serve_static[i].map){
     var map = settings.root_serve_static[i].map
-
     nkc.use(map,express.static(to,st))
   } else {
     nkc.use(express.static(to,st));
@@ -134,7 +136,8 @@ nkc.use('/index.*',function(req,res){
 //default avatar redirection
 nkc.use(rewrite('/api/avatar/*','/default/default_avatar_small.gif')) //if avatar not served
 nkc.use(rewrite('/api/avatar_small/*','/default/default_avatar_small.gif')) //if avatar not served
-
+nkc.use(rewrite('/api/pf_avatars/*', '/default/default_pf_avatar.jpg'));
+nkc.use(rewrite('/api/pf_banners/*', '/default/default_pf_banner.jpg'));
 nkc.use('/default/',express.static('resources/default_things/',settings.static_settings)) //staticify
 
 //ikc statics serving
