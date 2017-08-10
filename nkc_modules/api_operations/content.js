@@ -14,6 +14,7 @@ var permissions = require('../permissions')
 let operations = require('../api_operations');
 const db = queryfunc.getDB();
 const aql = queryfunc.getAql();
+const contentLength = require('../tools').contentLength;
 
 var table = {};
 module.exports = table;
@@ -863,9 +864,9 @@ table.configPersonalForum = {
     const announcement = params.announcement.trim();
     const moderators = params.moderators.map(moderator => moderator.trim());
     const key = params.key;
-    if(forumName.length > 10) throw '专栏名称不能大于10个字';
-    if(announcement.length > 500) throw '公告内容不能大于500字';
-    if(description.length > 30) throw '专栏介绍不能大于30字';
+    if(contentLength(forumName) > 20) throw '专栏名称不能大于20个字节(ASCII)';
+    if(contentLength(announcement) > 1000) throw '公告内容不能大于1000字节(ASCII)';
+    if(contentLength(description) > 60) throw '专栏介绍不能大于60字节(ASCII)';
     return db.collection('personalForums').document(key)
       .then(pf => {
         const originalModerators = pf.moderators;
