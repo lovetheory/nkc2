@@ -295,9 +295,7 @@ function upload_callback(err, back) {
 
 function uploadForumAvatar() {
   var ele = geid('personalForumAvatarUploader');
-  var event = document.createEvent('mouseEvents');
-  event.initEvent('click', false, true);
-  ele.dispatchEvent(event);
+  ele.click();
 }
 
 function avatarOnChange() {
@@ -318,7 +316,5 @@ function bannerOnChange() {
 
 function uploadForumBanner() {
   var ele = geid('personalForumBannerUploader');
-  var event = document.createEvent('mouseEvents');
-  event.initEvent('click', false, true);
-  ele.dispatchEvent(event);
+  ele.click();
 }

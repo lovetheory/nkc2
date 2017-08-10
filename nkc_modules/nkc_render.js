@@ -55,12 +55,12 @@ function nkc_render(options){
         display: true
       }
     },
-    onTagAttr: (tag, name, value, isWhiteAttr) => {
+    onTagAttr: function(tag, name, value, isWhiteAttr) {
       if(isWhiteAttr) {
         if(tag === 'a' && name === 'href') {
-          let valueHandled = value.replace(/\s+/g, '');
+          var valueHandled = value.replace(/\s+/g, '');
           valueHandled = valueHandled.replace('javascript', '');
-          return `href="${valueHandled}"`
+          return "href=" + valueHandled;
         }
       }
     }

@@ -255,9 +255,8 @@ im.bannerify = function(path,callback){
   return run_async('magick',[ //please make sure ImageMagick exists in PATH
     'convert',
     path,
-    '-strip',
-    '-thumbnail',
-    `${size}^>`,
+    '-resize',
+    `${size}^`,
     '-gravity',
     'Center',
     '-quality',
