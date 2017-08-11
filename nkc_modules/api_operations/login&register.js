@@ -13,6 +13,7 @@ const aql = queryfunc.getAql();
 var apifunc = require('../api_functions')
 var layer = require('../layer')
 var nm = require('nodemailer')
+const contentLength = require('../tools').contentLength;
 
 try{
   var mailSecrets = require('../mailSecrets.js');
@@ -203,7 +204,7 @@ table.userRegister = {
       email:params.email,
       regcode:params.regcode,
     }
-
+    if(contentLength(username) > 30) throw '用户名不能大于30字节(ASCII)';
     regex_validation.validate(params)
 
     if(params.password!==params.password2)throw '您两次输入的密码不匹配'
@@ -306,7 +307,8 @@ table.userPhoneRegister = {
       phone:params.phone,
       mcode:params.mcode/*,
       icode:params.icode*/
-    }
+    };
+    if(contentLength(userobj.username) > 30) throw '用于名不能大于30字节(ASCII)';
     let uid;
     let user;
     var time = Date.now() - 2*60*1000  //2分钟之内的验证码
@@ -377,6 +379,7 @@ table.userMailRegister = {
       email: params.email//,
       //icode: params.icode
     };
+    if(contentLength(userobj.username) > 30) throw '用户名不能大于30字节(ASCII)';
     const code = params.regCode;
     const c = new layer.BaseDao('answersheets', code);
     return c.load()

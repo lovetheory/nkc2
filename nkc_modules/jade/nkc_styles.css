@@ -1700,3 +1700,6 @@ margin-left: 5px;
   border-radius: 4px;
   border: 1px solid #ccc;
 }
+.question p {
+  display: inline;
+}

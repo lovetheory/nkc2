@@ -9,7 +9,7 @@
     when 'ans'
       p
         text.yellow 问答题：
-        .ThreadPostBody!= markdown_safe(q.question)
+        span.question!= markdown_safe(q.question)
       p.yellow
         text 答案：
         text.green #{q.answer}
@@ -17,7 +17,7 @@
     when 'ch4'
       p
         text.yellow 选择题：
-        .ThreadPostBody!= markdown_safe(q.question)
+        span.question!= markdown_safe(q.question)
 
       p
         text.yellow 答案：
