@@ -57,8 +57,9 @@ block content
             .panel-body
               meta(id='number_of_questions' value='#{data.exam.qarr.length}')
               each q,index in data.exam.qarr
-                span #{index+1}.
-                .ThreadPostBody!= markdown_safe(q.question)
+                div
+                  span #{index+1}.
+                  span.question!= markdown_safe(q.question)
 
                 case q.type
                   when 'ans'

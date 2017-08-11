@@ -35,8 +35,7 @@ context.setupIndex= ()=>{
         threads:{ // post 字段
           properties:{
             _key:{
-              type:'integer',
-              analyzer:'smartcn',
+              type:'string',
             },
             c:{ //content 内容
               type:'string',
@@ -76,7 +75,7 @@ context.setupIndex= ()=>{
   .then(res=>{
     console.log('setup ended');
   })
-  .catch(console.err)
+  .catch(console.error)
 }
 
 function mapWithPromise(arr,func,k){
