@@ -50,7 +50,7 @@ function assemblePostObject(){  //bbcode , markdown
   var post = {
     //t:gv('title').trim(),
 
-    c:gv('ReplyContent').trim(),
+    c:gv('ReplyContent'),
     l:"pwbb",
   }
 

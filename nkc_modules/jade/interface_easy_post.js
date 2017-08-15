@@ -170,7 +170,7 @@ var onlyMOnChange = function(that) {
 
 var onPost = function(that) {
   return function() {
-    var content = that.content.value.trim();
+    var content = that.content.value;
     var title = that.title.value.trim();
     var target = that.type + '/' + that.key;
     var language = gv('lang').toLowerCase().trim();

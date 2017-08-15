@@ -1781,7 +1781,7 @@ table.viewSMS = {
         limit 40
         let frompost = document(posts,r.frompid)
         let fromuser = document(users,frompost.uid)
-        let touser = document(users,r.touid)
+        let touser = document(users,@uid)
         let topost = document(posts,r.topid)
 
         filter !frompost.disabled
@@ -1793,15 +1793,29 @@ table.viewSMS = {
       })
       .then(arr => {
         data.replylist = arr;
+        return db.query(aql`
+          FOR i IN invites
+            FILTER i.invitee == ${uid}
+            SORT i.toc DESC
+            LIMIT 20
+            LET post = DOCUMENT(posts, i.pid)
+            LET user = DOCUMENT(users, i.inviter)
+            LET thread = DOCUMENT(threads, post.tid)
+            LET oc = DOCUMENT(posts, thread.oc)
+            RETURN MERGE(i, {post, user, oc})
+        `)})
+      .then(cursor => cursor.all())
+      .then(invites => {
+        data.invites = invites;
         var psnl = new layer.Personal(uid)
         return psnl.load()
-          .then(psnl => {
-            data.lastVisitTimestamp = psnl.model.message_lastvisit || 0
-            return psnl.update({new_message: 0, message_lastvisit: Date.now()})
-          })
-          .then(psnl => {
-            return data
-          })
+      })
+      .then(psnl => {
+        data.lastVisitTimestamp = psnl.model.message_lastvisit || 0
+        return psnl.update({new_message: 0, message_lastvisit: Date.now()})
+      })
+      .then(psnl => {
+        return data
       })
   }
 }

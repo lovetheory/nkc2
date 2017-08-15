@@ -4,7 +4,7 @@ var nkc_editor = function(){
   editor.assemblePostObject = function(){
     var post = {
       t:gv('title').trim(),
-      c:gv('content').trim(),
+      c:gv('content'),
       l:gv('lang').toLowerCase().trim(),
       cat:gv('cat').trim()
     }

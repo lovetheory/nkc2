@@ -17,22 +17,41 @@ block content
                 -var isNew = r.toc>data.lastVisitTimestamp
                 .SMSTableItem
                   .SMSFirstRow
-                    span(class='#{isNew?"reddish":""}') #{dateTimeString(r.toc)} 
+                    span(class='#{isNew?"reddish":""}') #{dateTimeString(r.toc)}
                     span #{fromNow(r.toc)}
-                    
+
                     span
                       - var uid = r.fromuser._key
                       - var avatar = '/avatar_small/' + uid
                         a(href='/m/#{uid}')
                           img.HomeThreadAvatar(src='#{avatar}')
-                          
-                    span #{r.fromuser.username} 回复了 #{r.touser.username} 的 
+
+                    span #{r.fromuser.username} 回复了 #{r.touser.username} 的
                       a(href='#{goto}') #{digestText(r.topost.t||''+'-'+r.topost.c,20)+'...'}
-                  
+
                   .SMSSecondRow
                     .SMSSentByOthers
                       a(href='#{goto}' target='_blank') #{digestText(r.frompost.t||''+'-'+r.frompost.c)}
-                  
+
+      if data.invites && data.invites.length
+        .col-xs-12
+          .nkcpanel(style='max-height: 300px; overflow-x: scroll;')
+            h4 @你的
+            .SMSTable
+              for invite in data.invites
+                -var isNew = invite.toc > data.lastVisitTimestamp
+                .SMSTableItem
+                  .SMSFirstRow
+                    span(class='#{isNew ? "reddish" : ""}') #{dateTimeString(invite.toc)}
+                      span #{fromNow(invite.toc)}
+                      span
+                        a(href='/m/#{invite.inviter}')
+                          img.HomeThreadAvatar(src='/avatar_small/#{invite.inviter}')
+                        a(href='/m/#{invite.inviter}') #{invite.user.username}&nbsp;
+                        span 在帖子
+                        a(href='/t/#{invite.oc.tid}##{invite.pid}') #{invite.oc.t}&nbsp;
+                        span 中@了你
+
       .col-xs-12
         .nkcpanel
           h4 短消息
