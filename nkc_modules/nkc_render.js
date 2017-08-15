@@ -1,6 +1,5 @@
 var in_browser = (typeof document !== 'undefined');
 
-
 //render source to HTML.
 function nkc_render(options){
   var render = {};
@@ -58,8 +57,7 @@ function nkc_render(options){
     onTagAttr: function(tag, name, value, isWhiteAttr) {
       if(isWhiteAttr) {
         if(tag === 'a' && name === 'href') {
-          var valueHandled = value.replace(/\s+/g, '');
-          valueHandled = valueHandled.replace('javascript', '');
+          var valueHandled = value.replace('javascript:', '');
           return "href=" + valueHandled;
         }
       }
@@ -383,7 +381,7 @@ function nkc_render(options){
       html =
       XBBCODE.process({
         text:html,
-        escapeHtml:false,
+        escapeHtml:true,
       })
 
       .html
@@ -401,7 +399,6 @@ function nkc_render(options){
       '<a href="$1" target="_blank" style="font-size:20px;">点击此处查看视频</a>')
       .replace(/\[(\/?)strike]/g,'<$1s>')
       .replace(/  /g,'&nbsp&nbsp')
-
       html = attachment_filter(html,post)
       // now post.r are marked with _used:true
     }
@@ -429,14 +426,14 @@ function nkc_render(options){
   }
 
   var markdown_experimental = function(post){
-    var parsed = commonreader.parse(post.c);
+    var content = post.c;
+    var parsed = commonreader.parse(content);
     var rendered = commonwriter.render(parsed)
     rendered = attachment_filter(rendered,post)
 
     rendered= custom_xss_process(rendered);
 
     rendered = render.hiddenReplaceHTML(rendered);
-
     return rendered;
   }
 
@@ -466,6 +463,14 @@ function nkc_render(options){
       renderedHTML = plain_escape(content)
     }
     renderedHTML = linkAlienate(renderedHTML) //please check linkAlienate()
+    var atUsers = post.atUsers;
+    if(atUsers && atUsers.length > 0) {
+      for(var i in atUsers) {
+        var user = atUsers[i];
+        var match = '@' + user.username.replace(/[^\u0000-\u00FF]/g,function(a){return escape(a).replace(/(%u)(\w{4})/gi,"&#x$2;")}) + ' ';
+        renderedHTML = renderedHTML.replace(match, '<a href="/m/' + user.uid + '">' + match + '</a>')
+      }
+    }
     return renderedHTML
   }
 

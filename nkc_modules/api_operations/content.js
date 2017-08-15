@@ -25,13 +25,20 @@ function createReplyRelation(frompid,topid){
   return operations.table.createReplyRelation.operation({frompid,topid})
 }
 
+var incrementPsnl = function(key){
+  var psnl = new layer.Personal(key)
+  return psnl.load()
+    .then(psnl=>{
+      return psnl.update({new_message:(psnl.model.new_message||0)+1})
+    })
+}
+
 //post to a given thread.
 var postToThread = function(params,tid,user, type){
   let pid;
   var post = params.post
   var tobject = null
   let timestamp = Date.now();
-
   //check existence
   return queryfunc.doc_load(tid,'threads')
   .then((th)=>{
@@ -42,6 +49,46 @@ var postToThread = function(params,tid,user, type){
   })
   .then((newpid) => {
     //create a new post
+    pid = newpid;
+    let content = post.c;
+    let existUsers = [];
+    const matchedArray = content.match(/@([^@\s]*)\s/g); //match @someone
+    if(matchedArray) {
+      let promises = matchedArray.map(str => {
+        const userName = str.slice(1, -1); //slice the @ and [\s] in reg
+        return apifunc.get_user_by_name(userName)
+          .then(u => {
+            let foundUser = u[0];
+            if(foundUser) {
+              existUsers.push({username: foundUser.username, uid: foundUser._key});
+              db.collection('invites').save({
+                pid,
+                invitee: foundUser._key,
+                inviter: user._key,
+                toc: timestamp
+              })
+                .then(() => incrementPsnl(foundUser._key))
+            }
+          })
+      });
+      return Promise.all(promises)
+        .then(() => {
+          const newpost = { //accept only listed attribute
+            _key:newpid,
+            tid,
+            toc:timestamp,
+            tlm:timestamp,
+            c:content,
+            t:post.t,
+            l:post.l,
+            uid:user._key,
+            username:user.username,
+            ipoc:params._req.iptrim,
+            atUsers: existUsers
+          };
+          return queryfunc.doc_save(newpost,'posts')
+        })
+    }
     var newpost = { //accept only listed attribute
       _key:newpid,
       tid,
@@ -65,19 +112,19 @@ var postToThread = function(params,tid,user, type){
     return queryfunc.doc_save(newpost,'posts')
     //insert the new post into posts collection
   })
-  .then(saveResult=>{
+  .then(saveResult=> {
     pid = saveResult._key
     //update thread object to make sync
     var updatedThread = null
 
     //extract quotation if exists
     var found = post.c.match(/\[quote=(.*?),(.*?)]/)
-    if(found&&found[2]){
+    if (found && found[2]) {
       apifunc.get_user_by_name(found[1]).then(users => {
         var ptuser = users[0];
-        if(ptuser._key !== tobject.uid) {
+        if (ptuser._key !== tobject.uid) {
           report(found)
-          createReplyRelation(pid,found[2])
+          createReplyRelation(pid, found[2])
         }
       });
     }
@@ -193,12 +240,14 @@ var postToPost = function(params,pid,user){ //modification.
   var fid;
   var timestamp,newpost={},original_key,tid;
   let origthread;
-
+  let content = post.c;
+  let originPost;
   return queryfunc.doc_load(pid,'posts')
   .catch(err=>{
     throw 'target post does not exist.'
   })
   .then(original_post=>{
+    originPost = original_post;
     original_key = original_post._key
     tid = original_post.tid
     author = original_post.uid
@@ -248,7 +297,7 @@ var postToPost = function(params,pid,user){ //modification.
       //else we have to check: do you own the original forum?
       return origforum.testModerator(params.user.username)
     })
-    .then(()=>{
+    .then(()=> {
       timestamp = Date.now();
 
       newpost.tlm = timestamp
@@ -272,9 +321,40 @@ var postToPost = function(params,pid,user){ //modification.
       original_post.pid = original_key;
       original_post._key = undefined;
 
-      //now save original to history;
-      return queryfunc.doc_save(original_post,'histories')
+      let existUsers = [];
+      const matchedArray = content.match(/@([^@\s]*)\s/g); //match @someone
+      const usersAlreadyInformed = originPost.atUsers || [];
+      if (matchedArray) {
+        let promises = matchedArray.map(str => {
+          const userName = str.slice(1, -1); //slice the @ and [\s] in reg
+          if (!(usersAlreadyInformed.find(obj => obj.username === userName))) {
+            return apifunc.get_user_by_name(userName)
+              .then(u => {
+                let foundUser = u[0];
+                if (foundUser) {
+                  existUsers.push({username: foundUser.username, uid: foundUser._key});
+                  db.collection('invites').save({
+                    pid,
+                    invitee: foundUser._key,
+                    toc: timestamp,
+                    inviter: user._key
+                  })
+                    .then(() => incrementPsnl(foundUser._key))
+                }
+              })
+          }
+        });
+        for (let atUser of usersAlreadyInformed) {
+          const username = '@' + atUser.username + ' ';
+          if (matchedArray.find(obj => obj === username)) {
+            existUsers.push(atUser);
+          }
+        }
+        return Promise.all(promises)
+          .then(() => newpost.atUsers = existUsers)
+      }
     })
+      .then(() => queryfunc.doc_save(original_post,'histories'))
   })
   .then(()=> {
     let obj = {
@@ -321,13 +401,23 @@ var postToPost = function(params,pid,user){ //modification.
 }
 
 table.postTo = {
-  init:function(){
-    return queryfunc.createIndex('posts',{
-      fields:['tid','toc'],
-      type:'skiplist',
-      unique:'false',
-      sparse:'false',
-    })
+  init:function() {
+    return Promise.all([
+      queryfunc.createIndex('posts', {
+        fields: ['tid', 'toc'],
+        type: 'skiplist',
+        unique: 'false',
+        sparse: 'false',
+      }),
+      queryfunc.createIndex('invites', {
+        fields: ['pid'],
+        type: 'skiplist',
+      }),
+      queryfunc.createIndex('invites', {
+        fields: ['invited'],
+        type: 'skiplist'
+      })
+    ])
   },
   operation:function(params){
     //0. object extraction
