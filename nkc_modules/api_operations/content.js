@@ -51,7 +51,7 @@ var postToThread = function(params,tid,user, type){
     //create a new post
     pid = newpid;
     let content = post.c;
-    let existUsers = [];
+    let existUsers = new Set();
     const matchedArray = content.match(/@([^@\s]*)\s/g); //match @someone
     if(matchedArray) {
       let promises = matchedArray.map(str => {
@@ -60,7 +60,7 @@ var postToThread = function(params,tid,user, type){
           .then(u => {
             let foundUser = u[0];
             if(foundUser) {
-              existUsers.push({username: foundUser.username, uid: foundUser._key});
+              existUsers.add({username: foundUser.username, uid: foundUser._key});
               db.collection('invites').save({
                 pid,
                 invitee: foundUser._key,
@@ -84,7 +84,7 @@ var postToThread = function(params,tid,user, type){
             uid:user._key,
             username:user.username,
             ipoc:params._req.iptrim,
-            atUsers: existUsers
+            atUsers: Array.from(existUsers)
           };
           return queryfunc.doc_save(newpost,'posts')
         })
@@ -321,7 +321,7 @@ var postToPost = function(params,pid,user){ //modification.
       original_post.pid = original_key;
       original_post._key = undefined;
 
-      let existUsers = [];
+      let existUsers = new Set();
       const matchedArray = content.match(/@([^@\s]*)\s/g); //match @someone
       const usersAlreadyInformed = originPost.atUsers || [];
       if (matchedArray) {
@@ -332,7 +332,7 @@ var postToPost = function(params,pid,user){ //modification.
               .then(u => {
                 let foundUser = u[0];
                 if (foundUser) {
-                  existUsers.push({username: foundUser.username, uid: foundUser._key});
+                  existUsers.add({username: foundUser.username, uid: foundUser._key});
                   db.collection('invites').save({
                     pid,
                     invitee: foundUser._key,
@@ -347,11 +347,11 @@ var postToPost = function(params,pid,user){ //modification.
         for (let atUser of usersAlreadyInformed) {
           const username = '@' + atUser.username + ' ';
           if (matchedArray.find(obj => obj === username)) {
-            existUsers.push(atUser);
+            existUsers.add(atUser);
           }
         }
         return Promise.all(promises)
-          .then(() => newpost.atUsers = existUsers)
+          .then(() => newpost.atUsers = Array.from(existUsers))
       }
     })
       .then(() => queryfunc.doc_save(original_post,'histories'))

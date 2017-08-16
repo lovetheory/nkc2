@@ -468,7 +468,9 @@ function nkc_render(options){
       for(var i in atUsers) {
         var user = atUsers[i];
         var match = '@' + user.username.replace(/[^\u0000-\u00FF]/g,function(a){return escape(a).replace(/(%u)(\w{4})/gi,"&#x$2;")}) + ' ';
-        renderedHTML = renderedHTML.replace(match, '<a href="/m/' + user.uid + '">' + match + '</a>')
+        var match2 = '@' + user.username.replace(/[^\u0000-\u00FF]/g,function(a){return escape(a).replace(/(%u)(\w{4})/gi,"&#x$2;")}) + '&#xA0;';
+        renderedHTML = renderedHTML.replace(match, '<a href="/m/' + user.uid + '">' + match + '</a>');
+        renderedHTML = renderedHTML.replace(match2, '<a href="/m/' + user.uid + '">' + match + '</a>')
       }
     }
     return renderedHTML
