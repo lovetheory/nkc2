@@ -467,8 +467,13 @@ function nkc_render(options){
     if(atUsers && atUsers.length > 0) {
       for(var i in atUsers) {
         var user = atUsers[i];
-        var match = '@' + user.username.replace(/[^\u0000-\u00FF]/g,function(a){return escape(a).replace(/(%u)(\w{4})/gi,"&#x$2;")}) + ' ';
-        renderedHTML = renderedHTML.replace(match, '<a href="/m/' + user.uid + '">' + match + '</a>')
+        var matchSpace = '@' + user.username.replace(/[^\u0000-\u00FF]/g,function(a){return escape(a).replace(/(%u)(\w{4})/gi,"&#x$2;")}) + ' ';
+        //双空格会产生奇怪转义
+        var matchSpecial = '@' + user.username.replace(/[^\u0000-\u00FF]/g,function(a){return escape(a).replace(/(%u)(\w{4})/gi,"&#x$2;")}) + '&#xA0;';
+        var matchEnter = '@' + user.username.replace(/[^\u0000-\u00FF]/g,function(a){return escape(a).replace(/(%u)(\w{4})/gi,"&#x$2;")}) + '<br>';
+        renderedHTML = renderedHTML.replace(matchSpace, '<a href="/m/' + user.uid + '">' + matchSpace + '</a>');
+        renderedHTML = renderedHTML.replace(matchSpecial, '<a href="/m/' + user.uid + '">' + matchSpecial + '</a>')
+        renderedHTML = renderedHTML.replace(matchEnter, '<a href="/m/' + user.uid + '">' + matchEnter + '</a>')
       }
     }
     return renderedHTML
