@@ -20,7 +20,7 @@ block title
 
 
 block content
-  -var isModerator = user? (forum.moderators.indexOf(user.username) > -1) : false
+  -var isModerator = user? (forum.moderators.indexOf(user._key) > -1) : false
 
   .container-fluid(style='max-width:1400px;')
     .row
@@ -48,11 +48,11 @@ block content
                               if description
                                 span #{description}
                           div
-                            - var moderators = data.forum.moderators
+                            - var moderators = data.forum.ms
                             if moderators && moderators.length
                               span 版主：
                                 each k in moderators
-                                  a.d-inline.margin-right(href='/user_activities_byname/#{k}') #{k}
+                                  a.d-inline.margin-right(href='/m/#{k._key}') #{k.username}
                         div(style='position: absolute; right: 0; top: 0;')
                           if isModerator
                             div
@@ -76,14 +76,14 @@ block content
                         a(href='javascript:;' onclick='uploadForumBanner();' style='display: block; position: relative;')
                           div(style='background-image: url(/default/banner_setting.jpg); background-position: center; background-size: contain; position: relative; width: 100%;')
                             img.pfBanner(style='width: 100%; opacity: 0.2;' src='/pfb/#{data.forum._key}')
-                            input#personalForumBannerUploader(type='file' style='position: absolute; width: 0; height: 0; z-index: -1; opacity: 0;' onchange="bannerOnChange()")
+                            input#personalForumBannerUploader(type='file' style='position: absolute; width: 0; height: 0; z-index: -1; opacity: 0;' onchange="bannerOnChange(#{data.forum._key})")
                       div(style='z-index: 1; position: relative;')
                         div(style='width: 19%; margin-top: -10%; height: 0; margin-left: 20px; padding-bottom: 19%; display: inline-block; vertical-align: top;')
                           div(style='background-color: white; width: 100%; padding: 3% 3% 3% 3%; border-radius: 5%; display: inline-block;')
                             a(href='javascript:;' onclick='uploadForumAvatar();')
                               div(style='background-image: url(/default/icon_setting.jpg); background-position: center; background-size: contain; border-radius: 5%;')
                                 img(src='/pfa/#{forum._key}' width='100%' style='border-radius: 5%; opacity: 0.2;')
-                                input#personalForumAvatarUploader(type='file' style='position: absolute; width: 0; height: 0; z-index: -1; opacity: 0;' onchange="avatarOnChange()")
+                                input#personalForumAvatarUploader(type='file' style='position: absolute; width: 0; height: 0; z-index: -1; opacity: 0;' onchange="avatarOnChange(#{data.forum._key})")
                         div(style='display: inline-block;')
                           div
                             div(style='display: inline-block;')
@@ -91,9 +91,9 @@ block content
                             div(style='display: inline-block;')
                               input#description(style='width: 360px;' value='#{description}' name='description' placeholder='请输入专栏介绍')
                           div
-                            -const str = moderators.length === 1? '' : moderators.reduce((pv, cv, ci, arr) => {return ci === 0? '' : pv + cv + ','}, '')
+                            -const str = moderators.length === 1? '' : moderators.reduce((pv, cv, ci, arr) => {return ci === 0? {username: ''} : pv.username + cv.username + ','}, '')
                             span 版主：
-                            span #{moderators[0]},
+                            span #{moderators[0].username},
                             input#moderators(placeholder='输入用户名，用,分隔' name='moderators' value='#{str}')
                         div(style='float: right; vertical-align: top;')
                           if isModerator

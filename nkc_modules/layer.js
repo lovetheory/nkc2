@@ -165,11 +165,11 @@ var layer = (function () {
           return _this;
         });
     };
-    Forum.prototype.testModerator = function (username) {
+    Forum.prototype.testModerator = function (uid) {
       var forum = this.model;
       if (!forum.moderators || forum.moderators.length == 0)
         throw '此版似乎未设定版主';
-      if (forum.moderators.indexOf(username) >= 0) {
+      if (forum.moderators.indexOf(uid) >= 0) {
         //if user exists as moderator for the forum
         return true;
       }

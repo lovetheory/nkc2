@@ -28,8 +28,8 @@ block content
         #fullwidthpanel.ThreadBox.nkcpanel
           - var thread = data.thread
           - var target = thread.fid || thread.toMid || thread.mid
-          - var isMyForumMdr = user? data.myForum.moderators.indexOf(user.username) > -1 : false
-          - var isOthersForumMdr = user? data.othersForum? data.othersForum.moderators.indexOf(user.username) > -1 : false : false
+          - var isMyForumMdr = user? data.myForum.moderators.indexOf(user._key) > -1 : false
+          - var isOthersForumMdr = user? data.othersForum? data.othersForum.moderators.indexOf(user._key) > -1 : false : false
           
           .ThreadTitle
             .ThreadTitle1(style="display:inline-block;width:82%;")

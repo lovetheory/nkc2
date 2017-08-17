@@ -51,7 +51,7 @@ var postToThread = function(params,tid,user, type){
     //create a new post
     pid = newpid;
     let content = post.c;
-    let existUsers = new Set();
+    let existUsers = [];
     const matchedArray = content.match(/@([^@\s]*)\s/g); //match @someone
     if(matchedArray) {
       let promises = matchedArray.map(str => {
@@ -59,19 +59,23 @@ var postToThread = function(params,tid,user, type){
         return apifunc.get_user_by_name(userName)
           .then(u => {
             let foundUser = u[0];
-            if(foundUser) {
-              existUsers.add({username: foundUser.username, uid: foundUser._key});
-              db.collection('invites').save({
-                pid,
-                invitee: foundUser._key,
-                inviter: user._key,
-                toc: timestamp
-              })
-                .then(() => incrementPsnl(foundUser._key))
+            let flag = true; //true means user did not in existUser[]
+            for(let u of existUsers) {
+              if(u.username === foundUser.username) flag = false;
+            }
+            if(foundUser && flag) {
+              existUsers.push({username: foundUser.username, uid: foundUser._key});
             }
           })
       });
       return Promise.all(promises)
+        .then(() => Promise.all(existUsers.map(foundUser => db.collection('invites').save({
+          pid,
+          invitee: foundUser.uid,
+          inviter: user._key,
+          toc: timestamp
+        })
+          .then(() => incrementPsnl(foundUser.uid)))))
         .then(() => {
           const newpost = { //accept only listed attribute
             _key:newpid,
@@ -84,7 +88,7 @@ var postToThread = function(params,tid,user, type){
             uid:user._key,
             username:user.username,
             ipoc:params._req.iptrim,
-            atUsers: Array.from(existUsers)
+            atUsers: existUsers
           };
           return queryfunc.doc_save(newpost,'posts')
         })
@@ -295,7 +299,7 @@ var postToPost = function(params,pid,user){ //modification.
       }
 
       //else we have to check: do you own the original forum?
-      return origforum.testModerator(params.user.username)
+      return origforum.testModerator(params.user._key)
     })
     .then(()=> {
       timestamp = Date.now();
@@ -321,7 +325,7 @@ var postToPost = function(params,pid,user){ //modification.
       original_post.pid = original_key;
       original_post._key = undefined;
 
-      let existUsers = new Set();
+      let existUsers = [];
       const matchedArray = content.match(/@([^@\s]*)\s/g); //match @someone
       const usersAlreadyInformed = originPost.atUsers || [];
       if (matchedArray) {
@@ -331,27 +335,33 @@ var postToPost = function(params,pid,user){ //modification.
             return apifunc.get_user_by_name(userName)
               .then(u => {
                 let foundUser = u[0];
-                if (foundUser) {
-                  existUsers.add({username: foundUser.username, uid: foundUser._key});
-                  db.collection('invites').save({
-                    pid,
-                    invitee: foundUser._key,
-                    toc: timestamp,
-                    inviter: user._key
-                  })
-                    .then(() => incrementPsnl(foundUser._key))
+                let flag = true;
+                for(let u of existUsers) {
+                  if(u.username === foundUser.username) flag = false;
+                }
+                if (foundUser && flag) {
+                  existUsers.push({username: foundUser.username, uid: foundUser._key});
                 }
               })
           }
         });
-        for (let atUser of usersAlreadyInformed) {
-          const username = '@' + atUser.username + ' ';
-          if (matchedArray.find(obj => obj === username)) {
-            existUsers.add(atUser);
-          }
-        }
         return Promise.all(promises)
-          .then(() => newpost.atUsers = Array.from(existUsers))
+          .then(() => Promise.all(existUsers.map(foundUser => db.collection('invites').save({
+            pid,
+            invitee: foundUser.uid,
+            toc: timestamp,
+            inviter: user._key
+          })
+            .then(() => incrementPsnl(foundUser.uid)))))
+          .then(() => {
+            for (let atUser of usersAlreadyInformed) {
+              const username = '@' + atUser.username + ' ';
+              if (matchedArray.find(obj => obj === username)) {
+                existUsers.push(atUser);
+              }
+            }
+          })
+          .then(() => newpost.atUsers = existUsers)
       }
     })
       .then(() => queryfunc.doc_save(original_post,'histories'))
@@ -953,6 +963,7 @@ table.configPersonalForum = {
     const forumName = params.forumName.trim();
     const announcement = params.announcement.trim();
     const moderators = params.moderators.map(moderator => moderator.trim());
+    let moderatorArr = []; //now moderators are stored in _key, not name
     const key = params.key;
     if(contentLength(forumName) > 20) throw '专栏名称不能大于20个字节(ASCII)';
     if(contentLength(announcement) > 1000) throw '公告内容不能大于1000字节(ASCII)';
@@ -960,7 +971,7 @@ table.configPersonalForum = {
     return db.collection('personalForums').document(key)
       .then(pf => {
         const originalModerators = pf.moderators;
-        if(originalModerators.indexOf(user.username) === -1) throw '权限错误';
+        if(originalModerators.indexOf(user._key) === -1) throw '权限错误';
         return Promise.all(moderators.map(moderator => db.query(aql`
           FOR u IN users
             FILTER u.username == ${moderator}
@@ -969,6 +980,7 @@ table.configPersonalForum = {
           .then(cursor => cursor.all())
           .then(users => {
             if(users.length === 0) throw '副版主含有不存在的用户名'
+            moderatorArr.push(users[0]._key)
           })))
       })
       .then(() => db.query(aql`
@@ -984,13 +996,12 @@ table.configPersonalForum = {
       .then(arr => {
         if(arr[0].length > 0) throw `专栏名称与现有的学院或个人专栏名称重复,不能使用`;
         return db.query(aql`
-          LET doc = DOCUMENT(personalForums, ${key}) 
-          LET owner = DOCUMENT(users, ${key})
+          LET doc = DOCUMENT(personalForums, ${key})
           UPDATE doc WITH {
             description: ${description},
             display_name: ${forumName},
             announcement: ${announcement},
-            moderators: APPEND([owner.username], ${moderators}, true)
+            moderators: APPEND([${key}], ${moderatorArr}, true)
           } IN personalForums
           RETURN NEW
         `)
@@ -1084,7 +1095,7 @@ table.switchTInPersonalForum = {
       })
       .then(mf => {
         myForum = mf;
-        if(myForum.moderators.indexOf(user.username) > -1) {
+        if(myForum.moderators.indexOf(user._key) > -1) {
           const threads = myForum.toppedThreads || [];
           const index = threads.findIndex(element => element === tid);
           if(index > -1) {
@@ -1124,7 +1135,7 @@ table.switchTInPersonalForum = {
       })
       .then(oF => {
         othersForum = oF;
-        if(othersForum.moderators.indexOf(user.username) > -1) {
+        if(othersForum.moderators.indexOf(user._key) > -1) {
           const threads = othersForum.toppedThreads || [];
           const index = threads.findIndex(t => t === tid);
           if(index > -1) {

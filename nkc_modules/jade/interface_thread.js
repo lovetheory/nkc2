@@ -114,7 +114,7 @@ function quotePost(pid){
     var content = pc.c;
     var replaceArr = [
       {reg: /<[^>]*>/gm, rep: ''},
-      {reg: /<\/[^>]*>/, rep: ' '}
+      {reg: /<\/[^>]*>/, rep: ' '},
     ];
     if(pc.l === 'html') {
       for(var i in replaceArr) {
@@ -123,7 +123,8 @@ function quotePost(pid){
       }
     }
 
-    var str = content.replace(/\[quote.*?][^]*?\[\/quote]/g,'').slice(0,length_limit).trim()
+    var str = content.replace(/\[quote.*?][^]*?\[\/quote]/g,'').slice(0,length_limit).trim();
+    str = content.replace(/@([^@\s]*)\s/gm, '');
     if(str.length==length_limit)str+='……'
 
     str = '[quote='+pc.username+','+pc._key+']'+ str + '[/quote]'

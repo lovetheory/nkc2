@@ -911,6 +911,13 @@ table.viewForum = {
         return [];
       })
       .then(ts => data.userThreads = ts)
+      .then(() => db.query(aql`
+        FOR uid IN ${forum.model.moderators}
+          LET m = DOCUMENT(users, uid)
+          RETURN m
+      `))
+      .then(cursor => cursor.all())
+      .then(ms => data.moderators = ms)
       .then(() => data)
   },
   requiredParams: {
@@ -1062,8 +1069,16 @@ table.viewPersonalForum = {
       .then(() => {
         data.targetUser = userclass.model;
         targetUser = userclass.model;
-        return db.collection('personalForums').document(uid)
+        return db.query(aql`
+          LET pf = DOCUMENT(personalForums, ${uid})
+          LET moderators = pf.moderators
+          LET ms = (FOR moderator IN moderators
+            RETURN DOCUMENT(users, moderator)
+          )
+          RETURN MERGE(pf, {ms})
+        `)
       })
+      .then(cursor => cursor.next())
       .then(forum => {
         data.forum = forum;
         forumObj = forum;
@@ -1116,7 +1131,7 @@ table.viewPersonalForum = {
         `)
         }
         else if(data.tab === 'own') {
-          if(user && forumObj.moderators.indexOf(user.username) > -1 || 'moveAllThreads' in po) {
+          if(user && forumObj.moderators.indexOf(user._key) > -1 || 'moveAllThreads' in po) {
             return db.query(aql`
               LET p1 = (
                 FOR p IN posts
