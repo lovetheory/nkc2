@@ -41,7 +41,7 @@ table.moveThread = {
               return
             }
             //else we have to check: do you own the original forum?
-            return origforum.testModerator(params.user.username)
+            return origforum.testModerator(params.user._key)
           })
       }
       db.query(aql`
@@ -79,24 +79,27 @@ table.disablePost = {
     var pid = params.pid
     var post = new layer.Post(pid)
     var po = params.permittedOperations
-
+    let thread;
+    let origforum;
     return post.load()
     .then(post=>{
       return post.loadForum()
     })
-    .then(origforum=>{
-      if(po['toggleAllPosts']){
+    .then(of=> {
+      origforum = of
+      if (po['toggleAllPosts']) {
         return
       }
-    console.log(post.model.tid)
-      let thread = new layer.Thread(post.model.tid);
-      thread.load().then(t => thread.model = t);
+      thread = new layer.Thread(post.model.tid);
+      return thread.load()
+    })
+    .then(() => {
       let model = thread.model;
       if(!model.fid && model.toMid === params.user._key || !model.fid && !model.toMid && model.mid === params.user._key) {
         return
       }
       //else we have to check: do you own the original forum?
-      return origforum.testModerator(params.user.username)
+      return origforum.testModerator(params.user._key)
     })
     .then(()=>{
       return post.update({disabled:true})
@@ -132,7 +135,7 @@ table.enablePost = {
         return
       }
       //else we have to check: do you own the original forum?
-      return origforum.testModerator(params.user.username)
+      return origforum.testModerator(params.user._key)
     })
     .then(()=>{
       return post.update({disabled:null})
@@ -229,7 +232,7 @@ table.setDigest={
       }
 
       //else we have to check: do you own the original forum?
-      return origforum.testModerator(params.user.username)
+      return origforum.testModerator(params.user._key)
     })
     .then(()=>{
       return thread.update({digest:thread.model.digest?null:true})
@@ -263,7 +266,7 @@ table.setTopped={
       }
 
       //else we have to check: do you own the original forum?
-      return origforum.testModerator(params.user.username)
+      return origforum.testModerator(params.user._key)
     })
     .then(()=>{
       return thread.update({topped:thread.model.topped?null:true})
@@ -477,19 +480,19 @@ table.switchVInPersonalForum = {
         .then(() => {
           if(
             thread.toMid === user._key ||
-            othersForum && othersForum.moderators.indexOf(user.username) > -1
+            othersForum && othersForum.moderators.indexOf(user._key) > -1
           ) {
             return db.collection('threads').update(thread, {hideInToMid: !thread.hideInToMid})
               .catch(e => {throw e})
           }
           else if(
             thread.mid === user._key ||
-            myForum.moderators.indexOf(user.username) > -1
+            myForum.moderators.indexOf(user._key) > -1
           ) {
             return db.collection('threads').update(thread, {hideInMid: !thread.hideInMid})
               .catch(e => {throw e});
           }
-          throw '操作有误,请报告论坛' + t.mid
+          throw '操作有误,请报告论坛' + thread.mid
         })
     }
     throw '权限不足'
@@ -521,14 +524,14 @@ table.switchDInPersonalForum = {
         .then(() => {
           if(
             thread.toMid === user._key ||
-            othersForum && othersForum.moderators.indexOf(user.username) > -1
+            othersForum && othersForum.moderators.indexOf(user._key) > -1
           ) {
             return db.collection('threads').update(thread, {digestInToMid: !thread.digestInToMid})
               .catch(e => {throw e})
           }
           else if(
             thread.mid === user._key ||
-            myForum.moderators.indexOf(user.username) > -1
+            myForum.moderators.indexOf(user._key) > -1
           ) {
             return db.collection('threads').update(thread, {digestInMid: !thread.digestInMid})
               .catch(e => {throw e});

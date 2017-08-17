@@ -18,6 +18,8 @@ var validation = require('./validation');
 var apifunc = require('./api_functions');
 var queryfunc = require('./query_functions');
 var im = require('./im_functions');
+const db = queryfunc.getDB();
+const aql = queryfunc.getAql();
 
 ///------------
 ///something here to be executed before all handlers below
@@ -168,7 +170,8 @@ api.post('/avatar', avatar_upload.single('file'), function(req,res,next){
 const UOPFA = multer(settings.uploadOptionsPersonalForumAvatar);
 api.post('/personalForumAvatar', UOPFA.single('file'), function(req, res, next) {
   if(!req.file)return next('shit not even a file. fuck.');
-
+  const id = req.query.id;
+  const user = req.user;
   report(req.file);
   if([
       'image/jpeg',
@@ -181,9 +184,14 @@ api.post('/personalForumAvatar', UOPFA.single('file'), function(req, res, next) 
   //otherwise should we allow..
 
   var upath = req.file.path
-  im.avatarify(upath) // avatarify in place
+  return db.collection('personalForums').document(id)
+    .then(pf => {
+      if(pf.moderators.indexOf(user._key) > -1)
+        return im.avatarify(upath) // avatarify in place
+      throw '权限不足'
+    })
     .then((back)=>{
-      var destination_file_small = settings.personalForumAvatarPath+req.user._key+'.jpg';
+      var destination_file_small = settings.personalForumAvatarPath + id + '.jpg';
       return nkcfs.copy(upath,destination_file_small,{clobber:true})
     })
     .then((back)=>{
@@ -197,7 +205,8 @@ api.post('/personalForumAvatar', UOPFA.single('file'), function(req, res, next) 
 const UOPFB = multer(settings.uploadOptionsPersonalForumBanner);
 api.post('/personalForumBanner', UOPFB.single('file'), function(req, res, next) {
   if(!req.file)return next('shit not even a file. fuck.');
-
+  const id = req.query.id;
+  const user = req.user;
   report(req.file);
   if([
       'image/jpeg',
@@ -210,9 +219,14 @@ api.post('/personalForumBanner', UOPFB.single('file'), function(req, res, next) 
   //otherwise should we allow..
 
   var upath = req.file.path
-  im.bannerify(upath) // avatarify in place
+  return db.collection('personalForums').document(id)
+    .then(pf => {
+      if(pf.moderators.indexOf(user._key) > -1)
+        return im.bannerify(upath); // avatarify in place
+      throw '权限不足'
+    })
     .then((back)=>{
-      var destination_file = settings.personalForumBannerPath+req.user._key+'.jpg';
+      var destination_file = settings.personalForumBannerPath+ id +'.jpg';
       return nkcfs.copy(upath,destination_file,{clobber:true})
     })
     .then((back)=>{

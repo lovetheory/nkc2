@@ -293,25 +293,25 @@ function upload_callback(err, back) {
   }
 }
 
-function uploadForumAvatar() {
+function uploadForumAvatar(id) {
   var ele = geid('personalForumAvatarUploader');
   ele.click();
 }
 
-function avatarOnChange() {
+function avatarOnChange(id) {
   var ele = geid('personalForumAvatarUploader');
   if(!ele.files[0])return screenTopWarning('pick one, okay?');
   var formData = new FormData();
   formData.append('file', ele.files[0]);
-  post_upload('/personalForumAvatar',formData,upload_callback);
+  post_upload('/personalForumAvatar?id=' + id, formData,upload_callback);
 }
 
-function bannerOnChange() {
+function bannerOnChange(id) {
   var ele = geid('personalForumBannerUploader');
   if(!ele.files[0])return screenTopWarning('pick one, okay?');
   var formData = new FormData();
   formData.append('file', ele.files[0]);
-  post_upload('/personalForumBanner',formData,upload_callback);
+  post_upload('/personalForumBanner?id=' + id, formData,upload_callback);
 }
 
 function uploadForumBanner() {

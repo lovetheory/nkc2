@@ -84,11 +84,11 @@ block content
                   div
                     span(style='margin-right:20px;') 今日: #{data.forum.count_posts_today||0} 主题: #{data.forum.count_threads||0} 回复: #{data.forum.count_posts||0}
           
-                    if data.forum.moderators && data.forum.moderators.length
+                    if data.moderators && data.moderators.length
                       span 版主：
-                        - var moderators = data.forum.moderators
+                        - var moderators = data.moderators
                         each k in moderators
-                          a.d-inline.margin-right(href='/user_activities_byname/#{k}') #{k}
+                          a.d-inline.margin-right(href='/m/#{k._key}') #{k.username}
                         
                   if data.forumthreadtypes && data.forumthreadtypes.length
                     .ForumNavigation1
@@ -254,10 +254,10 @@ block content
                 //    a.btn.btn-default(href='/editor?target=f/#{forum._key}') 新帖
                 //if forum.moderators && forum.moderators.length
                 //  div(style='height: 20px;text-align:right; width: 20%; display: inline-block') 版主:
-                -var moderators = forum.moderators || []
+                -var moderators = data.moderators || []
                   span 版主:
                 for moderator in moderators
-                  a(href='/user_activities_byname/#{moderator}')  #{moderator}
+                  a(href='/m/#{moderator._key}')  #{moderator,username}
                 //hr.hrNarrowSpace
                 //.ForumThreadList
                 //  each thread,index in forum.threads
