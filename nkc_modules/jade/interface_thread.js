@@ -124,7 +124,10 @@ function quotePost(pid){
     }
 
     var str = content.replace(/\[quote.*?][^]*?\[\/quote]/g,'').slice(0,length_limit).trim();
-    str = content.replace(/@([^@\s]*)\s/gm, '');
+    str = content.replace(/@([^@\s]*)\s/gm, function(matched) {
+      var str = matched.replace('@', '@ ')
+      return str
+    });
     if(str.length==length_limit)str+='……'
 
     str = '[quote='+pc.username+','+pc._key+']'+ str + '[/quote]'
