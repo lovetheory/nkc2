@@ -299,7 +299,6 @@ table.unbanUser = {
         certs = certs.filter(c=>c!='banned')
         return u.update({certs})
       })
-      .then(u => queryfunc.computeActiveUser(u.model))
       .then(() => 'success')
   },
   requiredParams:{

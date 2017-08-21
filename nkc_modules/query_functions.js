@@ -374,7 +374,7 @@ queryfunc.getForumThreads = (params, paging) => {
  `).catch(e => report(e));
 };
 
-queryfunc.computeActiveUser = triggerUser => {
+/*queryfunc.computeActiveUser = triggerUser => {
   var user = {};
   return db.collection('activeusers').all()
     .then(cursor => cursor.all())
@@ -447,7 +447,7 @@ queryfunc.computeActiveUser = triggerUser => {
         )
         .catch((e) => console.log(e))
     })
-};
+};*/
 
 queryfunc.getActiveUsers = () => {
   return db.query(aql`

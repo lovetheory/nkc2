@@ -475,7 +475,6 @@ table.postTo = {
           }
 
           return Promise.all(parr).then(()=>{
-            queryfunc.computeActiveUser(params.user);
             return result
           })
         })
