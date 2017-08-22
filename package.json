@@ -39,6 +39,7 @@
     "nano": "^6.2.0",
     "node-cron": "^1.1.1",
     "node-dir": "^0.1.12",
+    "node-schedule": "^1.2.4",
     "nodemailer": "^2.5.0",
     "random-seed": "^0.3.0",
     "request": "^2.67.0",

@@ -1,7 +1,7 @@
 require('./global_env.js')
 
 require('./nkc_modules/globalData')();
-
+const cronJobs = require('./nkc_modules/schedule_job');
 var settings = require('./nkc_modules/server_settings');
 require('./nkc_modules/helper')();
 
@@ -274,6 +274,8 @@ nkc.use((err,req,res,next)=>{
     jaderender('nkc_modules/jade/500.jade',data)
   );
 });
+
+const updateActiveUsers = cronJobs.updateActiveUsers(settings.updateActiveUsersCronStr);
 
 //server listening settings
 var listenaddr = '0.0.0.0'
