@@ -86,16 +86,16 @@ table.disablePost = {
       return post.loadForum()
     })
     .then(of=> {
-      origforum = of
-      if (po['toggleAllPosts']) {
-        return
-      }
+      origforum = of;
       thread = new layer.Thread(post.model.tid);
       return thread.load()
     })
     .then(() => {
       let model = thread.model;
       if(!model.fid && model.toMid === params.user._key || !model.fid && !model.toMid && model.mid === params.user._key) {
+        return
+      }
+      if (po['toggleAllPosts']) {
         return
       }
       //else we have to check: do you own the original forum?

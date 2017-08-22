@@ -68,7 +68,6 @@ function generalRequest(obj,opt,callback){
 
 function nkcOperationAPI(obj){
   return new Promise(function(resolve,reject){
-    console.log(obj);
     generalRequest(obj,{
       method:'POST',
       url:'/api/operation'
