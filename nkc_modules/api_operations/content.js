@@ -15,6 +15,7 @@ let operations = require('../api_operations');
 const db = queryfunc.getDB();
 const aql = queryfunc.getAql();
 const contentLength = require('../tools').contentLength;
+const operationScoreHandler = require('../score_handler').operationScoreHandler;
 
 var table = {};
 module.exports = table;
@@ -165,7 +166,18 @@ var postToThread = function(params,tid,user, type){
       updatedThread = t
       return incrementForumOnNewPost(tid)
     })
-    .then(r=>{
+    .then(() => operationScoreHandler({
+      address: params._req.connection.remoteAddress,
+      port: params._req.connection.remotePort,
+      operation: 'postToThread',
+      from: params.user._key,
+      to: params.user._key,
+      timeStamp: timestamp,
+      parameters: {
+        targetKey: 't/' + tid,
+      }
+    }))
+    .then(()=>{
       saveResult.fid = tobject.fid
       saveResult.tid = tid;
       saveResult.pid = pid
@@ -379,6 +391,17 @@ var postToPost = function(params,pid,user){ //modification.
     };
     return userBehaviorRec(obj)
   })
+    .then(() => operationScoreHandler({
+      address: params._req.connection.remoteAddress,
+      port: params._req.connection.remotePort,
+      operation: 'postToForum',
+      from: params.user._key,
+      to: params.user._key,
+      timeStamp: Date.now(),
+      parameters: {
+        targetKey: 'f/' + fid,
+      }
+    }))
     .then(() => {
     //now update the existing with the newly created:
     return queryfunc.doc_update(original_key,'posts',newpost);
@@ -677,22 +700,70 @@ table.updateAllUsers = {
   },
   operation:function(params){
     return AQL(`
-      for p in posts
-      collect uid = p.uid with count into count_posts
-
-      let user = document(users,uid)
-      filter user!=null
-
-      let count_threads = (
-        for t in threads
-        filter t.uid == uid
-        collect with count into ct
-        return ct
+      for user in users
+      let uid = user._key
+      let ps = (
+        for p in posts
+        filter p.uid == uid
+        return p
+      ) 
+      let recs = ( for p in ps return Length(p.recUsers) ) 
+      let disabledPostCount = ( 
+        for p in ps
+        filter p.disabled == true 
+        collect with count into length 
+        return length 
+      )[0] 
+      let postCount = LENGTH(ps) 
+      let ts = ( for t in threads filter t.uid == user._key return t ) 
+      let threadCount = ( 
+        for t in ts 
+        filter t.uid == uid 
+        collect with count into length 
+        return length 
+      )[0] 
+      let disabledThreadCount = ( 
+        for t in ts 
+        filter t.uid == uid && t.fid == 'recycle' 
+        collect with count into length 
+        return length 
+      )[0] 
+      let subs = LENGTH(document(usersSubscribe, uid).subscribers)
+      let digestThreadsCount = (
+        for t in ts
+        filter t.digest == true
+        collect with count into length
+        return length
       )[0]
-
-      update user with {count_posts,count_threads} in users
+      let toppedThreadsCount = (
+        for t in ts
+        filter t.topped == true
+        collect with count into length
+        return length
+      )[0]
+      update {
+        _key: uid,
+        disabledPostCount, 
+        disabledThreadCount, 
+        postCount, 
+        threadCount, 
+        subs, 
+        recCount: SUM(recs),
+        toppedThreadsCount,
+        digestThreadsCount
+      } in users
       `
     )
+      .then(() => db.collection('users').all())
+      .then(cursor => cursor.all())
+      .then(users => {
+        const scoreArithmetic = settings.user.scoreArithmetic;
+        const scoreCoefficientMap = settings.user.scoreCoefficientMap;
+        return Promise.all(users.map(user => {
+          const score = scoreArithmetic(user, scoreCoefficientMap);
+          return db.collection('users').update(user._key, {score})
+        }))
+      })
   }
 }
 
@@ -935,6 +1006,17 @@ let postToPersonalForum = (params, targetKey) => {
       //save this new thread
       return queryfunc.doc_save(newthread, 'threads')
     })
+    .then(() => operationScoreHandler({
+      address: params._req.connection.remoteAddress,
+      port: params._req.connection.remotePort,
+      operation: 'postToForum',
+      from: params.user._key,
+      to: targetKey,
+      timeStamp: Date.now(),
+      parameters: {
+        targetKey: 'm/' + targetKey,
+      }
+    }))
     .then(() => postToThread(params, newtid, user, 1))
     .catch(e => console.log(e))
 };

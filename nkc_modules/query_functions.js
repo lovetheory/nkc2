@@ -3,12 +3,12 @@
 
 var colors = require('colors');
 var moment = require('moment');
-
+const privateSettings = require('./private_settings');
 var settings = require('./server_settings.js');
 var helper_mod = require('./helper.js')();
 var bodyParser = require('body-parser');
 const arango = require('arangojs');
-const db = arango(settings.arango);
+const db = arango(privateSettings.arango);
 
 var users = db.collection('users');
 
@@ -47,7 +47,9 @@ queryfunc.db_init = function(){
     'usersSubscribe',
     'usersBehavior',
     'activeusers',
-    'settings'
+    'settings',
+    'behaviorLogs',
+    'usersLoggedToday'
   ];
   return db.listCollections()
     .then(collections => {
@@ -374,81 +376,6 @@ queryfunc.getForumThreads = (params, paging) => {
  `).catch(e => report(e));
 };
 
-/*queryfunc.computeActiveUser = triggerUser => {
-  var user = {};
-  return db.collection('activeusers').all()
-    .then(cursor => cursor.all())
-    .then(arr => {
-      if(arr.length) {
-        return db.query(aql`
-          LET lWThreadCount = (
-            FOR t IN threads
-              FILTER t.toc > ${Date.now() - 604800000} && t.disabled == NULL
-              && t.fid != 'recycle' && t.uid == ${triggerUser._key}
-              COLLECT WITH COUNT INTO length
-              RETURN length)[0]
-          LET lWPostCount = (
-            FOR p IN posts
-            LET t = DOCUMENT(threads, p.tid)
-              FILTER p.tlm > ${Date.now() - 604800000} && t.fid != 'recycle'
-              && p.uid == ${triggerUser._key} && p.disabled == NULL
-              COLLECT WITH COUNT INTO length
-              RETURN length)
-          LET xsf = DOCUMENT(users, ${triggerUser._key}).xsf
-          RETURN {
-            xsf,
-            uid: ${triggerUser._key},
-            lWThreadCount,
-            lWPostCount
-          }
-        `)
-          .then(res => {
-            user = res._result[0];
-            user.lWPostCount = user.lWPostCount - user.lWThreadCount;    //creating a post when creating a thread by default
-            user.vitality = settings.user.vitalityArithmetic(user.lWThreadCount, user.lWPostCount, user.xsf);
-            delete user.xsf;
-            return user
-          })
-          .then(user => db.query(aql`
-            FOR u IN activeusers
-              FILTER u.uid == ${user.uid}
-              UPDATE u WITH {
-                lWThreadCount: ${user.lWThreadCount},
-                lWPostCount: ${user.lWPostCount},
-                vitality: ${user.vitality}
-              } IN activeusers
-              RETURN NEW
-          `))
-          .then(res => {
-            if(res._result.length) {
-              return
-            }
-            return db.query(aql`
-              FOR u IN activeusers
-                SORT u.vitality
-                LIMIT 1
-                UPDATE u WITH {
-                  lWThreadCount: ${user.lWThreadCount},
-                  lWPostCount: ${user.lWPostCount},
-                  vitality: ${user.vitality},
-                  uid: ${user.uid}
-                } IN activeusers
-            `)
-          })
-          .catch(e => console.log(e))
-      }
-      return queryfunc.rebuildActiveUsers()
-        .then(() => queryfunc.createIndex('activeusers',{
-            fields:['vitality'],
-            type:'skiplist',
-            unique:'false',
-            sparse:'false',
-          })
-        )
-        .catch((e) => console.log(e))
-    })
-};*/
-
 queryfunc.getActiveUsers = () => {
   return db.query(aql`
     FOR u IN activeusers
@@ -502,14 +429,13 @@ queryfunc.threadsCount = function(fid) {
 };
 
 queryfunc.setDigestHook = function(fid, digest) {
+  let dig = digest || false;
   return db.query(aql`
     LET f = DOCUMENT(forums, ${fid})
-    LET ${digest? 'digest' : 'normal'} = f.tCount.${digest? 'digest' : 'normal'} - 1
-    LET ${digest? 'normal' : 'digest'} = f.tCount.${digest? 'normal' : 'digest'} + 1
     UPDATE f WITH {
       tCount:{
-        normal,
-        digest
+        ${digest? 'digest' : 'normal'}: f.tCount.${digest? 'digest' : 'normal'} - 1,
+        ${digest? 'normal' : 'digest'}: f.tCount.${digest? 'normal' : 'digest'} + 1
       }
     } IN forums
   `)

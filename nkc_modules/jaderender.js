@@ -63,13 +63,13 @@ function getCertsInText(user){
   return s
 }
 
+
 function getUserDescription(user){
   return `${user.username}\n`+
-  `学术分 ${user.xsf||0}\n`+
-  `科创币 ${user.kcb||0}\n`+
-  `${getCertsInText(user)}`
+    `学术分 ${user.xsf||0}\n`+
+    `科创币 ${user.kcb||0}\n`+
+    `${getCertsInText(user)}`
 }
-
 var jadeoptions = {
   seo_rewrite_mapping:settings.seo_rewrite_mapping,
   seo_reverse_rewrite:function(url){

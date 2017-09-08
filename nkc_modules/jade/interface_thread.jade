@@ -22,10 +22,10 @@ block title
   
   
 block content
-  .container-fluid(style="max-width:1400px;")
+  div.container-fluid(style="max-width:1400px;")
     .row
       .col-sm-12.col-md-9.col-lg-9
-        #fullwidthpanel.ThreadBox.nkcpanel
+        div#fullwidthpanel.ThreadBox.nkcpanel
           - var thread = data.thread
           - var target = thread.fid || thread.toMid || thread.mid
           - var isMyForumMdr = user? data.myForum.moderators.indexOf(user._key) > -1 : false
@@ -210,8 +210,9 @@ block content
           include interface_navigation_paging.jade
           
           - var forumname = data.forum.display_name
+          - var forumType = data.thread.fid? 'f' : 'm'
           span.lighttext 返回 
-            a(href='/f/#{target}') #{forumname}
+            a(href='/#{forumType}/#{target}') #{forumname}
             //link back to forum
           br
           span.lighttext#bm 返回 
@@ -239,7 +240,7 @@ block content
                 if 0
                   .form-group
                     button#WiderArea.hidden-xs.btn.btn-default(onclick='widerArea()') 拓展
-                  
+                include twemoji
                 .form-group
                   button#GoEditor.btn.btn-default(onclick='goEditor()') 去编辑器
 
@@ -281,7 +282,7 @@ block content
         
         .nkcpanel2#topB(style='margin-left: -25px; position: fixed; top: 50%; display: block;')
           button(class="glyphicon glyphicon-chevron-up btn btn-sm btn-default" style="margin-bottom:10px; padding: 10px 3px;" onclick="javascript:window.scrollTo(0,0);")
-          br 
+          br
           button(class="glyphicon glyphicon-chevron-down btn btn-sm btn-default" onclick="location.href='#bm'" style="padding: 10px 3px;")
         
               

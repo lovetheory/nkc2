@@ -85,6 +85,14 @@ const updateActiveUsers = cronStr => {
   });
 };
 
+const truncateUsersLoggedToday = cronStr => {
+  scheduleJob(cronStr, () => {
+    console.log('now truncate the usersLoggedToday');
+    return db.collection('usersLoggedToday').truncate()
+  })
+}
+
 module.exports = {
-  updateActiveUsers
+  updateActiveUsers,
+  truncateUsersLoggedToday
 };

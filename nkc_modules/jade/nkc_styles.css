@@ -1703,3 +1703,12 @@ margin-left: 5px;
 .question p {
   display: inline;
 }
+
+/*style for twemoji*/
+
+img.emoji {
+  height: 1.6em;
+  width: 1.6em;
+  margin: -0.3em .05em -0.3em .1em;
+  vertical-align: -0.1em;
+}

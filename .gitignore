@@ -23,10 +23,8 @@
 /test.js
 /run_as_production
 /nkc_modules/mailSecrets.js
-
-/nkc_modules/mailSecrets_template.js
-/nkc_modules/server_settings.js
 /static
 /dump/*
 /run
 /npm-debug.log
+/nkc_modules/private_settings.js

@@ -43,15 +43,19 @@ block content
             a.btn.btn-default(href="/danger") 危险
             a.btn.btn-default(href="/f/recycle") 进入回收站
             a.btn.btn-default(href="/f/draft") 进入草稿版
-            
             a.btn.btn-default(href='/api/operation?operation=viewTemplate&template=stats/stats.jade') 看统计
-            
+            a.btn.btn-default(href='/newusers') 最新用户
       .col-xs-12.col-md-6
         .panel.panel-default.f12
           .panel-body
             h4 这里是回显
             pre#logger
-            
+      //积分管理
+      .col-xs-12.col-md-6
+        .panel.panel-default.f12
+          .panel-body
+            p 积分变动查询
+            a.btn.btn-default(href='/behaviors') 入口
     hr
     .row
       .col-md-9

@@ -114,7 +114,7 @@ function register_submit(){
       //refreshICode();
       getFocus("#icode")
     }*/
-    if(err.detail == '此号码已经用于其他用户注册，请检查或更换查'){
+    if(err.detail == '此号码已经用于其他用户注册，请检查或更换'){
       //refreshICode();
       getFocus("#phone")
     }
@@ -183,7 +183,7 @@ function getMcode(){
         //refreshICode();
         getFocus("#icode")
       }*/
-      if(err.detail == '此号码已经用于其他用户注册，请检查或更换查'){
+      if(err.detail == '此号码已经用于其他用户注册，请检查或更换'){
         //refreshICode()
         getFocus("#phone")
       }

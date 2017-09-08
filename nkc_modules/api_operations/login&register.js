@@ -15,14 +15,8 @@ var layer = require('../layer')
 var nm = require('nodemailer')
 const contentLength = require('../tools').contentLength;
 
-try{
-  var mailSecrets = require('../mailSecrets.js');
-  var sendSMS = require('../mailSecrets.js').sendSMS;
-}
-catch(e){
-  var mailSecrets = require('../mailSecrets_template.js');
-  var sendSMS = require('../mailSecrets_template.js').sendSMS;
-}
+var mailSecrets = require('../mailSecrets.js');
+var sendSMS = require('../mailSecrets.js').sendSMS;
 
 var transporter = nm.createTransport(mailSecrets.smtpConfig);
 
@@ -112,35 +106,36 @@ var create_phoneuser = function(user){
     if(resultArr.length!=0)throw '用户名已存在，请输入其他用户名'
     return apifunc.get_new_uid()
   })
-  .then((newuid)=>{
+  .then((newuid)=> {
     uid = newuid;
     console.log(newuid);
     var timestamp = Date.now();
 
     var newuser = {
       _key: uid,
-      username:user.username,
-      username_lowercase:user.username.toLowerCase(),
-      toc:timestamp,
-      tlv:timestamp,
-      certs:['mobile', 'examinated'],
+      username: user.username,
+      username_lowercase: user.username.toLowerCase(),
+      toc: timestamp,
+      tlv: timestamp,
+      certs: ['mobile', 'examinated'],
     }
 
-    var salt = Math.floor((Math.random()*65536)).toString(16)
-    var hash = sha256HMAC(user.password,salt)
+    var salt = Math.floor((Math.random() * 65536)).toString(16)
+    var hash = sha256HMAC(user.password, salt)
 
     var newuser_personal = {
-      _key:uid,
-      email:user.email,
-      hashtype:'sha256HMAC',
-      mobile:user.mobile, //if from mobile entry
-      password:{
-        hash:hash,
-        salt:salt,
+      _key: uid,
+      email: user.email,
+      hashtype: 'sha256HMAC',
+      mobile: user.mobile, //if from mobile entry
+      password: {
+        hash: hash,
+        salt: salt,
       },
-      regcode:user.regCode,
+      regcode: user.regCode,
     }
-    return queryfunc.doc_save(newuser,'users')
+    return queryfunc.doc_save(newuser, 'users')
+
     .then(()=>{
       return queryfunc.doc_save(newuser_personal,'users_personal')
     })
@@ -152,13 +147,13 @@ var create_phoneuser = function(user){
           abbr: SUBSTRING(${user.username}, 0, 6),
           display_name: CONCAT(${user.username}, '的专栏'),
           description: CONCAT(${user.username}, '的专栏'),
-          moderators: [${user.username}],
+          moderators: [${uid}],
           recPosts: []
         } INTO personalForums
         RETURN NEW
         `)
     })
-      .then(res => res._result[0])
+    .then(res => res._result[0])
   })
 }
 
@@ -311,7 +306,7 @@ table.userPhoneRegister = {
     if(contentLength(userobj.username) > 30) throw '用于名不能大于30字节(ASCII)';
     let uid;
     let user;
-    var time = Date.now() - 2*60*1000  //2分钟之内的验证码
+    const time = Date.now() - 2*60*1000  //2分钟之内的验证码
     const code = params.regCode;
     const c = new layer.BaseDao('answersheets', code);
     return c.load()
@@ -410,10 +405,10 @@ table.userMailRegister = {
       .then(j => {
         if (j.length >= 5) throw '邮件发送次数已达上限，请隔天再试'
         return AQL(`
-      for u in users
-      filter u.username == @username
-      return u
-      `, {username: params.username}
+          for u in users
+          filter u.username_lowercase == @username_lowercase
+          return u
+          `, {username_lowercase: params.username.toLowerCase()}
         )
       })
       .then(res => {
@@ -537,11 +532,12 @@ table.userLogin = {
       {username:params.username.toLowerCase()}
     )
     .then((back)=>{
-      if(back.length!==1)//user not exist
-      throw ('用户名不存在，请检查用户名');
-
-      user = back[0]
-
+      if(back.length === 0)//user not exist
+        throw ('用户名不存在，请检查用户名');
+      else if(back.length > 1) {
+        throw '数据库异常,请报告:bbs@kc.ac.cn';
+      }
+      user = back[0];
       return queryfunc.doc_load(user._key,'users_personal')
     })
     .then(user_personal=>{
@@ -892,7 +888,7 @@ table.getMcode2 = {
       )
     })
     .then(m=>{
-      if(m[0].username != username) {
+      if(m[0].username !== username) {
         incIpTry(ip);
         throw '用户名和手机号码不对应，请检查'
       }
@@ -918,6 +914,99 @@ table.getMcode2 = {
   }
 }
 
+//手机找回密码的验证码
+table.getMcode3 = {
+  operation:function(params){
+    const ip = params._req.iptrim;
+    const incIpTry = require('../ip_validation');
+    var phone = params.phone;
+    //var icode = params.icode;
+    var code = random(6);
+    var time = new Date().getTime();
+    var time2 = Date.now()-24*60*60*1000;
+    //console.log(phone,code);
+
+    return AQL(`
+      for u in smscode
+      filter u.phone == @phone && u.toc > @time2
+      return u
+      `,{phone, time2}
+    )
+      .then(j=>{
+        //if(icode.toLowerCase() != params._req.session.icode3.toLowerCase() ) throw '图片验证码不正确，请检查'
+        if(j.length >= 5) throw '短信发送次数已达上限，请隔天再试'
+        return AQL(`
+        for u in mobilecodes
+        filter u.mobile == @phone
+        return u
+        `,{phone}
+        )
+      })
+      .then(k=>{
+        if(k.length > 0) {
+          incIpTry(ip);
+          throw '此手机已经被绑定，请检查'
+        }
+        return AQL(`
+        for u in mobilecodes
+        filter u._key == @uid
+        return u
+        `,{uid: params.user._key}
+        )
+      })
+      .then(m=>{
+        if(m.length > 0) {
+          incIpTry(ip);
+          throw '暂不支持修改绑定号码'
+        }
+        sendSMS(phone, code , 'reset', function(err,res){ //2调用修改密码方法
+          if(err){
+            console.log(err)
+          }else{
+            console.log(res)
+          }
+        })
+        return AQL(`
+        INSERT {
+          phone: @phone, code: @code, toc: @time, type:2
+        } IN smscode
+        `,{phone,code,time}
+        )
+      })
+
+
+  },
+  requiredParams:{
+    phone:String,
+  }
+}
+
+table.bindMobile = {
+  operation: params => {
+    const phone = params.phone;
+    const code = params.code;
+    const user = params.user;
+    const time = Date.now() - 2 * 60 * 1000;
+    return db.query(aql`
+      FOR doc IN smscode
+        FILTER doc.toc > ${time} && doc.phone == ${phone} && doc.code == ${code}
+        RETURN doc
+    `)
+      .then(cursor => cursor.all())
+      .then(docs => {
+        if(docs.length === 1) {
+          return db.collection('mobilecodes').save({
+            mobile: phone,
+            uid: user._key,
+            toc: time
+          })
+        } else {
+          throw '验证码过期或者验证码错误'
+        }
+      })
+      .then(() => '绑定成功!')
+  }
+};
 
 
 table.pchangePassword = {
