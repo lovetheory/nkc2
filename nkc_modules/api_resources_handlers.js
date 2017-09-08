@@ -144,6 +144,7 @@ api.post('/avatar', avatar_upload.single('file'), function(req,res,next){
   //otherwise should we allow..
 
   var upath = req.file.path
+  console.log(upath);
 
   //process the avatar image.
   im.avatarify(upath) // avatarify in place

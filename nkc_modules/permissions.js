@@ -86,6 +86,9 @@ var certificates={
     },
 
     permittedOperations:{
+      viewBehaviorLogs: true,
+      viewNewUsers: true,
+
       moveToPersonalForum: true,
       addThreadToCart:true,
       addPostToCart:true,
@@ -190,6 +193,8 @@ var certificates={
       non_broadcast:true,
     },
     permittedOperations:{
+      getMcode3: true,
+      bindMobile: true,
       switchTInPersonalForum: true,
       switchDInPersonalForum: true,
       switchVInPersonalForum: true,

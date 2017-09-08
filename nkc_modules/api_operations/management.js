@@ -10,6 +10,7 @@ var AQL = queryfunc.AQL
 const db = queryfunc.getDB();
 const aql = queryfunc.getAql();
 const im = require('../im_functions');
+const operationScoreHandler = require('../score_handler').operationScoreHandler;
 
 var layer = require('../layer')
 
@@ -60,6 +61,21 @@ table.moveThread = {
       //test existence
       return thread.update({fid,cid})
     })
+    .then(() => {
+      if(fid === 'recycle')
+        return operationScoreHandler({
+          address: params._req.connection.remoteAddress,
+          port: params._req.connection.remotePort,
+          isManageOp: true,
+          operation: 'moveToRecycle',
+          from: params.user._key,
+          to: thread.model.uid,
+          timeStamp: Date.now(),
+          parameters: {
+            targetKey: 't/' + thread.model._key
+          }
+        })
+    })
     .then(()=>`successfully moved ${tid} to ${fid}`)
   },
   requiredParams:{
@@ -101,6 +117,19 @@ table.disablePost = {
       //else we have to check: do you own the original forum?
       return origforum.testModerator(params.user._key)
     })
+    .then(() => operationScoreHandler({
+      address: params._req.connection.remoteAddress,
+      port: params._req.connection.remotePort,
+      isManageOp: true,
+      operation: 'disablePost',
+      from: params.user._key,
+      to: thread.model.uid,
+      timeStamp: Date.now(),
+      parameters: {
+        targetKey: 't/' + thread.model._key,
+        pid,
+      }
+    }))
     .then(()=>{
       return post.update({disabled:true})
       .then(post=>{
@@ -238,8 +267,36 @@ table.setDigest={
       return thread.update({digest:thread.model.digest?null:true})
     })
     .then(() => {
+      const timeStamp = Date.now();
+      if(thread.model.digest)
+        return operationScoreHandler({
+          address: params._req.connection.remoteAddress,
+          port: params._req.connection.remotePort,
+          isManageOp: true,
+          operation: 'setDigest',
+          from: params.user._key,
+          to: thread.model.uid,
+          timeStamp,
+          parameters: {
+            targetKey: 't/' + tid
+          }
+        });
+      return operationScoreHandler({
+        address: params._req.connection.remoteAddress,
+        port: params._req.connection.remotePort,
+        isManageOp: true,
+        operation: 'cancelDigest',
+        from: params.user._key,
+        to: thread.model.uid,
+        timeStamp,
+        parameters: {
+          targetKey: 't/' + tid
+        }
+      })
+    })
+    .then(() => {
       if(!forum.model) return
-      queryfunc.setDigestHook(forum.model._key, thread.model.digest)
+      return queryfunc.setDigestHook(forum.model._key, thread.model.digest)
     })
     .then(()=>{
       return {message:thread.model.digest?'设置精华':'撤销精华'}
@@ -270,6 +327,34 @@ table.setTopped={
     })
     .then(()=>{
       return thread.update({topped:thread.model.topped?null:true})
+    })
+    .then(() => {
+      const timeStamp = Date.now();
+      if(thread.model.topped)
+        return operationScoreHandler({
+          address: params._req.connection.remoteAddress,
+          port: params._req.connection.remotePort,
+          isManageOp: true,
+          operation: 'cancelTopped',
+          from: params.user._key,
+          to: thread.model.uid,
+          timeStamp,
+          parameters: {
+            targetKey: 't/' + tid
+          }
+        });
+      return operationScoreHandler({
+        address: params._req.connection.remoteAddress,
+        port: params._req.connection.remotePort,
+        isManageOp: true,
+        operation: 'setTopped',
+        from: params.user._key,
+        to: thread.model.uid,
+        timeStamp,
+        parameters: {
+          targetKey: 't/' + tid
+        }
+      });
     })
     .then(()=>{
       return {message:thread.model.topped?'设为置顶':'撤销置顶'}
@@ -359,11 +444,13 @@ table.addCredit = {
     //0. extract params
     var q = Number(params.q)
     if(q>10000 ||q<-10000){
-      throw 'invalid q value'
+      throw 'invalid q va lue'
     }
 
     var type = params.type
     var pid = params.pid
+
+
 
     var reason = params.reason
     if(reason.length<2)throw '写太短啦'
@@ -400,6 +487,8 @@ table.addCredit = {
         q,
         uid:params.user._key,
         username:params.user.username,
+        address: params._req.connection.remoteAddress,
+        port: params._req.connection.remotePort,
         touid,
         reason,
         source:'nkc',

@@ -41,8 +41,18 @@ table.viewMe = {
     data.certificateDefinitions = require('../permissions').certificates
 
     data.examinated = params.examinated
-    data.replytarget = 'me'
-    return data
+    data.replytarget = 'me';
+    var psnl = new layer.Personal(params.user._key)
+    return psnl.load()
+      .then(psnl => {
+        data.personal = psnl
+
+        return getForumList(params)
+      })
+      .then(res => {
+        data.forumlist = res
+        return data
+      })
   }
 }
 
@@ -131,16 +141,16 @@ table.viewActiveEmail = {
             hashtype: res[0].hashtype,
             email: res[0].email
           }
-          create_muser(user)
+          return create_muser(user)
             .then(k => {
               console.log(k)
+              return data.activeInfo1 = '邮箱注册成功，赶紧登录吧~'
             })
-          data.activeInfo1 = '邮箱注册成功，赶紧登录吧~'
         } else {
-          data.activeInfo2 = '邮箱链接已失效，请重新注册！'
+          return data.activeInfo2 = '邮箱链接已失效，请重新注册！'
         }
-        return data
       })
+      .then(() => data)
 
   }
 }
@@ -723,6 +733,7 @@ table.viewHome = {
         return queryfunc.getActiveUsers();
       })
       .then(res => {
+        data.twemoji = settings.editor.twemoji;
         data.activeUsers = res._result;
         return queryfunc.getIndexForumList(contentClasses);
       })
@@ -830,7 +841,7 @@ table.viewForum = {
         //if nothing went wrong
         data.cat = params.cat;
         data.threads = result;
-
+        data.twemoji = setting.editor.twemoji;
         data.paging = params.paging || 0;
 
         return getForumList(params)
@@ -1015,7 +1026,7 @@ table.viewThread = {
       .then(pf => data.myForum = pf)
       .then(() => getForumList(params))
       .then(forumlist => {
-
+        data.twemoji = settings.editor.twemoji;
         data.forumlist = forumlist
         data.replytarget = 't/' + tid
 
@@ -1081,6 +1092,7 @@ table.viewPersonalForum = {
       .then(cursor => cursor.next())
       .then(forum => {
         data.forum = forum;
+        data.twemoji = settings.editor.twemoji;
         forumObj = forum;
         return queryfunc.getVisibleChildForums(params)
       })
@@ -1397,7 +1409,7 @@ table.viewPersonalForum = {
               LET oc = DOCUMENT(posts, thread.oc)
               LET ocuser = DOCUMENT(users, thread.ocuser)
               LET lm = DOCUMENT(posts, thread.lm)
-              LET lmuser = DOCUMENT(users, thread.lmuser)
+              LET lmuser = DOCUMENT(users, lm.uid)
             RETURN MERGE(thread, {
               oc,
               ocuser,
@@ -1515,7 +1527,7 @@ table.viewEditor = {
           return data;
         })
     }
-
+    data.twemoji = settings.editor.twemoji;
     data.original_post = {
       c: params.content ? decodeURI(params.content) : '',
       //l:'pwbb',
@@ -2403,8 +2415,127 @@ table.viewLocalSearch = {
         return data
       })
   },
-}
+};
 
+table.viewBehaviorLogs = {
+  init: () => Promise.all([
+    queryfunc.createIndex('behaviorLogs', {
+      fields: ['from'],
+      type: 'skiplist',
+    }),
+    queryfunc.createIndex('behaviorLogs', {
+      fields: ['to'],
+      type: 'skiplist',
+    }),
+    queryfunc.createIndex('behaviorLogs', {
+      fields: ['isManageOp'],
+      type: 'skiplist',
+    }),
+    queryfunc.createIndex('behaviorLogs', {
+      fields: ['timeStamp'],
+      type: 'skiplist',
+    }),
+    queryfunc.createIndex('creditlogs', {
+      fields: ['type', 'source'],
+      type: 'skiplist'
+    })
+  ]),
+  operation: params => {
+    const data = defaultData(params);
+    data.template = jadeDir + '/interface_behavior_log.jade';
+    const page = params.page - 1 || 0;
+    const type = params.type || 'all';
+    const perPage = settings.paging.perpage;
+    const filterTypes = {
+      all: 'all',
+      management: true,
+      normal: false
+    };
+    const filter = (filterTypes[type] === 'all' ? null : 'isManageOp');
+    const from = params.from;
+    const to = params.to;
+    const address = params.ip;
+    const sort = params.sort || 'desc';
+    return db.query(aql`
+      LET logs1 = (FOR log IN behaviorLogs
+        FILTER log.${from? 'from': to? 'to' : 'non'} == ${from? from: to? to: null} && 
+        log.${filter? filter : 'non'} == ${filter? filterTypes[type] : null} &&
+        log.${address? 'address' : 'non'} == ${address? address : null}
+        RETURN log)
+      LET logs2 = (FOR log IN creditlogs
+        FILTER log.type == 'xsf' && log.source == 'nkc' && log.address > null &&
+        log.${from? 'from': to? 'to' : 'non'} == ${from? from: to? to: null} && 
+        log.${filter? filter : 'non'} == ${filter? filterTypes[type] : null} &&
+        log.${address? 'address' : 'non'} == ${address? address : null}
+        LET p = DOCUMENT(posts, log.pid)
+        RETURN {
+          timeStamp: log.toc,
+          reason: log.reason,
+          from: log.uid,
+          to: log.touid,
+          port: log.port,
+          address: log.address,
+          operation: 'changeXSF',
+          number: log.q,
+          parameters: {
+            targetKey: '/t/' + p.tid,
+            pid: log.pid
+          } 
+        }
+      )
+      LET logs = (FOR log IN UNION(logs1, logs2)
+        SORT log.timeStamp ${sort}
+        return log)
+      LET length = LENGTH(logs)
+      LET result = SLICE(logs, ${page * perPage}, ${perPage})
+      RETURN {
+        logs: result,
+        length
+      }
+    `)
+      .then(cursor => cursor.next())
+      .then(result => {
+        data.behaviorLogs = result.logs;
+        let newPage = new layer.Paging(page).getPagingParams(result.length);
+        newPage.page = params.page || 1;
+        data.page = newPage;
+        data.type = type;
+        data.from = from;
+        data.ip = params.ip;
+        data.to = to;
+        data.sort = params.sort;
+        return data
+      })
+  }
+};
+
+table.viewNewUsers = {
+  operation: params => {
+    const data = defaultData(params);
+    const page = params.page || 0;
+    const perPage = settings.paging.perpage;
+    data.template = jadeDir + '/interface_new_users.jade';
+    return db.query(aql`
+      LET users = (FOR u IN users
+        SORT u.toc DESC
+        return u)
+      LET length = LENGTH(users)
+      LET result = SLICE(users, ${page * perPage}, ${perPage})
+      RETURN {
+        users: result,
+        length
+      }
+    `)
+      .then(cursor => cursor.next())
+      .then(res => {
+        data.users = res.users;
+        let newPage = new layer.Paging(page).getPagingParams(res.length);
+        newPage.page = params.page || 1;
+        data.page = newPage;
+        return data
+      })
+  }
+};
 
 function sha256HMAC(password, salt) {
   const crypto = require('crypto')
@@ -2427,7 +2558,7 @@ function create_muser(user) {
         username_lowercase: user.username.toLowerCase(),
         toc: timestamp,
         tlv: timestamp,
-        certs: ['mail'],
+        certs: ['mail', 'examinated'],
       }
 
       var newuser_personal = {
@@ -2436,7 +2567,17 @@ function create_muser(user) {
         hashtype: user.hashtype,
         password: user.password
       };
-      return queryfunc.doc_save(newuser, 'users')
+      return db.query(aql`
+        for u in users
+          filter u.username_lowercase == ${user.username.toLowerCase()}
+        return u
+      `)
+        .then(cursor => cursor.all())
+        .then(users => {
+          if (users.length > 0)
+            throw `此用户名已经被注册,请重新注册`;
+          return queryfunc.doc_save(newuser, 'users')
+        })
         .then(() => {
           return queryfunc.doc_save(newuser_personal, 'users_personal')
         })
@@ -2453,5 +2594,27 @@ function create_muser(user) {
             } INTO personalForums
           `)
         })
+        .catch((err) => {
+          let errInsert = err;
+          return Promise.resolve()
+            .then(deleteErrDoc(uid, 'users'))
+            .then(deleteErrDoc(uid, 'users_personal'))
+            .then(deleteErrDoc(uid, 'personalForums'))
+            .then(() => {
+              throw `创建用户数据表出错：${err}`;
+            })
+            .catch((err) => {
+              throw `创建用户数据表出错:${errInsert}；${err}`;
+            })
+        })
     })
+}
+function deleteErrDoc(uid, collection) {
+  return db.query(aql`
+		FOR u IN ${collection}
+		FILTER u._key = ${uid}
+		REMOVE u IN ${collection}
+	`).catch((uid, collection, err) => {
+    throw `删除${collection}中_key=${uid}出错：${err}`;
+  });
 }

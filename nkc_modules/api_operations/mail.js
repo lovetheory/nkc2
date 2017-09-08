@@ -13,12 +13,7 @@ var layer = require('../layer');
 
 var nm = require('nodemailer');
 
-try{
-  var mailSecrets = require('../mailSecrets.js')
-}
-catch(e){
-  var mailSecrets = require('../mailSecrets_template.js')
-}
+var mailSecrets = require('../mailSecrets.js')
 
 var transporter = nm.createTransport(mailSecrets.smtpConfig);
 

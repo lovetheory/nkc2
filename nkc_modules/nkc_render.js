@@ -7,6 +7,7 @@ function nkc_render(options){
   var plain_escape;
   var XBBCODE;
   var xss;
+  var twemoji;
   if(in_browser){
     //browser mode
     //inclusion here done by <script>
@@ -14,13 +15,14 @@ function nkc_render(options){
     plain_escape = window.plain_escape;
     XBBCODE = window.XBBCODE;
     xss = window.filterXSS;
-
+    twemoji = window.twemoji;
     console.log('nkc_render.js running in browser.');
   }else{
     commonmark = require('commonmark');
     plain_escape = require('./jade/plain_escaper');
     XBBCODE = require('xbbcode-parser');
-    xss = require('xss')
+    xss = require('xss');
+    twemoji = require('twemoji');
   }
 
   //xss-----------------
@@ -462,6 +464,11 @@ function nkc_render(options){
       default:
       renderedHTML = plain_escape(content)
     }
+    renderedHTML = twemoji.parse(renderedHTML, {
+      folder: '/2/svg',
+      base: '/twemoji',
+      ext: '.svg'
+    });
     renderedHTML = linkAlienate(renderedHTML) //please check linkAlienate()
     var atUsers = post.atUsers;
     if(atUsers && atUsers.length > 0) {

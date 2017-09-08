@@ -1,6 +1,7 @@
 const queryFunc = require('../query_functions');
 const aql = queryFunc.getAql();
 const db = queryFunc.getDB();
+const operationScoreHandler = require('../score_handler').operationScoreHandler;
 
 let table = {};
 
@@ -46,6 +47,18 @@ table.recommendPost = {
           } IN posts
         `)
       })
+      .then(() => operationScoreHandler({
+        address: params._req.connection.remoteAddress,
+        port: params._req.connection.remotePort,
+        operation: 'recommendPost',
+        from: params.user._key,
+        to: post.uid,
+        timeStamp: time,
+        parameters: {
+          targetKey: 't/' + post.tid,
+          pid: post._key
+        }
+      }))
       .catch(e => {throw e;})
   }
 };
@@ -66,6 +79,18 @@ table.unrecommendPost = {
           } IN personalForums
         `)
       })
+      .then(() => operationScoreHandler({
+        address: params._req.connection.remoteAddress,
+        port: params._req.connection.remotePort,
+        operation: 'unrecommendPost',
+        from: params.user._key,
+        to: post.uid,
+        timeStamp: time,
+        parameters: {
+          targetKey: 't/' + post.tid,
+          pid: post._key
+        }
+      }))
       .then(() => {
         return db.query(aql`
           LET post = DOCUMENT(posts, ${unrecPid})

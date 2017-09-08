@@ -2,6 +2,7 @@ const permissions = require('../permissions');
 const queryFunc = require('../query_functions');
 const aql = queryFunc.getAql();
 const db = queryFunc.getDB();
+const operationScoreHandler = require('../score_handler').operationScoreHandler;
 
 let table = {};
 
@@ -9,6 +10,7 @@ table.subscribeUser = {
   operation: params => {
     let user = params.user;
     let subUid = params.targetUid;
+    console.log(params._req.connection.remoteAddress + ':' + params._req.connection.remotePort)
     return db.collection('users').document(subUid)
       .then(() => {
         return db.query(aql`
@@ -21,6 +23,26 @@ table.subscribeUser = {
           IN usersSubscribe
         `)
       })
+      .then(() => db.query(aql`
+        UPSERT {_key: ${subUid}}
+        INSERT {
+          _key: ${subUid},
+          subscribers: [${user._key}]
+        }
+        UPDATE {subscribers: PUSH(OLD.subscribers || [], ${user._key}, true)}
+        IN usersSubscribe
+      `))
+      .then(() => operationScoreHandler({
+        address: params._req.connection.remoteAddress,
+        port: params._req.connection.remotePort,
+        operation: 'subscribeUser',
+        from: user._key,
+        to: subUid,
+        timeStamp: Date.now(),
+        parameters: {
+          targetKey: 'm/' + user._key
+        }
+      }))
       .catch(e => {throw `user ${user._key} does not exist.`})
   }
 };
@@ -30,11 +52,28 @@ table.unsubscribeUser = {
     let user = params.user;
     let unSubUid = params.targetUid;
     return db.query(aql`
-    LET o = DOCUMENT(usersSubscribe, ${user._key})
-      UPDATE o WITH {
-        subscribeUsers: REMOVE_VALUE(o.subscribeUsers, ${unSubUid})
-      } IN usersSubscribe
+      LET o = DOCUMENT(usersSubscribe, ${user._key})
+        UPDATE o WITH {
+          subscribeUsers: REMOVE_VALUE(o.subscribeUsers, ${unSubUid})
+        } IN usersSubscribe
     `)
+      .then(() => db.query(aql`
+        LET o = DOCUMENT(usersSubscribe, ${unSubUid})
+        UPDATE o WITH {
+          subscribers: REMOVE_VALUE(o.subscribers, ${user._key})
+        } IN usersSubscribe
+      `))
+      .then(() => operationScoreHandler({
+        address: params._req.connection.remoteAddress,
+        port: params._req.connection.remotePort,
+        operation: 'unsubscribeUser',
+        from: user._key,
+        to: unSubUid,
+        timeStamp: Date.now(),
+        parameters: {
+          targetKey: 'm/' + user._key
+        }
+      }))
   }
 };
 

@@ -29,7 +29,9 @@ var RedisStore = require('connect-redis')(session);
 
 var apifunc = require('./nkc_modules/api_functions');
 var queryfunc = require('./nkc_modules/query_functions');
-
+const db = queryfunc.getDB();
+const aql = queryfunc.getAql();
+const operationScoreHandler = require('./nkc_modules/score_handler').operationScoreHandler;
 queryfunc.db_init();
 
 var nkc = express(); //main router
@@ -211,6 +213,24 @@ nkc.use((req,res,next)=>{
       u.update({tlv:Date.now()});
     })
   })
+  .then(() => db.query(aql`
+    RETURN DOCUMENT(usersLoggedToday, ${req.user._key})
+  `))
+  .then(cursor => cursor.all())
+  .then(users => {
+    if(users.length) return
+    return operationScoreHandler({
+      ip: req.connection.remoteAddress + ':' + req.connection.remotePort,
+      operation: 'dailyLogin',
+      from: req.user._key,
+      to: req.user._key,
+      timeStamp: Date.now()
+    })
+      .then(() => db.collection('usersLoggedToday').save({
+        time: Date.now(),
+        _key: req.user._key
+      }))
+  })
   .then(next)
   .catch((err)=>{
     report('error requesting for user',err)
@@ -276,6 +296,7 @@ nkc.use((err,req,res,next)=>{
 });
 
 const updateActiveUsers = cronJobs.updateActiveUsers(settings.updateActiveUsersCronStr);
+const truncateUsersLoggedToday = cronJobs.truncateUsersLoggedToday(settings.truncateUsersLoggedToday);
 
 //server listening settings
 var listenaddr = '0.0.0.0'

@@ -13,8 +13,8 @@
     span 科创币 #{user.kcb||0}
 
 
-    span 总主题 #{user.count_threads||0} 帖
-    span 总回复 #{user.count_posts||0} 楼
+    span 总主题 #{user.threadCount||0} 帖
+    span 总回复 #{user.postCount||0} 楼
 
     -var listCertText = getUserDescription(user).split('\n').pop()
     span 拥有证书：#{listCertText}
