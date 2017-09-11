@@ -131,7 +131,7 @@ block content
                    span(style='font-size:0.8em;') （点击可自动输入。）
                 -var forumlist = data.forumlist;
                 -for (var i = 0; i < forumlist.length; i++)
-                  .col-xs-12.col-md-2
+                  .col-xs-12.col-md-12
                     ul.list-inline(style='padding:0;')
                       li(style='list-style:none;font-size:1.2em;padding-bottom:0.5em;') #{forumlist[i].parentforum.display_name}
                       -for (var j = 0; j < forumlist[i].forumgroup.length; j++)
