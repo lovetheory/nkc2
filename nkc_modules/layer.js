@@ -88,9 +88,11 @@ var layer = (function () {
                     LET usersSub = DOCUMENT(usersSubscribe, ${this.key})
                     LET subscribeUsers = usersSub.subscribeUsers
                     LET subscribeForums = usersSub.subscribeForums
+                    LET subscribers = usersSub.subscribers
                     RETURN MERGE(u, {
                         subscribeUsers,
-                        subscribeForums
+                        subscribeForums,
+                        subscribers
                     })
                 `)
           .then(res => {
