@@ -1661,7 +1661,11 @@ margin-left: 5px;
     display: none;
   }
 }
-
+@media screen and (max-width: 991px) {
+  .hidden-label{
+    display: none;
+  } 
+}
 .nkc-figure-text {
   font-size: 14px;
   background-color: rgba(0, 0, 0, 0.5);
