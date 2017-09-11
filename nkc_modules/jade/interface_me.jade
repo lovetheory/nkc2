@@ -122,7 +122,7 @@ block content
               .form-group
                 input.form-control#focus_forums(type='text', placeholder='例如：81,373', name='colorCode', onclick='select()',value='#{user.focus_forums||""}')
             .col-xs-12.col-md-5
-              button.btn.btn-default.center-block#changeFocusDiv(onclick='changeFocusDiv()') 板块id示例 
+              button.btn.btn-default#changeFocusDiv(onclick='changeFocusDiv()') 板块id示例
                 span.caret
           #focusDiv(style='display:none;')
             .col-xs-12.col-md-12
@@ -131,7 +131,7 @@ block content
                    span(style='font-size:0.8em;') （点击可自动输入。）
                 -var forumlist = data.forumlist;
                 -for (var i = 0; i < forumlist.length; i++)
-                  .col-xs-12.col-md-2(style='min-height:14em;')
+                  .col-xs-12.col-md-2
                     ul.list-inline(style='padding:0;')
                       li(style='list-style:none;font-size:1.2em;padding-bottom:0.5em;') #{forumlist[i].parentforum.display_name}
                       -for (var j = 0; j < forumlist[i].forumgroup.length; j++)
