@@ -136,7 +136,7 @@ block content
                       li(style='list-style:none;font-size:1.2em;padding-bottom:0.5em;') #{forumlist[i].parentforum.display_name}
                       -for (var j = 0; j < forumlist[i].forumgroup.length; j++)
                         li(style='list-style:none;padding-left:0.5em;')
-                          a(href='###',onclick='fillFocusId(#{forumlist[i].forumgroup[j]._key})',style='color:#666;font-size:1em;') #{forumlist[i].forumgroup[j]._key + '：' + forumlist[i].forumgroup[j].display_name}
+                          a(href='###',onclick='fillFocusId("#{forumlist[i].forumgroup[j]._key}")',style='color:#666;font-size:1em;') #{forumlist[i].forumgroup[j]._key + '：' + forumlist[i].forumgroup[j].display_name}
           .col-xs-12.col-md-12
             br
             br
