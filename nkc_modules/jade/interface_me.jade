@@ -205,7 +205,6 @@ block scripts
       nkcAPI('changePassword',passwordObj)
       .then(function(){
         jwarning('密码修改成功！');
-        window.location.reload();
       })
       .catch(function(err){
         jwarning(err);
