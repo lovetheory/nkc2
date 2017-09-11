@@ -52,13 +52,13 @@ block content
                             if moderators && moderators.length
                               span 版主：
                                 each k in moderators
-                                  a.d-inline.margin-right(href='/m/#{k._key}') #{k.username}
-                              -var subscribeUsersNum = (data.targetUser.subscribeUsers)?data.targetUser.subscribeUsers.length : 0;
-                              -var subscribersNum = (data.targetUser.subscribers)?data.targetUser.subscribers.length : 0;    
+                                  a.d-inline.margin-right(href='/m/#{k._key}') #{k.username}    
+                              -var subscribeUsersNum = (data.targetUser.subscribeUsers)?data.targetUser.subscribeUsers : [];
+                              -var subscribersNum = (data.targetUser.subscribers)?data.targetUser.subscribers : [];    
                               span 关注：
-                                a.d-inline.margin-right(href='###') #{subscribeUsersNum}
+                                a.d-inline.margin-right(href='###') #{subscribeUsersNum.length}
                               span 粉丝：
-                                a.d-inline.margin-right(href='###') #{subscribersNum}
+                                a.d-inline.margin-right(href='###') #{subscribersNum.length}
                         div(style='position: absolute; right: 0; top: 0;')
                           if isModerator
                             div
