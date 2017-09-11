@@ -110,18 +110,18 @@ block content
             .col-xs-12.col-md-12
               .h4(style='font-weight:300;') Colorcode
                 span(style='font-size:0.8em;') （作为页面背景的颜色，有时显示在用户名的左侧成一个小圆圈。）
-            .col-xs-5.col-md-5
+            .col-xs-12.col-md-5
               .form-group
                 input.form-control#color(type='text', placeholder='例如草木绿：#97b45a', name='colorCode', onclick='select()',value='#{user.color||""}')
-          .col-xs-6.col-md-6
+          .col-xs-12.col-md-6
             br
             .col-xs-12.col-md-12
               .h4(style='font-weight:300;') 关注板块id
                 span(style='font-size:0.8em;') （原本只能用半角逗号分隔，后来我发现有的同学非要用全角逗号，所以我只好写了兼容代码。）
-            .col-xs-5.col-md-5
+            .col-xs-12.col-md-5
               .form-group
                 input.form-control#focus_forums(type='text', placeholder='例如：81,373', name='colorCode', onclick='select()',value='#{user.focus_forums||""}')
-            .col-xs-5.col-md-5
+            .col-xs-12.col-md-5
               button.btn.btn-default.center-block#changeFocusDiv(onclick='changeFocusDiv()') 板块id示例 
                 span.caret
           #focusDiv(style='display:none;')
@@ -223,7 +223,6 @@ block scripts
       nkcAPI('submitPersonalSetting',settingObj)
       .then(function(){
         jwarning('个人资料修改成功！');
-        window.location.reload();
       })
       .catch(function(err){
         jwarning(err);
@@ -239,7 +238,6 @@ block scripts
       })
       .then(function(){
         jwarning('手机号码绑定成功！');
-        window.location.reload();
       })
       .catch(function(err){
         jwarning(err);
