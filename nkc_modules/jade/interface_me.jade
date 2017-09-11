@@ -132,10 +132,10 @@ block content
                 -var forumlist = data.forumlist;
                 -for (var i = 0; i < forumlist.length; i++)
                   .col-xs-12.col-md-2(style='min-height:14em;')
-                    ul(style='padding:0;')
-                      li(style='list-style:none;font-size:1.1em;padding-bottom:0.5em;') #{forumlist[i].parentforum.display_name}
+                    ul.list-inline(style='padding:0;')
+                      li(style='list-style:none;font-size:1.2em;padding-bottom:0.5em;') #{forumlist[i].parentforum.display_name}
                       -for (var j = 0; j < forumlist[i].forumgroup.length; j++)
-                        li(style='list-style:none;')  
+                        li(style='list-style:none;padding-left:0.5em;')
                           a(href='###',onclick='fillFocusId(#{forumlist[i].forumgroup[j]._key})',style='color:#666;font-size:1.2em;') #{forumlist[i].forumgroup[j]._key + '：' + forumlist[i].forumgroup[j].display_name}
           .col-xs-12.col-md-12
             br
@@ -220,22 +220,6 @@ block scripts
         color:geid('color').value,
         focus_forums:geid('focus_forums').value,
       };
-      if(settingObj.post_sign == ''){
-        jwarning('帖子签名不能为空！');
-        return;
-      }
-      if(settingObj.description == ''){
-        jwarning('个人简介不能为空！');
-        return;
-      }
-      if(settingObj.color == ''){
-        jwarning('Colorcode不能为空！');
-        return;
-      }
-      if(settingObj.focus_forums == ''){
-        jwarning('关注板块id不能为空！');
-        return;
-      }
       geid('submitpersonalsetting').disabled = true;
       nkcAPI('submitPersonalSetting',settingObj)
       .then(function(){
