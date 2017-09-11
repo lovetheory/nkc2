@@ -54,9 +54,9 @@ block content
                                 each k in moderators
                                   a.d-inline.margin-right(href='/m/#{k._key}') #{k.username}
                               span 关注：
-                                a.d-inline.margin-right(href='###') #{data.targetUser.subscribeUsers.length}
+                                a.d-inline.margin-right(href='###') #{data.targetUser.subscribeUsers.length||0}
                               span 粉丝：
-                                a.d-inline.margin-right(href='###') #{data.targetUser.subscribers.length}
+                                a.d-inline.margin-right(href='###') #{data.targetUser.subscribers.length||0}
                         div(style='position: absolute; right: 0; top: 0;')
                           if isModerator
                             div
