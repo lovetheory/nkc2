@@ -53,8 +53,8 @@ block content
                               span 版主：
                                 each k in moderators
                                   a.d-inline.margin-right(href='/m/#{k._key}') #{k.username}
-                              -subscribeUsersNum = (data.targetUser.subscribeUsers)?data.targetUser.subscribeUsers.length : 0;
-                              -subscribersNum = (data.targetUser.subscribers)?data.targetUser.subscribers.length : 0;    
+                              -var subscribeUsersNum = (data.targetUser.subscribeUsers)?data.targetUser.subscribeUsers.length : 0;
+                              -var subscribersNum = (data.targetUser.subscribers)?data.targetUser.subscribers.length : 0;    
                               span 关注：
                                 a.d-inline.margin-right(href='###') #{subscribeUsersNum}
                               span 粉丝：
