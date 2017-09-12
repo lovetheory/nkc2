@@ -1779,8 +1779,9 @@ table.viewSMS = {
     data.template = jadeDir + 'interface_messages.jade'
     var uid = params.user._key
     data.receiver = params.receiver //optional param
-    const page = params.page;
+    const page = params.page || 0;
     const perPage = 20;
+    const tab = params.tab || 'replies';
     return AQL(`
       FOR s IN sms
         FILTER s.s == @uid || s.r == @uid
