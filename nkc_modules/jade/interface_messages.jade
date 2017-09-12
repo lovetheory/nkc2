@@ -7,112 +7,20 @@ block title
 block content
   .container
     .row
-      if data.replylist && data.replylist.length
-        .col-xs-12
-          .nkcpanel(style='max-height:300px;overflow-x:scroll;')
-            h4 回复提醒
-            .SMSTable
-              each r in data.replylist
-                -var goto = '/t/'+r.topost.tid
-                -var isNew = r.toc>data.lastVisitTimestamp
-                .SMSTableItem
-                  .SMSFirstRow
-                    span(class='#{isNew?"reddish":""}') #{dateTimeString(r.toc)}
-                    span #{fromNow(r.toc)}
+      .panel.panel-default
+        ul.nav.nav-tabs
+          - var nowAt = data.tab
+            li(class='#{nowAt === 'replies'? 'active': ''}')
+              a(href='/sms?&tab=replies') 回复提醒
+            li(class='#{nowAt === 'at'? 'active': ''}')
+              a(href='/sms?&tab=at') @我的
+            li(class='#{nowAt === 'messages'? 'active': ''}')
+              a(href='/sms?&tab=messages') 短消息
+            li(class='#{nowAt === 'system'? 'active': ''}')
+              a(href='/sms?&tab=system') 系统通知
 
-                    span
-                      - var uid = r.fromuser._key
-                      - var avatar = '/avatar_small/' + uid
-                        a(href='/m/#{uid}')
-                          img.HomeThreadAvatar(src='#{avatar}')
-
-                    span #{r.fromuser.username} 回复了 #{r.touser.username} 的
-                      a(href='#{goto}') #{digestText(r.topost.t||''+'-'+r.topost.c,20)+'...'}
-
-                  .SMSSecondRow
-                    .SMSSentByOthers
-                      a(href='#{goto}' target='_blank') #{digestText(r.frompost.t||''+'-'+r.frompost.c)}
-
-      if data.invites && data.invites.length
-        .col-xs-12
-          .nkcpanel(style='max-height: 300px; overflow-x: scroll;')
-            h4 @你的
-            .SMSTable
-              for invite in data.invites
-                -var isNew = invite.toc > data.lastVisitTimestamp
-                .SMSTableItem
-                  .SMSFirstRow
-                    span(class='#{isNew ? "reddish" : ""}') #{dateTimeString(invite.toc)}
-                      span #{fromNow(invite.toc)}
-                      span
-                        a(href='/m/#{invite.inviter}')
-                          img.HomeThreadAvatar(src='/avatar_small/#{invite.inviter}')
-                        a(href='/m/#{invite.inviter}') #{invite.user.username}&nbsp;
-                        span 在帖子
-                        a(href='/t/#{invite.oc.tid}##{invite.pid}') #{invite.oc.t}&nbsp;
-                        span 中@了你
-
-      .col-xs-12
-        .nkcpanel
-          h4 短消息
-          span (点击用户名快捷添回复)
-          .row
-            .form-group.col-sm-3#msgForm
-              input#username.form-control(type='text' placeholder='收信人用户名' value="#{data.receiver||''}")
-
-            li.col-sm-12(style='list-style-type: none;')
-              textarea#content.form-control(placeholder='消息内容' form='msgForm' style='height: 100px;')
-
-            .form-group.col-sm-2
-              button#send.btn.btn-default() 发送
-              
-
-          -var smslist = data.smslist
-          nav
-            include interface_navigation_paging.jade
-          .SMSTable
-              
-            each s,index in smslist
-              -var isNew = s.toc>data.lastVisitTimestamp
-              -var sender = s.us
-              -var receiver = s.ur
-              -var senderid = s.s
-              -var receiverid = s.r
-              -var content = s.c
-              .SMSTableItem
-                .SMSFirstRow
-                  span(class='#{isNew?"reddish":""}') #{dateTimeString(s.toc)}
-                  span #{fromNow(s.toc)}
-                  
-                  span
-                    - var uid = sender._key
-                    - var avatar = '/avatar_small/' + uid
-                      a(href='/m/#{uid}')
-                        img.HomeThreadAvatar(src='#{avatar}')
-
-                  span(onclick="setReceiver('#{sender.username}')") #{sender.username}
-                    
-                  span ▶
-                  span
-                    - var uid = receiver._key
-                    - var avatar = '/avatar_small/' + uid
-                      a(href='/m/#{uid}')
-                        img.HomeThreadAvatar(src='#{avatar}')
-                      
-                  span(onclick="setReceiver('#{receiver.username}')") #{receiver.username} 
-
-                  
-                  
-                  
-                .SMSSecondRow
-                  if sender.username == data.user.username
-                    .SMSSentByMe
-                      div!=plain(content)
-                  else
-                    .SMSSentByOthers
-                      div!=plain(content)
-          nav
-            include interface_navigation_paging.jade
+          //nav
+          //  include interface_navigation_paging.jade
               
         
   include debug_output.jade

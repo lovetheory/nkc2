@@ -1779,6 +1779,8 @@ table.viewSMS = {
     data.template = jadeDir + 'interface_messages.jade'
     var uid = params.user._key
     data.receiver = params.receiver //optional param
+    const page = params.page;
+    const perPage = 20;
     return AQL(`
       FOR s IN sms
         FILTER s.s == @uid || s.r == @uid
@@ -1786,7 +1788,7 @@ table.viewSMS = {
         RETURN length
     `, {uid})
       .then(length => {
-        var paging = new layer.Paging(params.page).getPagingParams(length);
+        var paging = new layer.Paging(page).getPagingParams(length);
         data.paging = paging;
 
         return AQL(`
