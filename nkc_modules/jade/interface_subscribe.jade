@@ -24,9 +24,9 @@ block content
             a(href='/m/#{targetUser._key}') #{targetUser.username}
           p #{targetUser.description || ''}
       ul.nav.nav-tabs
-        li#{subscribeUsersClass}(role="presentation")
+        li(class="#{subscribeUsersClass}",role="presentation")
           a(href='/subscribe?&uid=#{data.targetUser._key}&list=subscribeUsers') 关注
-        li#{subscribersClass}(role="presentation")
+        li(class="#{subscribersClass}",role="presentation")
           a(href='/subscribe?&uid=#{data.targetUser._key}') 粉丝
       br
       -var usersList = data.users.userslist;
