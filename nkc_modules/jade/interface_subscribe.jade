@@ -31,7 +31,7 @@ block content
       br
       -var usersList = data.users.userslist;
       ul.media-list
-        -for(var i = 0; i < usersList; i++)
+        -for(var i = 0; i < usersList; i++ )
           li.media
             .media-left
               a(href="/m/#{usersList[i]._key}")
