@@ -68,9 +68,9 @@ block content
               -if(users.page.page < users.page.pagecount - 3 && users.page.pagecount > 7)
                 li
                   a(href='/subscribe?&uid=#{targetUser._key}#{subscribe}&page=#{users.page.pagecount}') 末 
-      -var usersList = data.users.userslist;
+      -var usersList = users.userslist;
       ul.media-list
-        -for(var i = 0; i < usersList; i++ )
+        -for(var i = 0; i < usersList.length; i++ )
           li.media
             .media-left
               a(href="/m/#{usersList[i]._key}")
