@@ -2548,9 +2548,9 @@ table.viewSubscribe = {
     return db.query(aql`
       LET users_subscribe = (FOR u IN usersSubscribe
         filter u._key == ${uid}
-        return u.${list})
-      LET length = LENGTH(users_subscribe[0])
-      LET result = SLICE(users_subscribe[0], ${(page-1) * perPage}, ${perPage})
+        return u)
+      LET length = LENGTH(users_subscribe.${list}[0])
+      LET result = SLICE(users_subscribe.${list}[0], ${(page-1) * perPage}, ${perPage})
       LET d = (
         FOR uid in result
           FOR u IN users
@@ -2559,6 +2559,7 @@ table.viewSubscribe = {
       )
       return {
         userslist: d,
+        targetUser: users_subscribe,
         length: length
       }
     `)
