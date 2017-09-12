@@ -270,7 +270,7 @@ block scripts
     function submitSendMcode() {
       geid('submitSendMcode').disabled = true;
       var codeObj = {
-        phone:geid('phoneNumber').value
+        phone:geid('phoneNumber').value,
         areaCode:areaCode
       };
       if(codeObj.phone == ''){
