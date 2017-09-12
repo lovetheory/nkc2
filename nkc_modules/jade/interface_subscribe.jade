@@ -80,7 +80,7 @@ block content
                 a(href="/m/#{usersList[i]._key}") #{usersList[i].username}
               p #{usersList[i].description || ''}
       br
-      .rom
+      .rom(style="overflow:hidden;")
         .col-xs-12.col-md-12
           nav(aria-label='navigation')
             ul.pagination
