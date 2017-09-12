@@ -2557,15 +2557,18 @@ table.viewSubscribe = {
             filter u._key == uid
             return u   
       )
-      return d
+      return {
+        userslist: d,
+        length: length
+      }
     `)
       .then(cursor => cursor.next())
       .then(res => {
         data.users = {};
-        data.users.userslist = res;
+        data.users.userslist = res.userslist;
         data.users.page = {
           page: page,
-          pagecount: perPage
+          pagecount: res.length
         };
         data.users.list = params.list || '';
         return data;
