@@ -11,8 +11,9 @@ block content
     .row
       .media
         .media-left
-          a(hreg='/m/#{user._key}')
+          a(href='/m/#{user._key}')
             img.media-object(src="/avatar/#{user._key}")
         .media-body
-          h4.media-heading #{user.username}
+          h4.media-heading
+            a(href='/m/#{user._key}') #{user.username}
           p #{user.description || ''}
