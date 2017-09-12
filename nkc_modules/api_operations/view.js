@@ -2542,7 +2542,7 @@ table.viewSubscribe = {
     const data = defaultData(params);
     const page = params.page || 1;
     const list = params.list || 'subscribers';
-    const uid = params.user._key;
+    const uid = params.uid;
     const perPage = settings.paging.perpage;
     data.template = jadeDir + '/interface_subscribe.jade';
     return db.query(aql`
@@ -2561,12 +2561,12 @@ table.viewSubscribe = {
     `)
       .then(cursor => cursor.next())
       .then(res => {
-        data.users = res;
+        data.users.data = res;
         data.page = {
           page: page,
           pagecount: perPage
         };
-        data.list = params.list || '';
+        data.users.list = params.list || '';
         return data;
       })
   }

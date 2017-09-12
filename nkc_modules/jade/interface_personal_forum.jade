@@ -58,7 +58,7 @@ block content
                               span 关注：
                                 a.d-inline.margin-right(href='/subscribe?&list=subscribeUsers') #{subscribeUsersNum.length}
                               span 粉丝：
-                                a.d-inline.margin-right(href='/subscribe?&list=subscribers') #{subscribersNum.length}
+                                a.d-inline.margin-right(href='/subscribe') #{subscribersNum.length}
                         div(style='position: absolute; right: 0; top: 0;')
                           if isModerator
                             div
@@ -250,3 +250,4 @@ block scripts
   script(src='/interface_collections.js')
   script(src='/interface_personal_forum.js')
   script(src='/interface_easy_post.js')
+  p #{Json.stringify(data)}
