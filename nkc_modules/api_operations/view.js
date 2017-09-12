@@ -2568,7 +2568,7 @@ table.viewSubscribe = {
         data.users.userslist = res.userslist;
         data.users.page = {
           page: page,
-          pagecount: res.length
+          pagecount: Math.ceil(res.length/perPage)
         };
         data.users.list = params.list || '';
         return data;
