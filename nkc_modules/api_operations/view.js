@@ -2536,13 +2536,13 @@ table.viewNewUsers = {
       })
   }
 };
-//查看订阅和被订阅用户页面
+//查看订阅用户和被订阅用户页面
 table.viewSubscribe = {
   operation: params => {
     const data = defaultData(params);
     const page = params.page || 1;
     const list = params.list || 'subscribers';
-    const uid = "10";
+    const uid = params.user._key;
     const perPage = settings.paging.perpage;
     data.template = jadeDir + '/interface_subscribe.jade';
     return db.query(aql`
@@ -2561,8 +2561,9 @@ table.viewSubscribe = {
     `)
       .then(cursor => cursor.next())
       .then(res => {
-        data.users.data = res;
-        data.page = {
+        data.users = {};
+        data.users.userslist = res;
+        data.users.page = {
           page: page,
           pagecount: perPage
         };
