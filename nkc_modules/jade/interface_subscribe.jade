@@ -17,4 +17,9 @@ block content
           h4.media-heading
             a(href='/m/#{targetUser._key}') #{targetUser.username}
           p #{targetUser.description || ''}
+      ul.nav.nav-tabs
+        li(role="presentation")
+          a(href='/subscribe?&uid=#{data.targetUser._key}&list=subscribeUsers') 关注
+        li(role="presentation")
+          a(href='/subscribe?&uid=#{data.targetUser._key}') 粉丝
   p #{JSON.stringify(data)}
