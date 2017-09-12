@@ -2549,11 +2549,11 @@ table.viewSubscribe = {
       LET targetUser = (FOR u IN usersSubscribe
         filter u._key == ${uid}
         return {
-          list: u.${list},
+          users: u.${list},
           user: u
         })
-      LET length = LENGTH(targetUser.list)
-      LET result = SLICE(targetUser.list, ${(page-1) * perPage}, ${perPage})
+      LET length = LENGTH(targetUser.users[0])
+      LET result = SLICE(targetUser.users[0], ${(page-1) * perPage}, ${perPage})
       LET d = (
         FOR uid in result
           FOR u IN users
