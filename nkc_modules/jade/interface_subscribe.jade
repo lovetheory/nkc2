@@ -1,9 +1,5 @@
-extends bootstrap_base.jade
-
-block title
-  - var user = data.user
-  title #{user.username} - #{data.site.name}
-  meta#replytarget(value='#{data.replytarget}')
-
-block content
-  p #{JSON.stringify(data}
+doctype html
+  head
+    title test
+  body
+    p #{JSON.stringify(data}
