@@ -2550,7 +2550,7 @@ table.viewSubscribe = {
         filter u._key == ${uid}
         return {
           list: u.${list},
-          User: u
+          user: u
         })
       LET length = LENGTH(targetUser.list[0])
       LET result = SLICE(targetUser.list[0], ${(page-1) * perPage}, ${perPage})
