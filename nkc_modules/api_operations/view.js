@@ -2566,7 +2566,7 @@ table.viewSubscribe = {
           page: page,
           pagecount: perPage
         };
-        data.list: params.list || '';
+        data.list = params.list || '';
         return data;
       })
   }
