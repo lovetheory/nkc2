@@ -2546,12 +2546,13 @@ table.viewSubscribe = {
     const perPage = settings.paging.perpage;
     data.template = jadeDir + '/interface_subscribe.jade';
     return db.query(aql`
+      LET targetUser = (FOR u IN users
+        filter u._key == ${uid}
+        return u
+      )
       LET users_subscribe = (FOR u IN usersSubscribe
         filter u._key == ${uid}
         return u.${list})
-      LET targetUser = (FOR u IN users
-        filter u._key == ${uid}
-        return u)  
       LET length = LENGTH(users_subscribe[0])
       LET result = SLICE(users_subscribe[0], ${(page-1) * perPage}, ${perPage})
       LET d = (
