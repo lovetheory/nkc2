@@ -11,8 +11,8 @@ block content
     .row
       .media
         .media-left
-          a(hreg='/avatar/#{user._key}')
-            img.media-object(src="/m/#{user._key}")
+          a(hreg='/m/#{user._key}')
+            img.media-object(src="/avatar/#{user._key}")
         .media-body
           h4.media-heading #{user.username}
-          p #(user.description || '')
+          p #{user.description || ''}
