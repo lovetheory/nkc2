@@ -2542,7 +2542,7 @@ table.viewSubscribe = {
     const data = defaultData(params);
     const page = params.page || 1;
     const list = params.list || 'subscribers';
-    const uid = params.uid;
+    //const uid = params.uid;
     const perPage = settings.paging.perpage;
     data.template = jadeDir + '/interface_subscribe.jade';
     return db.query(aql`
