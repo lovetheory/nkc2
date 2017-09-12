@@ -26,10 +26,10 @@ block content
             a(href='/m/#{targetUser._key}') #{targetUser.username}
           p #{targetUser.description || ''}
       ul.nav.nav-tabs
-        li(class="#{subscribeUsersClass}",role="presentation")
-          a(href='/subscribe?&uid=#{data.targetUser._key}&list=subscribeUsers') 关注
         li(class="#{subscribersClass}",role="presentation")
           a(href='/subscribe?&uid=#{data.targetUser._key}') 粉丝
+        li(class="#{subscribeUsersClass}",role="presentation")
+          a(href='/subscribe?&uid=#{data.targetUser._key}&list=subscribeUsers') 关注
       br
       .rom
         .col-xs-12.col-md-12
