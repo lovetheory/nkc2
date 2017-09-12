@@ -69,7 +69,7 @@ block content
                 li
                   a(href='/subscribe?&uid=#{targetUser._key}#{subscribe}&page=#{users.page.pagecount}') 末 
       -var usersList = users.userslist;
-      ul.media-list
+      ul.media-list(style="overflow:hidden;")
         -for(var i = 0; i < usersList.length; i++)
           li.media
             .media-left

@@ -2539,7 +2539,7 @@ table.viewNewUsers = {
       })
   }
 };
-//查看订阅用户和被订阅用户页面
+//查看订阅和被订阅页面
 table.viewSubscribe = {
   operation: params => {
     const data = defaultData(params);
