@@ -2536,6 +2536,41 @@ table.viewNewUsers = {
       })
   }
 };
+//查看订阅和被订阅页面
+table.viewSubscribe = {
+  operation: params => {
+    const data = defaultData(params);
+    const page = params.page || 1;
+    const list = params.list || 'subscribers';
+    const uid = params.user._key;
+    const perPage = settings.paging.perpage;
+    data.template = jadeDir + '/interface_subscribe.jade';
+    return db.query(aql`
+      LET users_subscribe = (FOR u IN usersSubscribe
+        filter u._key == ${uid}
+        return u.${list})
+      LET length = LENGTH(users)
+      LET result = SLICE(users_subscribe[0], ${(page-1) * perPage}, ${perPage})
+      LET d = (
+        FOR uid in result
+          FOR u IN users
+            filter u._key == uid
+            return u   
+      )
+      return d
+    `)
+      .then(cursor => cursor.next())
+      .then(res => {
+        data.users = res;
+        data.page = {
+          page: page,
+          pagecount: perPage
+        };
+        data.list: params.list || '';
+        return data;
+      })
+  }
+};
 
 function sha256HMAC(password, salt) {
   const crypto = require('crypto')

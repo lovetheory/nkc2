@@ -56,9 +56,9 @@ block content
                               -var subscribeUsersNum = (data.targetUser.subscribeUsers)?data.targetUser.subscribeUsers : [];
                               -var subscribersNum = (data.targetUser.subscribers)?data.targetUser.subscribers : [];    
                               span 关注：
-                                a.d-inline.margin-right(href='###') #{subscribeUsersNum.length}
+                                a.d-inline.margin-right(href='/subscribe?list=subscribeUsers') #{subscribeUsersNum.length}
                               span 粉丝：
-                                a.d-inline.margin-right(href='###') #{subscribersNum.length}
+                                a.d-inline.margin-right(href='/subscribe') #{subscribersNum.length}
                         div(style='position: absolute; right: 0; top: 0;')
                           if isModerator
                             div

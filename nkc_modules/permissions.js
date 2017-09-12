@@ -242,6 +242,7 @@ var certificates={
 
       getForumCategories:true,
       getForumsOfZone:true,
+      viewSubscribe:true,//查看订阅与被订阅页面
     },
   },
 
