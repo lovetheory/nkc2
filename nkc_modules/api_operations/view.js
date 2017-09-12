@@ -2536,7 +2536,7 @@ table.viewNewUsers = {
       })
   }
 };
-//查看订阅和被订阅用户页面
+//查看订阅和被订阅页面
 table.viewSubscribe = {
   operation: params => {
     const data = defaultData(params);
@@ -2546,14 +2546,11 @@ table.viewSubscribe = {
     const perPage = settings.paging.perpage;
     data.template = jadeDir + '/interface_subscribe.jade';
     return db.query(aql`
-      LET targetUser = (FOR u IN usersSubscribe
+      LET users_subscribe = (FOR u IN usersSubscribe
         filter u._key == ${uid}
-        return {
-          users: u.${list},
-          user: u
-        })
-      LET length = LENGTH(targetUser.users)
-      LET result = SLICE(targetUser.users, ${(page-1) * perPage}, ${perPage})
+        return u.${list})
+      LET length = LENGTH(users_subscribe[0])
+      LET result = SLICE(users_subscribe[0], ${(page-1) * perPage}, ${perPage})
       LET d = (
         FOR uid in result
           FOR u IN users
@@ -2562,7 +2559,6 @@ table.viewSubscribe = {
       )
       return {
         userslist: d,
-        targetUser: targetUser.user,
         length: length
       }
     `)
@@ -2575,7 +2571,6 @@ table.viewSubscribe = {
           pagecount: Math.ceil(res.length/perPage)
         };
         data.users.list = params.list || '';
-        data.targetUser = res.targetUser;
         return data;
       })
   }
