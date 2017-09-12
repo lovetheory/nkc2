@@ -2552,8 +2552,8 @@ table.viewSubscribe = {
           list: u.${list},
           user: u
         })
-      LET length = LENGTH(targetUser.list[0])
-      LET result = SLICE(targetUser.list[0], ${(page-1) * perPage}, ${perPage})
+      LET length = LENGTH(targetUser.list)
+      LET result = SLICE(targetUser.list, ${(page-1) * perPage}, ${perPage})
       LET d = (
         FOR uid in result
           FOR u IN users
