@@ -5,15 +5,15 @@ block title
   link(href='/interface_experimental.css' rel='stylesheet')
   title #{data.username}的关注与粉丝
 block content
-  -var user = data.user;
+  -var targetUser = data.targetUser;
   -var users = data.users;
   .container
     .row
       .media
         .media-left
-          a(href='/m/#{user._key}')
-            img.media-object(src="/avatar/#{user._key}")
+          a(href='/m/#{targetUser._key}')
+            img.media-object(src="/avatar/#{targetUser._key}")
         .media-body
           h4.media-heading
-            a(href='/m/#{user._key}') #{user.username}
-          p #{user.description || ''}
+            a(href='/m/#{targetUser._key}') #{targetUser.username}
+          p #{targetUser.description || ''}
