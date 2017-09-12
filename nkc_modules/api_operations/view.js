@@ -2536,7 +2536,7 @@ table.viewNewUsers = {
       })
   }
 };
-//查看订阅和被订阅页面
+//查看订阅和被订阅用户页面
 table.viewSubscribe = {
   operation: params => {
     const data = defaultData(params);
@@ -2548,9 +2548,12 @@ table.viewSubscribe = {
     return db.query(aql`
       LET users_subscribe = (FOR u IN usersSubscribe
         filter u._key == ${uid}
-        return u)
-      LET length = LENGTH(users_subscribe.${list}[0])
-      LET result = SLICE(users_subscribe.${list}[0], ${(page-1) * perPage}, ${perPage})
+        return u.${list})
+      LET targetUser = (FOR u IN users
+        filter u._key == ${uid}
+        return u)  
+      LET length = LENGTH(users_subscribe[0])
+      LET result = SLICE(users_subscribe[0], ${(page-1) * perPage}, ${perPage})
       LET d = (
         FOR uid in result
           FOR u IN users
@@ -2559,8 +2562,8 @@ table.viewSubscribe = {
       )
       return {
         userslist: d,
-        targetUser: users_subscribe,
-        length: length
+        length: length,
+        targetUser: targetUser
       }
     `)
       .then(cursor => cursor.next())
@@ -2572,6 +2575,7 @@ table.viewSubscribe = {
           pagecount: Math.ceil(res.length/perPage)
         };
         data.users.list = params.list || '';
+        data.targetUser = res.targetUser;
         return data;
       })
   }
