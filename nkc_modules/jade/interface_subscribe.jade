@@ -25,6 +25,7 @@ block content
           h4.media-heading
             a(href='/m/#{targetUser._key}') #{targetUser.username}
           p #{targetUser.description || ''}
+      hr    
       ul.nav.nav-tabs
         li(class="#{subscribersClass}",role="presentation")
           a(href='/subscribe?&uid=#{data.targetUser._key}') 粉丝
@@ -66,8 +67,7 @@ block content
               //- 当前页数若小于 最大分页数-3 则显示尾页按钮
               -if(users.page.page < users.page.pagecount - 3 && users.page.pagecount > 7)
                 li
-                  a(href='/subscribe?&uid=#{targetUser._key}#{subscribe}&page=#{users.page.pagecount}') 末
-      .rom  
+                  a(href='/subscribe?&uid=#{targetUser._key}#{subscribe}&page=#{users.page.pagecount}') 末 
       -var usersList = data.users.userslist;
       ul.media-list
         -for(var i = 0; i < usersList; i++ )
