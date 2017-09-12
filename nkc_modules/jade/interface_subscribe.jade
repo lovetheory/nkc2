@@ -7,19 +7,36 @@ block title
 block content
   -var targetUser = data.targetUser;
   -var users = data.users;
+  -var subscribeUsersClass = '';
+  -var subscribersClass = '';
+  -if(users.list && users.list != '')
+    -subscribeUsersClass = '.active';
+  -else
+    -subscribersClass = '.active';
   .container
     .row
       .media
         .media-left
           a(href='/m/#{targetUser._key}')
-            img.media-object(src="/avatar/#{targetUser._key}")
+            img.media-object(src="/avatar/#{targetUser._key}",alt="#{targetUser.username}")
         .media-body
           h4.media-heading
             a(href='/m/#{targetUser._key}') #{targetUser.username}
           p #{targetUser.description || ''}
       ul.nav.nav-tabs
-        li(role="presentation")
+        li#{subscribeUsersClass}(role="presentation")
           a(href='/subscribe?&uid=#{data.targetUser._key}&list=subscribeUsers') 关注
-        li(role="presentation")
+        li#{subscribersClass}(role="presentation")
           a(href='/subscribe?&uid=#{data.targetUser._key}') 粉丝
+      br
+      -var usersList = data.users.userslist;
+      ul.media-list
+        -for(var i = 0; i < usersList; i++)
+          li.media
+            .media-left
+              a(href="/m/#{usersList[i]._key}")
+                img.media-object(src="/avatar/#{usersList[i]._key}",alt="#{usersList[i].username}",style="height:5em;width:5em;")
+            .media-body
+              h4.media-heading
+                a(href="/m/#{usersList[i]._key}") #{usersList[i].username}
   p #{JSON.stringify(data)}
