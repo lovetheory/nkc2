@@ -32,7 +32,7 @@ block content
         li(class="#{subscribersClass}",role="presentation")
           a(href='/subscribe?&uid=#{data.targetUser._key}') 粉丝
       br
-      .rom
+      .rom(style="overflow:hidden;")
         .col-xs-12.col-md-12
           nav(aria-label='navigation')
             ul.pagination
@@ -69,7 +69,7 @@ block content
                 li
                   a(href='/subscribe?&uid=#{targetUser._key}#{subscribe}&page=#{users.page.pagecount}') 末 
       -var usersList = users.userslist;
-      ul.media-list(style="overflow:hidden;")
+      ul.media-list
         -for(var i = 0; i < usersList.length; i++)
           li.media
             .media-left
