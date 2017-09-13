@@ -64,7 +64,7 @@ block content
                   li
                     a(href='/subscribe?&uid=#{targetUser._key}#{subscribe}&page=#{i}') #{i}
                 -n--;
-              //- 当前页数若小于 最大分页数-3 则显示尾页按钮
+              //- 当前页数若小于最大分页数-3 则显示尾页按钮
               -if(users.page.page < users.page.pagecount - 3 && users.page.pagecount > 7)
                 li
                   a(href='/subscribe?&uid=#{targetUser._key}#{subscribe}&page=#{users.page.pagecount}') 末 
