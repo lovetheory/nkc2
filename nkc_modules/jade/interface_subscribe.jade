@@ -73,8 +73,8 @@ block content
       .rom
         .col-xs-12.col-md-12
           .col-xs-12.col-md-3.col-sm-4
-            ul.media-list
-              -for(var i = 0; i < usersList.length; i++)
+            -for(var i = 0; i < usersList.length; i++)
+              ul.media-list
                 li.media
                   .media-left
                     a(href="/m/#{usersList[i]._key}")
