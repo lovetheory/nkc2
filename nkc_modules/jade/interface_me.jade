@@ -288,7 +288,6 @@ block scripts
       geid('submitSendMcode').disabled = true;
       nkcAPI('getMcode3',codeObj)
       .then(function(){
-        geid('submitSendMcode').disabled = false;
         jwarning('手机短信验证码发送成功！');
         setTimeout(timeOut_60,1000);
       })
