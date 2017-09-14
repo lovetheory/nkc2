@@ -149,11 +149,19 @@ function getMcode(){
     getFocus("#password2")
     return error_report('请再次填写密码！')
   }
-  if(phone == '' || phone.length !== 11 )
+  if(phone == ''){
+    getFocus("#phone")
+    return error_report('请填写手机号码！')
+  }
+  if(isNaN(parseInt(phone))){
+    getFocus("#phone")
+    return error_report('手机号码格式不正确！')
+  }
+  /*if(phone == '' || phone.length !== 11 )
   {
     getFocus("#phone")
     return error_report('手机号码为空或者格式不正确！')
-  }
+  }*/
  /* if(icode == ''){
     getFocus("#icode")
     return error_report('请填写图片验证码！')
