@@ -3,7 +3,7 @@ extends bootstrap_base.jade
 
 block title
   link(href='/interface_experimental.css' rel='stylesheet')
-  title #{data.username}的关注与粉丝
+  title #{data.targetUser.username}的关注/粉丝
 block content
   -var targetUser = data.targetUser;
   -var users = data.users;
