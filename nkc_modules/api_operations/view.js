@@ -2077,7 +2077,6 @@ table.viewPersonalActivities = {
       .then(arr => {
         let forumArr = Array.from(arr); //deep copy from all the forum that can be visited
         arr.push(null); //push null to origin arr for personal forum
-        console.log(params.contentClasses)
         return db.query(aql`
           FOR o IN usersBehavior
             SORT o.time DESC
