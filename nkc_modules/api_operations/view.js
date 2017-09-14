@@ -1780,73 +1780,200 @@ table.viewSMS = {
     var uid = params.user._key
     data.receiver = params.receiver //optional param
     const page = params.page || 0;
-    const perPage = 20;
     const tab = params.tab || 'replies';
-    return AQL(`
-      FOR s IN sms
-        FILTER s.s == @uid || s.r == @uid
-        COLLECT WITH COUNT INTO length
-        RETURN length
-    `, {uid})
-      .then(length => {
-        var paging = new layer.Paging(page).getPagingParams(length);
-        data.paging = paging;
-
-        return AQL(`
-          FOR s IN sms
-            FILTER s.s == @uid || s.r == @uid
-            SORT s.toc DESC
-            LIMIT @start, @count
-            LET us = DOCUMENT(users, s.s)
-            LET ur = DOCUMENT(users, s.r)
-            RETURN MERGE(s, {us, ur})
-        `, {uid: uid, start: paging.start, count: paging.count})
-      })
-      .then(sarr => {
-        data.smslist = sarr
-        return AQL(`
-        for r in replies
-        filter r.touid == @uid
-        sort r.touid desc, r.toc desc
-        limit 40
-        let frompost = document(posts,r.frompid)
-        let fromuser = document(users,frompost.uid)
-        let touser = document(users,@uid)
-        let topost = document(posts,r.topid)
-
-        filter !frompost.disabled
-
-        limit 30
-        return merge(r,{fromuser,frompost,topost,touser})
-        `, {uid}
-        )
-      })
-      .then(arr => {
-        data.replylist = arr;
+    return Promise.resolve()
+      .then(() => {
+        if (tab === 'replies') {
+          return db.query(aql`
+            LET replies = (FOR r IN replies
+              FILTER r.touid == ${uid}
+              SORT r.toc DESC
+              LET fromPost = DOCUMENT(posts, r.frompid)
+              LET fromUser = DOCUMENT(users, r.fromPost.uid)
+              LET toUser = DOCUMENT(users, ${uid})
+              LET toPost = DOCUMENT(posts, r.topid)
+              FILTER !fromPost.disabled
+              RETURN {
+                r,
+                fromPost,
+                toUser,
+                toPost
+              })
+            RETURN {
+              length: LENGTH(replies),
+              docs: replies
+            }
+          `)
+            .then(cursor => cursor.next())
+        }
+        if (tab === 'at') {
+          return db.query(aql`
+            LET ats = (
+              FOR i IN invites
+                FILTER i.invitee == ${uid}
+                SORT i.toc DESC
+                LET post = DOCUMENT(posts, i.pid)
+                LET user = DOCUMENT(users, i.inviter)
+                LET thread = DOCUMENT(threads, post.tid)
+                LET oc = DOCUMENT(posts, thread.oc)
+              RETURN {
+                i,
+                post,
+                user,
+                thread,
+                oc
+              }
+            )
+            RETURN {
+              length: LENGTH(ats),
+              docs: ats
+            }
+          `)
+            .then(cursor => cursor.next())
+        }
+        if (tab === 'messages') {
+          const conversation = params.conversation;
+          if(conversation)
+            return db.query(aql`
+              LET messages = (FOR s IN sms
+                FILTER s.r == ${uid} && s.s == ${conversation} || 
+                s.s == ${uid} && s.r == ${conversation}
+                SORT s.toc DESC
+                RETURN s)
+              RETURN {
+                docs: messages,
+                length: LENGTH(messages)
+              }
+            `)
+              .then(cursor => cursor.next());
+          return db.query(aql`
+            LET messages = (
+              LET ms = (FOR s IN sms
+                FILTER s.r == ${uid} || s.s == ${uid}
+                SORT s.toc DESC
+                RETURN MERGE(s, {conversation: s.r == ${uid}? s.s : s.r})
+                )
+              FOR s IN ms
+                COLLECT conversation = s.conversation INTO group = s
+              RETURN {
+                conversation: DOCUMENT(users, conversation),
+                group
+              }
+              )
+              RETURN {
+                docs: messages,
+                length: LENGTH(messages)
+              }
+          `)
+            .then(cursor => cursor.next())
+        }
         return db.query(aql`
-          FOR i IN invites
-            FILTER i.invitee == ${uid}
-            SORT i.toc DESC
-            LIMIT 20
-            LET post = DOCUMENT(posts, i.pid)
-            LET user = DOCUMENT(users, i.inviter)
-            LET thread = DOCUMENT(threads, post.tid)
-            LET oc = DOCUMENT(posts, thread.oc)
-            RETURN MERGE(i, {post, user, oc})
-        `)})
-      .then(cursor => cursor.all())
-      .then(invites => {
-        data.invites = invites;
-        var psnl = new layer.Personal(uid)
-        return psnl.load()
+          let sysInfos = (
+          for s in sms
+            filter s.s == 'system'
+            sort s.toc desc
+          return s
+          )
+          return {
+            docs: sysInfos,
+            length: LENGTH(sysInfos)
+          }
+        `)
+          .then(cursor => cursor.next())
       })
-      .then(psnl => {
-        data.lastVisitTimestamp = psnl.model.message_lastvisit || 0
-        return psnl.update({new_message: 0, message_lastvisit: Date.now()})
-      })
-      .then(psnl => {
+      .then(doc => {
+        const paging = new layer.Paging(page).getPagingParams(doc.length);
+        data.paging = paging;
+        data.docs = doc.docs.slice(paging.start, paging.count);
+        data.tab = tab;
+        data.conversation = params.conversation;
         return data
       })
+    // return AQL(`
+    //   FOR s IN sms
+    //     FILTER s.s == @uid || s.r == @uid
+    //     COLLECT WITH COUNT INTO length
+    //     RETURN length
+    // `, {uid})
+    //   .then(length => {
+    //     var paging = new layer.Paging(page).getPagingParams(length);
+    //     data.paging = paging;
+    //     if(tab === 'replies')
+    //       return AQL(`
+    //         for r in replies
+    //         filter r.touid == @uid
+    //         sort r.touid desc, r.toc desc
+    //         let frompost = document(posts,r.frompid)
+    //         let fromuser = document(users,frompost.uid)
+    //         let touser = document(users,@uid)
+    //         let topost = document(posts,r.topid)
+    //
+    //         filter !frompost.disabled
+    //
+    //         limit ${paging.start}, ${paging.count}
+    //         return merge(r,{fromuser,frompost,topost,touser})
+    //         `, {uid}
+    //       );
+    //     if(tab === 'message')
+    //       return AQL(`
+    //         FOR s IN sms
+    //           FILTER s.s == @uid || s.r == @uid
+    //           SORT s.toc DESC
+    //           LIMIT @start, @count
+    //           LET us = DOCUMENT(users, s.s)
+    //           LET ur = DOCUMENT(users, s.r)
+    //           RETURN MERGE(s, {us, ur})
+    //       `, {uid: uid, start: paging.start, count: paging.count})
+    //     if(tab === 'at')
+    //       return db.query(aql`
+    //         FOR i IN invites
+    //           FILTER i.invitee == ${uid}
+    //           SORT i.toc DESC
+    //           LIMIT ${paging.start}, ${paging.count}
+    //           LET post = DOCUMENT(posts, i.pid)
+    //           LET user = DOCUMENT(users, i.inviter)
+    //           LET thread = DOCUMENT(threads, post.tid)
+    //           LET oc = DOCUMENT(posts, thread.oc)
+    //           RETURN MERGE(i, {post, user, oc})
+    //       `)})
+    //         .then(cursor => cursor.all())
+    //     return db.query(aql`
+    //       for s in sms
+    //       filter s.s == 'system'
+    //       sort s.toc desc
+    //       limit ${paging.start}, ${paging.count}
+    //     `)
+    //       .then(cursor => cursor.all())
+    //   .then(sarr => {
+    //     data.smslist = sarr
+    //
+    //   })
+    //   .then(arr => {
+    //     data.replylist = arr;
+    //     return db.query(aql`
+    //       FOR i IN invites
+    //         FILTER i.invitee == ${uid}
+    //         SORT i.toc DESC
+    //         LIMIT 20
+    //         LET post = DOCUMENT(posts, i.pid)
+    //         LET user = DOCUMENT(users, i.inviter)
+    //         LET thread = DOCUMENT(threads, post.tid)
+    //         LET oc = DOCUMENT(posts, thread.oc)
+    //         RETURN MERGE(i, {post, user, oc})
+    //     `)})
+    //   .then(cursor => cursor.all())
+    //   .then(invites => {
+    //     data.invites = invites;
+    //     var psnl = new layer.Personal(uid)
+    //     return psnl.load()
+    //   })
+    //   .then(psnl => {
+    //     data.lastVisitTimestamp = psnl.model.message_lastvisit || 0
+    //     return psnl.update({new_message: 0, message_lastvisit: Date.now()})
+    //   })
+    //   .then(psnl => {
+    //     return data
+    //   })
   }
 }
 
