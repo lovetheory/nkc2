@@ -277,6 +277,10 @@ block scripts
         jwarning('手机号码不能为空！');
         return;
       }
+      if(isNaN(parseInt(codeObj.phone))){
+        jwarning('手机号码格式不正确！');
+        return;
+      }
       nkcAPI('getMcode3',codeObj)
       .then(function(){
         jwarning('手机短信验证码发送成功！');

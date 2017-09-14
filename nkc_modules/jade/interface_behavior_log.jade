@@ -158,9 +158,9 @@ block content
               th(scope='row') #{i + 1}
               td #{changeTime(data.behaviorLogs[i].timeStamp)}
               td
-                a(href='/m/#{data.behaviorLogs[i].from}') #{data.behaviorLogs[i].from}
+                a(href='/m/#{data.behaviorLogs[i].from.uid}') (#{data.behaviorLogs[i].from.uid}) #{data.behaviorLogs[i].from.username}
               td
-                a(href='/m/#{data.behaviorLogs[i].to}') #{data.behaviorLogs[i].to}
+                a(href='/m/#{data.behaviorLogs[i].to.uid}') (#{data.behaviorLogs[i].to.uid}) #{data.behaviorLogs[i].to.username}
               td #{data.behaviorLogs[i].address}:#{data.behaviorLogs[i].port}
               td #{operationCH}
               td

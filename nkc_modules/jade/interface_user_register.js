@@ -66,12 +66,17 @@ function register_submit(){
       throw({detail:'请填写手机号码！'})
       return;
     }
-    if(userobj.phone.length !== 11)
-    {
+    if(isNaN(parseInt(userobj.phone))){
       getFocus("#phone")
       throw({detail:'手机号码格式不正确！'})
       return;
     }
+    /*if(userobj.phone.length !== 11)
+    {
+      getFocus("#phone")
+      throw({detail:'手机号码格式不正确！'})
+      return;
+    }*/
     if(userobj.mcode == ''){
       getFocus("#mcode")
       throw({detail:'请填写手机验证码！'})
