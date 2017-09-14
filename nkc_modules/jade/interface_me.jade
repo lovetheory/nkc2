@@ -217,6 +217,7 @@ block scripts
       nkcAPI('changePassword',passwordObj)
       .then(function(){
         jwarning('密码修改成功！');
+        geid('submitnewpassword').disabled = false;
       })
       .catch(function(err){
         jwarning(err);
@@ -235,6 +236,7 @@ block scripts
       nkcAPI('submitPersonalSetting',settingObj)
       .then(function(){
         jwarning('个人资料修改成功！');
+        geid('submitpersonalsetting').disabled = false;
       })
       .catch(function(err){
         jwarning(err);
