@@ -17,21 +17,24 @@ block content
     -subscribersClass = 'active';
   .container
     .row
-      .media
-        .media-left
-          a(href='/m/#{targetUser._key}')
-            img.media-object.img-rounded(src="/avatar/#{targetUser._key}",alt="#{targetUser.username}",style="height:5em;width:5em;")
-        .media-body
-          h4.media-heading
-            a(href='/m/#{targetUser._key}') #{targetUser.username}
-          :markdown
-            #{targetUser.description || '个人简介暂未填写'}
-      hr    
-      ul.nav.nav-tabs
-        li(class="#{subscribeUsersClass}",role="presentation")
-          a(href='/subscribe?&uid=#{data.targetUser._key}&list=subscribeUsers') 关注
-        li(class="#{subscribersClass}",role="presentation")
-          a(href='/subscribe?&uid=#{data.targetUser._key}') 粉丝
+      .col-xs-12.col-md-12
+        .media
+          .media-left
+            a(href='/m/#{targetUser._key}')
+              img.media-object.img-rounded(src="/avatar/#{targetUser._key}",alt="#{targetUser.username}",style="height:5em;width:5em;")
+          .media-body
+            h4.media-heading
+              a(href='/m/#{targetUser._key}') #{targetUser.username}
+            :markdown
+              #{targetUser.description || '个人简介暂未填写'}
+      .col-xs-12.col-md-12
+        hr
+      .col-xs-12.col-md-12 
+        ul.nav.nav-tabs
+          li(class="#{subscribeUsersClass}",role="presentation")
+            a(href='/subscribe?&uid=#{data.targetUser._key}&list=subscribeUsers') 关注
+          li(class="#{subscribersClass}",role="presentation")
+            a(href='/subscribe?&uid=#{data.targetUser._key}') 粉丝
       .col-xs-12.col-md-12
         nav(aria-label='navigation')
           ul.pagination
