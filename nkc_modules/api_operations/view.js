@@ -2553,9 +2553,9 @@ table.viewSubscribe = {
         filter u._key == ${uid}
         return u
       )
-      LET users_subscribe = ((FOR u IN usersSubscribe
+      LET users_subscribe = (FOR u IN usersSubscribe
         filter u._key == ${uid}
-        return u.${list}) || [])
+        return u.${list} || [])
       LET length = LENGTH(users_subscribe[0])
       LET result = SLICE(users_subscribe[0], ${(page-1) * perPage}, ${perPage})
       LET d = (
