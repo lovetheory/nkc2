@@ -37,11 +37,10 @@ block content
 
           //nav
           //  include interface_navigation_paging.jade
-              
+    p #{JSON.stringify(data)}            
         
   include debug_output.jade
 
 block scripts
   script(src='/interface_common.js')
   script(src='/interface_messages.js')
-p #{JSON.stringify(data)}
