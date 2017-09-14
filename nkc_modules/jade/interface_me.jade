@@ -79,7 +79,7 @@ block content
               .form-group
                 label(for="name")
                   .h5(style='font-weight:300;') 电话号码
-                input.form-control#phoneNumber(type='text', placeholder='电话号码', onclick='select()',onkeyup="this.value=this.value.replace(/[^\d]/g,'') ")
+                input.form-control#phoneNumber(type='text', placeholder='电话号码', onclick='select()')
             .col-xs-12.col-md-2
               .form-group
                 label(for="name")
@@ -253,6 +253,10 @@ block scripts
         jwarning('手机号码不能为空！');
         return;
       }
+      if(!(/(^[1-9]\d*$)/.test(mobileObj.phone))){
+        jwarning('手机号码格式不正确！');
+        return;
+      }
       if(mobileObj.code == ''){
         jwarning('手机短信验证码不能为空！');
         return;
@@ -277,7 +281,7 @@ block scripts
         jwarning('手机号码不能为空！');
         return;
       }
-      if(isNaN(parseInt(codeObj.phone))){
+      if(!(/(^[1-9]\d*$)/.test(codeObj.phone))){
         jwarning('手机号码格式不正确！');
         return;
       }

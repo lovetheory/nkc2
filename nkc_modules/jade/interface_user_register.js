@@ -66,7 +66,7 @@ function register_submit(){
       throw({detail:'请填写手机号码！'})
       return;
     }
-    if(isNaN(parseInt(userobj.phone))){
+    if(!(/(^[1-9]\d*$)/.test(userobj.phone))){
       getFocus("#phone")
       throw({detail:'手机号码格式不正确！'})
       return;
@@ -153,7 +153,7 @@ function getMcode(){
     getFocus("#phone")
     return error_report('请填写手机号码！')
   }
-  if(isNaN(parseInt(phone))){
+  if(!(/(^[1-9]\d*$)/.test(phone))){
     getFocus("#phone")
     return error_report('手机号码格式不正确！')
   }
