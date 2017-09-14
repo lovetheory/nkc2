@@ -24,7 +24,8 @@ block content
         .media-body
           h4.media-heading
             a(href='/m/#{targetUser._key}') #{targetUser.username}
-          p #{targetUser.description || ''}
+          :markdown
+            #{targetUser.description || '个人简介暂未填写'}
       hr    
       ul.nav.nav-tabs
         li(class="#{subscribeUsersClass}",role="presentation")
