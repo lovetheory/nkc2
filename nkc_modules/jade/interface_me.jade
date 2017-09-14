@@ -265,6 +265,8 @@ block scripts
       .then(function(){
         geid('submitPhoneNumber').disabled = false;
         geid('submitSendMcode').disabled = false;
+        clearTimeout(stopTime);
+        geid('submitSendMcode').innerHTML = '获取验证码';
         jwarning('手机号码绑定成功！');
       })
       .catch(function(err){
@@ -302,7 +304,7 @@ block scripts
       interval_time--;
       if(interval_time > 0) {
         geid('submitSendMcode').innerHTML = '重新发送 ' + interval_time;
-        setTimeout(timeOut_60,1000);
+        stopTime = setTimeout(timeOut_60,1000);
         return;
       }
       geid('submitSendMcode').innerHTML = '获取验证码';
