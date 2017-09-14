@@ -2548,39 +2548,59 @@ table.viewSubscribe = {
     const uid = params.uid;
     const perPage = settings.paging.perpage;
     data.template = jadeDir + '/interface_subscribe.jade';
+        
     return db.query(aql`
-      LET targetUser = (FOR u IN users
+        FOR u IN users
         filter u._key == ${uid}
         return u
-      )
-      LET users_subscribe = (FOR u IN usersSubscribe
-        filter u._key == ${uid}
-        return u.${list})
-      LET length = LENGTH(users_subscribe[0])
-      LET result = SLICE(users_subscribe[0], ${(page-1) * perPage}, ${perPage})
-      LET d = (
-        FOR uid in result
-          FOR u IN users
-            filter u._key == uid
-            return u   
-      )
-      return {
-        userslist: d,
-        length: length,
-        targetUser: targetUser[0]
-      }
     `)
-      .then(cursor => cursor.next())
-      .then(res => {
-        data.users = {};
-        data.users.userslist = res.userslist;
-        data.users.page = {
-          page: page,
-          pagecount: Math.ceil(res.length/perPage)
-        };
-        data.users.list = params.list || '';
-        data.targetUser = res.targetUser;
-        return data;
+      .then((res) => {
+        data.targetUser = res;
+      })
+      .then(() => {
+        return db.query(aql`
+          FOR u IN usersSubscribe
+          FILTER u._key == ${uid}
+          return u
+        `)
+        .then((res) => {
+          if(!res[list] || res[list].length == 0) {
+            return {uids:[]};
+          }else{
+            return {uids: res[list]};
+          }
+        })
+        .then((res) => {
+          if(res.uids.length == 0){
+            return {
+              userslist:[],
+              length: 0
+            };
+          }else{
+            return db.query(aql`
+              LET length = LENGTH(${res.uids})
+              LET result = SLICE(${res.uids},${(page-1) * perPage}, ${perPage})
+              let userslist = (FOR uid IN result
+                FOR u IN users
+                  FILTER u._key == uid
+                  return u)
+              return {
+                userslist: userslist,
+                length: length
+              }
+            `)
+          }
+        })
+        .then((res) => {
+          data.users = {};
+          data.users.userslist = res.userslist;
+          data.users.list = params.list || '';
+          data.users.page = {
+            page: page,
+            pageCount: Math.ceil(res.length/perPage)
+          };
+          return data;
+        })
       })
   }
 };
