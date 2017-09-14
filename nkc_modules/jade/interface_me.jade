@@ -264,6 +264,7 @@ block scripts
       nkcAPI('bindMobile',mobileObj)
       .then(function(){
         geid('submitPhoneNumber').disabled = false;
+        geid('submitSendMcode').disabled = false;
         jwarning('手机号码绑定成功！');
       })
       .catch(function(err){
