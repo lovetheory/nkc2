@@ -26,7 +26,7 @@ block content
             a(href='/m/#{targetUser._key}') #{targetUser.username}
           p #{targetUser.description || ''}
       hr    
-      ul.nav.nav-tabss
+      ul.nav.nav-tabs
         li(class="#{subscribeUsersClass}",role="presentation")
           a(href='/subscribe?&uid=#{data.targetUser._key}&list=subscribeUsers') 关注
         li(class="#{subscribersClass}",role="presentation")
