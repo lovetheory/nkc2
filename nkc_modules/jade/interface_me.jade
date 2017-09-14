@@ -79,7 +79,7 @@ block content
               .form-group
                 label(for="name")
                   .h5(style='font-weight:300;') 电话号码
-                input.form-control#phoneNumber(type='text', placeholder='电话号码', onclick='select()')
+                input.form-control#phoneNumber(type='text', placeholder='电话号码', onclick='select()',onkeyup="this.value=this.value.replace(/[^\d]/g,'') ")
             .col-xs-12.col-md-2
               .form-group
                 label(for="name")
