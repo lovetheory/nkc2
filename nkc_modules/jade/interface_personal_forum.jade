@@ -55,16 +55,10 @@ block content
                                   a.d-inline.margin-right(href='/m/#{k._key}') #{k.username}    
                               -var subscribeUsersNum = (data.targetUser.subscribeUsers)?data.targetUser.subscribeUsers : [];
                               -var subscribersNum = (data.targetUser.subscribers)?data.targetUser.subscribers : [];
-                              -var disabled_subscribers = '';
-                              -var disabled_subscribeUsers = '';
-                              -if(subscribeUsersNum.length == 0)
-                                -var disabled_subscribeUsers = 'disabled';
-                              -if(subscribersNum.length == 0)
-                                -var disabled_subscribers = 'disabled';
                               span 关注：
-                                a(class='d-inline margin-right #{disabled_subscribeUsers}',href='/subscribe?&uid=#{data.targetUser._key}&list=subscribeUsers') #{subscribeUsersNum.length}
+                                a(class='d-inline margin-right',href='/subscribe?&uid=#{data.targetUser._key}&list=subscribeUsers') #{subscribeUsersNum.length}
                               span 粉丝：
-                                a(class='d-inline margin-right #{disabled_subscribers}',href='/subscribe?&uid=#{data.targetUser._key}') #{subscribersNum.length}
+                                a(class='d-inline margin-right',href='/subscribe?&uid=#{data.targetUser._key}') #{subscribersNum.length}
                         div(style='position: absolute; right: 0; top: 0;')
                           if isModerator
                             div
@@ -181,7 +175,7 @@ block content
                     li
                       a.btn.btn-default(href='/editor?target=#{data.replytarget}') 新帖
                 ul.pagination.NavigationPaging
-                  - var page = paging?paging.page:null
+                  - var page = paging?paging.page:null;
                   li(class="#{class_str_all}")
                     a(href='?&tab=#{data.tab}#{data.sortby? "&sortby=toc": ""}') 俱
 
