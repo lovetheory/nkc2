@@ -20,13 +20,14 @@ block content
       .media
         .media-left
           a(href='/m/#{targetUser._key}')
-            img.media-object(src="/avatar/#{targetUser._key}",alt="#{targetUser.username}",style="height:10em;")
+            img.media-object.img-rounded(src="/avatar/#{targetUser._key}",alt="#{targetUser.username}",style="height:10em;")
         .media-body
           h4.media-heading
             a(href='/m/#{targetUser._key}') #{targetUser.username}
           p #{targetUser.description || ''}
       hr    
       ul.nav.nav-tabs
+        -if()
         li(class="#{subscribeUsersClass}",role="presentation")
           a(href='/subscribe?&uid=#{data.targetUser._key}&list=subscribeUsers') 关注
         li(class="#{subscribersClass}",role="presentation")
@@ -74,7 +75,7 @@ block content
           li.media
             .media-left
               a(href="/m/#{usersList[i]._key}")
-                img.media-object(src="/avatar/#{usersList[i]._key}",alt="#{usersList[i].username}",style="height:3em;width:3em;")
+                img.media-object.img-rounded(src="/avatar/#{usersList[i]._key}",alt="#{usersList[i].username}",style="height:3em;width:3em;")
             .media-body
               h4.media-heading
                 a(href="/m/#{usersList[i]._key}") #{usersList[i].username}
