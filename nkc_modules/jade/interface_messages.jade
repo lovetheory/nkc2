@@ -110,6 +110,12 @@ block content
           -if(!data.conversation)
             .col-xs-12.col-md-3(style="margin:0.4em 0 0 0")
               <a class="btn btn-default" href="/sms?&tab=messages&conversation=null" role="button">发信息</a>
+              <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">Button with data-target</button>
+              <div class="collapse" id="collapseExample">
+                <div class="well">
+                  dafsdfasdfasdfasdfasdfasdfasdf
+                </div>
+              </div>
             .col-xs-12.col-md-12
               -var allNewMesNum = 0;
               -for(var i = 0 ; i < docs.length; i++)
@@ -151,7 +157,6 @@ block content
                       span(style="font-size:0.8em;") &nbsp;说：
                       p(style="font-size:0.8em;") #{docs[i].c}
               hr(style='margin:0.5em 0;')
-              <a class="btn btn-default" href="#" role="button">发信息</a>
 
 
         .col-xs-12.col-md-12(style="margin:0.4em 0 0 0")
