@@ -70,8 +70,6 @@ block content
                 -if(page < pageCount - 3 && pageCount > 7)
                   li
                     a(href='/sms?&page=#{pageCount}&tab=#{nowAt}') 末
-        .col-xs-12.col-md-3(style="margin:0.4em 0 0 0")
-          <a class="btn btn-default" href="/sms?&tab=messages&conversation=null" role="button">发信息</a>
         -if(nowAt === 'replies')
           .col-xs-12.col-md-12
             -for(var i = 0 ; i < docs.length; i++)
@@ -110,6 +108,8 @@ block content
 
         -if(nowAt === 'messages')
           -if(!data.conversation)
+            .col-xs-12.col-md-3(style="margin:0.4em 0 0 0")
+              <a class="btn btn-default" href="/sms?&tab=messages&conversation=null" role="button">发信息</a>
             .col-xs-12.col-md-12
               -var allNewMesNum = 0;
               -for(var i = 0 ; i < docs.length; i++)
