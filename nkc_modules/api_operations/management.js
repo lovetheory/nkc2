@@ -651,6 +651,16 @@ table.popPFSwitch = {
   }
 };
 
+table.pushSysInfo = {
+  operation: params => {
+    const info = params.info;
+    return db.collection('sms').save({
+      c: info,
+
+    })
+  }
+};
+
 table.adSwitch = {
   operation: params => {
     const tid = params.tid;

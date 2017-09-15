@@ -534,4 +534,13 @@ queryfunc.getUsersThreads = uid => db.query(aql`
 `)
   .then(cursor => cursor.all());
 
+queryfunc.incrementPsnl = function(key, type){
+  return db.collection('users_personal').document(key)
+    .then(psnl=>{
+      const newMessage = psnl.new_message;
+      newMessage[type] = (newMessage[type] || 0) + 1;
+      return db.collection('users_personal').update(key, {new_message: newMessage})
+    })
+};
+
 module.exports = queryfunc;
