@@ -87,11 +87,12 @@ block content
                       span(style="font-size:0.8em;") 下回复了你：
                       p(style="font-size:0.8em;") #{docs[i].fromPost.c}
             hr(style='margin:0.5em 0;')
-        -if(nowAt === 'at')
+        //-if(nowAt === 'at')
           .col-xs-12.col-md-12
             -for(var i = 0 ; i < docs.length; i++)
                 hr(style='margin:0.5em 0;')
                 .media(style='margin:0;')
+                  span #{changeTime(docs[i].post.toc || 0)}
                   .media-left.media-top
                     a(href='/m/#{docs[i].post.uid}')
                       img.media-object.img-rounded(src='/avatar/#{docs[i].post.uid}',alt='name',style='height:4em;width:4em;')
