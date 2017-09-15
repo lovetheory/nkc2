@@ -238,11 +238,11 @@ block scripts
           content: $("#inputContent").val()
         };
       }
-      if(mesObj.content == ''){
-        return screenTopWarning('请输入消息内容!');
-      }
       if(mesObj.username == ''){
         return screenTopWarning('请输入用户名!');
+      }
+      if(mesObj.content == ''){
+        return screenTopWarning('请输入消息内容!');
       }
       geid('sendMes').disabled = true;
       nkcAPI('postNewMessage',mesObj)
