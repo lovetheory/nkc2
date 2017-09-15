@@ -34,10 +34,10 @@ block content
               a(href='/sms?&tab=messages') 短消息
             li(class='#{nowAt === "system"? "active": ""}')
               a(href='/sms?&tab=system') 系统通知
-        .col-xs-12.col-md-12(style="margin:0.4em 0 0 0")
-          nav(aria-label='navigation')
-            ul.pagination(style="margin:0")
-              -if(pageCount > 1)
+        -if(pageCount > 1)
+          .col-xs-12.col-md-6(style="margin:0.4em 0 0 0")
+            nav(aria-label='navigation')
+              ul.pagination(style="margin:0")
                 //- 当前页数若大于4则显示首页按钮
                 //- 若总的分页数小于7则不需要显示首页和尾页按钮
                 -if(page > 4 && pageCount > 7)
@@ -70,6 +70,8 @@ block content
                 -if(page < pageCount - 3 && pageCount > 7)
                   li
                     a(href='/sms?&page=#{pageCount}&tab=#{nowAt}') 末
+        .col-xs-12.col-md-3(style="margin:0.4em 0 0 0")
+          <a class="btn btn-default" href="/sms?&tab=messages&conversation=null" role="button">发信息</a>
         -if(nowAt === 'replies')
           .col-xs-12.col-md-12
             -for(var i = 0 ; i < docs.length; i++)
@@ -82,9 +84,9 @@ block content
                 .media-body
                   h4.media-heading
                     a(href='/m/#{docs[i].fromPost.uid}') #{docs[i].fromPost.username}
-                    span(style="font-size:0.8em;") 在帖子
+                    span(style="font-size:0.8em;") &nbsp;在帖子&nbsp;
                     a(href='/t/#{docs[i].fromPost.tid}##{docs[i].fromPost._key}') #{docs[i].toPost.t||docs[i].toPost.tid}
-                    span(style="font-size:0.8em;") 下回复了你：
+                    span(style="font-size:0.8em;") &nbsp;下回复了你：
                     p(style="font-size:0.8em;") #{docs[i].fromPost.c}
             hr(style='margin:0.5em 0;')
 
@@ -100,9 +102,9 @@ block content
                 .media-body
                   h4.media-heading
                     a(href='/m/#{docs[i].post.uid}') #{docs[i].post.username}
-                    span(style="font-size:0.8em;") 在帖子
+                    span(style="font-size:0.8em;") &nbsp;在帖子&nbsp;
                     a(href='/t/#{docs[i].post.tid}##{docs[i].post._key}') #{docs[i].oc.t||docs[i].oc.tid}
-                    span(style="font-size:0.8em;") 下@了你：
+                    span(style="font-size:0.8em;") &nbsp;下@了你：
                     p(style="font-size:0.8em;") #{docs[i].post.c}
             hr(style='margin:0.5em 0;')
 
@@ -132,7 +134,7 @@ block content
                         span.reddish(style="font-size:0.8em;") (#{newMesNum}) 
                       span(style="font-size:0.8em;") &nbsp;最近一条信息：
                       p(style="font-size:0.8em;") #{docs[i].group[0].c}
-                      a(style='font-size:0.85em;',href='/sms?&tab=messages&conversation=#{docs[i].conversation._key}') 查看聊天记录
+                      a(style='font-size:0.85em;',href='/sms?&tab=messages&conversation=#{docs[i].conversation._key}') 查看聊天
               hr(style='margin:0.5em 0;')
           -else
             col-xs-12.col-md-12
@@ -146,15 +148,16 @@ block content
                   .media-body
                     h4.media-heading
                       a(href='/m/#{docs[i].s}') #{docs[i].s} 
-                      span(style="font-size:0.8em;") ：
+                      span(style="font-size:0.8em;") &nbsp;说：
                       p(style="font-size:0.8em;") #{docs[i].c}
               hr(style='margin:0.5em 0;')
+              <a class="btn btn-default" href="#" role="button">发信息</a>
 
 
         .col-xs-12.col-md-12(style="margin:0.4em 0 0 0")
           nav(aria-label='navigation')
-            ul.pagination(style="margin:0")
-              -if(pageCount > 1)
+            -if(pageCount > 1)
+              ul.pagination(style="margin:0")
                 //- 当前页数若大于4则显示首页按钮
                 //- 若总的分页数小于7则不需要显示首页和尾页按钮
                 -if(page > 4 && pageCount > 7)
