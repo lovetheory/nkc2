@@ -127,7 +127,7 @@ block content
               -for(var i = 0 ; i < docs.length; i++)
                 -var newMesNum = 0;
                 -for(var j = 0; j < docs[i].group.length; j++)
-                  -if(docs[i].conversation.tlv <= docs[i].group[j].toc)
+                  -if(data.user.tlv <= docs[i].group[j].toc)
                     -newMesNum++;
                   -else
                     -break;
