@@ -103,3 +103,4 @@ block content
             -if(data.page.page < data.page.pagecount - 3 && data.page.pagecount > 7)
               li
                 a(href='/newusers?&page=#{data.page.pagecount}') 末
+    p #{JSON.stringify(data)}
