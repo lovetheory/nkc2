@@ -229,13 +229,13 @@ block scripts
     function sendMes(){
       if(!$("#inputUsername")){
         var mesObj = {
-          content: $("#inputContent").html(),
+          content: $("#inputContent").val(),
           conversation: $("#inputContent").attr('conversation')
         };
       }else{
         var mesObj = {
           username: $("#inputUsername").val(),
-          content: $("#inputContent").html()
+          content: $("#inputContent").val()
         };
       }
       if(mesObj.content == ''){
