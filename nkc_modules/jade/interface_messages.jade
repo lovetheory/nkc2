@@ -239,7 +239,7 @@ block scripts
   //-script(src='/interface_messages.js')
   script.
     function sendMes(){
-      if(!$("#inputUsername")){
+      if(!document.getElementById("inputUsername")){
         var mesObj = {
           content: $("#inputContent").val(),
           conversation: $("#inputContent").attr('conversation')
