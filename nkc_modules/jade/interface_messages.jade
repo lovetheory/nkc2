@@ -82,7 +82,7 @@ block content
                     h4.media-heading
                       a(href='/m/#{docs[i].fromPost.uid}') #{docs[i].fromPost.username}
                       span(style="font-size:0.8em;") 在帖子
-                      a(href='/t/#{docs[i].fromPost.tid + "#" + docs[i].fromPost._key}') #{docs[i].fromPost.tid}
+                      a(href='/t/#{docs[i].fromPost.tid}##{docs[i].fromPost._key}') #{docs[i].fromPost.tid}
                       span(style="font-size:0.8em;") 下回复你：
                       p(style="font-size:0.8em;") #{docs[i].fromPost.c}
             hr(style='margin:0.5em 0;')
