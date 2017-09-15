@@ -116,7 +116,7 @@ block content
                     label(for="exampleInputEmail1") 用户名
                     input.form-control#exampleInputEmail1(type="email",placeholder="请输入用户名")
                   .form-group
-                    textarea.form-control(rows="3",style="min-height:20em;",placeholder="请输入信息内容")
+                    textarea.form-control(rows="3",style="min-height:13em;",placeholder="请输入信息内容")
                   .form-group(style="overflow:hidden;margin-bottom:0;")
                     button.btn.btn-default(type="submit",style='float:right') 发送
             .col-xs-12.col-md-12
@@ -146,7 +146,15 @@ block content
                       a(style='font-size:0.85em;',href='/sms?&tab=messages&conversation=#{docs[i].conversation._key}') 查看聊天
               hr(style='margin:0.5em 0;')
           -else
-            col-xs-12.col-md-12
+            .col-xs-12.col-md-12(style="margin:0.4em 0 0 0")
+              .form-group
+                label(for="exampleInputEmail1") 用户名
+                input.form-control#exampleInputEmail1(type="email",placeholder="请输入用户名")
+              .form-group
+                textarea.form-control(rows="3",style="min-height:13em;",placeholder="请输入信息内容")
+              .form-group(style="overflow:hidden;margin-bottom:0;")
+                button.btn.btn-default(type="submit",style='float:right') 发送
+            .col-xs-12.col-md-12
               -for(var i = 0 ; i < docs.length; i++)
                 hr(style='margin:0.5em 0;')
                 .media(style='margin:0;')
