@@ -27,16 +27,16 @@ block content
         .col-xs-12.col-md-12
           ul.nav.nav-tabs(style='margin-top: 0.5em;')
             li(class='#{nowAt === "replies"? "active": ""}')
-              a(href='/sms?&tab=replies') 回复提醒
+              a(style="cursor: pointer;",href='/sms?&tab=replies') 回复提醒
                 span.reddish(style="font-size:0.85em;") (#{data.user.new_message.replies}) 
             li(class='#{nowAt === "at"? "active": ""}')
-              a(href='/sms?&tab=at') @我的
+              a(style="cursor: pointer;",href='/sms?&tab=at') @我的
                 span.reddish(style="font-size:0.85em;") (#{data.user.new_message.at}) 
             li(class='#{nowAt === "messages"? "active": ""}')
-              a(href='/sms?&tab=messages') 短消息
+              a(style="cursor: pointer;",href='/sms?&tab=messages') 短消息
                 span.reddish(style="font-size:0.85em;") (#{data.user.new_message.messages}) 
             li(class='#{nowAt === "system"? "active": ""}')
-              a(href='/sms?&tab=system') 系统通知
+              a(style="cursor: pointer;",href='/sms?&tab=system') 系统通知
                 span.reddish(style="font-size:0.85em;") (#{data.user.new_message.system}) 
         -if(pageCount > 1)
           .col-xs-12.col-md-6(style="margin:0.4em 0 0 0")
