@@ -168,6 +168,17 @@ block content
                       span(style="font-size:0.8em;") &nbsp;说：
                       p(style="font-size:0.8em;") #{docs[i].c}
               hr(style='margin:0.5em 0;')
+        -if(nowAt === 'system')
+          .col-xs-12.col-md-12
+            -for(var i = 0 ; i < docs.length; i++)
+              hr(style='margin:0.5em 0;')
+              .media(style='margin:0;')
+                span #{changeTime(docs[i].toc)}
+                .media-body
+                  h4.media-heading
+                    a(href='/sms?&tab=system&key=#{docs[i]._key}') #{docs[i].c.title}
+            hr(style='margin:0.5em 0;')
+
 
 
         .col-xs-12.col-md-12(style="margin:0.4em 0 0 0")
