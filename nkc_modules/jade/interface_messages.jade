@@ -172,8 +172,8 @@ block content
 
         .col-xs-12.col-md-12(style="margin:0.4em 0 0 0")
           nav(aria-label='navigation')
-            -if(pageCount > 1)
-              ul.pagination(style="margin:0")
+            ul.pagination(style="margin:0")
+              -if(pageCount > 1)  
                 //- 当前页数若大于4则显示首页按钮
                 //- 若总的分页数小于7则不需要显示首页和尾页按钮
                 -if(page > 4 && pageCount > 7)
