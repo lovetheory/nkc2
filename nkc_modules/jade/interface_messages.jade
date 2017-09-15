@@ -126,10 +126,12 @@ block content
                 .media-body
                   h4.media-heading
                     a(href='/m/#{docs[i].conversation._key}') #{docs[i].conversation.username}
+                    &nbsp;
+                    a(href='/sms?&tab=messages&conversation=#{docs[i].conversation._key}') 未读
                       span.reddish(style="font-size:0.8em;") (#{newMesNum}) 
-                    span(style="font-size:0.8em;") &nbsp;说：
+                    span(style="font-size:0.8em;") &nbsp;最近一条信息：
                     p(style="font-size:0.8em;") #{docs[i].group[0].c}
-                    a(style='font-size:0.85en;',href='/sms?&tab=messages&conversation=#{docs[i].conversation._key}') 聊天记录
+                    a(style='font-size:0.85em;',href='/sms?&tab=messages&conversation=#{docs[i].conversation._key}') 查看聊天记录
             hr(style='margin:0.5em 0;')
 
 
