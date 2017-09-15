@@ -73,53 +73,63 @@ block content
         -if(nowAt === 'replies')
           .col-xs-12.col-md-12
             -for(var i = 0 ; i < docs.length; i++)
-                hr(style='margin:0.5em 0;')
-                .media(style='margin:0;')
-                  span #{changeTime(docs[i].fromPost.toc)}
-                  .media-left.media-top
-                    a(href='/m/#{docs[i].fromPost.uid}')
-                      img.media-object.img-rounded(src='/avatar/#{docs[i].fromPost.uid}',style='height:3em;width:3em;')
-                  .media-body
-                    h4.media-heading
-                      a(href='/m/#{docs[i].fromPost.uid}') #{docs[i].fromPost.username}
-                      span(style="font-size:0.8em;") 在帖子
-                      a(href='/t/#{docs[i].fromPost.tid}##{docs[i].fromPost._key}') #{docs[i].toPost.t||docs[i].toPost.tid}
-                      span(style="font-size:0.8em;") 下回复了你：
-                      p(style="font-size:0.8em;") #{docs[i].fromPost.c}
+              hr(style='margin:0.5em 0;')
+              .media(style='margin:0;')
+                span #{changeTime(docs[i].fromPost.toc)}
+                .media-left.media-top
+                  a(href='/m/#{docs[i].fromPost.uid}')
+                    img.media-object.img-rounded(src='/avatar/#{docs[i].fromPost.uid}',style='height:3em;width:3em;')
+                .media-body
+                  h4.media-heading
+                    a(href='/m/#{docs[i].fromPost.uid}') #{docs[i].fromPost.username}
+                    span(style="font-size:0.8em;") 在帖子
+                    a(href='/t/#{docs[i].fromPost.tid}##{docs[i].fromPost._key}') #{docs[i].toPost.t||docs[i].toPost.tid}
+                    span(style="font-size:0.8em;") 下回复了你：
+                    p(style="font-size:0.8em;") #{docs[i].fromPost.c}
             hr(style='margin:0.5em 0;')
 
         -if(nowAt === 'at')
           .col-xs-12.col-md-12
             -for(var i = 0 ; i < docs.length; i++)
-                hr(style='margin:0.5em 0;')
-                .media(style='margin:0;')
-                  span #{changeTime(docs[i].post.toc)}
-                  .media-left.media-top
-                    a(href='/m/#{docs[i].post.uid}')
-                      img.media-object.img-rounded(src='/avatar/#{docs[i].post.uid}',style='height:3em;width:3em;')
-                  .media-body
-                    h4.media-heading
-                      a(href='/m/#{docs[i].post.uid}') #{docs[i].post.username}
-                      span(style="font-size:0.8em;") 在帖子
-                      a(href='/t/#{docs[i].post.tid}##{docs[i].post._key}') #{docs[i].oc.t||docs[i].oc.tid}
-                      span(style="font-size:0.8em;") 下@了你：
-                      p(style="font-size:0.8em;") #{docs[i].post.c}
+              hr(style='margin:0.5em 0;')
+              .media(style='margin:0;')
+                span #{changeTime(docs[i].post.toc)}
+                .media-left.media-top
+                  a(href='/m/#{docs[i].post.uid}')
+                    img.media-object.img-rounded(src='/avatar/#{docs[i].post.uid}',style='height:3em;width:3em;')
+                .media-body
+                  h4.media-heading
+                    a(href='/m/#{docs[i].post.uid}') #{docs[i].post.username}
+                    span(style="font-size:0.8em;") 在帖子
+                    a(href='/t/#{docs[i].post.tid}##{docs[i].post._key}') #{docs[i].oc.t||docs[i].oc.tid}
+                    span(style="font-size:0.8em;") 下@了你：
+                    p(style="font-size:0.8em;") #{docs[i].post.c}
             hr(style='margin:0.5em 0;')
 
         -if(nowAt === 'messages')
           .col-xs-12.col-md-12
+            -var allNewMesNum = 0;
             -for(var i = 0 ; i < docs.length; i++)
-                hr(style='margin:0.5em 0;')
-                .media(style='margin:0;')
-                  span #{changeTime(docs[i].group[0].toc)}
-                  .media-left.media-top
-                    a(href='/m/#{docs[i].conversation._key}')
-                      img.media-object.img-rounded(src='/avatar/#{docs[i].conversation._key}',style='height:3em;width:3em;')
-                  .media-body
-                    h4.media-heading
-                      a(href='/m/#{docs[i].conversation._key}') #{docs[i].conversation.username}
-                      p(style="font-size:0.8em;") #{docs[i].group[0].c}
-                      a(href='/sms?&tab=messages&conversation=#{docs[i].conversation._key}') 更多信息
+              -var newMesNum = 0;
+              -for(var j = 0; j < docs[i].group.length; j++)
+                -if(docs[i].conversation.tlv <= docs[i].group[j].toc)
+                  -newMesNum++;
+                -else
+                  -break;
+              -allNewMesNum += newMesNum;
+              hr(style='margin:0.5em 0;')
+              .media(style='margin:0;')
+                span #{changeTime(docs[i].group[0].toc)}
+                .media-left.media-top
+                  a(href='/m/#{docs[i].conversation._key}')
+                    img.media-object.img-rounded(src='/avatar/#{docs[i].conversation._key}',style='height:3em;width:3em;')
+                .media-body
+                  h4.media-heading
+                    a(href='/m/#{docs[i].conversation._key}') #{docs[i].conversation.username}
+                      span.reddish(style="font-size:0.8em;") (#{newMesNum}) 
+                    span(style="font-size:0.8em;") &nbsp;说：
+                    p(style="font-size:0.8em;") #{docs[i].group[0].c}
+                    a(style='font-size:0.85en;',href='/sms?&tab=messages&conversation=#{docs[i].conversation._key}') 聊天记录
             hr(style='margin:0.5em 0;')
 
 
