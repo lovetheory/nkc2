@@ -61,7 +61,7 @@ block content
               th 注册时间
               th 注册方式
               th 最近登陆时间
-              th
+              th 发帖量
           tbody
             for user in data.users
               tr
@@ -69,6 +69,8 @@ block content
                   a(href='/m/#{user._key}') #{user.username}
                 td #{changeTime(user.toc)}
                 td #{user.certs.indexOf('mobile') > -1 ? '手机' : '邮箱'}
+                td #{changeTime(user.tlv)}
+                td #{user.threadCount}
     .rom
       .col-xs-12.col-md-12
         nav(aria-label='navigation')
