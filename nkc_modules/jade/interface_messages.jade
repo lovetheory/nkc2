@@ -108,16 +108,17 @@ block content
 
         -if(nowAt === 'messages')
           -if(!data.conversation)
-            .col-xs-12.col-md-3(style="margin:0.4em 0 0 0")
+            .col-xs-12.col-md-12(style="margin:0.4em 0 0 0")
               button.btn.btn-primary(type="button",data-toggle="collapse",data-target="#collapseExample",aria-expanded="false",aria-controls="collapseExample") 发信息
-              .collapse#collapseExample
+              .collapse#collapseExample(style='margin-top:0.5em;')
                 .well
-                  form
-                    .form-group
-                      label(for="exampleInputEmail1") 用户名
-                      input.form-control#exampleInputEmail1(type="email",placeholder="请输入用户名")
-                    .form-group
-                      textarea.form-control(rows="3") 请输入信息内容
+                  .form-group
+                    label(for="exampleInputEmail1") 用户名
+                    input.form-control#exampleInputEmail1(type="email",placeholder="请输入用户名")
+                  .form-group
+                    textarea.form-control(rows="3",style="min-height:20em;",placeholder="请输入信息内容")
+                  .form-group(style="overflow:hidden;margin-bottom:0;")
+                    button.btn.btn-default(type="submit",style='float:right') 发送
             .col-xs-12.col-md-12
               -var allNewMesNum = 0;
               -for(var i = 0 ; i < docs.length; i++)
@@ -137,7 +138,7 @@ block content
                   .media-body
                     h4.media-heading
                       a(href='/m/#{docs[i].conversation._key}') #{docs[i].conversation.username}
-                      &nbsp;
+                      span &nbsp;
                       a(style='font-size:0.85em;',href='/sms?&tab=messages&conversation=#{docs[i].conversation._key}') 未读
                         span.reddish(style="font-size:0.8em;") (#{newMesNum}) 
                       span(style="font-size:0.8em;") &nbsp;最近一条信息：
