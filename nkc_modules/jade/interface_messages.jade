@@ -76,15 +76,15 @@ block content
                 .media
                   span #{changeTime(docs[i].fromPost.toc)}
                   .media-left.media-top
-                    a(href='###')
-                      img.media-object.img-rounded(src='http://192.168.11.24:1086/avatar/71807',alt='name',style='height:4em;width:4em;')
+                    a(href='/m/#{docs[i].fromPost.uid}')
+                      img.media-object.img-rounded(src='/avatar/#{docs[i].fromPost.uid}',alt='name',style='height:4em;width:4em;')
                   .media-body
                     h4.media-heading
-                      a(href='###') 离歌笑
+                      a(href='/m/#{docs[i].fromPost.uid}') #{docs[i].fromPost.username}
                       span(style="font-size:0.8em;") 在帖子
-                      a(href='###') 、䲠，这两个字有什么不同？
+                      a(href='/t/#{docs[i].fromPost.tid + '#' + docs[i].fromPost._key}') #{docs[i].fromPost.tid}
                       span(style="font-size:0.8em;") 下回复你：
-                      p(style="font-size:0.8em;") 这两个字在Windows操作系统下都是chun鱼的chun，但是前者在其它系统下却可能变为乱码。这是由于前者是GBK增补字符集PUA编码，而后者是Unicode标准非PUA编码。受影响的有106个字符。而后者是Unicode标准非PUA编码。受影响的有106个字符。而后者是Unicode标准非PUA编码。受影响的有106个字符。而后者是Unicode标准非PUA编码。受影响的有106个字符。而后者是Unicode标准非PUA编码。受影响的有106个字符。而后者是Unicode标准非PUA编码。受影响的有106个字符。而后者是Unicode标准非PUA编码。受影响的有106个字符。而后者是Unicode标准非PUA编码。受影响的有106个字符。由于不是所有字体都支持这106个PUA字符，导致了UTF-8在这106个字符上实际上并不跨平台。考虑到大多数操作系统都支持Unicode，如果要让文本跨平台使用，最好转换为非PUA编码。
+                      p(style="font-size:0.8em;") #{docs[i].fromPost.c}
     p #{JSON.stringify(data)}
 
 
