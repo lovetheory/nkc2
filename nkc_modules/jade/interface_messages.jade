@@ -226,12 +226,12 @@ block scripts
     function sendMes(){
       if(!$("#inputUsername")){
         var mesObj = {
-          content: ${"#inputContent"}
+          content: $("#inputContent").html()
         }
       }else{
         var mesObj = {
-          username: $("#inputUsername"),
-          content: ${"#inputContent"}
+          username: $("#inputUsername").value(),
+          content: $("#inputContent").html()
         };
       }
       if(mesObj.content == ''){
