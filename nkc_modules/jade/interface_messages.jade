@@ -28,12 +28,16 @@ block content
           ul.nav.nav-tabs(style='margin-top: 0.5em;')
             li(class='#{nowAt === "replies"? "active": ""}')
               a(href='/sms?&tab=replies') 回复提醒
+                span.reddish(style="font-size:0.85em;") (#{data.user.new_message.replies}) 
             li(class='#{nowAt === "at"? "active": ""}')
               a(href='/sms?&tab=at') @我的
+                span.reddish(style="font-size:0.85em;") (#{data.user.new_message.at}) 
             li(class='#{nowAt === "messages"? "active": ""}')
               a(href='/sms?&tab=messages') 短消息
+                span.reddish(style="font-size:0.85em;") (#{data.user.new_message.messages}) 
             li(class='#{nowAt === "system"? "active": ""}')
               a(href='/sms?&tab=system') 系统通知
+                span.reddish(style="font-size:0.85em;") (#{data.user.new_message.system}) 
         -if(pageCount > 1)
           .col-xs-12.col-md-6(style="margin:0.4em 0 0 0")
             nav(aria-label='navigation')
@@ -139,7 +143,7 @@ block content
                       a(href='/m/#{docs[i].conversation._key}') #{docs[i].conversation.username}
                       span &nbsp;
                       a(style='font-size:0.85em;',href='/sms?&tab=messages&conversation=#{docs[i].conversation._key}') 未读
-                        span.reddish(style="font-size:0.8em;") (#{newMesNum}) 
+                        span.reddish(style="font-size:0.85em;") (#{newMesNum}) 
                       span(style="font-size:0.8em;") &nbsp;最近一条信息：
                       p(style="font-size:0.8em;") #{docs[i].group[0].c}
                       a(style='font-size:0.85em;',href='/sms?&tab=messages&conversation=#{docs[i].conversation._key}') 查看聊天
