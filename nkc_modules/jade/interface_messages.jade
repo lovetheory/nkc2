@@ -151,7 +151,7 @@ block content
           -else
             .col-xs-12.col-md-12(style="margin:0.4em 0 0 0")
               .form-group
-                textarea.form-control#inputContent(rows="3",style="min-height:13em;",placeholder="请输入信息内容")
+                textarea.form-control#inputContent(conversation='#{data.conversation}',rows="3",style="min-height:13em;",placeholder="请输入信息内容")
               .form-group(style="overflow:hidden;margin-bottom:0;")
                 button.btn.btn-default#sendMes(onclick='sendMes()',type="submit",style='float:right') 发送
             .col-xs-12.col-md-12
@@ -229,7 +229,8 @@ block scripts
     function sendMes(){
       if(!$("#inputUsername")){
         var mesObj = {
-          content: $("#inputContent").html()
+          content: $("#inputContent").html(),
+          conversation: $("#inputContent").attr('conversation')
         };
       }else{
         var mesObj = {
@@ -255,6 +256,7 @@ block scripts
         screenTopWarning('信息发送失败！' + err);
         geid('sendMes').disabled = false;
       });
+    }
 
 
 
