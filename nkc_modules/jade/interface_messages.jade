@@ -112,12 +112,12 @@ block content
               button.btn.btn-primary(type="button",data-toggle="collapse",data-target="#collapseExample",aria-expanded="false",aria-controls="collapseExample") 发信息
               .collapse#collapseExample(style='margin-top:0.5em;')
                 .form-group
-                  label(for="exampleInputEmail1") 用户名
-                  input.form-control#exampleInputEmail1(type="email",placeholder="请输入用户名")
+                  label 用户名
+                  input.form-control#inputUsername(type="text",placeholder="请输入用户名")
                 .form-group
-                  textarea.form-control(rows="3",style="min-height:13em;",placeholder="请输入信息内容")
+                  textarea.form-control#inputContent(rows="3",style="min-height:13em;",placeholder="请输入信息内容")
                 .form-group(style="overflow:hidden;margin-bottom:0;")
-                  button.btn.btn-default(type="submit",style='float:right') 发送
+                  button.btn.btn-default#sendMes(onclick='sendMes()',type="submit",style='float:right') 发送
             .col-xs-12.col-md-12
               -var allNewMesNum = 0;
               -for(var i = 0 ; i < docs.length; i++)
@@ -147,12 +147,9 @@ block content
           -else
             .col-xs-12.col-md-12(style="margin:0.4em 0 0 0")
               .form-group
-                label(for="exampleInputEmail1") 用户名
-                input.form-control#exampleInputEmail1(type="email",placeholder="请输入用户名",value="#{data.conversation}")
-              .form-group
-                textarea.form-control(rows="3",style="min-height:13em;",placeholder="请输入信息内容")
+                textarea.form-control#inputContent(rows="3",style="min-height:13em;",placeholder="请输入信息内容")
               .form-group(style="overflow:hidden;margin-bottom:0;")
-                button.btn.btn-default(type="submit",style='float:right') 发送
+                button.btn.btn-default#sendMes(onclick='sendMes()',type="submit",style='float:right') 发送
             .col-xs-12.col-md-12
               -for(var i = 0 ; i < docs.length; i++)
                 hr(style='margin:0.5em 0;')
@@ -217,6 +214,45 @@ block content
 
 
 
+                
+        
+  include debug_output.jade
+
+block scripts
+  script(src='/jquery/jquery-1.11.1.js')
+  script(src='/interface_common.js')
+  script(src='/interface_messages.js')
+  script.
+    function sendMes(){
+      if(!$("#inputUsername")){
+        var mesObj = {
+          content: ${"#inputContent"}
+        }
+      }else{
+        var mesObj = {
+          username: $("#inputUsername"),
+          content: ${"#inputContent"}
+        };
+      }
+      if(mesObj.content == ''){
+        return screenTopWarning('请输入消息内容!');
+      }
+      if(mesObj.username == ''){
+        return screenTopWarning('请输入用户名!');
+      }
+      geid('sendMes').disabled = true;
+      nkcAPI('postNewMessage',mesObj)
+      .then(function(){
+        screenTopWarning('信息发送成功！');
+        setTimeout(function(){
+          window.location.reload();
+        },1500)
+      })
+      .catch(function(err){
+        screenTopWarning('信息发送失败！' + err);
+        geid('sendMes').disabled = false;
+      })
+
 
 
  //-          -var obj = {replies: '回复', at: '@', messages: '短消息', system: '系统'}
@@ -238,10 +274,3 @@ block content
 
           //nav
           //  include interface_navigation_paging.jade
-                
-        
-  include debug_output.jade
-
-block scripts
-  script(src='/interface_common.js')
-  script(src='/interface_messages.js')
