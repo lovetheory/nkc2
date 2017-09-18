@@ -58,8 +58,8 @@ block content
           thead
             tr
               th 用户名
-              th 注册时间
               th 注册方式
+              th 注册时间
               th 最近登陆时间
               th 发帖量
               th 回复量
@@ -68,8 +68,8 @@ block content
               tr
                 td
                   a(href='/m/#{user._key}') #{user.username}
-                td #{changeTime(user.toc)}
                 td #{user.certs.indexOf('mobile') > -1 ? '手机' : '邮箱'}
+                td #{changeTime(user.toc)}
                 td #{changeTime(user.tlv)}
                 td #{user.threadCount}
                 td #{user.postCount}
