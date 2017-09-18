@@ -91,11 +91,9 @@ if !post.disabled || (post.disabled && po.enablePost)
             span.TPCIssuer #{username} &nbsp;&nbsp;
             span.TPCDate #{dateTimeString(c.toc).split(' ')[0]} &nbsp;&nbsp;
             span.TPCReason #{c.reason}
-
+p #{JSON.stringify(data)}
 - var po = data.permittedOperations
 if post.disabled
 
   - if(po.enablePost)
     a(href="javascript:enablePost('#{post._key}')") [此楼已屏蔽，点击解除]
-
-  p #{JSON.stringify(data)}
