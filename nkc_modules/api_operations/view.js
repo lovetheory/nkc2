@@ -2668,6 +2668,18 @@ table.viewBehaviorLogs = {
       .then(cursor => cursor.next())
       .then(result => {
         data.behaviorLogs = result.logs;
+        for (let i = 0; i < data.behaviorLogs.length; i++){
+          let userFrom = new layer.User(data.behaviorLogs[i].from);
+          data.behaviorLogs[i].from = {
+            uid: userFrom._key,
+            username: user.username
+          }
+          let userTo = new layer.User(data.behaviorLogs[i].to);
+          data.behaviorLogs[i].to = {
+            uid: userTo._key,
+            username: user.username
+          }
+        }
         let newPage = new layer.Paging(page).getPagingParams(result.length);
         newPage.page = params.page || 1;
         data.page = newPage;
