@@ -2680,7 +2680,6 @@ table.viewBehaviorLogs = {
             username: userTo.username
           }
         }
-        
         let newPage = new layer.Paging(page).getPagingParams(result.length);
         newPage.page = params.page || 1;
         data.page = newPage;
