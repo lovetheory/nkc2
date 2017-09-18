@@ -184,6 +184,8 @@ block content
                   .media-body
                     h4.media-heading
                       a(href='/sms?&tab=system&key=#{docs[i]._key}') #{docs[i].c.title}
+                        -if(!docs[i].viewed)
+                          span.reddish ·
                       //-p(style="font-size:0.8em;") #{docs[i].c.content}
               hr(style='margin:0.5em 0;')
           -else
@@ -232,7 +234,6 @@ block content
                 -if(page < pageCount - 3 && pageCount > 7)
                   li
                     a(href='/sms?&page=#{pageCount}&tab=#{nowAt}') 末
-    p #{JSON.stringify(data)}
 
 
 
