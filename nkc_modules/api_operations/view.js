@@ -1874,9 +1874,9 @@ table.viewSMS = {
         }
         return queryfunc.decrementPsnl(user._key, 'system')
           .then(() => {
-          if(params.key)
-            return db.collection('sms').document(key);
-          return db.query(aql`
+            if(params.key)
+              return db.collection('sms').document(key);
+            return db.query(aql`
               let sysInfos = (
                 for s in sms
                   filter s.s == 'system'
@@ -1887,11 +1887,11 @@ table.viewSMS = {
                 docs: sysInfos,
                 length: LENGTH(sysInfos)
               }
-            `)
+            `).then(cursor => cursor.next())
           })
-          .then(cursor => cursor.next())
       })
       .then(doc => {
+        if()
         const paging = new layer.Paging(page).getPagingParams(doc.length);
         data.paging = paging;
         data.docs = doc.docs.slice(paging.start, paging.count);
@@ -2637,7 +2637,7 @@ table.viewBehaviorLogs = {
         log.${address? 'address' : 'non'} == ${address? address : null}
         LET from = DOCUMENT(users, log.from)
         LET to = DOCUMENT(users, log.to)
-        RETURN MERGE({}, {from, to}))
+        RETURN MERGE(log, {from, to}))
       LET logs2 = (FOR log IN creditlogs
         FILTER log.type == 'xsf' && log.source == 'nkc' && log.address > null &&
         log.${from? 'from': to? 'to' : 'non'} == ${from? from: to? to: null} && 
