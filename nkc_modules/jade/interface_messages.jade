@@ -187,6 +187,7 @@ block content
             .col-xs-12.col-md-12
               span #{changeTime(docs.toc)}
               h2(style='text-align:center;') #{docs.c.title}
+              div.ThreadPostBody(style="#{postHeight?'overflow-y:scroll;max-height:'+postHeight:''}")!= experimental_render(docs.c.content)
               p #{docs.c.content}
 
 
