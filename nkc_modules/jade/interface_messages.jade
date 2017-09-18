@@ -16,12 +16,12 @@ block content
     -return out;
   //-拿到data里面的数据
   -var nowAt = data.tab;
-  //-if(data.paging && data.paging.page)
-  //  -var page = data.paging.page + 1;
-  //  -var pageCount = data.paging.pageCount;
-  //-else
-  -var page = 1;
-  -var pageCount = 1;
+  -if(data.paging)
+    -var page = data.paging.page + 1;
+    -var pageCount = data.paging.pageCount;
+  -else
+    -var page = 1;
+    -var pageCount = 1;
   -var obj = {replies: '回复', at: '@', messages: '短消息', system: '系统'};
   -var docs = data.docs;
 
