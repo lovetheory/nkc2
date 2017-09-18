@@ -18,7 +18,7 @@ var certificates={
 
     permittedOperations:{
       deleteElseQuestions:true,
-
+      postsysinfo: true,
     },
     // see end of api_operations.js
   },

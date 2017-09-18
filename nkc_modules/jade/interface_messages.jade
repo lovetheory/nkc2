@@ -185,9 +185,11 @@ block content
               hr(style='margin:0.5em 0;')
           -else
             .col-xs-12.col-md-12
+              -var c = docs.c.content
+              -var t = docs.c.title
               span #{changeTime(docs.toc)}
-              h2(style='text-align:center;') #{docs.c.title}
-              p #{experimental_render(docs.c.content)}
+              h2(style='text-align:center;') #{t}
+              p!= experimental_render({c, l: 'bbcode'})
 
 
 
