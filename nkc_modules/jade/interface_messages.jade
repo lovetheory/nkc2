@@ -172,16 +172,22 @@ block content
                       p(style="font-size:0.8em;") #{docs[i].c}
               hr(style='margin:0.5em 0;')
         -if(nowAt === 'system')
-          .col-xs-12.col-md-12
-            -for(var i = 0 ; i < docs.length; i++)
+          -if(data.paging)
+            .col-xs-12.col-md-12
+              -for(var i = 0 ; i < docs.length; i++)
+                hr(style='margin:0.5em 0;')
+                .media(style='margin:0;')
+                  span #{changeTime(docs[i].toc)}
+                  .media-body
+                    h4.media-heading
+                      a(href='/sms?&tab=system&key=#{docs[i]._key}') #{docs[i].c.title}
+                      p(style="font-size:0.8em;") #{docs[i].c.content}
               hr(style='margin:0.5em 0;')
-              .media(style='margin:0;')
-                span #{changeTime(docs[i].toc)}
-                .media-body
-                  h4.media-heading
-                    a(href='/sms?&tab=system&key=#{docs[i]._key}') #{docs[i].c.title}
-                    p(style="font-size:0.8em;") #{docs[i].c.content}
-            hr(style='margin:0.5em 0;')
+          -else
+            .col-xs-12.col-md-12
+              span #{changeTime(docs.toc)}
+              h2(style='text-align:center;') #{docs.c.title}
+              p #{docs.c.content}
 
 
 
