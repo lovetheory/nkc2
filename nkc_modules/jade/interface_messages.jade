@@ -5,7 +5,6 @@ block title
   meta#replytarget(value='#{data.replytarget}')
 
 block content
-  p #{JSON.stringify(data)}
   -function changeTime(value)
     -var add_0 = function(value)
       -if(value <= 9)
@@ -219,6 +218,7 @@ block content
                 -if(page < pageCount - 3 && pageCount > 7)
                   li
                     a(href='/sms?&page=#{pageCount}&tab=#{nowAt}') 末
+    p #{JSON.stringify(data)}
 
 
 
