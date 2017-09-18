@@ -143,10 +143,8 @@ block content
                       img.media-object.img-rounded(src='/avatar/#{docs[i].conversation._key}',style='height:3em;width:3em;')
                   .media-body
                     h4.media-heading
-                      a(href='/m/#{docs[i].conversation._key}') #{docs[i].conversation.username}
-                      span &nbsp;
-                      a(style='font-size:0.85em;',href='/sms?&tab=messages&conversation=#{docs[i].conversation._key}')
-                        span.reddish (#{newMesNum}) 
+                      a(href='/sms?&tab=messages&conversation=#{docs[i].conversation._key}') #{docs[i].conversation.username}
+                      span.reddish (#{newMesNum}) 
                       span :
                       a(style='font-size:0.85em;float:right;',href='/sms?&tab=messages&conversation=#{docs[i].conversation._key}') 查看聊天信息
                       p(style="font-size:0.8em;") #{docs[i].group[0].c}
