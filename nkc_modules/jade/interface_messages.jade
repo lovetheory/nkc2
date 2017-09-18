@@ -275,6 +275,7 @@ block scripts
       .then(function(){
         screenTopWarning('信息发送成功！');
         $("#inputContent").val('');
+        geid('sendMes').disabled = false;
       })
       .catch(function(err){
         screenTopWarning('信息发送失败！' + err);
