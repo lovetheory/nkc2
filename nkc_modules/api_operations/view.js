@@ -2648,12 +2648,12 @@ table.viewNewUsers = {
       LET users = (FOR u IN users
         SORT u.toc DESC
         return u)
-      LET ips = (FOR u IN users
+      LET length = LENGTH(users)
+      LET result = SLICE(users, ${page * perPage}, ${perPage})
+      LET ips = (FOR u IN result
         FOR h IN histories
           FILTER h.uid == u._key
           RETURN h.ipoc)
-      LET length = LENGTH(users)
-      LET result = SLICE(users, ${page * perPage}, ${perPage})
       RETURN {
         users: result,
         ips: ips,
@@ -2662,7 +2662,7 @@ table.viewNewUsers = {
     `)
       .then(cursor => cursor.next())
       .then(res => {
-        for (let i = 0; i < res.ips; i++) {
+        for (let i = 0; i < res.ips.length; i++) {
           res.users[i].ip = res.ips[i];
         }
         data.users = res.users;
