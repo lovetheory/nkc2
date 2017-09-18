@@ -130,7 +130,7 @@ block content
               -for(var i = 0 ; i < docs.length; i++)
                 -var newMesNum = 0;
                 -for(var j = 0; j < docs[i].group.length; j++)
-                  -if(data.user.tlv <= docs[i].group[j].toc)
+                  -if(!docs[i].group[j].viewed)
                     -newMesNum++;
                   -else
                     -continue;
@@ -167,8 +167,13 @@ block content
                     h4.media-heading
                       a(href='/m/#{docs[i].s}') #{docs[i].s} 
                       span(style="font-size:0.8em;") &nbsp;说：
-                      p(style="font-size:0.8em;") #{docs[i].c}
+                    p(style="font-size:0.8em;") #{docs[i].c}
+                    -if(i < docs.length-1)
+                      -if(!docs[i].viewed && docs[i+1].viewed)
+                        hr(style='margin:0.5em 0;')
+                        p(style="text-align:center;color:#888;") 以上为最新信息
               hr(style='margin:0.5em 0;')
+
         -if(nowAt === 'system')
           -if(data.paging)
             .col-xs-12.col-md-12
