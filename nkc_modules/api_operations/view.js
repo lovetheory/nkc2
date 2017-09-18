@@ -2668,13 +2668,30 @@ table.viewBehaviorLogs = {
       .then(cursor => cursor.next())
       .then(result => {
         data.behaviorLogs = result.logs;
+        let getUsername = (uid) => {
+          return db.query(aql`
+            FOR u IN users
+            FILTER u._key == ${uid}
+            return {
+              uid: ${uid},
+              username: u.username
+            }
+          `)
+          .then(cursor => cursor.next())
+          .then((res) => {
+            return res;
+          })
+          .catch((err) => {
+            throw err;
+          })
+        }
         for (let i = 0; i < data.behaviorLogs.length; i++){
-          let userFrom = new layer.User(data.behaviorLogs[i].from);
+          let userFrom = getUsername(data.behaviorLogs[i].from);
           data.behaviorLogs[i].from = {
             uid: userFrom._key,
             username: userFrom.username
           }
-          let userTo = new layer.User(data.behaviorLogs[i].to);
+          let userTo = getUsername(data.behaviorLogs[i].to);
           data.behaviorLogs[i].to = {
             uid: userTo._key,
             username: userTo.username
