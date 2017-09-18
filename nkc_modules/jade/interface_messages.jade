@@ -271,9 +271,7 @@ block scripts
       nkcAPI('postNewMessage',mesObj)
       .then(function(){
         screenTopWarning('信息发送成功！');
-        setTimeout(function(){
-          window.location.reload();
-        },1500)
+        $("#inputContent").val('');
       })
       .catch(function(err){
         screenTopWarning('信息发送失败！' + err);
