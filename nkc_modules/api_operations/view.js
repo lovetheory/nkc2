@@ -2635,18 +2635,22 @@ table.viewBehaviorLogs = {
         FILTER log.${from? 'from': to? 'to' : 'non'} == ${from? from: to? to: null} && 
         log.${filter? filter : 'non'} == ${filter? filterTypes[type] : null} &&
         log.${address? 'address' : 'non'} == ${address? address : null}
-        RETURN log)
+        LET from = DOCUMENT(users, log.from)
+        LET to = DOCUMENT(users, log.to)
+        RETURN MERGE({}, {from, to}))
       LET logs2 = (FOR log IN creditlogs
         FILTER log.type == 'xsf' && log.source == 'nkc' && log.address > null &&
         log.${from? 'from': to? 'to' : 'non'} == ${from? from: to? to: null} && 
         log.${filter? filter : 'non'} == ${filter? filterTypes[type] : null} &&
         log.${address? 'address' : 'non'} == ${address? address : null}
         LET p = DOCUMENT(posts, log.pid)
+        LET from = DOCUMENT(users, log.uid)
+        LET to = DOCUMENT(users, log.touid)
         RETURN {
           timeStamp: log.toc,
           reason: log.reason,
-          from: log.uid,
-          to: log.touid,
+          from,
+          to,
           port: log.port,
           address: log.address,
           operation: 'changeXSF',
@@ -2670,36 +2674,6 @@ table.viewBehaviorLogs = {
       .then(cursor => cursor.next())
       .then(result => {
         data.behaviorLogs = result.logs;
-        let getUsername = (uid) => {
-          return db.query(aql`
-            FOR u IN users
-            FILTER u._key == ${uid}
-            return {
-              uid: ${uid},
-              username: u.username
-            }
-          `)
-          .then(cursor => cursor.next())
-          .then((res) => {
-            return res;
-          })
-          .catch((err) => {
-            throw err;
-          })
-        }
-        for (let i = 0; i < data.behaviorLogs.length; i++){
-          let userFrom = getUsername(data.behaviorLogs[i].from);
-          data.behaviorLogs[i].from = {
-            uid: userFrom._key,
-            username: userFrom.username
-          }
-          let userTo = getUsername(data.behaviorLogs[i].to);
-          data.behaviorLogs[i].to = {
-            uid: userTo._key,
-            username: userTo.username
-          }
-        }
-        
         let newPage = new layer.Paging(page).getPagingParams(result.length);
         newPage.page = params.page || 1;
         data.page = newPage;
