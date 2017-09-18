@@ -2629,12 +2629,12 @@ table.viewBehaviorLogs = {
           let userFrom = new layer.User(data.behaviorLogs[i].from);
           data.behaviorLogs[i].from = {
             uid: userFrom._key,
-            username: user.username
+            username: userFrom.username
           }
           let userTo = new layer.User(data.behaviorLogs[i].to);
           data.behaviorLogs[i].to = {
             uid: userTo._key,
-            username: user.username
+            username: userTo.username
           }
         }
         let newPage = new layer.Paging(page).getPagingParams(result.length);
