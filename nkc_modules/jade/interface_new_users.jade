@@ -18,39 +18,40 @@ block content
     .rom
       .col-xs-12.col-md-12
         nav(aria-label='navigation')
-          ul.pagination
-            //- 当前页数若大于4则显示首页按钮
-            //- 若总的分页数小于7则不需要显示首页和尾页按钮
-            -if(data.page.page > 4 && data.page.pagecount > 7)
-              li
-                a(href='/newusers?&page=1') 首
-            //- n为总共需要显示的分页按钮个数
-            //- i为循环中当前生成的页数
-            -var n = 7;
-            -var min = data.page.pagecount - 3;
-            -if(data.page.page > min)
-              -min = data.page.pagecount - 6;
-            -else
-              -min = data.page.page - 3;
-            -for(var i = min ; 1 ; i++)
-              -if(n == 0)
-                -break;
-              -if(i <= 0)
-                -continue;
-              -if(i > data.page.pagecount)
-                -break;
-              //- 生成当前所在分页按钮时，有蓝色背景，不可点击
-              -if(i == data.page.page)
-                li.active
-                  a(href='javscript:void(0)') #{i}
-              -else
+          -if(data.page.pagecount > 1)
+            ul.pagination
+              //- 当前页数若大于4则显示首页按钮
+              //- 若总的分页数小于7则不需要显示首页和尾页按钮
+              -if(data.page.page > 4 && data.page.pagecount > 7)
                 li
-                  a(href='/newusers?&page=#{i}') #{i}
-              -n--;
-              //- 当前页数若小于 最大分页数-3 则显示尾页按钮
-            -if(data.page.page < data.page.pagecount - 3 && data.page.pagecount > 7)
-              li
-                a(href='/newusers?&page=#{data.page.pagecount}') 末
+                  a(href='/newusers?&page=1') 首
+              //- n为总共需要显示的分页按钮个数
+              //- i为循环中当前生成的页数
+              -var n = 7;
+              -var min = data.page.pagecount - 3;
+              -if(data.page.page > min)
+                -min = data.page.pagecount - 6;
+              -else
+                -min = data.page.page - 3;
+              -for(var i = min ; 1 ; i++)
+                -if(n == 0)
+                  -break;
+                -if(i <= 0)
+                  -continue;
+                -if(i > data.page.pagecount)
+                  -break;
+                //- 生成当前所在分页按钮时，有蓝色背景，不可点击
+                -if(i == data.page.page)
+                  li.active
+                    a(href='javscript:void(0)') #{i}
+                -else
+                  li
+                    a(href='/newusers?&page=#{i}') #{i}
+                -n--;
+                //- 当前页数若小于 最大分页数-3 则显示尾页按钮
+              -if(data.page.page < data.page.pagecount - 3 && data.page.pagecount > 7)
+                li
+                  a(href='/newusers?&page=#{data.page.pagecount}') 末
     .row
       .col-xs-12
         table.table.table-hover.table-condensed
@@ -78,37 +79,37 @@ block content
     .rom
       .col-xs-12.col-md-12
         nav(aria-label='navigation')
-          ul.pagination
-            //- 当前页数若大于4则显示首页按钮
-            //- 若总的分页数小于7则不需要显示首页和尾页按钮
-            -if(data.page.page > 4 && data.page.pagecount > 7)
-              li
-                a(href='/newusers?&page=1') 首
-            //- n为总共需要显示的分页按钮个数
-            //- i为循环中当前生成的页数
-            -var n = 7;
-            -var min = data.page.pagecount - 3;
-            -if(data.page.page > min)
-              -min = data.page.pagecount - 6;
-            -else
-              -min = data.page.page - 3;
-            -for(var i = min ; 1 ; i++)
-              -if(n == 0)
-                -break;
-              -if(i <= 0)
-                -continue;
-              -if(i > data.page.pagecount)
-                -break;
-              //- 生成当前所在分页按钮时，有蓝色背景，不可点击
-              -if(i == data.page.page)
-                li.active
-                  a(href='javscript:void(0)') #{i}
-              -else
+          -if(data.page.pagecount > 1)
+            ul.pagination
+              //- 当前页数若大于4则显示首页按钮
+              //- 若总的分页数小于7则不需要显示首页和尾页按钮
+              -if(data.page.page > 4 && data.page.pagecount > 7)
                 li
-                  a(href='/newusers?&page=#{i}') #{i}
-              -n--;
-              //- 当前页数若小于 最大分页数-3 则显示尾页按钮
-            -if(data.page.page < data.page.pagecount - 3 && data.page.pagecount > 7)
-              li
-                a(href='/newusers?&page=#{data.page.pagecount}') 末
-    p #{JSON.stringify(data)}
+                  a(href='/newusers?&page=1') 首
+              //- n为总共需要显示的分页按钮个数
+              //- i为循环中当前生成的页数
+              -var n = 7;
+              -var min = data.page.pagecount - 3;
+              -if(data.page.page > min)
+                -min = data.page.pagecount - 6;
+              -else
+                -min = data.page.page - 3;
+              -for(var i = min ; 1 ; i++)
+                -if(n == 0)
+                  -break;
+                -if(i <= 0)
+                  -continue;
+                -if(i > data.page.pagecount)
+                  -break;
+                //- 生成当前所在分页按钮时，有蓝色背景，不可点击
+                -if(i == data.page.page)
+                  li.active
+                    a(href='javscript:void(0)') #{i}
+                -else
+                  li
+                    a(href='/newusers?&page=#{i}') #{i}
+                -n--;
+                //- 当前页数若小于 最大分页数-3 则显示尾页按钮
+              -if(data.page.page < data.page.pagecount - 3 && data.page.pagecount > 7)
+                li
+                  a(href='/newusers?&page=#{data.page.pagecount}') 末
