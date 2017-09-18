@@ -2648,15 +2648,23 @@ table.viewNewUsers = {
       LET users = (FOR u IN users
         SORT u.toc DESC
         return u)
+      LET ips = (FOR u IN users
+        FOR h IN histories
+          FILTER h.uid == u._key
+          RETURN h.ipoc)
       LET length = LENGTH(users)
       LET result = SLICE(users, ${page * perPage}, ${perPage})
       RETURN {
         users: result,
+        ips: ips,
         length
       }
     `)
       .then(cursor => cursor.next())
       .then(res => {
+        for (let i = 0; i < res.ips; i++) {
+          res.users[i].ip = res.ips[i];
+        }
         data.users = res.users;
         let newPage = new layer.Paging(page).getPagingParams(res.length);
         newPage.page = params.page || 1;
