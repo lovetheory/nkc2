@@ -841,7 +841,7 @@ table.viewForum = {
         //if nothing went wrong
         data.cat = params.cat;
         data.threads = result;
-        data.twemoji = setting.editor.twemoji;
+        data.twemoji = settings.editor.twemoji;
         data.paging = params.paging || 0;
 
         return getForumList(params)
@@ -1781,104 +1781,112 @@ table.viewSMS = {
     data.receiver = params.receiver //optional param
     const page = params.page || 0;
     const tab = params.tab || 'replies';
+    const user = params.user;
     return Promise.resolve()
       .then(() => {
         if (tab === 'replies') {
-          return db.query(aql`
-            LET replies = (FOR r IN replies
-              FILTER r.touid == ${uid}
-              SORT r.toc DESC
-              LET fromPost = DOCUMENT(posts, r.frompid)
-              LET fromUser = DOCUMENT(users, r.fromPost.uid)
-              LET toUser = DOCUMENT(users, ${uid})
-              LET toPost = DOCUMENT(posts, r.topid)
-              FILTER !fromPost.disabled
+          return queryfunc.decrementPsnl(user._key, 'replies')
+            .then(() => db.query(aql`
+              LET replies = (FOR r IN replies
+                FILTER r.touid == ${uid}
+                SORT r.toc DESC
+                LET fromPost = DOCUMENT(posts, r.frompid)
+                LET fromUser = DOCUMENT(users, r.fromPost.uid)
+                LET toUser = DOCUMENT(users, ${uid})
+                LET toPost = DOCUMENT(posts, r.topid)
+                FILTER !fromPost.disabled
+                RETURN {
+                  r,
+                  fromPost,
+                  toUser,
+                  toPost
+                })
               RETURN {
-                r,
-                fromPost,
-                toUser,
-                toPost
-              })
-            RETURN {
-              length: LENGTH(replies),
-              docs: replies
-            }
-          `)
+                length: LENGTH(replies),
+                docs: replies
+              }
+            `))
             .then(cursor => cursor.next())
         }
         if (tab === 'at') {
-          return db.query(aql`
-            LET ats = (
-              FOR i IN invites
-                FILTER i.invitee == ${uid}
-                SORT i.toc DESC
-                LET post = DOCUMENT(posts, i.pid)
-                LET user = DOCUMENT(users, i.inviter)
-                LET thread = DOCUMENT(threads, post.tid)
-                LET oc = DOCUMENT(posts, thread.oc)
+          return queryfunc.decrementPsnl(user._key, 'at')
+            .then(() => db.query(aql`
+              LET ats = (
+                FOR i IN invites
+                  FILTER i.invitee == ${uid}
+                  SORT i.toc DESC
+                  LET post = DOCUMENT(posts, i.pid)
+                  LET user = DOCUMENT(users, i.inviter)
+                  LET thread = DOCUMENT(threads, post.tid)
+                  LET oc = DOCUMENT(posts, thread.oc)
+                RETURN {
+                  i,
+                  post,
+                  user,
+                  thread,
+                  oc
+                }
+              )
               RETURN {
-                i,
-                post,
-                user,
-                thread,
-                oc
+                length: LENGTH(ats),
+                docs: ats
               }
-            )
-            RETURN {
-              length: LENGTH(ats),
-              docs: ats
-            }
-          `)
+            `))
             .then(cursor => cursor.next())
         }
         if (tab === 'messages') {
           const conversation = params.conversation;
-          if(conversation)
-            return db.query(aql`
-              LET messages = (FOR s IN sms
-                FILTER s.r == ${uid} && s.s == ${conversation} || 
-                s.s == ${uid} && s.r == ${conversation}
-                SORT s.toc DESC
-                RETURN s)
-              RETURN {
-                docs: messages,
-                length: LENGTH(messages)
-              }
-            `)
-              .then(cursor => cursor.next());
-          return db.query(aql`
-            LET messages = (
-              LET ms = (FOR s IN sms
-                FILTER s.r == ${uid} || s.s == ${uid}
-                SORT s.toc DESC
-                RETURN MERGE(s, {conversation: s.r == ${uid}? s.s : s.r})
-                )
-              FOR s IN ms
-                COLLECT conversation = s.conversation INTO group = s
-              RETURN {
-                conversation: DOCUMENT(users, conversation),
-                group
-              }
-              )
-              RETURN {
-                docs: messages,
-                length: LENGTH(messages)
-              }
-          `)
+          return queryfunc.decrementPsnl(user._key, 'messages')
+            .then(() => {
+              if (conversation)
+                return db.query(aql`
+                  LET messages = (FOR s IN sms
+                    FILTER s.r == ${uid} && s.s == ${conversation} || 
+                    s.s == ${uid} && s.r == ${conversation}
+                    SORT s.toc DESC
+                    RETURN s)
+                  RETURN {
+                    docs: messages,
+                    length: LENGTH(messages)
+                  }
+                `);
+              return db.query(aql`
+                LET messages = (
+                  LET ms = (FOR s IN sms
+                    FILTER s.r == ${uid} || s.s == ${uid}
+                    SORT s.toc DESC
+                    RETURN MERGE(s, {conversation: s.r == ${uid}? s.s : s.r})
+                    )
+                  FOR s IN ms
+                    COLLECT conversation = s.conversation INTO group = s
+                  RETURN {
+                    conversation: DOCUMENT(users, conversation),
+                    group
+                  }
+                  )
+                  RETURN {
+                    docs: messages,
+                    length: LENGTH(messages)
+                  }
+              `)
+            })
             .then(cursor => cursor.next())
         }
-        return db.query(aql`
-          let sysInfos = (
-          for s in sms
-            filter s.s == 'system'
-            sort s.toc desc
-          return s
-          )
-          return {
-            docs: sysInfos,
-            length: LENGTH(sysInfos)
-          }
-        `)
+        return queryfunc.decrementPsnl(user._key, 'system')
+          .then(() => {
+            db.query(aql`
+              let sysInfos = (
+                for s in sms
+                  filter s.s == 'system'
+                  sort s.toc desc
+                return s
+              )
+              return {
+                docs: sysInfos,
+                length: LENGTH(sysInfos)
+              }
+            `)
+          })
           .then(cursor => cursor.next())
       })
       .then(doc => {
@@ -1993,7 +2001,42 @@ table.viewPersonal = {
         return data
       })
   }
-}
+};
+
+table.postNewMessage = {
+  operation: params => {
+    const conversation = params.conversation;
+    const username = params.username;
+    const content = params.content;
+    const user = params.user;
+    const toc = Date.now();
+    const ip = params._req.iptrim;
+    let rUser;
+    return Promise.resolve()
+      .then(() => {
+        if(conversation)
+          return db.collection('sms').save({
+            s: user._key,
+            r: conversation,
+            c: content,
+            toc,
+            ip
+          });
+        return apifunc.get_user_by_name(username)
+          .then(receiveUser => {
+            rUser = receiveUser[0];
+            return db.collection('sms').save({
+              s: user._key,
+              r: rUser._key,
+              c: content,
+              toc,
+              ip
+            })
+          })
+      })
+      .then(() => queryfunc.incrementPsnl((rUser? rUser._key: conversation), 'messages'))
+  }
+};
 
 table.viewSelf = {
   init: () => Promise.all([
@@ -2665,6 +2708,7 @@ table.viewNewUsers = {
       LET result = SLICE(users, ${page * perPage}, ${perPage})
       RETURN {
         users: result,
+        ips: ips,
         length
       }
     `)
@@ -2795,6 +2839,35 @@ function create_muser(user) {
             })
         })
     })
+}
+
+table.viewNewSysInfo = {
+  operation: params => {
+    const data = defaultData(params);
+    data.template = jadeDir + '/interface_new_sysinfo.jade';
+    data.twemoji = settings.editor.twemoji;
+    return data
+  }
+};
+
+table.postsysinfo = {
+  operation: params => {
+    const sms = {
+      c: {
+        title: params.title,
+        content: params.content
+      },
+      toc: Date.now(),
+      ip: params._req.iptrim,
+      s: 'system'
+    };
+    return db.collection('sms').save(sms)
+      .then(() => {
+        params._res.sent = true;
+        params._res.redirect('/experimental');
+        return queryfunc.incrementPsnl('all', 'system')
+      })
+  }
 }
 function deleteErrDoc(uid, collection) {
   return db.query(aql`

@@ -48,6 +48,8 @@ var params = req.body
 
 //parse body. expect JSON;
 api.use(bodyparser.json());
+api.use(bodyparser.urlencoded({ extended: true }));
+
 
 
 api.use(function(req,res,next){

@@ -237,6 +237,7 @@ settings.urlrewrite = [ //happens before serve_static
   {map: /^\/behaviors\??(.*)/, to: '/api/operation?&operation=viewBehaviorLogs$1'},
   {map: /^\/newusers\??(.*)/, to: '/api/operation?&operation=viewNewUsers$1'},
   {map: /^\/subscribe\??(.*)/, to: '/api/operation?&operation=viewSubscribe$1'},
+  {map: /^\/postsysinfo\??(.*)/, to: '/api/operation?&operation=postsysinfo$1'},
   //{map:'/me',to:'/interface/me'},
 
   //{map:/^\/exam\?{0,1}(.*)/,to:'/api/operation?&operation=viewExam&$1'},
@@ -249,7 +250,7 @@ settings.urlrewrite = [ //happens before serve_static
   urlrewriteGen('register2','viewRegister2'),  //邮箱注册
   urlrewriteGen('activeEmail','viewActiveEmail'),  //邮箱激活
   urlrewriteGen('exam','viewExam'),
-
+  urlrewriteGen('newsysteminfo', 'viewNewSysInfo'),
   urlrewriteGen('logout','viewLogout'),
   urlrewriteGen('login','viewLogin'),
   urlrewriteGen('experimental','viewExperimental'),
