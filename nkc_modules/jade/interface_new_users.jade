@@ -61,6 +61,7 @@ block content
               th 注册方式
               th 注册时间
               th 最近登陆时间
+              th ip
               th 发帖量
               th 回复量
           tbody
@@ -71,6 +72,7 @@ block content
                 td #{user.certs.indexOf('mobile') > -1 ? '手机' : '邮箱'}
                 td #{changeTime(user.toc)}
                 td #{changeTime(user.tlv)}
+                td #{user.ip || '0.0.0.0'}
                 td #{user.threadCount}
                 td #{user.postCount}
     .rom
