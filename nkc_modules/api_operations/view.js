@@ -1874,7 +1874,9 @@ table.viewSMS = {
         }
         return queryfunc.decrementPsnl(user._key, 'system')
           .then(() => {
-            db.query(aql`
+          if(params.key)
+            return db.collection('sms').document(key);
+          return db.query(aql`
               let sysInfos = (
                 for s in sms
                   filter s.s == 'system'
