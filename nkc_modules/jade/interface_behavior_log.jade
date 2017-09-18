@@ -158,9 +158,9 @@ block content
               th(scope='row') #{i + 1}
               td #{changeTime(data.behaviorLogs[i].timeStamp)}
               td
-                a(href='/m/#{data.behaviorLogs[i].from.uid}') (#{data.behaviorLogs[i].from.uid}) #{data.behaviorLogs[i].from.username}
+                a(href='/m/#{data.behaviorLogs[i].from._key}') (#{data.behaviorLogs[i].from._key}) #{data.behaviorLogs[i].from.username}
               td
-                a(href='/m/#{data.behaviorLogs[i].to.uid}') (#{data.behaviorLogs[i].to.uid}) #{data.behaviorLogs[i].to.username}
+                a(href='/m/#{data.behaviorLogs[i].to._key}') (#{data.behaviorLogs[i].to._key}) #{data.behaviorLogs[i].to.username}
               td #{data.behaviorLogs[i].address}:#{data.behaviorLogs[i].port}
               td #{operationCH}
               td
@@ -208,5 +208,5 @@ block content
   script(src='/jquery/jquery-1.11.1.js')
   script(src='/interface_behavior_log.js')
   include debug_output.jade
-  
+
   p #{JSON.stringify(data)}
