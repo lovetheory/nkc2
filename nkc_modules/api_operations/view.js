@@ -1891,10 +1891,13 @@ table.viewSMS = {
           })
       })
       .then(doc => {
-        if()
-        const paging = new layer.Paging(page).getPagingParams(doc.length);
-        data.paging = paging;
-        data.docs = doc.docs.slice(paging.start, paging.count);
+        if(doc.length) {
+          const paging = new layer.Paging(page).getPagingParams(doc.length);
+          data.paging = paging;
+          data.docs = doc.docs.slice(paging.start, paging.count);
+        } else {
+          data.docs = doc
+        }
         data.tab = tab;
         data.conversation = params.conversation;
         return data
