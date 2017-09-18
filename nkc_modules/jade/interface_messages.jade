@@ -172,7 +172,7 @@ block content
                       p(style="font-size:0.8em;") #{docs[i].c}
               hr(style='margin:0.5em 0;')
         -if(nowAt === 'system')
-          -if(data.paging)
+          -if(!data.paging)
             .col-xs-12.col-md-12
               -for(var i = 0 ; i < docs.length; i++)
                 hr(style='margin:0.5em 0;')
