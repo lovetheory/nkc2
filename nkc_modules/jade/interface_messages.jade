@@ -234,7 +234,7 @@ block content
                 -if(page < pageCount - 3 && pageCount > 7)
                   li
                     a(href='/sms?&page=#{pageCount}&tab=#{nowAt}#{conversation}') 末
-    p #{JSON.stringify(data.docs)}
+    p #{JSON.stringify(data.paging)}
 
 
 
