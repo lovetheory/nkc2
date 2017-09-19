@@ -134,6 +134,12 @@ var create_phoneuser = function(user){
         hash: hash,
         salt: salt,
       },
+      new_message: {
+        messages: 0,
+        at: 0,
+        replied: 0,
+        system: 0
+      },
       regcode: user.regCode,
     }
     return queryfunc.doc_save(newuser, 'users')

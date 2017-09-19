@@ -1841,19 +1841,22 @@ table.viewSMS = {
           if(conversation) {
             let doc;
             return db.collection('users').document(conversation)
-              .then(() => db.query(aql`
-                LET messages = (FOR s IN sms
-                  FILTER s.r == ${uid} && s.s == ${conversation} || 
-                  s.s == ${uid} && s.r == ${conversation}
-                  SORT s.toc DESC
-                  LET sender = DOCUMENT(users, s.s)
-                  LET receiver = DOCUMENT(users, s.r)
-                  RETURN MERGE(s, {s: sender, r: receiver}))
-                RETURN {
-                  docs: messages,
-                  length: LENGTH(messages)
-                }
-              `))
+              .then(u => {
+                data.targetUser = u;
+                return db.query(aql`
+                  LET messages = (FOR s IN sms
+                    FILTER s.r == ${uid} && s.s == ${conversation} || 
+                    s.s == ${uid} && s.r == ${conversation}
+                    SORT s.toc DESC
+                    LET sender = DOCUMENT(users, s.s)
+                    LET receiver = DOCUMENT(users, s.r)
+                    RETURN MERGE(s, {s: sender, r: receiver}))
+                  RETURN {
+                    docs: messages,
+                    length: LENGTH(messages)
+                  }
+                `)
+              })
               .then(cursor => cursor.next())
               .then(d => {
                 doc = d;
@@ -1887,18 +1890,18 @@ table.viewSMS = {
                 FILTER s.r == ${uid} || s.s == ${uid}
                 SORT s.toc DESC
                 RETURN MERGE(s, {conversation: s.r == ${uid}? s.s : s.r})
-                )
+              )
               FOR s IN ms
                 COLLECT conversation = s.conversation INTO group = s
+                SORT group[0].toc DESC
               RETURN {
                 conversation: DOCUMENT(users, conversation),
                 group
-              }
-              )
-              RETURN {
-                docs: messages,
-                length: LENGTH(messages)
-              }
+              })
+            RETURN {
+              docs: messages,
+              length: LENGTH(messages)
+            }
           `)
             .then(cursor => cursor.next())
         }
@@ -1929,7 +1932,7 @@ table.viewSMS = {
         return db.query(aql`
           let sysInfos = (
             for s in sms
-              filter s.s == 'system'
+              filter s.s == 'system' && s.toc > ${user.toc}
               sort s.toc desc
             return s
           )
@@ -2759,7 +2762,13 @@ function create_muser(user) {
         _key: uid,
         email: user.email,
         hashtype: user.hashtype,
-        password: user.password
+        password: user.password,
+        new_message: {
+          messages: 0,
+          at: 0,
+          replied: 0,
+          system: 0
+        },
       };
       return db.query(aql`
         for u in users
@@ -2815,6 +2824,8 @@ table.viewNewSysInfo = {
 
 table.postsysinfo = {
   operation: params => {
+    if(params.title === '') throw '标题必填';
+    if(params.content.length < 6) throw '内容太短';
     const sms = {
       c: {
         title: params.title,

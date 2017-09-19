@@ -193,6 +193,7 @@ var certificates={
       non_broadcast:true,
     },
     permittedOperations:{
+      postNewMessage: true,
       getMcode3: true,
       bindMobile: true,
       switchTInPersonalForum: true,
