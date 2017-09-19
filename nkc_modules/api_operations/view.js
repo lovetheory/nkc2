@@ -2708,7 +2708,7 @@ table.viewSubscribe = {
       return {
         userslist: d,
         length: length,
-        targetUser: targetUser[0]
+        targetUser: targetUser
       }
     `)
       .then(cursor => cursor.next())
