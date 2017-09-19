@@ -166,11 +166,11 @@ block content
                     span(style="color: red;font-size: 1em;margin-right: 0.3em;") ●
                   span #{changeTime(docs[i].toc)}
                   .media-left.media-top
-                    a(href='/m/#{docs[i].s}')
-                      img.media-object.img-rounded(src='/avatar/#{docs[i].s}',style='height:3em;width:3em;')
+                    a(href='/m/#{docs[i].s._key}')
+                      img.media-object.img-rounded(src='/avatar/#{docs[i].s._key}',style='height:3em;width:3em;')
                   .media-body
                     h4.media-heading
-                      a(href='/m/#{docs[i].s}') #{docs[i].s.username} 
+                      a(href='/m/#{docs[i].s._key}') #{docs[i].s.username} 
                       span(style="font-size:1em;") :
                     p(style="font-size:1em;") #{docs[i].c}
               hr(style='margin:0.5em 0;')
