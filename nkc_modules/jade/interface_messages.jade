@@ -166,8 +166,8 @@ block content
                   .media-body
                     h4.media-heading
                       a(href='/m/#{docs[i].s}') #{docs[i].s} 
-                      span(style="font-size:0.8em;") &nbsp;说：
-                    p(style="font-size:0.8em;") #{docs[i].c}
+                      span(style="font-size:1em;") &nbsp;：
+                    p(style="font-size:1em;") #{docs[i].c}
                     -if(i < docs.length-1)
                       -if(!docs[i].viewed && docs[i+1].viewed)
                         hr(style='margin:0.5em 0;')
