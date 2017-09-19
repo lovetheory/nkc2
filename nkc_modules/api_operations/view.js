@@ -2702,7 +2702,7 @@ table.viewSubscribe = {
         return u.${list})
       LET us = users_subscribe[0] || []
       LET length = LENGTH(us)
-      LET result = SLICE(us, ${(page-1) * perPage}, ${perPage})
+      LET result = SLICE(us, ${(page-1) * perPage}, ${perPage}) || []
       LET d = (
         FOR uid in result
           FOR u IN users
