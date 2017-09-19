@@ -165,13 +165,11 @@ block content
                       img.media-object.img-rounded(src='/avatar/#{docs[i].s}',style='height:3em;width:3em;')
                   .media-body
                     h4.media-heading
+                      -if(!docs[i].viewed && docs[i].r == data.user._key)
+                        span(style="color: red;font-size: 0.5em;margin-right: 0.2em;") ●
                       a(href='/m/#{docs[i].s}') #{docs[i].s} 
                       span(style="font-size:1em;") ：
                     p(style="font-size:1em;") #{docs[i].c}
-                    -if(i < docs.length-1)
-                      -if(!docs[i].viewed && docs[i+1].viewed)
-                        hr(style='margin:0.5em 0;')
-                        p(style="text-align:center;color:#888;") 以上为未读信息
               hr(style='margin:0.5em 0;')
 
         -if(nowAt === 'system')
@@ -183,10 +181,9 @@ block content
                   span #{changeTime(docs[i].toc)}
                   .media-body
                     h4.media-heading
+                      -if(!docs[i].viewed)
+                        span(style="color: red;font-size: 0.5em;margin-right: 0.5em;") ●
                       a(href='/sms?&tab=system&key=#{docs[i]._key}') #{docs[i].c.title}
-                      -if(i < docs.length-1)
-                        -if(!docs[i].viewed)
-                          span(style="color: red;font-size: 0.5em;margin-left: 0.5em;") ●
               hr(style='margin:0.5em 0;')
           -else
             .col-xs-12.col-md-12
