@@ -77,8 +77,9 @@ block content
                   td #{user.regIP}:#{user.regPort}
                 -else
                   td 0.0.0.0:0000
-                td #{user.threadCount}
-                td #{user.postCount}
+                td #{user.threadCount || 0}
+                td #{user.postCount || 0}
+    p #{JSON.stringify(data)}
     .rom
       .col-xs-12.col-md-12
         nav(aria-label='navigation')
