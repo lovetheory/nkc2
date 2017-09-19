@@ -66,7 +66,8 @@ block content
                           - var user = data.targetUser
                           if(data.user)
                             if(user._key != data.user._key)
-                              if(data.user.subscribeUsers.indexOf(user._key) > -1)
+                              var subscribeUsers = data.user.subscribeUsers || []
+                              if(subscribeUsers.indexOf(user._key) > -1)
                                 div
                                   a.btn.btn-sm.btn-danger(href='javascript:;' onclick='subscribeUserSwitch("#{user._key}");' style='margin-top: 5px; margin-left: 10px;')#subscribeButton 取关
                               else

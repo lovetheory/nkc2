@@ -10,7 +10,6 @@
         if(data.user)
           if(user._key != data.user._key)
             var subscribeUsers = data.user.subscribeUsers || []
-            -console.log(subscribeUsers)
             if(subscribeUsers.indexOf(user._key) > -1)
               a.btn.btn-sm.btn-danger(href='javascript:;' onclick='subscribeUserSwitch("#{uid}");')#subscribeButton 取关
             else
