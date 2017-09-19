@@ -2697,12 +2697,10 @@ table.viewSubscribe = {
         filter u._key == ${uid}
         return u
       )
-      LET users_subscribe = (FOR u IN usersSubscribe
-        filter u._key == ${uid}
-        return u.${list})
-      LET us = users_subscribe[0] || []
-      LET length = LENGTH(us)
-      LET result = SLICE(us, ${(page-1) * perPage}, ${perPage}) || []
+      LET us = DOCUMENT(usersSubscribe, ${uid})
+      LET uss = us? us.${list} : []
+      LET length = LENGTH(uss)
+      LET result = SLICE(uss, ${(page-1) * perPage}, ${perPage}) || []
       LET d = (
         FOR uid in result
           FOR u IN users
