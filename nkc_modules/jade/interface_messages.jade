@@ -165,11 +165,12 @@ block content
                       img.media-object.img-rounded(src='/avatar/#{docs[i].s}',style='height:3em;width:3em;')
                   .media-body
                     h4.media-heading
-                      -if(!docs[i].viewed && docs[i].r == data.user._key)
-                        span(style="color: red;font-size: 0.5em;margin-right: 0.2em;") ●
                       a(href='/m/#{docs[i].s}') #{docs[i].s} 
                       span(style="font-size:1em;") ：
-                    p(style="font-size:1em;") #{docs[i].c}
+                    p(style="font-size:1em;")
+                      -if(!docs[i].viewed && docs[i].r == data.user._key)
+                        span(style="color: red;font-size: 0.5em;margin-right: 0.2em;") ●
+                      span #{docs[i].c}
               hr(style='margin:0.5em 0;')
 
         -if(nowAt === 'system')
