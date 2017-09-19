@@ -59,8 +59,8 @@ div
                 span 信
               
                 if data.user.new_message
-                  -var new_message = data.user.new_message||0
-                  span.reddish (#{(new_message.message || 0) + (new_message.system || 0) + (new_message.at || 0) + (new_message.replies || 0)})
+                  -var new_message = data.user.new_message
+                  span.reddish (#{(new_message.messages || 0) + (new_message.system || 0) + (new_message.at || 0) + (new_message.replies || 0)})
             
             if data.permittedOperations
               if data.permittedOperations.viewExperimental

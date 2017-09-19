@@ -459,7 +459,7 @@ function nkc_render(options){
 
       case 'markdown':
       renderedHTML = markdown_experimental(post)
-      break;
+      break;0
 
       default:
       renderedHTML = plain_escape(content)

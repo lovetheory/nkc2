@@ -117,6 +117,8 @@ var create_phoneuser = function(user){
       username_lowercase: user.username.toLowerCase(),
       toc: timestamp,
       tlv: timestamp,
+      regIP: user.regIP,
+      regPort: user.regPort,
       certs: ['mobile', 'examinated'],
     }
 
@@ -300,6 +302,8 @@ table.userPhoneRegister = {
       password:params.password,
       regCode: params.regCode,
       phone:params.phone,
+      regIP: params._req.iptrim,
+      regPort: params._req.connection.remotePort,
       mcode:params.mcode/*,
       icode:params.icode*/
     };
