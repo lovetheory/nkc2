@@ -41,6 +41,9 @@ block content
             li(class='#{nowAt === "system"? "active": ""}')
               a(style="cursor: pointer;",href='/sms?&tab=system') 系统通知
                 span.reddish(style="font-size:0.85em;") (#{data.user.new_message.system}) 
+        //-var conversation
+        //-if(nowAt === 'messages' && data.conversation)
+
         -if(pageCount > 1)
           .col-xs-12.col-md-6(style="margin:0.4em 0 0 0")
             nav(aria-label='navigation')
@@ -130,7 +133,7 @@ block content
               -for(var i = 0 ; i < docs.length; i++)
                 -var newMesNum = 0;
                 -for(var j = 0; j < docs[i].group.length; j++)
-                  -if(!docs[i].group[j].viewed)
+                  -if(!docs[i].group[j].viewed && docs[i].group.r == data.user._key)
                     -newMesNum++;
                   -else
                     -continue;
