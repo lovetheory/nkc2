@@ -162,7 +162,7 @@ block content
               -for(var i = 0 ; i < docs.length; i++)
                 hr(style='margin:0.5em 0;')
                 .media(style='margin:0;')
-                  -if(!docs[i].viewed && docs[i].r == data.user._key)
+                  -if(!docs[i].viewed && docs[i].r._key == data.user._key)
                     span(style="color: red;font-size: 1em;margin-right: 0.3em;") ●
                   span #{changeTime(docs[i].toc)}
                   .media-left.media-top
