@@ -43,7 +43,7 @@ block content
                 span.reddish(style="font-size:0.85em;") (#{data.user.new_message.system}) 
         -var conversation = '';
         -if(nowAt === 'messages' && data.conversation)
-          conversation = '&conversation=' + data.conversation;
+          -conversation = '&conversation=' + data.conversation;
         -if(pageCount > 1)
           .col-xs-12.col-md-6(style="margin:0.4em 0 0 0")
             nav(aria-label='navigation')
