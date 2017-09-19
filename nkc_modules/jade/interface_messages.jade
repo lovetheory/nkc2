@@ -82,9 +82,13 @@ block content
                     a(href='/sms?&page=#{pageCount-1}&tab=#{nowAt}#{conversation}') 末
         -if(nowAt === 'replies')
           .col-xs-12.col-md-12
+            -var reNum = data.user.new_message.replies;
             -for(var i = 0 ; i < docs.length; i++)
               hr(style='margin:0.5em 0;')
               .media(style='margin:0;')
+                -if(reNum > 0)
+                  -reNum--;
+                  span(style="color: red;font-size: 1em;margin-right: 0.3em;") ●
                 span #{changeTime(docs[i].fromPost.toc)}
                 .media-left.media-top
                   a(href='/m/#{docs[i].fromPost.uid}')
@@ -100,9 +104,13 @@ block content
 
         -if(nowAt === 'at')
           .col-xs-12.col-md-12
+            -var atNum = data.user.new_message.at;
             -for(var i = 0 ; i < docs.length; i++)
               hr(style='margin:0.5em 0;')
               .media(style='margin:0;')
+                -if(atNum > 0 )
+                  -atNum--;
+                  span(style="color: red;font-size: 1em;margin-right: 0.3em;") ●
                 span #{changeTime(docs[i].post.toc)}
                 .media-left.media-top
                   a(href='/m/#{docs[i].post.uid}')
