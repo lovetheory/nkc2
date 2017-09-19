@@ -287,7 +287,7 @@ block scripts
         geid('sendMes').disabled = false;
       })
       .catch(function(err){
-        screenTopWarning('信息发送失败！' + err);
+        screenTopWarning('信息发送失败！' + JSON.stringify(err));
         geid('sendMes').disabled = false;
       });
     }
