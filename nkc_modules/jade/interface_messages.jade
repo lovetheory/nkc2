@@ -181,7 +181,7 @@ block content
               -for(var i = 0 ; i < docs.length; i++)
                 hr(style='margin:0.5em 0;')
                 .media(style='margin:0;')
-                  -if(docs[i].viewed.indexOf(data.user._key) = -1)
+                  -if(docs[i].viewed.indexOf(data.user._key) == -1)
                     span(style="color: red;font-size: 1em;margin-right: 0.3em;") ●
                   span #{changeTime(docs[i].toc)}
                   .media-body
