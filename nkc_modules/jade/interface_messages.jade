@@ -185,9 +185,8 @@ block content
                     h4.media-heading
                       a(href='/sms?&tab=system&key=#{docs[i]._key}') #{docs[i].c.title}
                     -if(i < docs.length-1)
-                      -if(!docs[i].viewed && docs[i+1].viewed)
-                        hr(style='margin:0.5em 0;')
-                        p(style="text-align:center;color:#888;") 以上为未读通知
+                      -if(!docs[i].viewed)
+                        span(style="red") 未读
               hr(style='margin:0.5em 0;')
           -else
             .col-xs-12.col-md-12
