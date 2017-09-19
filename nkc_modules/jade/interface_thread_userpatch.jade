@@ -9,6 +9,7 @@
       .ForumName #{user.username}&nbsp;&nbsp;&nbsp;
         if(data.user)
           if(user._key != data.user._key)
+            data.user.subscribeUsers = data.user.subscribeUsers || [];
             if(data.user.subscribeUsers.indexOf(user._key) > -1)
               a.btn.btn-sm.btn-danger(href='javascript:;' onclick='subscribeUserSwitch("#{uid}");')#subscribeButton 取关
             else
