@@ -73,7 +73,10 @@ block content
                 td #{user.certs.indexOf('mobile') > -1 ? '手机' : '邮箱'}
                 td #{changeTime(user.toc)}
                 td #{changeTime(user.tlv)}
-                td #{user.ip || '0.0.0.0'}
+                -if(user.regIP && user.regPort)
+                  td #{user.regIP}:#{user.regPort}
+                -else
+                  td 0.0.0.0:0000
                 td #{user.threadCount}
                 td #{user.postCount}
     .rom
