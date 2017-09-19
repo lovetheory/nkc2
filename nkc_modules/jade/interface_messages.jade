@@ -133,7 +133,7 @@ block content
               -for(var i = 0 ; i < docs.length; i++)
                 -var newMesNum = 0;
                 -for(var j = 0; j < docs[i].group.length; j++)
-                  -if(!docs[i].group[j].viewed && docs[i].group.r == data.user._key)
+                  -if(!docs[i].group[j].viewed && docs[i].group[j].r == data.user._key)
                     -newMesNum++;
                   -else
                     -continue;
