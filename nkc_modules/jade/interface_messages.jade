@@ -52,7 +52,7 @@ block content
                 //- 若总的分页数小于7则不需要显示首页和尾页按钮
                 -if(page > 4 && pageCount > 7)
                   li
-                    a(href='/sms?&page=1&tab=#{nowAt}#{conversation}') 首
+                    a(href='/sms?&page=0&tab=#{nowAt}#{conversation}') 首
                 //- n为总共需要显示的分页按钮个数
                 //- i为循环中当前生成的页数
                 -var n = 7;
@@ -74,12 +74,12 @@ block content
                       a(href='###') #{i}
                   -else
                     li
-                      a(href='/sms?&page=#{i}&tab=#{nowAt}#{conversation}') #{i}
+                      a(href='/sms?&page=#{i-1}&tab=#{nowAt}#{conversation}') #{i}
                   -n--;
                 //- 当前页数若小于 最大分页数-3 则显示尾页按钮
                 -if(page < pageCount - 3 && pageCount > 7)
                   li
-                    a(href='/sms?&page=#{pageCount}&tab=#{nowAt}#{conversation}') 末
+                    a(href='/sms?&page=#{pageCount-1}&tab=#{nowAt}#{conversation}') 末
         -if(nowAt === 'replies')
           .col-xs-12.col-md-12
             -for(var i = 0 ; i < docs.length; i++)
@@ -206,7 +206,7 @@ block content
                 //- 若总的分页数小于7则不需要显示首页和尾页按钮
                 -if(page > 4 && pageCount > 7)
                   li
-                    a(href='/sms?&page=1&tab=#{nowAt}#{conversation}') 首
+                    a(href='/sms?&page=0&tab=#{nowAt}#{conversation}') 首
                 //- n为总共需要显示的分页按钮个数
                 //- i为循环中当前生成的页数
                 -var n = 7;
@@ -228,12 +228,12 @@ block content
                       a(href='###') #{i}
                   -else
                     li
-                      a(href='/sms?&page=#{i}&tab=#{nowAt}#{conversation}') #{i}
+                      a(href='/sms?&page=#{i-1}&tab=#{nowAt}#{conversation}') #{i}
                   -n--;
                 //- 当前页数若小于 最大分页数-3 则显示尾页按钮
                 -if(page < pageCount - 3 && pageCount > 7)
                   li
-                    a(href='/sms?&page=#{pageCount}&tab=#{nowAt}#{conversation}') 末
+                    a(href='/sms?&page=#{pageCount-1}&tab=#{nowAt}#{conversation}') 末
     p #{JSON.stringify(data.paging)}
 
 
