@@ -183,10 +183,10 @@ block content
                   span #{changeTime(docs[i].toc)}
                   .media-body
                     h4.media-heading
+                      -if(i < docs.length-1)
+                          -if(!docs[i].viewed)
+                            span(style="color: red;font-size: 1em;margin-left: 0.5em;") ●
                       a(href='/sms?&tab=system&key=#{docs[i]._key}') #{docs[i].c.title}
-                    -if(i < docs.length-1)
-                      -if(!docs[i].viewed)
-                        span(style="red") 未读
               hr(style='margin:0.5em 0;')
           -else
             .col-xs-12.col-md-12
