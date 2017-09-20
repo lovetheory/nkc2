@@ -83,7 +83,7 @@ block content
                 .media-body
                   h4.media-heading
                     a(href="/m/#{usersList[i]._key}") #{usersList[i].username}
-                  span(style='color:#555;') 主题:#{usersList[i].threadCount} 回复:#{usersList[i].postCount}
+                  span(style='color:#555;') 主题:#{usersList[i].threadCount || 0} 回复:#{usersList[i].postCount || 0}
       .col-xs-12.col-md-12
         nav(aria-label='navigation')
           ul.pagination
