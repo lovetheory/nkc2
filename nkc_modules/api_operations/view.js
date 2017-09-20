@@ -480,6 +480,7 @@ table.viewLatest = {
     let count;
     data.template = jadeDir + 'interface_latest_threads.jade';
     data.navbar = {highlight: 'home'};
+    data.twemoji = settings.editor.twemoji;
     for (let param in params.contentClasses) {
       if (params.contentClasses[param] === true) {
         contentClasses[param] = true;
@@ -1526,6 +1527,7 @@ table.viewEditor = {
       return apifunc.get_a_post(pid)
         .then(function (back) {
           data.original_post = back;
+          data.twemoji = settings.editor.twemoji;
           return data;
         })
     }
@@ -2760,7 +2762,7 @@ function create_muser(user) {
         new_message: {
           messages: 0,
           at: 0,
-          replied: 0,
+          replies: 0,
           system: 0
         },
       };
@@ -2783,10 +2785,10 @@ function create_muser(user) {
             INSERT {
               _key: ${uid},
               type: 'forum',
-              abbr: SUBSTRING(${user.username}, 0, 6),
-              display_name: CONCAT(${user.username}, '的专栏'),
-              description: CONCAT(${user.username}, '的专栏'),
-              moderators: [${user.username}],
+              abbr: SUBSTRING(${newuser.username}, 0, 6),
+              display_name: CONCAT(${newuser.username}, '的专栏'),
+              description: CONCAT(${newuser.username}, '的专栏'),
+              moderators: [${uid}],
               recPosts: []
             } INTO personalForums
           `)

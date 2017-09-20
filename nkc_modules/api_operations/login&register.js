@@ -137,7 +137,7 @@ var create_phoneuser = function(user){
       new_message: {
         messages: 0,
         at: 0,
-        replied: 0,
+        replies: 0,
         system: 0
       },
       regcode: user.regCode,
@@ -1005,16 +1005,30 @@ table.bindMobile = {
       .then(cursor => cursor.all())
       .then(docs => {
         if(docs.length === 1) {
-          return db.collection('mobilecodes').save({
-            mobile: phone,
-            uid: user._key,
-            toc: time
-          })
+          return db.query(aql`
+            FOR m IN mobilecodes
+            FILTER m.uid == ${user._key}
+            RETURN m
+          `)
+            .then(cursor => cursor.all())
+            .then(arr => {
+              if(arr.length === 0) {
+                return db.collection('mobilecodes').save({
+                  uid: user._key,
+                  mobile: phone,
+                  toc: time
+                })
+              }
+              throw '你已绑定手机'
+            })
         } else {
           throw '验证码过期或者验证码错误'
         }
       })
       .then(() => '绑定成功!')
+      .catch(e => {
+        throw e
+      })
   }
 };
 
