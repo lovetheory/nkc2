@@ -1661,7 +1661,11 @@ margin-left: 5px;
     display: none;
   }
 }
-
+@media screen and (max-width: 991px) {
+  .hidden-label{
+    display: none;
+  } 
+}
 .nkc-figure-text {
   font-size: 14px;
   background-color: rgba(0, 0, 0, 0.5);
@@ -1711,4 +1715,13 @@ img.emoji {
   width: 1.6em;
   margin: -0.3em .05em -0.3em .1em;
   vertical-align: -0.1em;
+}
+.text-align-center{
+  text-align: center;
+}
+.border-right{
+  border-left: 1px solid #eee;
+}
+.border-right{
+  border-right: 1px solid #eee;
 }

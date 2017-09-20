@@ -26,14 +26,6 @@ function createReplyRelation(frompid,topid){
   return operations.table.createReplyRelation.operation({frompid,topid})
 }
 
-var incrementPsnl = function(key){
-  var psnl = new layer.Personal(key)
-  return psnl.load()
-    .then(psnl=>{
-      return psnl.update({new_message:(psnl.model.new_message||0)+1})
-    })
-}
-
 //post to a given thread.
 var postToThread = function(params,tid,user, type){
   let pid;
@@ -76,7 +68,7 @@ var postToThread = function(params,tid,user, type){
           inviter: user._key,
           toc: timestamp
         })
-          .then(() => incrementPsnl(foundUser.uid)))))
+          .then(() => queryfunc.incrementPsnl(foundUser.uid, 'at')))))
         .then(() => {
           const newpost = { //accept only listed attribute
             _key:newpid,
@@ -364,7 +356,7 @@ var postToPost = function(params,pid,user){ //modification.
             toc: timestamp,
             inviter: user._key
           })
-            .then(() => incrementPsnl(foundUser.uid)))))
+            .then(() => queryfunc.incrementPsnl(foundUser.uid, 'at')))))
           .then(() => {
             for (let atUser of usersAlreadyInformed) {
               const username = '@' + atUser.username + ' ';

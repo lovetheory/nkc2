@@ -17,14 +17,6 @@ var permissions = require('../permissions')
 var table = {};
 module.exports = table;
 
-var incrementPsnl = function(key){
-  var psnl = new layer.Personal(key)
-  return psnl.load()
-  .then(psnl=>{
-    return psnl.update({new_message:(psnl.model.new_message||0)+1})
-  })
-}
-
 table.sendShortMessageByUsername = {
   operation:function(params){
     var destusername = params.username
@@ -44,7 +36,7 @@ table.sendShortMessageByUsername = {
     })
     .then(s=>{
 
-      return incrementPsnl(u.model._key)
+      return queryfunc.incrementPsnl(u.model._key, 'messages')
       .then(psnl=>{
         return s.model
       })

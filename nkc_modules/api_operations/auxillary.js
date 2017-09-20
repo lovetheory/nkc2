@@ -105,14 +105,6 @@ table.runAQL={
   }
 }
 
-var incrementPsnl = function(key){
-  var psnl = new layer.Personal(key)
-  return psnl.load()
-  .then(psnl=>{
-    return psnl.update({new_message:(psnl.model.new_message||0)+1})
-  })
-}
-
 table.createReplyRelation = {
   init:()=>{
     queryfunc.createIndex('replies',{
@@ -140,7 +132,7 @@ table.createReplyRelation = {
         toc,
       })
       .then(r=>{
-        return incrementPsnl(touid)
+        return queryfunc.incrementPsnl(touid, 'replies')
         .then(psnl=>{
           return {_key:r.key}
         })

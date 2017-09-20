@@ -139,7 +139,9 @@ table.viewActiveEmail = {
             username: res[0].username,
             password: res[0].password,
             hashtype: res[0].hashtype,
-            email: res[0].email
+            email: res[0].email,
+            regPort: params._req.connection.remotePort,
+            regIP: params._req.iptrim
           }
           return create_muser(user)
             .then(k => {
@@ -478,6 +480,7 @@ table.viewLatest = {
     let count;
     data.template = jadeDir + 'interface_latest_threads.jade';
     data.navbar = {highlight: 'home'};
+    data.twemoji = settings.editor.twemoji;
     for (let param in params.contentClasses) {
       if (params.contentClasses[param] === true) {
         contentClasses[param] = true;
@@ -841,7 +844,7 @@ table.viewForum = {
         //if nothing went wrong
         data.cat = params.cat;
         data.threads = result;
-        data.twemoji = setting.editor.twemoji;
+        data.twemoji = settings.editor.twemoji;
         data.paging = params.paging || 0;
 
         return getForumList(params)
@@ -1524,6 +1527,7 @@ table.viewEditor = {
       return apifunc.get_a_post(pid)
         .then(function (back) {
           data.original_post = back;
+          data.twemoji = settings.editor.twemoji;
           return data;
         })
     }
@@ -1779,73 +1783,181 @@ table.viewSMS = {
     data.template = jadeDir + 'interface_messages.jade'
     var uid = params.user._key
     data.receiver = params.receiver //optional param
-    return AQL(`
-      FOR s IN sms
-        FILTER s.s == @uid || s.r == @uid
-        COLLECT WITH COUNT INTO length
-        RETURN length
-    `, {uid})
-      .then(length => {
-        var paging = new layer.Paging(params.page).getPagingParams(length);
-        data.paging = paging;
-
-        return AQL(`
-          FOR s IN sms
-            FILTER s.s == @uid || s.r == @uid
-            SORT s.toc DESC
-            LIMIT @start, @count
-            LET us = DOCUMENT(users, s.s)
-            LET ur = DOCUMENT(users, s.r)
-            RETURN MERGE(s, {us, ur})
-        `, {uid: uid, start: paging.start, count: paging.count})
-      })
-      .then(sarr => {
-        data.smslist = sarr
-        return AQL(`
-        for r in replies
-        filter r.touid == @uid
-        sort r.touid desc, r.toc desc
-        limit 40
-        let frompost = document(posts,r.frompid)
-        let fromuser = document(users,frompost.uid)
-        let touser = document(users,@uid)
-        let topost = document(posts,r.topid)
-
-        filter !frompost.disabled
-
-        limit 30
-        return merge(r,{fromuser,frompost,topost,touser})
-        `, {uid}
-        )
-      })
-      .then(arr => {
-        data.replylist = arr;
+    const page = params.page || 0;
+    const tab = params.tab || 'replies';
+    const user = params.user;
+    return Promise.resolve()
+      .then(() => {
+        if (tab === 'replies') {
+          return queryfunc.decrementPsnl(user._key, 'replies')
+            .then(() => db.query(aql`
+              LET replies = (FOR r IN replies
+                FILTER r.touid == ${uid}
+                SORT r.toc DESC
+                LET fromPost = DOCUMENT(posts, r.frompid)
+                LET fromUser = DOCUMENT(users, r.fromPost.uid)
+                LET toUser = DOCUMENT(users, ${uid})
+                LET toPost = DOCUMENT(posts, r.topid)
+                FILTER !fromPost.disabled
+                RETURN {
+                  r,
+                  fromPost,
+                  toUser,
+                  toPost
+                })
+              RETURN {
+                length: LENGTH(replies),
+                docs: replies
+              }
+            `))
+            .then(cursor => cursor.next())
+        }
+        if (tab === 'at') {
+          return queryfunc.decrementPsnl(user._key, 'at')
+            .then(() => db.query(aql`
+              LET ats = (
+                FOR i IN invites
+                  FILTER i.invitee == ${uid}
+                  SORT i.toc DESC
+                  LET post = DOCUMENT(posts, i.pid)
+                  LET user = DOCUMENT(users, i.inviter)
+                  LET thread = DOCUMENT(threads, post.tid)
+                  LET oc = DOCUMENT(posts, thread.oc)
+                RETURN {
+                  i,
+                  post,
+                  user,
+                  thread,
+                  oc
+                }
+              )
+              RETURN {
+                length: LENGTH(ats),
+                docs: ats
+              }
+            `))
+            .then(cursor => cursor.next())
+        }
+        if (tab === 'messages') {
+          const conversation = params.conversation;
+          if(conversation) {
+            let doc;
+            return db.collection('users').document(conversation)
+              .then(u => {
+                data.targetUser = u;
+                return db.query(aql`
+                  LET messages = (FOR s IN sms
+                    FILTER s.r == ${uid} && s.s == ${conversation} || 
+                    s.s == ${uid} && s.r == ${conversation}
+                    SORT s.toc DESC
+                    LET sender = DOCUMENT(users, s.s)
+                    LET receiver = DOCUMENT(users, s.r)
+                    RETURN MERGE(s, {s: sender, r: receiver}))
+                  RETURN {
+                    docs: messages,
+                    length: LENGTH(messages)
+                  }
+                `)
+              })
+              .then(cursor => cursor.next())
+              .then(d => {
+                doc = d;
+                return db.query(aql`
+                  FOR s IN sms
+                  FILTER s.s == ${conversation} && s.r == ${user._key}
+                  FILTER s.viewed == false
+                  UPDATE s WITH {viewed: true} IN sms
+                  COLLECT WITH COUNT INTO length
+                  RETURN length
+                `)
+              })
+              .then(cursor => cursor.next())
+              .then(length => {
+                return db.query(aql`
+                  LET u = DOCUMENT(users_personal, ${user._key})
+                  LET msg = u.new_message
+                  UPDATE u WITH {new_message: {
+                    messages: msg.messages - ${length},
+                    at: msg.at,
+                    replies: msg.replies,
+                    system: msg.system
+                  }} IN users_personal
+                `)
+              })
+              .then(() => doc)
+          }
+          return db.query(aql`
+            LET messages = (
+              LET ms = (FOR s IN sms
+                FILTER s.r == ${uid} || s.s == ${uid}
+                SORT s.toc DESC
+                RETURN MERGE(s, {conversation: s.r == ${uid}? s.s : s.r})
+              )
+              FOR s IN ms
+                COLLECT conversation = s.conversation INTO group = s
+                SORT group[0].toc DESC
+              RETURN {
+                conversation: DOCUMENT(users, conversation),
+                group
+              })
+            RETURN {
+              docs: messages,
+              length: LENGTH(messages)
+            }
+          `)
+            .then(cursor => cursor.next())
+        }
+        if(params.key) {
+          let doc;
+          return db.collection('sms').document(params.key)
+            .then(d => {
+              doc = d;
+              if(doc.viewed.indexOf(user._key) > -1)
+                return;
+              return db.query(aql`
+                LET u = DOCUMENT(users_personal, ${user._key})
+                LET msg = u.new_message
+                UPDATE u WITH {new_message: {
+                  messages: msg.messages,
+                  system: msg.system - 1,
+                  at: msg.at,
+                  replies: msg.replies
+                }} IN users_personal
+                `)
+                .then(() => {
+                  doc.viewed.push(user._key);
+                  db.collection('sms').update(doc, {viewed: doc.viewed})
+                })
+            })
+            .then(() => doc)
+        }
         return db.query(aql`
-          FOR i IN invites
-            FILTER i.invitee == ${uid}
-            SORT i.toc DESC
-            LIMIT 20
-            LET post = DOCUMENT(posts, i.pid)
-            LET user = DOCUMENT(users, i.inviter)
-            LET thread = DOCUMENT(threads, post.tid)
-            LET oc = DOCUMENT(posts, thread.oc)
-            RETURN MERGE(i, {post, user, oc})
-        `)})
-      .then(cursor => cursor.all())
-      .then(invites => {
-        data.invites = invites;
-        var psnl = new layer.Personal(uid)
-        return psnl.load()
+          let sysInfos = (
+            for s in sms
+              filter s.s == 'system' && s.toc > ${user.toc}
+              sort s.toc desc
+            return s
+          )
+          return {
+            docs: sysInfos,
+            length: LENGTH(sysInfos)
+          }
+        `).then(cursor => cursor.next())
       })
-      .then(psnl => {
-        data.lastVisitTimestamp = psnl.model.message_lastvisit || 0
-        return psnl.update({new_message: 0, message_lastvisit: Date.now()})
-      })
-      .then(psnl => {
+      .then(doc => {
+        if(doc.length > -1) {
+          const paging = new layer.Paging(page).getPagingParams(doc.length);
+          data.paging = paging;
+          data.docs = doc.docs.slice(paging.start, paging.start + paging.count);
+        } else {
+          data.docs = doc
+        }
+        data.tab = tab;
+        data.conversation = params.conversation;
         return data
       })
   }
-}
+};
 
 table.viewPersonal = {
   operation: function (params) {
@@ -1863,7 +1975,44 @@ table.viewPersonal = {
         return data
       })
   }
-}
+};
+
+table.postNewMessage = {
+  operation: params => {
+    const conversation = params.conversation;
+    const username = params.username;
+    const content = params.content;
+    const user = params.user;
+    const toc = Date.now();
+    const ip = params._req.iptrim;
+    let rUser;
+    return Promise.resolve()
+      .then(() => {
+        if(conversation)
+          return db.collection('sms').save({
+            s: user._key,
+            r: conversation,
+            c: content,
+            viewed: false,
+            toc,
+            ip
+          });
+        return apifunc.get_user_by_name(username)
+          .then(receiveUser => {
+            rUser = receiveUser[0];
+            return db.collection('sms').save({
+              s: user._key,
+              r: rUser._key,
+              c: content,
+              viewed: false,
+              toc,
+              ip
+            })
+          })
+      })
+      .then(() => queryfunc.incrementPsnl((rUser? rUser._key: conversation), 'messages'))
+  }
+};
 
 table.viewSelf = {
   init: () => Promise.all([
@@ -2074,7 +2223,6 @@ table.viewPersonalActivities = {
       .then(arr => {
         let forumArr = Array.from(arr); //deep copy from all the forum that can be visited
         arr.push(null); //push null to origin arr for personal forum
-        console.log(params.contentClasses)
         return db.query(aql`
           FOR o IN usersBehavior
             SORT o.time DESC
@@ -2461,18 +2609,22 @@ table.viewBehaviorLogs = {
         FILTER log.${from? 'from': to? 'to' : 'non'} == ${from? from: to? to: null} && 
         log.${filter? filter : 'non'} == ${filter? filterTypes[type] : null} &&
         log.${address? 'address' : 'non'} == ${address? address : null}
-        RETURN log)
+        LET from = DOCUMENT(users, log.from)
+        LET to = DOCUMENT(users, log.to)
+        RETURN MERGE(log, {from, to}))
       LET logs2 = (FOR log IN creditlogs
         FILTER log.type == 'xsf' && log.source == 'nkc' && log.address > null &&
         log.${from? 'from': to? 'to' : 'non'} == ${from? from: to? to: null} && 
         log.${filter? filter : 'non'} == ${filter? filterTypes[type] : null} &&
         log.${address? 'address' : 'non'} == ${address? address : null}
         LET p = DOCUMENT(posts, log.pid)
+        LET from = DOCUMENT(users, log.uid)
+        LET to = DOCUMENT(users, log.touid)
         RETURN {
           timeStamp: log.toc,
           reason: log.reason,
-          from: log.uid,
-          to: log.touid,
+          from,
+          to,
           port: log.port,
           address: log.address,
           operation: 'changeXSF',
@@ -2536,6 +2688,45 @@ table.viewNewUsers = {
       })
   }
 };
+//查看订阅和被订阅页面
+table.viewSubscribe = {
+  operation: params => {
+    const data = defaultData(params);
+    const page = params.page || 1;
+    const list = params.list || 'subscribers';
+    const uid = params.uid;
+    const perPage = settings.paging.perpage;
+    data.template = jadeDir + '/interface_subscribe.jade';
+    return db.query(aql`
+      LET targetUser = DOCUMENT(users, ${uid})
+      LET us = DOCUMENT(usersSubscribe, ${uid})
+      LET uss = us? us.${list} : []
+      LET length = LENGTH(uss)
+      LET result = SLICE(uss, ${(page-1) * perPage}, ${perPage}) || []
+      LET d = (
+        FOR uid in result
+        RETURN DOCUMENT(users, uid)
+      )
+      return {
+        userslist: d,
+        length: length,
+        targetUser: targetUser
+      }
+    `)
+      .then(cursor => cursor.next())
+      .then(res => {
+        data.users = {};
+        data.users.userslist = res.userslist;
+        data.users.page = {
+          page: page,
+          pagecount: Math.ceil(res.length/perPage)
+        };
+        data.users.list = params.list || '';
+        data.targetUser = res.targetUser;
+        return data;
+      })
+  }
+};
 
 function sha256HMAC(password, salt) {
   const crypto = require('crypto')
@@ -2558,6 +2749,8 @@ function create_muser(user) {
         username_lowercase: user.username.toLowerCase(),
         toc: timestamp,
         tlv: timestamp,
+        regIP: user.regIP,
+        regPort: user.regPort,
         certs: ['mail', 'examinated'],
       }
 
@@ -2565,7 +2758,13 @@ function create_muser(user) {
         _key: uid,
         email: user.email,
         hashtype: user.hashtype,
-        password: user.password
+        password: user.password,
+        new_message: {
+          messages: 0,
+          at: 0,
+          replies: 0,
+          system: 0
+        },
       };
       return db.query(aql`
         for u in users
@@ -2586,10 +2785,10 @@ function create_muser(user) {
             INSERT {
               _key: ${uid},
               type: 'forum',
-              abbr: SUBSTRING(${user.username}, 0, 6),
-              display_name: CONCAT(${user.username}, '的专栏'),
-              description: CONCAT(${user.username}, '的专栏'),
-              moderators: [${user.username}],
+              abbr: SUBSTRING(${newuser.username}, 0, 6),
+              display_name: CONCAT(${newuser.username}, '的专栏'),
+              description: CONCAT(${newuser.username}, '的专栏'),
+              moderators: [${uid}],
               recPosts: []
             } INTO personalForums
           `)
@@ -2608,6 +2807,38 @@ function create_muser(user) {
             })
         })
     })
+}
+
+table.viewNewSysInfo = {
+  operation: params => {
+    const data = defaultData(params);
+    data.template = jadeDir + '/interface_new_sysinfo.jade';
+    data.twemoji = settings.editor.twemoji;
+    return data
+  }
+};
+
+table.postsysinfo = {
+  operation: params => {
+    if(params.title === '') throw '标题必填';
+    if(params.content.length < 6) throw '内容太短';
+    const sms = {
+      c: {
+        title: params.title,
+        content: params.content
+      },
+      toc: Date.now(),
+      ip: params._req.iptrim,
+      s: 'system',
+      viewed: [],
+    };
+    return db.collection('sms').save(sms)
+      .then(() => {
+        params._res.sent = true;
+        params._res.redirect('/experimental');
+        return queryfunc.incrementPsnl('all', 'system')
+      })
+  }
 }
 function deleteErrDoc(uid, collection) {
   return db.query(aql`

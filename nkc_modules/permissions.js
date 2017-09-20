@@ -18,7 +18,7 @@ var certificates={
 
     permittedOperations:{
       deleteElseQuestions:true,
-
+      postsysinfo: true,
     },
     // see end of api_operations.js
   },
@@ -193,6 +193,7 @@ var certificates={
       non_broadcast:true,
     },
     permittedOperations:{
+      postNewMessage: true,
       getMcode3: true,
       bindMobile: true,
       switchTInPersonalForum: true,
@@ -242,6 +243,7 @@ var certificates={
 
       getForumCategories:true,
       getForumsOfZone:true,
+      viewSubscribe:true,//查看订阅与被订阅页面
     },
   },
 

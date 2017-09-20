@@ -52,7 +52,13 @@ block content
                             if moderators && moderators.length
                               span 版主：
                                 each k in moderators
-                                  a.d-inline.margin-right(href='/m/#{k._key}') #{k.username}
+                                  a.d-inline.margin-right(href='/m/#{k._key}') #{k.username}    
+                              -var subscribeUsersNum = (data.targetUser.subscribeUsers)?data.targetUser.subscribeUsers : [];
+                              -var subscribersNum = (data.targetUser.subscribers)?data.targetUser.subscribers : [];
+                              span 关注：
+                                a(class='d-inline margin-right',href='/subscribe?&uid=#{data.targetUser._key}&list=subscribeUsers') #{subscribeUsersNum.length}
+                              span 粉丝：
+                                a(class='d-inline margin-right',href='/subscribe?&uid=#{data.targetUser._key}') #{subscribersNum.length}
                         div(style='position: absolute; right: 0; top: 0;')
                           if isModerator
                             div
@@ -60,7 +66,8 @@ block content
                           - var user = data.targetUser
                           if(data.user)
                             if(user._key != data.user._key)
-                              if(data.user.subscribeUsers.indexOf(user._key) > -1)
+                              -var subscribeUsers = data.user.subscribeUsers ? data.user.subscribeUsers : []
+                              if(subscribeUsers.indexOf(user._key) > -1)
                                 div
                                   a.btn.btn-sm.btn-danger(href='javascript:;' onclick='subscribeUserSwitch("#{user._key}");' style='margin-top: 5px; margin-left: 10px;')#subscribeButton 取关
                               else
@@ -169,7 +176,7 @@ block content
                     li
                       a.btn.btn-default(href='/editor?target=#{data.replytarget}') 新帖
                 ul.pagination.NavigationPaging
-                  - var page = paging?paging.page:null
+                  - var page = paging?paging.page:null;
                   li(class="#{class_str_all}")
                     a(href='?&tab=#{data.tab}#{data.sortby? "&sortby=toc": ""}') 俱
 
