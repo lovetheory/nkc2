@@ -99,7 +99,7 @@ block content
                     span(style="font-size:0.8em;") &nbsp;在帖子&nbsp;
                     a(href='/t/#{docs[i].fromPost.tid}##{docs[i].fromPost._key}') #{docs[i].toPost.t||docs[i].toPost.tid}
                     span(style="font-size:0.8em;") &nbsp;下回复了你：
-                    p(style="font-size:0.8em;") #{docs[i].fromPost.c}
+                    p(style="font-size:0.8em; word-break:break-all;") #{docs[i].fromPost.c}
             hr(style='margin:0.5em 0;')
 
         -if(nowAt === 'at')
@@ -121,7 +121,7 @@ block content
                     span(style="font-size:0.8em;") &nbsp;在帖子&nbsp;
                     a(href='/t/#{docs[i].post.tid}##{docs[i].post._key}') #{docs[i].oc.t||docs[i].oc.tid}
                     span(style="font-size:0.8em;") &nbsp;下@了你：
-                    p(style="font-size:0.8em;") #{docs[i].post.c}
+                    p(style="font-size:0.8em; word-break:break-all;") #{docs[i].post.c}
             hr(style='margin:0.5em 0;')
 
         -if(nowAt === 'messages')
@@ -158,7 +158,7 @@ block content
                       span.reddish (#{newMesNum}) 
                       span :
                       a(style='font-size:0.85em;float:right;',href='/sms?&tab=messages&conversation=#{docs[i].conversation._key}') 查看聊天信息
-                      p(style="font-size:0.8em;") #{docs[i].group[0].c}
+                      p(style="font-size:0.8em; word-break:break-all;") #{docs[i].group[0].c}
               hr(style='margin:0.5em 0;')
           -else
             .col-xs-12.col-md-12(style="margin:0.4em 0 0 0")
@@ -184,7 +184,7 @@ block content
                     h4.media-heading
                       a(href='/m/#{docs[i].s._key}') #{docs[i].s.username} 
                       span(style="font-size:1em;") :
-                    p(style="font-size:1em;") #{docs[i].c}
+                    p(style="font-size:1em;word-break:break-all;") #{docs[i].c}
               hr(style='margin:0.5em 0;')
 
         -if(nowAt === 'system')
@@ -206,7 +206,7 @@ block content
               -var t = docs.c.title
               span #{changeTime(docs.toc)}
               h2 #{t}
-              p(style='line-height: 2em;')!= experimental_render({c, l: 'bbcode'})
+              p(style='line-height: 2em;word-break:break-all;')!= experimental_render({c, l: 'bbcode'})
 
 
 
