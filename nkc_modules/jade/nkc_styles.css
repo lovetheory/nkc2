@@ -1725,7 +1725,14 @@ img.emoji {
 .border-right{
   border-right: 1px solid #eee;
 }
-
+#changeDis{
+  display: inline-block;
+  margin: 3px 3px 3px 7px;
+}
+#changeDisNone{
+  display: inline-block;
+  margin-top: 10px;
+}
 @media screen and (max-width: 1200px) {
   #qrcode {
     display: none;
