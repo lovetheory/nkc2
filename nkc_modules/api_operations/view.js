@@ -1518,6 +1518,7 @@ table.viewEditor = {
     data.replytarget = target;
     data.navbar = {}
     data.navbar.highlight = 'editor'; //navbar highlight
+    data.forumID = params.forumID;
 
     if (target.indexOf('post/') == 0) {
       //if user appears trying to edit a post

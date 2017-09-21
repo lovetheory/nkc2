@@ -969,6 +969,8 @@ let postToPersonalForum = (params, targetKey) => {
   targetKey = targetKey.toString();
   let user = params.user;
   let post = params.post;
+  let forumID = params.forumID;
+  console.log(forumID);
 
   if (typeof post.t !== 'string')throw '请填写标题！'
 
@@ -990,6 +992,7 @@ let postToPersonalForum = (params, targetKey) => {
           _key: newtid.toString(),//key must be string.
           uid: user._key,
           mid: user._key,
+          fid: forumID
         };
       if(user._key !== targetKey) {
         newthread.toMid = targetKey

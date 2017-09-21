@@ -1725,3 +1725,9 @@ img.emoji {
 .border-right{
   border-right: 1px solid #eee;
 }
+
+@media screen and (max-width: 1366px) {
+  #qrcode {
+    display: none;
+  }
+}

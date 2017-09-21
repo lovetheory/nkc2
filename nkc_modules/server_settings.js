@@ -361,6 +361,7 @@ settings.root_serve_static =
   {map:'/xbbcode',to:'node_modules/xbbcode-parser/'},
   {map:'/xss',to:'node_modules/xss/dist'},
   {map: '/twemoji', to: 'node_modules/twemoji'},
+  {map: '/qrcode', to: 'node_modules/qrcode'},
 
 
   {map:'/external_pkgs',to:'external_pkgs/'},
