@@ -1726,19 +1726,19 @@ img.emoji {
   border-right: 1px solid #eee;
 }
 #changeDis{
-  display: inline-block;
-  margin: 3px 3px 3px 7px;
+  float: left;
+  width: 50%;
 }
 #changeDisNone{
-  display: inline-block;
-  margin-top: 10px;
+  float: left;
+  width: 50%;
 }
 @media screen and (max-width: 1200px) {
   #qrcode {
     display: none;
   }
   #changeDis {
-    display: block;
+    width: 100%;
   }
   #changeDisNone{
     display: none;
