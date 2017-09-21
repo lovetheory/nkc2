@@ -1728,13 +1728,12 @@ img.emoji {
 
 @media screen and (max-width: 1200px) {
   #qrcode {
-
+    display: none;
   }
-  #changeDis{
+  #changeDis {
     display: block;
-    margin: 0;
   }
-  #changeDisNoneP{
+  #changeDisNone{
     display: none;
   }
 }
