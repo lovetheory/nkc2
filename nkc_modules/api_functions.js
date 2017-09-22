@@ -450,7 +450,7 @@ apifunc.exam_gen = function(options){
       .then(arr=>{
         qarr = qarr.concat(arr)
         if(category == 'mix'){
-          return [];
+          return return layer.Question.randomlyListQuestionsOfCategory('common',0,seed+2);
         }
         return layer.Question.randomlyListQuestionsOfCategory('common',settings.exam.number_of_questions_common,seed+2)
       })
