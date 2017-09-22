@@ -448,7 +448,6 @@ apifunc.exam_gen = function(options){
       }
       return layer.Question.randomlyListQuestionsOfCategory(category,settings.exam.number_of_questions_subjective,seed+1)
       .then(arr=>{
-        console.log('array:' + arr);
         qarr = qarr.concat(arr)
         if(category == 'mix'){
           return layer.Question.randomlyListQuestionsOfCategory('common',settings.exam.number_of_questions_common_a,seed+2);
@@ -459,6 +458,7 @@ apifunc.exam_gen = function(options){
         qarr = qarr.concat(arr)
       })
     }else{
+      console.log('array:' + arr);
       return layer.Question.randomlyListQuestionsOfCategory(null,settings.exam.number_of_questions,seed)//category, count, seed
       .then(arr=>{
         qarr=qarr.concat(arr)
