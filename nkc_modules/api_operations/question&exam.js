@@ -46,13 +46,16 @@ function evaluateExam(params){
   var questions;
   var score = 0;
   var records = [];
+  var isA = true;
 
   return apifunc.get_certain_questions(qidlist)
   .then(back=>{
     questions = back;
-
     for(i in questions){
       var correctness = false;
+      if(isA == true && questions[i].category != 'mix'){
+        isA = false;
+      }
 
       if(sheet[i]===null||sheet[i]===undefined){ //null choices
         correctness = false;
@@ -92,7 +95,7 @@ function evaluateExam(params){
       }
     }
 
-    return {records,score}
+    return {records,score,isA}
   })
 }
 
@@ -120,6 +123,7 @@ table.submitExam = {
           category:params.category,
           tsm:Date.now(),
           _key:token,
+          isA: examResult.isA
         }
 
         if(params.user){

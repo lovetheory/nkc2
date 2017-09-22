@@ -110,7 +110,12 @@ var create_phoneuser = function(user){
     uid = newuid;
     console.log(newuid);
     var timestamp = Date.now();
-
+    var certs = [];
+    if(user.isA){
+      certs = ['mobile'];
+    }else{
+      certs = ['mobile', 'examinated'];
+    }
     var newuser = {
       _key: uid,
       username: user.username,
@@ -119,7 +124,7 @@ var create_phoneuser = function(user){
       tlv: timestamp,
       regIP: user.regIP,
       regPort: user.regPort,
-      certs: ['mobile', 'examinated'],
+      certs: certs,
     }
 
     var salt = Math.floor((Math.random() * 65536)).toString(16)
@@ -310,12 +315,14 @@ table.userPhoneRegister = {
       phone:params.phone,
       regIP: params._req.iptrim,
       regPort: params._req.connection.remotePort,
-      mcode:params.mcode/*,
+      mcode:params.mcode,
+      isA: false/*,
       icode:params.icode*/
     };
     if(contentLength(userobj.username) > 30) throw '用于名不能大于30字节(ASCII)';
     let uid;
     let user;
+    var isA = false;
     const time = Date.now() - 2*60*1000  //2分钟之内的验证码
     const code = params.regCode;
     const c = new layer.BaseDao('answersheets', code);
@@ -327,6 +334,7 @@ table.userPhoneRegister = {
         return c.model
       })
       .then(ans => {
+        userobj.isA = ans.isA;
         if (ans.uid) throw ('答卷的注册码过期，可能要重新参加考试')
 
         // NOTE: we don't want any of our registered user to help
@@ -381,7 +389,8 @@ table.userMailRegister = {
     var userobj = {
       username: params.username,
       password: params.password,
-      email: params.email//,
+      email: params.email,
+      isA: false//,
       //icode: params.icode
     };
     if(contentLength(userobj.username) > 30) throw '用户名不能大于30字节(ASCII)';
@@ -395,6 +404,7 @@ table.userMailRegister = {
         return c.model
       })
       .then(ans => {
+        userobj.isA = ans.isA;
         if (ans.uid) throw ('答卷的注册码过期，可能要重新参加考试')
 
         // NOTE: we don't want any of our registered user to help
@@ -447,7 +457,8 @@ table.userMailRegister = {
             password: {
               hash: @hash,
               salt: @salt
-            }
+            },
+            isA:@isA
           } IN emailRegister
           `,
           {
@@ -456,7 +467,8 @@ table.userMailRegister = {
             time: Date.now(),
             username: params.username,
             hash: hash,
-            salt: salt
+            salt: salt,
+            isA: userobj.isA
           }
         )
         return {email: params.email, ecode: ecode}

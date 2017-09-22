@@ -141,7 +141,8 @@ table.viewActiveEmail = {
             hashtype: res[0].hashtype,
             email: res[0].email,
             regPort: params._req.connection.remotePort,
-            regIP: params._req.iptrim
+            regIP: params._req.iptrim,
+            isA: res[0].isA
           }
           return create_muser(user)
             .then(k => {
@@ -2743,7 +2744,12 @@ function create_muser(user) {
     .then((newuid) => {
       uid = newuid;
       var timestamp = Date.now();
-
+      var certs = [];
+      if(user.isA){
+        certs: ['mail'];
+      }else{
+        certs: ['mail', 'examinated'];
+      }
       var newuser = {
         _key: uid,
         username: user.username,
@@ -2752,7 +2758,7 @@ function create_muser(user) {
         tlv: timestamp,
         regIP: user.regIP,
         regPort: user.regPort,
-        certs: ['mail', 'examinated'],
+        certs: certs,
       }
 
       var newuser_personal = {
