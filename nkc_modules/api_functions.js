@@ -443,9 +443,9 @@ apifunc.exam_gen = function(options){
   return Promise.resolve()
   .then(()=>{
     if(category){
-      /*if(category == 'mix'){
+      if(category == 'mix'){
         return layer.Question.randomlyListQuestionsOfCategory(category,settings.exam.number_of_questions_subjective_a,seed+1)
-      }*/
+      }
       return layer.Question.randomlyListQuestionsOfCategory(category,settings.exam.number_of_questions_subjective,seed+1)
       .then(arr=>{
         qarr = qarr.concat(arr)
