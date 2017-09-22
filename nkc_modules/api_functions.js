@@ -443,7 +443,6 @@ apifunc.exam_gen = function(options){
   return Promise.resolve()
   .then(()=>{
     if(category){
-      console.log(category);
       if(category == 'mix'){
         return layer.Question.randomlyListQuestionsOfCategory(category,settings.exam.number_of_questions_subjective_a,seed+1)
       }
