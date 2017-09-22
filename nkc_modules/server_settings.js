@@ -502,6 +502,8 @@ settings.exam = {
 
   number_of_questions_subjective:8,
   number_of_questions_common:2,
+  number_of_questions_subjective_a:10,
+  number_of_questions_common_a:0,
 
   time_before_register:3600*1000*1, //1h
 }
