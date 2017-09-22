@@ -642,7 +642,6 @@ var layer = (function () {
               qarr.push(q);
             }));
           }
-          console.log(qarr);
           return Promise.all(parr)
             .then(function () {
               return qarr;

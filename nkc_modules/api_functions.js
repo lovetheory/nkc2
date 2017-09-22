@@ -443,16 +443,18 @@ apifunc.exam_gen = function(options){
   return Promise.resolve()
   .then(()=>{
     if(category){
+      numberSubjective = settings.exam.number_of_questions_subjective;
       if(category == 'mix'){
-        return layer.Question.randomlyListQuestionsOfCategory(category,settings.exam.number_of_questions_subjective_a,seed+1)
+        numberSubjective = settings.exam.number_of_questions_subjective_a;
       }
-      return layer.Question.randomlyListQuestionsOfCategory(category,settings.exam.number_of_questions_subjective,seed+1)
+      return layer.Question.randomlyListQuestionsOfCategory(category,numberSubjective,seed+1)
       .then(arr=>{
         qarr = qarr.concat(arr)
+        numberCommon = settings.exam.number_of_questions_common;
         if(category == 'mix'){
-          return layer.Question.randomlyListQuestionsOfCategory('common',settings.exam.number_of_questions_common_a,seed+2);
+          numberCommon = settings.exam.number_of_questions_common_a;
         }
-        return layer.Question.randomlyListQuestionsOfCategory('common',settings.exam.number_of_questions_common,seed+2)
+        return layer.Question.randomlyListQuestionsOfCategory('common',numberCommon,seed+2)
       })
       .then(arr=>{
         qarr = qarr.concat(arr)
