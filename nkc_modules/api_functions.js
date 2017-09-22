@@ -443,12 +443,12 @@ apifunc.exam_gen = function(options){
   return Promise.resolve()
   .then(()=>{
     if(category){
-      console.log(category);
       if(category == 'mix'){
         return layer.Question.randomlyListQuestionsOfCategory(category,settings.exam.number_of_questions_subjective_a,seed+1)
       }
       return layer.Question.randomlyListQuestionsOfCategory(category,settings.exam.number_of_questions_subjective,seed+1)
       .then(arr=>{
+        console.log(arr);
         qarr = qarr.concat(arr)
         if(category == 'mix'){
           return layer.Question.randomlyListQuestionsOfCategory('common',settings.exam.number_of_questions_common_a,seed+2);
@@ -466,7 +466,6 @@ apifunc.exam_gen = function(options){
     }
   })
   .then(function(){
-    console.log(qarr.length);
     for(i in qarr){
       var qobj = {};
       var originalquestion = qarr[i];
