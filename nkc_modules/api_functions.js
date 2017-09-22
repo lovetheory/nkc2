@@ -443,6 +443,7 @@ apifunc.exam_gen = function(options){
   return Promise.resolve()
   .then(()=>{
     if(category){
+      console.log(category);
       if(category == 'mix'){
         return layer.Question.randomlyListQuestionsOfCategory(category,settings.exam.number_of_questions_subjective_a,seed+1)
       }
@@ -458,7 +459,6 @@ apifunc.exam_gen = function(options){
         qarr = qarr.concat(arr)
       })
     }else{
-      console.log('array:' + arr);
       return layer.Question.randomlyListQuestionsOfCategory(null,settings.exam.number_of_questions,seed)//category, count, seed
       .then(arr=>{
         qarr=qarr.concat(arr)
