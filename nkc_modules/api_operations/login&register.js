@@ -404,6 +404,7 @@ table.userMailRegister = {
         return c.model
       })
       .then(ans => {
+        //检测isA字段是否存在
         userobj.isA = ans.isA || false;
         if (ans.uid) throw ('答卷的注册码过期，可能要重新参加考试')
 
