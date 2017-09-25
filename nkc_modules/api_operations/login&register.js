@@ -443,10 +443,10 @@ table.userMailRegister = {
       .then(res => {
         if (res.length > 0) throw "此邮箱已注册过，请检查或更换"
         //if (params.icode.toLowerCase() != params._req.session.icode.toLowerCase()) throw '图片验证码不正确，请检查'
-        console.log('1');
         var ecode = random(14);
         let salt = Math.floor(Math.random() * 65536).toString(16);
         let hash = sha256HMAC(params.password, salt);
+        console.log(userobj.isA);
         AQL(`
           INSERT {
             email: @email,
@@ -471,7 +471,6 @@ table.userMailRegister = {
             isA: userobj.isA
           }
         )
-        console.log('2');
         return {email: params.email, ecode: ecode}
       })
       .then(res => {
