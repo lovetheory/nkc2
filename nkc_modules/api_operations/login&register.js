@@ -404,7 +404,7 @@ table.userMailRegister = {
         return c.model
       })
       .then(ans => {
-        userobj.isA = ans.isA;
+        userobj.isA = ans.isA || false;
         if (ans.uid) throw ('答卷的注册码过期，可能要重新参加考试')
 
         // NOTE: we don't want any of our registered user to help
