@@ -446,7 +446,6 @@ table.userMailRegister = {
         var ecode = random(14);
         let salt = Math.floor(Math.random() * 65536).toString(16);
         let hash = sha256HMAC(params.password, salt);
-        console.log(JSON.stringify(userobj));
         AQL(`
           INSERT {
             email: @email,

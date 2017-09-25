@@ -2746,9 +2746,9 @@ function create_muser(user) {
       var timestamp = Date.now();
       var certs = [];
       if(user.isA){
-        certs: ['mail'];
+        certs = ['mail'];
       }else{
-        certs: ['mail', 'examinated'];
+        certs = ['mail', 'examinated'];
       }
       var newuser = {
         _key: uid,
