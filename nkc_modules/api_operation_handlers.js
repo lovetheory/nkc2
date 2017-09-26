@@ -131,7 +131,7 @@ function testPermission(params){
   var permissionList = permission.getPermissionsFromUser(params.user);
   report(permissionList);
 
-  //没证书发帖拦截
+  //发帖拦截
   if(params.operation == 'postTo') {
     var userCerts = params.user.certs;
     var hasMobile = false;
