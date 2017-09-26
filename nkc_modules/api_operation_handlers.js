@@ -148,7 +148,7 @@ function testPermission(params){
       throw `您的账号还没有实名认证，请前往资料设置页绑定手机号码。`;
     }
     if(!hasExaminated) {
-      throw `您还没有获得进士证书，请前往资料设置页点击"参加考试"链接后选择B卷考试。`;
+      throw `您还没有获得进士证书，请前往资料设置页点击参加考试。`;
     }
   }
 
