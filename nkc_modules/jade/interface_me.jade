@@ -35,6 +35,7 @@ block content
             .col-xs-7.col-md-7
               .col-xs-12.col-md-12
                 div.f12!= plain(getUserDescription(user))
+                a(href='/register?getcode=true') 参加考试
               .col-xs-12.col-md-6
                 a.btn.btn-default.left-block(href='/m/#{user._key}?tab=own',role="button",style='margin:0.5em auto;') 查看个人专栏
               .col-xs-12.col-md-6
