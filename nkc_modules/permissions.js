@@ -143,7 +143,7 @@ var certificates={
       professional:true,
     },
     permittedOperations:{
-      postTo:true,
+      //postTo:true,
       getPostContent:true,
       testExaminated:true,
       selfModifyTimeLimit:timeMonth*3, //3m
@@ -175,7 +175,7 @@ var certificates={
 
     },
     permittedOperations:{
-      postTo:true,  //发帖
+      //postTo:true,  //发帖
       getPostContent:true,
       selfModifyTimeLimit:timeHour*1,
     }
