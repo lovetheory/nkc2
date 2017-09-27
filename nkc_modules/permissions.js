@@ -163,7 +163,6 @@ var certificates={
 
     },
     permittedOperations:{
-      //postTo:true,  //发帖
       getPostContent:true,
       selfModifyTimeLimit:timeHour*1,
     }
