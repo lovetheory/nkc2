@@ -139,7 +139,7 @@ function testPermission(params){
         hasMobile = true;
       }
     }
-
+    console.log(permissionList.permittedOperations[params.operation]);
     if (!permissionList.permittedOperations[params.operation]) { //user does not have permission for this operation
       throw `您还没有获得进士证书，请前往资料设置页点击参加考试。`;
     }
