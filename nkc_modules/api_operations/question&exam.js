@@ -93,9 +93,9 @@ function evaluateExam(params){
       {
         throw '您之前测试通过的次数有点多哦，不应该再进行测试了！'
       }*/
-      back[back.length - 1].isA = back[back.length - 1].isA ? back[back.length - 1].isA : false;
-      if(!back[back.length - 1].isA){
-        if(Date.now() - back[back.length - 1].tsm < settings.exam.succeed_interval) {
+      back[0].isA = back[0].isA ? back[0].isA : false;
+      if(!back[0].isA){
+        if(Date.now() - back[0].tsm < settings.exam.succeed_interval) {
           throw '您之前测试通过的次数有点多哦，不应该再进行测试了！';
         }
       }
