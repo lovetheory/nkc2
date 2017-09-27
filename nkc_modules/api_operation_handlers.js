@@ -143,7 +143,7 @@ function testPermission(params){
         hasBanned = true;
       }
     }
-    if (!hasBanned) {
+    if (hasBanned) {
       throw `根据系统记录，你的账号已经被封禁，请重新注册。`;
     }
     if (!hasMobile) {
