@@ -143,7 +143,7 @@ var certificates={
       professional:true,
     },
     permittedOperations:{
-      //postTo:true,
+      postTo:true,
       getPostContent:true,
       testExaminated:true,
       selfModifyTimeLimit:timeMonth*3, //3m
