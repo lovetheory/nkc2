@@ -134,10 +134,17 @@ function testPermission(params){
   if(params.operation == 'postTo') {
     var userCerts = params.user.certs;
     var hasMobile = false;
+    var hasBanned = false;
     for (var i in userCerts) {
       if (userCerts[i] == 'mobile') {
         hasMobile = true;
       }
+      if (userCerts[i] == 'banned') {
+        hasBanned = true;
+      }
+    }
+    if (!hasBanned) {
+      throw `根据系统记录，你的账号已经被封禁，请重新注册。`;
     }
     if (!hasMobile) {
       throw `您的账号还没有实名认证，请前往资料设置页绑定手机号码。`;
