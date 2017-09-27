@@ -347,7 +347,7 @@ apifunc.get_user = (uid)=>{
     })
     .then(usersSubscribe => {
       //desensitize
-      let doc = Object.assign(temp, usersSubscribe)
+      let doc = Object.assign(temp, usersSubscribe);
       doc.password = undefined;
       doc.password2 = undefined;
       doc.hashtype = undefined;

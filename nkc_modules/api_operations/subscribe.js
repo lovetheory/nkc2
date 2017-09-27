@@ -33,7 +33,7 @@ table.subscribeUser = {
         IN usersSubscribe
       `))
       .then(() => operationScoreHandler({
-        address: params._req.connection.remoteAddress,
+        address: params._req.iptrim,
         port: params._req.connection.remotePort,
         operation: 'subscribeUser',
         from: user._key,
@@ -64,7 +64,7 @@ table.unsubscribeUser = {
         } IN usersSubscribe
       `))
       .then(() => operationScoreHandler({
-        address: params._req.connection.remoteAddress,
+        address: params._req.iptrim,
         port: params._req.connection.remotePort,
         operation: 'unsubscribeUser',
         from: user._key,

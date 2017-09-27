@@ -1029,7 +1029,12 @@ table.bindMobile = {
                   mobile: phone,
                   toc: time
                 })
-                  .then(() => db.collection('users').update(user, {certs: user.certs.push('mobile')}))
+                  .then(() => db.query(aql`
+                    LET user = DOCUMENT(users, ${user._key}) || []
+                    UPDATE user WITH {
+                      certs: PUSH(user.certs, 'mobile')
+                    }  IN users
+                  `))
               }
               throw '你已绑定手机'
             })

@@ -167,6 +167,7 @@ var postToThread = function(params,tid,user, type){
       timeStamp: timestamp,
       parameters: {
         targetKey: 't/' + tid,
+        pid
       }
     }))
     .then(()=>{
@@ -237,6 +238,17 @@ var postToForum = function(params,fid,user,cat){
   .then((result)=>{
     return incrementForumOnNewThread(newtid)
   })
+  .then(() => operationScoreHandler({
+    address: params._req.iptrim,
+    port: params._req.connection.remotePort,
+    operation: 'postToForum',
+    from: params.user._key,
+    to: newtid,
+    timeStamp: Date.now(),
+    parameters: {
+      targetKey: 't/' + tid,
+    }
+  }))
   .then((result)=>{
     return postToThread(params,newtid,user, 1)
   })
@@ -384,14 +396,15 @@ var postToPost = function(params,pid,user){ //modification.
     return userBehaviorRec(obj)
   })
     .then(() => operationScoreHandler({
-      address: params._req.connection.remoteAddress,
+      address: params._req.iptrim,
       port: params._req.connection.remotePort,
-      operation: 'postToForum',
+      operation: 'postToPost',
       from: params.user._key,
-      to: params.user._key,
+      to: originPost.uid,
       timeStamp: Date.now(),
       parameters: {
-        targetKey: 'f/' + fid,
+        targetKey: 't/' + originPost.tid,
+        pid: originPost._key
       }
     }))
     .then(() => {
@@ -1002,7 +1015,7 @@ let postToPersonalForum = (params, targetKey) => {
       return queryfunc.doc_save(newthread, 'threads')
     })
     .then(() => operationScoreHandler({
-      address: params._req.connection.remoteAddress,
+      address: params._req.iptrim,
       port: params._req.connection.remotePort,
       operation: 'postToForum',
       from: params.user._key,
