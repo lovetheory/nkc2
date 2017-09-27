@@ -36,6 +36,10 @@ settings.user = {
         change: 1
       }
     },
+    postToPost: {
+      scoreChange: 0,
+      attrChange: {}
+    },
     postToForum: {
       scoreChange: 0,
       attrChange: {

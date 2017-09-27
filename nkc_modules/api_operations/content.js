@@ -243,16 +243,15 @@ var postToForum = function(params,fid,user,cat){
     port: params._req.connection.remotePort,
     operation: 'postToForum',
     from: params.user._key,
-    to: newtid,
+    to: params.user._key,
     timeStamp: Date.now(),
     parameters: {
-      targetKey: 't/' + tid,
+      targetKey: 't/' + newtid,
     }
   }))
   .then((result)=>{
     return postToThread(params,newtid,user, 1)
   })
-    .catch(e => console.log(e))
 };
 
 var postToPost = function(params,pid,user){ //modification.
