@@ -42,6 +42,7 @@ var postToThread = function(params,tid,user, type){
   })
   .then((newpid) => {
     //create a new post
+    console.log(newpid);
     pid = newpid;
     let content = post.c;
     let existUsers = [];
