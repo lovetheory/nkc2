@@ -444,7 +444,7 @@ permissions.testModifyTimeLimit = function(params,ownership,toc){
 
 var calculateThenConcatCerts = function(user){
   if(!user)return ['visitor']
-
+  console.log(user.certs);
   if(!user.certs){
     user.certs =  []
   }
