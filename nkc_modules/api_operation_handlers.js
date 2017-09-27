@@ -135,17 +135,18 @@ function testPermission(params){
     var userCerts = params.user.certs;
     var hasMobile = false;
     for (var i in userCerts) {
-      if(userCerts[i] == 'mobile') {
+      if (userCerts[i] == 'mobile') {
         hasMobile = true;
       }
     }
 
-    if(!permissionList.permittedOperations[params.operation]){ //user does not have permission for this operation
+    if (!permissionList.permittedOperations[params.operation]) { //user does not have permission for this operation
       throw `您还没有获得进士证书，请前往资料设置页点击参加考试。`;
     }
-    if(!hasMobile) {
+    if (!hasMobile) {
       throw `您的账号还没有实名认证，请前往资料设置页绑定手机号码。`;
     }
+  }
   if(!permissionList.permittedOperations[params.operation]){ //user does not have permission for this operation
     if(params.operation === 'moveThread') return
     throw '权限不足。permission denied.'
