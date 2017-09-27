@@ -10,7 +10,8 @@ if data.user
   - if(!data.permittedOperations.viewExam && !data.permittedOperations.postTo)
     p.f12.reddish 根据系统记录，你的账号已经被封禁，请重新注册。
   - else
-    p.f12.reddish 新科创论坛要求每一位用户经过实名认证和取得进士证书后才能发帖。
+    if(!hasPostTo || !hasMobile)
+      p.f12.reddish 新科创论坛要求每一位用户经过实名认证和取得进士证书后才能发帖。
     if(!hasMobile)
       p.f12.reddish 您的账号还没有实名认证，请在账号安全设置处绑定手机号码。
     if(!hasPostTo)
