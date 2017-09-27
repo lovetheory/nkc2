@@ -31,11 +31,12 @@ block content
               请在下面选择你最擅长的题目类别。
               
               ----
-          h2 A卷
-            small （可获得普通证书，只能参与部分专业板块的讨论）
-          p.f14
-            a(href='/exam?category=mix') 参加 【基础题】 测试
-          hr
+          -if(data.user)
+            h2 A卷
+              small （可获得普通证书，只能参与部分专业板块的讨论）
+            p.f14
+              a(href='/exam?category=mix') 参加 【基础题】 测试
+            hr
           h2 B卷
             small （可获得高级证书，可参与所有专业板块的讨论）
           -var categories = {'chem':'化学','phys':'物理学','bio':'生物学','english':'英语','aviation':'民航知识','agri':'农业技术','hedc':'高能材料','cs':'计算机科学','ml':'机器学习','3dp':'3D打印','ham':'业余无线电','ee':'电子技术','electrical':'电气工程','dev':'软件开发'}
