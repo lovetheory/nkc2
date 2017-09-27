@@ -143,7 +143,7 @@ var certificates={
       professional:true,
     },
     permittedOperations:{
-      postTo:true,
+      postTo:true,//进士及以上证书才能发帖，外加判断有没有手机证书
       getPostContent:true,
       testExaminated:true,
       selfModifyTimeLimit:timeMonth*3, //3m
