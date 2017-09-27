@@ -221,9 +221,14 @@ block content
             a(href='javascript:window.scrollTo(0,0);') 本页顶部
           
           hr.hrNarrowSpace
-            
+
           if data.permittedOperations
-            if data.permittedOperations.postTo
+            - var userCerts = data.user.certs;
+            - var hasMobile = false;
+            - for(var i =0; i < userCerts.length; i++)
+              - if(userCerts[i] === 'mobile')
+                - hasMobile = true;
+            if (data.permittedOperations.postTo && hasMobile)
               //.form-group
                 //a.f12(href='/editor?target=#{data.replytarget}') 回复（去编辑器）
 
