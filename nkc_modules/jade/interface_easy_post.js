@@ -330,7 +330,7 @@ var onGoEditor = function(that) {
       window.location.href = url;
     }
     else {
-      key = that.id;
+      key = that.key;
       if(!key) {
         screenTopWarning('未指定正确的发送目标, 请选择正确的学院 -> 专业');
         return;

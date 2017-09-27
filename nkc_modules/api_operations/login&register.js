@@ -1029,6 +1029,7 @@ table.bindMobile = {
                   mobile: phone,
                   toc: time
                 })
+                  .then(() => db.collection('users').update(user, {certs: user.certs.push('mobile')}))
               }
               throw '你已绑定手机'
             })
