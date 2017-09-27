@@ -130,7 +130,7 @@ function testPermission(params){
   // test if user is applicapable of executing operation specified by params.
   var permissionList = permission.getPermissionsFromUser(params.user);
   report(permissionList);
-
+  console.log(params);
   //发帖拦截
   if(params.operation == 'postTo') {
     var userCerts = params.user.certs;
