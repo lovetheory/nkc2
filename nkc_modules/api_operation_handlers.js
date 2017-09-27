@@ -130,7 +130,7 @@ function testPermission(params){
   // test if user is applicapable of executing operation specified by params.
   var permissionList = permission.getPermissionsFromUser(params.user);
   report(permissionList);
-  //发帖判断是否有postTo权限和mobile证书
+  // 发帖判断是否有postTo权限和mobile证书
   if(params.operation == 'postTo') {
     var userCerts = params.user.certs;
     var hasMobile = false;
