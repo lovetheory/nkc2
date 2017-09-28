@@ -179,7 +179,6 @@ function getMcode(){
   }
 
   else{
-    console.log(JSON.stringify(userobj));
     nkcAPI('getMcode',{phone:phone/*, icode:icode*/, regCode: regCode, areaCode: areaCode})
     .then(function(res){
       var count = 120;
