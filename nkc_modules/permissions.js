@@ -10,7 +10,7 @@ var timeDay = timeHour*24;
 var timeMonth = timeDay*30;
 var timeYear = timeDay*365;
 
-//证书，每张证书将包含不同的权限
+//证书，每张证书将包含不同的权限 
 var certificates={
   dev:{
     display_name:'运维',

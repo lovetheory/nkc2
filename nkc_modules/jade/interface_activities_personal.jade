@@ -73,7 +73,7 @@ block content
             include nkc_footer_links.jade
 
       include debug_output.jade
-
+    p #{JSON.stringify(data)}
 block scripts
   script(src='/moment-with-locales.js')
   script(src='/interface_common.js')
