@@ -36,6 +36,10 @@ settings.user = {
         change: 1
       }
     },
+    postToPost: {
+      scoreChange: 0,
+      attrChange: {}
+    },
     postToForum: {
       scoreChange: 0,
       attrChange: {
@@ -361,6 +365,7 @@ settings.root_serve_static =
   {map:'/xbbcode',to:'node_modules/xbbcode-parser/'},
   {map:'/xss',to:'node_modules/xss/dist'},
   {map: '/twemoji', to: 'node_modules/twemoji'},
+  {map: '/qrcode', to: 'node_modules/qrcode'},
 
 
   {map:'/external_pkgs',to:'external_pkgs/'},
@@ -501,6 +506,8 @@ settings.exam = {
 
   number_of_questions_subjective:8,
   number_of_questions_common:2,
+  number_of_questions_subjective_a:10,
+  number_of_questions_common_a:0,
 
   time_before_register:3600*1000*1, //1h
 }

@@ -139,11 +139,10 @@ var certificates={
     display_name:'进士',
     inheritFrom:['default'],
     contentClasses:{
-      sensitive:true,
       professional:true,
     },
     permittedOperations:{
-      postTo:true,
+      postTo:true,//若有postTo权限则是进士及进士以上,已经通过了B卷考试
       getPostContent:true,
       testExaminated:true,
       selfModifyTimeLimit:timeMonth*3, //3m
@@ -162,7 +161,6 @@ var certificates={
 
     },
     permittedOperations:{
-      postTo:true,  //发帖
       getPostContent:true,
       selfModifyTimeLimit:timeHour*1,
     }
@@ -175,7 +173,7 @@ var certificates={
 
     },
     permittedOperations:{
-      postTo:true,  //发帖
+      //postTo:true,  //发帖
       getPostContent:true,
       selfModifyTimeLimit:timeHour*1,
     }

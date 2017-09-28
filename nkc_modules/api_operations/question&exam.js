@@ -46,13 +46,16 @@ function evaluateExam(params){
   var questions;
   var score = 0;
   var records = [];
+  var isA = true;
 
   return apifunc.get_certain_questions(qidlist)
   .then(back=>{
     questions = back;
-
     for(i in questions){
       var correctness = false;
+      if(isA == true && questions[i].category != 'mix'){
+        isA = false;
+      }
 
       if(sheet[i]===null||sheet[i]===undefined){ //null choices
         correctness = false;
@@ -85,14 +88,20 @@ function evaluateExam(params){
   .then(back=>{
     if(back.length>0)
     {
-      if(Date.now() - back[0].tsm < settings.exam.succeed_interval)
+      /*if(Date.now() - back[0].tsm < settings.exam.succeed_interval)
       //if re-succeed an exam within given amount of time
       {
         throw '您之前测试通过的次数有点多哦，不应该再进行测试了！'
+      }*/
+      back[0].isA = back[0].isA ? back[0].isA : false;
+      if(!back[0].isA){
+        if(Date.now() - back[0].tsm < settings.exam.succeed_interval) {
+          throw '您之前测试通过的次数有点多哦，不应该再进行测试了！';
+        }
       }
     }
 
-    return {records,score}
+    return {records,score,isA}
   })
 }
 
@@ -120,6 +129,7 @@ table.submitExam = {
           category:params.category,
           tsm:Date.now(),
           _key:token,
+          isA: examResult.isA
         }
 
         if(params.user){

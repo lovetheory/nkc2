@@ -31,16 +31,20 @@ block content
           ul.nav.nav-tabs(style='margin-top: 0.5em;')
             li(class='#{nowAt === "replies"? "active": ""}')
               a(style="cursor: pointer;",href='/sms?&tab=replies') 回复提醒
-                span.reddish(style="font-size:1em;") (#{data.user.new_message.replies}) 
+                if(data.user.new_message.replies && data.user.new_message.replies > 0)
+                  span.reddish(style="font-size:1em;") (#{data.user.new_message.replies})
             li(class='#{nowAt === "at"? "active": ""}')
               a(style="cursor: pointer;",href='/sms?&tab=at') @我的
-                span.reddish(style="font-size:1em;") (#{data.user.new_message.at}) 
+                if(data.user.new_message.at && data.user.new_message.at > 0)
+                  span.reddish(style="font-size:1em;") (#{data.user.new_message.at})
             li(class='#{nowAt === "messages"? "active": ""}')
               a(style="cursor: pointer;",href='/sms?&tab=messages') 短消息
-                span.reddish(style="font-size:1em;") (#{data.user.new_message.messages}) 
+                if(data.user.new_message.messages && data.user.new_message.messages > 0)
+                  span.reddish(style="font-size:1em;") (#{data.user.new_message.messages})
             li(class='#{nowAt === "system"? "active": ""}')
               a(style="cursor: pointer;",href='/sms?&tab=system') 系统通知
-                span.reddish(style="font-size:1em;") (#{data.user.new_message.system}) 
+                if(data.user.new_message.system && data.user.new_message.system > 0)
+                  span.reddish(style="font-size:1em;") (#{data.user.new_message.system})
         -var conversation = '';
         -if(nowAt === 'messages' && data.conversation)
           -conversation = '&conversation=' + data.conversation;
@@ -155,7 +159,8 @@ block content
                   .media-body
                     h4.media-heading
                       a(href='/sms?&tab=messages&conversation=#{docs[i].conversation._key}') #{docs[i].conversation.username}
-                      span.reddish (#{newMesNum}) 
+                      -if(newMesNum > 0)
+                        span.reddish (#{newMesNum})
                       span :
                       a(style='font-size:0.85em;float:right;',href='/sms?&tab=messages&conversation=#{docs[i].conversation._key}') 查看聊天信息
                       p(style="font-size:0.8em; word-break:break-all;") #{docs[i].group[0].c}

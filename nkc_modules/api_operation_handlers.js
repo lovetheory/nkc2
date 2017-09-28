@@ -130,7 +130,29 @@ function testPermission(params){
   // test if user is applicapable of executing operation specified by params.
   var permissionList = permission.getPermissionsFromUser(params.user);
   report(permissionList);
-
+  //发帖判断是否有postTo权限和mobile证书
+  if(params.operation == 'postTo') {
+    var userCerts = params.user.certs;
+    var hasMobile = false;
+    var hasBanned = false;
+    for (var i in userCerts) {
+      if (userCerts[i] == 'mobile') {
+        hasMobile = true;
+      }
+      if (userCerts[i] == 'banned') {
+        hasBanned = true;
+      }
+    }
+    if (hasBanned) {
+      throw `根据系统记录，你的账号已经被封禁，请重新注册。`;
+    }
+    if (!hasMobile) {
+      throw `您的账号还没有实名认证，请前往资料设置页绑定手机号码。`;
+    }
+    if (!permissionList.permittedOperations[params.operation]) { //user does not have permission for this operation
+      throw `您还没有获得进士证书，请前往资料设置页点击参加考试。`;
+    }
+  }
   if(!permissionList.permittedOperations[params.operation]){ //user does not have permission for this operation
     if(params.operation === 'moveThread') return
     throw '权限不足。permission denied.'

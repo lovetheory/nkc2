@@ -220,7 +220,8 @@ nkc.use((req,res,next)=>{
   .then(users => {
     if(users.length) return
     return operationScoreHandler({
-      ip: req.connection.remoteAddress + ':' + req.connection.remotePort,
+      address: req.iptrim,
+      port: req.connection.remotePort,
       operation: 'dailyLogin',
       from: req.user._key,
       to: req.user._key,

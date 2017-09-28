@@ -141,7 +141,8 @@ table.viewActiveEmail = {
             hashtype: res[0].hashtype,
             email: res[0].email,
             regPort: params._req.connection.remotePort,
-            regIP: params._req.iptrim
+            regIP: params._req.iptrim,
+            isA: res[0].isA
           }
           return create_muser(user)
             .then(k => {
@@ -1518,6 +1519,7 @@ table.viewEditor = {
     data.replytarget = target;
     data.navbar = {}
     data.navbar.highlight = 'editor'; //navbar highlight
+    data.forumID = params.forumID;
 
     if (target.indexOf('post/') == 0) {
       //if user appears trying to edit a post
@@ -2489,7 +2491,7 @@ table.viewForgotPassword2 = {
     if (data.phone != undefined && data.mcode != undefined) {
       return AQL(`
         for u in mobilecodes
-        filter u.mobile == @mobile
+        filter u.mobile == CONCAT('0086', @mobile) || u.mobile == @mobile
         return u
         `, {mobile: data.phone}
       )
@@ -2742,7 +2744,12 @@ function create_muser(user) {
     .then((newuid) => {
       uid = newuid;
       var timestamp = Date.now();
-
+      var certs = [];
+      if(user.isA){
+        certs = ['mail'];
+      }else{
+        certs = ['mail', 'examinated'];
+      }
       var newuser = {
         _key: uid,
         username: user.username,
@@ -2751,7 +2758,7 @@ function create_muser(user) {
         tlv: timestamp,
         regIP: user.regIP,
         regPort: user.regPort,
-        certs: ['mail', 'examinated'],
+        certs: certs,
       }
 
       var newuser_personal = {

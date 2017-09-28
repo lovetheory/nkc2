@@ -1725,3 +1725,22 @@ img.emoji {
 .border-right{
   border-right: 1px solid #eee;
 }
+#changeDis{
+  float: left;
+  width: 50%;
+}
+#changeDisNone{
+  float: left;
+  width: 50%;
+}
+@media screen and (max-width: 1200px) {
+  #qrcode {
+    display: none;
+  }
+  #changeDis {
+    width: 100%;
+  }
+  #changeDisNone{
+    display: none;
+  }
+}

@@ -116,6 +116,7 @@ var nkc_editor = function(){
     return nkcAPI('postTo',{
       target:target,
       post:post,
+      forumID: geid('forumID').innerHTML
     })
     .then(function(result){
       var redirectTarget = result.redirect;

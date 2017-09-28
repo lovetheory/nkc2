@@ -64,7 +64,7 @@ table.moveThread = {
     .then(() => {
       if(fid === 'recycle')
         return operationScoreHandler({
-          address: params._req.connection.remoteAddress,
+          address: params._req.iptrim,
           port: params._req.connection.remotePort,
           isManageOp: true,
           operation: 'moveToRecycle',
@@ -118,16 +118,16 @@ table.disablePost = {
       return origforum.testModerator(params.user._key)
     })
     .then(() => operationScoreHandler({
-      address: params._req.connection.remoteAddress,
+      address: params._req.iptrim,
       port: params._req.connection.remotePort,
       isManageOp: true,
       operation: 'disablePost',
       from: params.user._key,
-      to: thread.model.uid,
+      to: post.model.uid,
       timeStamp: Date.now(),
       parameters: {
         targetKey: 't/' + thread.model._key,
-        pid,
+        pid
       }
     }))
     .then(()=>{
@@ -270,7 +270,7 @@ table.setDigest={
       const timeStamp = Date.now();
       if(thread.model.digest)
         return operationScoreHandler({
-          address: params._req.connection.remoteAddress,
+          address: params._req.iptrim,
           port: params._req.connection.remotePort,
           isManageOp: true,
           operation: 'setDigest',
@@ -282,7 +282,7 @@ table.setDigest={
           }
         });
       return operationScoreHandler({
-        address: params._req.connection.remoteAddress,
+        address: params._req.iptrim,
         port: params._req.connection.remotePort,
         isManageOp: true,
         operation: 'cancelDigest',
@@ -332,7 +332,7 @@ table.setTopped={
       const timeStamp = Date.now();
       if(thread.model.topped)
         return operationScoreHandler({
-          address: params._req.connection.remoteAddress,
+          address: params._req.iptrim,
           port: params._req.connection.remotePort,
           isManageOp: true,
           operation: 'cancelTopped',
@@ -344,7 +344,7 @@ table.setTopped={
           }
         });
       return operationScoreHandler({
-        address: params._req.connection.remoteAddress,
+        address: params._req.iptrim,
         port: params._req.connection.remotePort,
         isManageOp: true,
         operation: 'setTopped',

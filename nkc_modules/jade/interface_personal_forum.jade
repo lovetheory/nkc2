@@ -69,10 +69,10 @@ block content
                               -var subscribeUsers = data.user.subscribeUsers ? data.user.subscribeUsers : []
                               if(subscribeUsers.indexOf(user._key) > -1)
                                 div
-                                  a.btn.btn-sm.btn-danger(href='javascript:;' onclick='subscribeUserSwitch("#{user._key}");' style='margin-top: 5px; margin-left: 10px;')#subscribeButton 取关
+                                  a.subscribeButton.btn.btn-sm.btn-danger(href='javascript:;' onclick='subscribeUserSwitch("#{user._key}");' style='margin-top: 5px; margin-left: 10px;')#subscribeButton 取关
                               else
                                 div
-                                  a.btn.btn-sm.btn-info(href='javascript:;' onclick='subscribeUserSwitch("#{user._key}");' style='margin-top: 5px; margin-left: 10px;')#subscribeButton 关注
+                                  a.subscribeButton.btn.btn-sm.btn-info(href='javascript:;' onclick='subscribeUserSwitch("#{user._key}");' style='margin-top: 5px; margin-left: 10px;')#subscribeButton 关注
                         hr.hrNarrowSpace
                         div
                           if announcement && announcement != ''
@@ -171,10 +171,7 @@ block content
                 - var class_str_sortby_toc = sortby?'active':''
                 - var class_str_sortby_tlm = sortby?'':'active'
 
-                if data.replytarget
-                  ul.pagination.NavigationPaging
-                    li
-                      a.btn.btn-default(href='/editor?target=#{data.replytarget}') 新帖
+
                 ul.pagination.NavigationPaging
                   - var page = paging?paging.page:null;
                   li(class="#{class_str_all}")
@@ -211,8 +208,7 @@ block content
               nav
                 include interface_navigation_paging.jade
 
-              if data.replytarget && !hasChildren
-                a.btn.btn-default(style="margin-top:13px" href='/editor?target=#{data.replytarget}') 发表新帖
+
 
           .div#bm
 

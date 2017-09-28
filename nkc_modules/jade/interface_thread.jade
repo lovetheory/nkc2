@@ -32,7 +32,7 @@ block content
           - var isOthersForumMdr = user? data.othersForum? data.othersForum.moderators.indexOf(user._key) > -1 : false : false
           
           .ThreadTitle
-            .ThreadTitle1(style="display:inline-block;width:82%;")
+            .ThreadTitle1(style="display:inline-block;width:74%;")
               - var forum = data.forum
               - var forumname = forum.display_name
               - var parent = null
@@ -187,15 +187,17 @@ block content
                     a#OFTopped(href='javascript:;' onclick='switchTInPersonalForum("#{thread._key}","#{displayName}","OF")' style='color: #CBDCEA') #{topOF}
                     span &nbsp;&nbsp;
 
-            .ThreadTitle2(style="display:inline-block;width:16%;vertical-align:top;")
-              .ThreadTitle22(style="border:1px solid #ddd;border-radius:10px;")
-                p.lighttext#airnum1(style="font-size:21px;text-align:center;margin-top:0px;margin-bottom:0px;") 文 号
-                .hrdiv(style="width:80%;height:1px;background-color:#ddd;margin:0 auto;")
-                -var tpid = thread.oc._id.split('/')[1]
-                p.lighttext#airnum2(style="font-size:21px;text-align:center;color:#cdf;margin-bottom:0px;margin-top:0px;") #{tpid}     
-                .hrdiv(style="width:80%;height:1px;background-color:#ddd;margin:0 auto;")
-                p.lighttext#airnum3(style="text-align:center;") #{(thread.count-1)?(thread.count-1)+' 回复 /':''} #{thread.hits} 浏览
-
+            .ThreadTitle2(style="display:inline-block;width:20%;vertical-align:top;")
+              .ThreadTitle22(style="border: 1px solid #ddd;border-radius: 10px;overflow: hidden;padding: 3px 0px 0 0px;")
+                div#changeDis
+                  p.lighttext#airnum1(style="font-size:21px;text-align:center;margin-top:0px;margin-bottom:0px;") 文 号
+                  .hrdiv(style="width:80%;height:1px;background-color:#ddd;margin:0 auto;")
+                  -var tpid = thread.oc._id.split('/')[1]
+                  p.lighttext#airnum2(style="font-size:21px;text-align:center;color:#cdf;margin-bottom:0px;margin-top:0px;") #{tpid}
+                  .hrdiv(style="width:80%;height:1px;background-color:#ddd;margin:0 auto;")
+                  p.lighttext#airnum3(style="text-align:center;") #{(thread.count-1)?(thread.count-1)+' 回复 /':''} #{thread.hits} 浏览
+                div#changeDisNone
+                  canvas#qrcode
 
           
           include interface_navigation_paging.jade      
@@ -219,30 +221,36 @@ block content
             a(href='javascript:window.scrollTo(0,0);') 本页顶部
           
           hr.hrNarrowSpace
-            
-          if data.permittedOperations
-            if data.permittedOperations.postTo
-              //.form-group
-                //a.f12(href='/editor?target=#{data.replytarget}') 回复（去编辑器）
 
-              .form-group
-                textarea#ReplyContent.form-control(rows='5' placeholder='快速回复（bbcode语法）' style='resize:vertical')
-              
-              .form-inline
+          if data.permittedOperations
+            -if(data.user)
+              - var userCerts = data.user.certs;
+              - var hasMobile = false;
+              - for(var i =0; i < userCerts.length; i++)
+                - if(userCerts[i] === 'mobile')
+                  - hasMobile = true;
+              if (data.permittedOperations.postTo && hasMobile)
+                //.form-group
+                  //a.f12(href='/editor?target=#{data.replytarget}') 回复（去编辑器）
+
                 .form-group
-                  button#ButtonReply.btn.btn-primary(onclick='submit()') 回复
-                  
-                .checkbox-inline
-                  label
-                    input#ParseURL(type='checkbox' checked)
-                    |处理URL
-            
-                if 0
+                  textarea#ReplyContent.form-control(rows='5' placeholder='快速回复（bbcode语法）' style='resize:vertical')
+
+                .form-inline
                   .form-group
-                    button#WiderArea.hidden-xs.btn.btn-default(onclick='widerArea()') 拓展
-                include twemoji
-                .form-group
-                  button#GoEditor.btn.btn-default(onclick='goEditor()') 去编辑器
+                    button#ButtonReply.btn.btn-primary(onclick='submit()') 回复
+
+                  .checkbox-inline
+                    label
+                      input#ParseURL(type='checkbox' checked)
+                      |处理URL
+
+                  if 0
+                    .form-group
+                      button#WiderArea.hidden-xs.btn.btn-default(onclick='widerArea()') 拓展
+                  include twemoji
+                  .form-group
+                    button#GoEditor.btn.btn-default(onclick='goEditor()') 去编辑器
 
           include exam_notification.jade
           
@@ -288,12 +296,12 @@ block content
               
         //include interface_forums_list.jade
 
-          
   include debug_output.jade
     
 block scripts
   script(src='/interface_common.js')
   script(src='/interface_thread.js')
+  script(src='/qrcode/build/qrcode.min.js')
   script.
     common.backcolorChange("#{(data.user?data.user.color:null)||'#e4e4e4'}");
                 

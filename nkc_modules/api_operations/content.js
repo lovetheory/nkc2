@@ -42,6 +42,7 @@ var postToThread = function(params,tid,user, type){
   })
   .then((newpid) => {
     //create a new post
+    console.log(newpid);
     pid = newpid;
     let content = post.c;
     let existUsers = [];
@@ -167,6 +168,7 @@ var postToThread = function(params,tid,user, type){
       timeStamp: timestamp,
       parameters: {
         targetKey: 't/' + tid,
+        pid
       }
     }))
     .then(()=>{
@@ -237,10 +239,20 @@ var postToForum = function(params,fid,user,cat){
   .then((result)=>{
     return incrementForumOnNewThread(newtid)
   })
+  .then(() => operationScoreHandler({
+    address: params._req.iptrim,
+    port: params._req.connection.remotePort,
+    operation: 'postToForum',
+    from: params.user._key,
+    to: params.user._key,
+    timeStamp: Date.now(),
+    parameters: {
+      targetKey: 't/' + newtid,
+    }
+  }))
   .then((result)=>{
     return postToThread(params,newtid,user, 1)
   })
-    .catch(e => console.log(e))
 };
 
 var postToPost = function(params,pid,user){ //modification.
@@ -384,14 +396,15 @@ var postToPost = function(params,pid,user){ //modification.
     return userBehaviorRec(obj)
   })
     .then(() => operationScoreHandler({
-      address: params._req.connection.remoteAddress,
+      address: params._req.iptrim,
       port: params._req.connection.remotePort,
-      operation: 'postToForum',
+      operation: 'postToPost',
       from: params.user._key,
-      to: params.user._key,
+      to: originPost.uid,
       timeStamp: Date.now(),
       parameters: {
-        targetKey: 'f/' + fid,
+        targetKey: 't/' + originPost.tid,
+        pid: originPost._key
       }
     }))
     .then(() => {
@@ -969,6 +982,8 @@ let postToPersonalForum = (params, targetKey) => {
   targetKey = targetKey.toString();
   let user = params.user;
   let post = params.post;
+  let forumID = params.forumID;
+  console.log(forumID);
 
   if (typeof post.t !== 'string')throw '请填写标题！'
 
@@ -990,6 +1005,7 @@ let postToPersonalForum = (params, targetKey) => {
           _key: newtid.toString(),//key must be string.
           uid: user._key,
           mid: user._key,
+          fid: forumID
         };
       if(user._key !== targetKey) {
         newthread.toMid = targetKey
@@ -999,11 +1015,11 @@ let postToPersonalForum = (params, targetKey) => {
       return queryfunc.doc_save(newthread, 'threads')
     })
     .then(() => operationScoreHandler({
-      address: params._req.connection.remoteAddress,
+      address: params._req.iptrim,
       port: params._req.connection.remotePort,
       operation: 'postToForum',
       from: params.user._key,
-      to: targetKey,
+      to: params.user._key,
       timeStamp: Date.now(),
       parameters: {
         targetKey: 'm/' + targetKey,

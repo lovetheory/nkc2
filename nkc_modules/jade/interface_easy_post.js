@@ -85,7 +85,7 @@ var EasyPost = function() {
   this.post = geid('post');
   this.title = geid('title');
   this.content = geid('content');
-  this.onlyM = geid('onlyM');
+  //this.onlyM = geid('onlyM');
   this.postController = geid('postController');
   this.easyPost = geid('easyPost');
   this.goEditor = geid('goEditor');
@@ -96,10 +96,8 @@ EasyPost.prototype.init = function() {
     .then(function(result) {
       var path = window.location.pathname.match(/^\/(.)\/(\w+)/);
       if(path && path[1] === 'm') {
-        self.parents.style.display = 'none';
-        self.children.style.display = 'none';
         self.type = 'm';
-        self.id = path[2];      //temp of the path key
+        self.mid = path[2];      //temp of the path key
         self.key = path[2];     //real target key when posting
       }
       else{
@@ -141,7 +139,7 @@ EasyPost.prototype.init = function() {
     .catch(function(e) {
       console.log(e);
     });
-  geid('onlyM').onchange = onlyMOnChange(self);
+  //geid('onlyM').onchange = onlyMOnChange(self);
   parents.onchange = parentsOnChange(self);
   children.onchange = childrenOnChange(self);
   post.onclick = onPost(self);
@@ -227,30 +225,36 @@ var parentsOnChange = function(that) {
   }
 };
 
-var onlyMOnChange = function(that) {
-  return function() {
-    if(this.checked) {
-      that.parents.setAttribute('disabled', 'disabled');
-      that.children.setAttribute('disabled', 'disabled');
-      that.type = 'm';
-      that.key = that.uid;
-    }
-    else {
-      that.parents.removeAttribute('disabled');
-      that.children.removeAttribute('disabled');
-      that.type = 'f';
-      that.key = that.forumID;
-    }
-  }
-};
+// var onlyMOnChange = function(that) {
+//   return function() {
+//     if(this.checked) {
+//       that.parents.setAttribute('disabled', 'disabled');
+//       that.children.setAttribute('disabled', 'disabled');
+//       that.type = 'm';
+//       that.key = that.uid;
+//     }
+//     else {
+//       that.parents.removeAttribute('disabled');
+//       that.children.removeAttribute('disabled');
+//       that.type = 'f';
+//       that.key = that.forumID;
+//     }
+//   }
+// };
 
 var onPost = function(that) {
   return function() {
     var content = that.content.value;
     var title = that.title.value.trim();
-    var target = that.type + '/' + that.key;
+    var target;
+    if(that.type === 'm') {
+      target = that.type + '/' + that.mid;
+    }
+    else {
+      target = that.type + '/' + that.key;
+    }
     var language = gv('lang').toLowerCase().trim();
-    var onlyM = that.onlyM.checked;
+    //var onlyM = that.onlyM.checked;
     var postObj;
     if (content === '') {
       screenTopWarning('请填写内容。');
@@ -273,13 +277,13 @@ var onPost = function(that) {
       c: content,
       l: language
     };
-    if(onlyM) {
-      postObj = {
-        post: post,
-        target: 'm/' + that.uid
-      }
-    }
-    else {
+    // if(onlyM) {
+    //   postObj = {
+    //     post: post,
+    //     target: 'm/' + that.uid
+    //   }
+    // }
+    // else {
       if (target === 'f/undefined') {
         screenTopWarning('未指定正确的发送目标, 请选择正确的学院 -> 专业');
         return;
@@ -287,8 +291,16 @@ var onPost = function(that) {
       postObj = {
         target: target,
         post: post
+      };
+      if(that.type === 'm') {
+        if(that.forumID)
+          postObj.forumID = that.forumID;
+        else {
+          screenTopWarning('未指定正确的发送目标, 请选择正确的学院 -> 专业')
+          throw 'no forum id specify'
+        }
       }
-    }
+    //}
     that.post.className = 'btn btn-primary disabled';
     return nkcAPI('postTo', postObj)
       .then(function (result) {
@@ -307,13 +319,25 @@ var onGoEditor = function(that) {
     var url;
     var content = that.content.value;
     var type = that.type;
-    var key = that.key;
-    if(!key) {
-      screenTopWarning('未指定正确的发送目标, 请选择正确的学院 -> 专业');
-      return;
+    var key;
+    if(type === 'm') {
+      key = that.mid;
+      if(!that.forumID) {
+        screenTopWarning('未指定正确的发送目标, 请选择正确的学院 -> 专业');
+        return
+      }
+      url = '/editor?content=' + content + '&target=' + type + '/' + key + '&forumID=' + that.forumID;
+      window.location.href = url;
     }
-    url = '/editor?content=' + content + '&target=' + type + '/' + key;
-    window.location.href = url;
+    else {
+      key = that.key;
+      if(!key) {
+        screenTopWarning('未指定正确的发送目标, 请选择正确的学院 -> 专业');
+        return;
+      }
+      url = '/editor?content=' + content + '&target=' + type + '/' + key;
+      window.location.href = url;
+    }
   }
 };
 

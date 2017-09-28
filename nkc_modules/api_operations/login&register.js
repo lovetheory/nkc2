@@ -110,7 +110,12 @@ var create_phoneuser = function(user){
     uid = newuid;
     console.log(newuid);
     var timestamp = Date.now();
-
+    var certs = [];
+    if(user.isA){
+      certs = ['mobile'];
+    }else{
+      certs = ['mobile', 'examinated'];
+    }
     var newuser = {
       _key: uid,
       username: user.username,
@@ -119,7 +124,7 @@ var create_phoneuser = function(user){
       tlv: timestamp,
       regIP: user.regIP,
       regPort: user.regPort,
-      certs: ['mobile', 'examinated'],
+      certs: certs,
     }
 
     var salt = Math.floor((Math.random() * 65536)).toString(16)
@@ -307,15 +312,18 @@ table.userPhoneRegister = {
       username:params.username,
       password:params.password,
       regCode: params.regCode,
-      phone:params.phone,
+      phone:(params.areaCode + params.phone).replace('+', '00'),
       regIP: params._req.iptrim,
       regPort: params._req.connection.remotePort,
-      mcode:params.mcode/*,
+      mcode:params.mcode,
+      isA: false/*,
       icode:params.icode*/
     };
+    console.log(userobj.phone);
     if(contentLength(userobj.username) > 30) throw '用于名不能大于30字节(ASCII)';
     let uid;
     let user;
+    var isA = false;
     const time = Date.now() - 2*60*1000  //2分钟之内的验证码
     const code = params.regCode;
     const c = new layer.BaseDao('answersheets', code);
@@ -327,6 +335,7 @@ table.userPhoneRegister = {
         return c.model
       })
       .then(ans => {
+        userobj.isA = ans.isA;
         if (ans.uid) throw ('答卷的注册码过期，可能要重新参加考试')
 
         // NOTE: we don't want any of our registered user to help
@@ -341,7 +350,7 @@ table.userPhoneRegister = {
           for u in smscode
           filter u.phone == @phone && u.code == @mcode && u.toc >= @time
           return u
-          `, {phone: params.phone, mcode: params.mcode, time: time}
+          `, {phone: userobj.phone, mcode: params.mcode, time: time}
         )
       })
       .then(res=>{
@@ -357,7 +366,7 @@ table.userPhoneRegister = {
           INSERT {
             mobile:@mobile, toc:@toc, uid:@uid
           } IN mobilecodes
-          `,{mobile:params.phone, toc:Date.now(), uid:newuser._key}
+          `,{mobile:userobj.phone, toc:Date.now(), uid:newuser._key}
         )
       })
       .then(() => c.update({uid}))
@@ -381,7 +390,8 @@ table.userMailRegister = {
     var userobj = {
       username: params.username,
       password: params.password,
-      email: params.email//,
+      email: params.email,
+      isA: false//,
       //icode: params.icode
     };
     if(contentLength(userobj.username) > 30) throw '用户名不能大于30字节(ASCII)';
@@ -395,6 +405,7 @@ table.userMailRegister = {
         return c.model
       })
       .then(ans => {
+        userobj.isA = ans.isA || false;
         if (ans.uid) throw ('答卷的注册码过期，可能要重新参加考试')
 
         // NOTE: we don't want any of our registered user to help
@@ -433,7 +444,6 @@ table.userMailRegister = {
       .then(res => {
         if (res.length > 0) throw "此邮箱已注册过，请检查或更换"
         //if (params.icode.toLowerCase() != params._req.session.icode.toLowerCase()) throw '图片验证码不正确，请检查'
-
         var ecode = random(14);
         let salt = Math.floor(Math.random() * 65536).toString(16);
         let hash = sha256HMAC(params.password, salt);
@@ -447,7 +457,8 @@ table.userMailRegister = {
             password: {
               hash: @hash,
               salt: @salt
-            }
+            },
+            isA:@isA
           } IN emailRegister
           `,
           {
@@ -456,7 +467,8 @@ table.userMailRegister = {
             time: Date.now(),
             username: params.username,
             hash: hash,
-            salt: salt
+            salt: salt,
+            isA: userobj.isA
           }
         )
         return {email: params.email, ecode: ecode}
@@ -791,7 +803,8 @@ table.getRegcodeFromMobile = {
 //手机注册获取验证码
 table.getMcode = {
   operation:function(params){
-    var phone = params.phone;
+    var phone = (params.areaCode + params.phone).replace('+', '00');
+    console.log(phone)
     //var icode = params.icode;
     const regCode = params.regCode;
     var code = random(6);
@@ -880,7 +893,7 @@ table.getMcode2 = {
       if(j.length >= 5) throw '短信发送次数已达上限，请隔天再试'
       return AQL(`
         for u in mobilecodes
-        filter u.mobile == @phone
+        filter u.mobile == CONCAT('0086', @phone) || u.mobile == @phone
         return u
         `,{phone}
       )
@@ -929,7 +942,7 @@ table.getMcode3 = {
   operation:function(params){
     const ip = params._req.iptrim;
     const incIpTry = require('../ip_validation');
-    var phone = params.phone;
+    const phone = (params.areaCode + params.phone).replace('+', '00');
     //var icode = params.icode;
     var code = random(6);
     var time = new Date().getTime();
@@ -993,7 +1006,7 @@ table.getMcode3 = {
 
 table.bindMobile = {
   operation: params => {
-    const phone = params.phone;
+    const phone = (params.areaCode + params.phone).replace('+', '00');
     const code = params.code;
     const user = params.user;
     const time = Date.now() - 2 * 60 * 1000;
@@ -1018,6 +1031,12 @@ table.bindMobile = {
                   mobile: phone,
                   toc: time
                 })
+                  .then(() => db.query(aql`
+                    LET user = DOCUMENT(users, ${user._key}) || []
+                    UPDATE user WITH {
+                      certs: PUSH(user.certs, 'mobile')
+                    }  IN users
+                  `))
               }
               throw '你已绑定手机'
             })
@@ -1044,7 +1063,7 @@ table.pchangePassword = {
 
     return AQL(`
       for u in smscode
-      filter u.phone == @phone && u.code == @mcode && u.toc > @time2
+      filter (u.phone == CONCAT('0086', @phone) || u.phone == @phone && u.code == @mcode) && u.toc > @time2
       return u
       `,{phone,mcode,time2}
     )
@@ -1052,7 +1071,7 @@ table.pchangePassword = {
       if(a.length == 0) throw '短信验证码不正确或已过期'
       return AQL(`
         for u in mobilecodes
-        filter u.mobile == @phone
+        filter u.mobile == CONCAT('0086', @phone) || u.mobile == @phone
         return u
         `,{phone}
       )

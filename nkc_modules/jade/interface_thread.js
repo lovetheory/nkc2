@@ -7,6 +7,15 @@ $(document).ready(function(){
     $('#airnum2').css('font-size','16px');
     $('#airnum3').css('font-size','10px');
   }
+  var qrcode = geid('qrcode');
+  if(qrcode) {
+    var path = window.location.href;
+    qrcodelib.toCanvas(qrcode, path, {
+      scale: 3,
+      margin: 1,
+      color: {dark: 'a9a9a9'}
+    }, console.error.bind(console))
+  }
   var editor = geid('ReplyContent');
   var proxy = geid('proxy');
   proxy.addEventListener('click', function(e) {

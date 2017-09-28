@@ -347,7 +347,7 @@ apifunc.get_user = (uid)=>{
     })
     .then(usersSubscribe => {
       //desensitize
-      let doc = Object.assign(temp, usersSubscribe)
+      let doc = Object.assign(temp, usersSubscribe);
       doc.password = undefined;
       doc.password2 = undefined;
       doc.hashtype = undefined;
@@ -443,10 +443,18 @@ apifunc.exam_gen = function(options){
   return Promise.resolve()
   .then(()=>{
     if(category){
-      return layer.Question.randomlyListQuestionsOfCategory(category,settings.exam.number_of_questions_subjective,seed+1)
+      numberSubjective = settings.exam.number_of_questions_subjective;
+      if(category == 'mix'){
+        numberSubjective = settings.exam.number_of_questions_subjective_a;
+      }
+      return layer.Question.randomlyListQuestionsOfCategory(category,numberSubjective,seed+1)
       .then(arr=>{
         qarr = qarr.concat(arr)
-        return layer.Question.randomlyListQuestionsOfCategory('common',settings.exam.number_of_questions_common,seed+2)
+        numberCommon = settings.exam.number_of_questions_common;
+        if(category == 'mix'){
+          numberCommon = settings.exam.number_of_questions_common_a;
+        }
+        return layer.Question.randomlyListQuestionsOfCategory('common',numberCommon,seed+2)
       })
       .then(arr=>{
         qarr = qarr.concat(arr)
@@ -459,7 +467,6 @@ apifunc.exam_gen = function(options){
     }
   })
   .then(function(){
-
     for(i in qarr){
       var qobj = {};
       var originalquestion = qarr[i];

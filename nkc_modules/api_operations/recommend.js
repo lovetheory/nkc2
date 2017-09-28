@@ -48,7 +48,7 @@ table.recommendPost = {
         `)
       })
       .then(() => operationScoreHandler({
-        address: params._req.connection.remoteAddress,
+        address: params._req.iptrim,
         port: params._req.connection.remotePort,
         operation: 'recommendPost',
         from: params.user._key,
@@ -80,7 +80,7 @@ table.unrecommendPost = {
         `)
       })
       .then(() => operationScoreHandler({
-        address: params._req.connection.remoteAddress,
+        address: params._req.iptrim,
         port: params._req.connection.remotePort,
         operation: 'unrecommendPost',
         from: params.user._key,
