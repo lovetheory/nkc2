@@ -143,7 +143,7 @@ var certificates={
       professional:true,
     },
     permittedOperations:{
-      postTo:true,//若有postTo则是进士及进士以上,已经通过了B卷考试
+      postTo:true,//若有postTo权限则是进士及进士以上,已经通过了B卷考试
       getPostContent:true,
       testExaminated:true,
       selfModifyTimeLimit:timeMonth*3, //3m
