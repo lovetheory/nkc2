@@ -69,10 +69,10 @@ block content
                               -var subscribeUsers = data.user.subscribeUsers ? data.user.subscribeUsers : []
                               if(subscribeUsers.indexOf(user._key) > -1)
                                 div
-                                  a.btn.btn-sm.btn-danger(href='javascript:;' onclick='subscribeUserSwitch("#{user._key}");' style='margin-top: 5px; margin-left: 10px;')#subscribeButton 取关
+                                  a.subscribeButton.btn.btn-sm.btn-danger(href='javascript:;' onclick='subscribeUserSwitch("#{user._key}");' style='margin-top: 5px; margin-left: 10px;')#subscribeButton 取关
                               else
                                 div
-                                  a.btn.btn-sm.btn-info(href='javascript:;' onclick='subscribeUserSwitch("#{user._key}");' style='margin-top: 5px; margin-left: 10px;')#subscribeButton 关注
+                                  a.subscribeButton.btn.btn-sm.btn-info(href='javascript:;' onclick='subscribeUserSwitch("#{user._key}");' style='margin-top: 5px; margin-left: 10px;')#subscribeButton 关注
                         hr.hrNarrowSpace
                         div
                           if announcement && announcement != ''
