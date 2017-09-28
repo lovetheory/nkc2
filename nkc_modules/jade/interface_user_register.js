@@ -95,7 +95,6 @@ function register_submit(){
       throw({detail:'请填写图片验证码！'})
       return;
     }*/
-    console.log(JSON.stringify(userobj));
     return nkcAPI('userPhoneRegister',userobj)
   })
   .then(function(result){
@@ -180,7 +179,8 @@ function getMcode(){
   }
 
   else{
-    nkcAPI('getMcode',{phone:phone/*, icode:icode*/, regCode: regCode})
+    console.log(JSON.stringify(userobj));
+    nkcAPI('getMcode',{phone:phone/*, icode:icode*/, regCode: regCode, areaCode: areaCode})
     .then(function(res){
       var count = 120;
       var countdown = setInterval(CountDown, 1000);
