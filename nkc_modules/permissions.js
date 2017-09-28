@@ -142,7 +142,6 @@ var certificates={
       professional:true,
     },
     permittedOperations:{
-      postTo:true,//若有postTo权限则是进士及进士以上,已经通过了B卷考试
       getPostContent:true,
       testExaminated:true,
       selfModifyTimeLimit:timeMonth*3, //3m
@@ -187,10 +186,10 @@ var certificates={
       images:true,
       non_images:true,
       non_public:true,
-
       non_broadcast:true,
     },
     permittedOperations:{
+      postTo:true,
       postNewMessage: true,
       getMcode3: true,
       bindMobile: true,
