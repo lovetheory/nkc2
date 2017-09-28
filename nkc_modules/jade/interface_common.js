@@ -455,8 +455,8 @@ function subscribeUserSwitch(targetUid) {
       .then(function() {
         screenTopAlert('成功取消关注');
         for(var i = 0; i < button.length; i++){
-          button.innerHTML = '关注';
-          button.className = 'subscribeButton btn btn-sm btn-info';
+          button[i].innerHTML = '关注';
+          button[i].className = 'subscribeButton btn btn-sm btn-info';
         }
         /*button.innerHTML = '关注';
         button.className = 'btn btn-sm btn-info';*/
