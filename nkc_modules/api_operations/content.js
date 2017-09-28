@@ -1019,7 +1019,7 @@ let postToPersonalForum = (params, targetKey) => {
       port: params._req.connection.remotePort,
       operation: 'postToForum',
       from: params.user._key,
-      to: targetKey,
+      to: params.user._key,
       timeStamp: Date.now(),
       parameters: {
         targetKey: 'm/' + targetKey,

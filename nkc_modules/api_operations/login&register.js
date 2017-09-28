@@ -940,7 +940,7 @@ table.getMcode3 = {
   operation:function(params){
     const ip = params._req.iptrim;
     const incIpTry = require('../ip_validation');
-    var phone = params.phone;
+    const phone = (params.areaCode + params.phone).replace('+', '00');
     //var icode = params.icode;
     var code = random(6);
     var time = new Date().getTime();
@@ -1004,7 +1004,7 @@ table.getMcode3 = {
 
 table.bindMobile = {
   operation: params => {
-    const phone = params.phone;
+    const phone = (params.areaCode + params.phone).replace('+', '00');
     const code = params.code;
     const user = params.user;
     const time = Date.now() - 2 * 60 * 1000;
