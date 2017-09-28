@@ -1,3 +1,9 @@
+var areaCode = '+86';
+//选择国际区号
+function chooseCountryNum(num){
+  areaCode = parseInt(num);
+}
+
 function error_report(str){
   geid('error_info').innerHTML = '<strong style="color:red;">'+str+'</strong>';
   display('error_info_panel');  //下面的提示框
@@ -22,7 +28,9 @@ function register_submit(){
       password2 : gv('password2'),
       regCode: gv('regCode'),
       phone:gv('phone'),
-      mcode:gv('mcode')/*,
+      mcode:gv('mcode'),
+      areaCode: areaCode
+      /*,
       icode:gv('icode')*/
     }
 
