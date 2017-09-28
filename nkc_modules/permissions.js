@@ -139,7 +139,6 @@ var certificates={
     display_name:'进士',
     inheritFrom:['default'],
     contentClasses:{
-      sensitive:true,
       professional:true,
     },
     permittedOperations:{

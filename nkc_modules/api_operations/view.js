@@ -2491,7 +2491,7 @@ table.viewForgotPassword2 = {
     if (data.phone != undefined && data.mcode != undefined) {
       return AQL(`
         for u in mobilecodes
-        filter u.mobile == @mobile
+        filter u.mobile == CONCAT('0086', @mobile) || u.mobile == @mobile
         return u
         `, {mobile: data.phone}
       )

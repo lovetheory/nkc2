@@ -312,13 +312,14 @@ table.userPhoneRegister = {
       username:params.username,
       password:params.password,
       regCode: params.regCode,
-      phone:params.phone,
+      phone:(params.areaCode + params.phone).replace('+', '00'),
       regIP: params._req.iptrim,
       regPort: params._req.connection.remotePort,
       mcode:params.mcode,
       isA: false/*,
       icode:params.icode*/
     };
+    console.log(userobj.phone);
     if(contentLength(userobj.username) > 30) throw '用于名不能大于30字节(ASCII)';
     let uid;
     let user;
@@ -349,7 +350,7 @@ table.userPhoneRegister = {
           for u in smscode
           filter u.phone == @phone && u.code == @mcode && u.toc >= @time
           return u
-          `, {phone: params.phone, mcode: params.mcode, time: time}
+          `, {phone: userobj.phone, mcode: params.mcode, time: time}
         )
       })
       .then(res=>{
@@ -365,7 +366,7 @@ table.userPhoneRegister = {
           INSERT {
             mobile:@mobile, toc:@toc, uid:@uid
           } IN mobilecodes
-          `,{mobile:params.phone, toc:Date.now(), uid:newuser._key}
+          `,{mobile:userobj.phone, toc:Date.now(), uid:newuser._key}
         )
       })
       .then(() => c.update({uid}))
@@ -802,7 +803,8 @@ table.getRegcodeFromMobile = {
 //手机注册获取验证码
 table.getMcode = {
   operation:function(params){
-    var phone = params.phone;
+    var phone = (params.areaCode + params.phone).replace('+', '00');
+    console.log(phone)
     //var icode = params.icode;
     const regCode = params.regCode;
     var code = random(6);
@@ -891,7 +893,7 @@ table.getMcode2 = {
       if(j.length >= 5) throw '短信发送次数已达上限，请隔天再试'
       return AQL(`
         for u in mobilecodes
-        filter u.mobile == @phone
+        filter u.mobile == CONCAT('0086', @phone) || u.mobile == @phone
         return u
         `,{phone}
       )
@@ -1061,7 +1063,7 @@ table.pchangePassword = {
 
     return AQL(`
       for u in smscode
-      filter u.phone == @phone && u.code == @mcode && u.toc > @time2
+      filter (u.phone == CONCAT('0086', @phone) || u.phone == @phone && u.code == @mcode) && u.toc > @time2
       return u
       `,{phone,mcode,time2}
     )
@@ -1069,7 +1071,7 @@ table.pchangePassword = {
       if(a.length == 0) throw '短信验证码不正确或已过期'
       return AQL(`
         for u in mobilecodes
-        filter u.mobile == @phone
+        filter u.mobile == CONCAT('0086', @phone) || u.mobile == @phone
         return u
         `,{phone}
       )
