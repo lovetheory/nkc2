@@ -57,10 +57,10 @@ block content
             a(href='/m/#{data.targetUser._key}?&tab=subscribe') 关注
           li.active
             a(href='/activities/#{data.forum._key}') 动态
-        .panel#activities
-          for obj in data.activities
-            include interface_single_activity
-          include click_load
+        //.panel#activities
+        //  for obj in data.activities
+        //    include interface_single_activity
+        //  include click_load
 
       .col-md-3.hidden-xs.hidden-sm
         .nkcpanel
