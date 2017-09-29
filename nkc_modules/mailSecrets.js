@@ -16,7 +16,7 @@ module.exports = {
   },
 
   sendSMS: function(phone, code, fn, callback){
-    var period = 15*60*1000;
+    var period = '15';//字符串模板分钟数
     if(fn === 'register'){
       //注册用户走这里
       new alidayu('23632480', 'e264a8555d0ef54a9e881969572ed4d2').smsSend({
