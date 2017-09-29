@@ -19,30 +19,30 @@ module.exports = {
     if(fn === 'register'){
       //注册用户走这里
       new alidayu('23632480', 'e264a8555d0ef54a9e881969572ed4d2').smsSend({
-        sms_free_sign_name: '注册验证',  //短信签名
+        sms_free_sign_name: '科创注册验证',  //短信签名
         sms_param: {"code": code, "product": "科创论坛"},
         rec_num: phone,
-        sms_template_code: 'SMS_100770071',//注册模板
+        sms_template_code: 'SMS_100865101',//注册模板
         sms_type: 'normal'
       }, callback)
     }
     else if(fn === 'reset'){
       //修改密码走这里
       new alidayu('23632480', 'e264a8555d0ef54a9e881969572ed4d2').smsSend({
-        sms_free_sign_name: '变更密码',  //短信签名
+        sms_free_sign_name: '科创变更密码',  //短信签名
         sms_param: {"code": code, "product": "科创论坛"},
         rec_num: phone,
-        sms_template_code: 'SMS_100730069',//大于平台手机找回密码模板号
+        sms_template_code: 'SMS_100810088',//大于平台手机找回密码模板号
         sms_type: 'normal'
       }, callback)
     }
     else if(fn === 'bindMobile'){
       //现有账号实名认证 绑定手机号
       new alidayu('23632480', 'e264a8555d0ef54a9e881969572ed4d2').smsSend({
-        sms_free_sign_name: '绑定手机号',  //短信签名
+        sms_free_sign_name: '科创绑定手机号',  //短信签名
         sms_param: {"code": code, "product": "科创论坛"},
         rec_num: phone,
-        sms_template_code: 'SMS_100770070',
+        sms_template_code: 'SMS_100755081',
         sms_type: 'normal'
       }, callback)
     }
