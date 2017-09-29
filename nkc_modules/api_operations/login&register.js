@@ -324,7 +324,7 @@ table.userPhoneRegister = {
     let uid;
     let user;
     var isA = false;
-    const time = Date.now() - 2*60*1000  //2分钟之内的验证码
+    const time = Date.now() - 15*60*1000  //15分钟之内的验证码
     const code = params.regCode;
     const c = new layer.BaseDao('answersheets', code);
     return c.load()
@@ -936,8 +936,7 @@ table.getMcode2 = {
     phone:String,
   }
 }
-
-//手机找回密码的验证码
+//资料设置页 绑定手机号
 table.getMcode3 = {
   operation:function(params){
     const ip = params._req.iptrim;
@@ -982,7 +981,7 @@ table.getMcode3 = {
           incIpTry(ip);
           throw '暂不支持修改绑定号码'
         }
-        sendSMS(phone, code , 'reset', function(err,res){ //2调用修改密码方法
+        sendSMS(phone, code , 'bindMobile', function(err,res){ //2调用修改密码方法
           if(err){
             console.log(err)
           }else{
@@ -1009,7 +1008,7 @@ table.bindMobile = {
     const phone = (params.areaCode + params.phone).replace('+', '00');
     const code = params.code;
     const user = params.user;
-    const time = Date.now() - 2 * 60 * 1000;
+    const time = Date.now() - 15 * 60 * 1000;//15分钟之内的验证码
     return db.query(aql`
       FOR doc IN smscode
         FILTER doc.toc > ${time} && doc.phone == ${phone} && doc.code == ${code}

@@ -41,17 +41,17 @@ block content
         .panel
           -var newestDigestThreads = data.newestDigestThreads
             include interface_digest_threads
-        .panel
-          div
-            span(style='color: silver;') 最新专栏&nbsp;&nbsp;&nbsp;
-            a(style='float: right;' href='/latest?&content=personal') 更多>>>>
-            .clearfix
-          for thread in data.latestPFThreads
-            include interface_index_singlethread
-
-        .panel
-          -var popPersonalForums = data.popPersonalForums
-            include interface_pop_pfs
+        //.panel
+        //  div
+        //    span(style='color: silver;') 最新专栏&nbsp;&nbsp;&nbsp;
+        //    a(style='float: right;' href='/latest?&content=personal') 更多>>>>
+        //    .clearfix
+        //  for thread in data.latestPFThreads
+        //    include interface_index_singlethread
+        //
+        //.panel
+        //  -var popPersonalForums = data.popPersonalForums
+        //    include interface_pop_pfs
 
         div#bm
 

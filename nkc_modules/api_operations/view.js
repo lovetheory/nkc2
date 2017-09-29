@@ -690,26 +690,26 @@ table.viewHome = {
           res.splice(index, 1);
         }
         data.newestDigestThreads = temp;
-        return db.query(aql`
-          FOR t IN threads
-            SORT t.tlm DESC
-            FILTER t.fid == null
-            limit 10
-            LET oc = DOCUMENT(posts, t.oc)
-            LET ocuser = DOCUMENT(users, oc.uid)
-            LET lm = DOCUMENT(posts, t.lm)
-            LET lmuser = DOCUMENT(users, lm.uid)
-            RETURN MERGE(t, {
-              oc,
-              ocuser,
-              lm,
-              lmuser
-            })
-        `)
-      })
-      .then(cursor => cursor.all())
-      .then(ts => {
-        data.latestPFThreads = ts;
+      //   return db.query(aql`
+      //     FOR t IN threads
+      //       SORT t.tlm DESC
+      //       FILTER t.fid == null
+      //       limit 10
+      //       LET oc = DOCUMENT(posts, t.oc)
+      //       LET ocuser = DOCUMENT(users, oc.uid)
+      //       LET lm = DOCUMENT(posts, t.lm)
+      //       LET lmuser = DOCUMENT(users, lm.uid)
+      //       RETURN MERGE(t, {
+      //         oc,
+      //         ocuser,
+      //         lm,
+      //         lmuser
+      //       })
+      //   `)
+      // })
+      // .then(cursor => cursor.all())
+      // .then(ts => {
+      //   data.latestPFThreads = ts;
         return queryfunc.getVisibleChildForums(params)
       })
       .then(arr => {
@@ -772,14 +772,15 @@ table.viewHome = {
       .then(cursor => cursor.all())
       .then(ads => {
         data.ads = ads;
-        return db.query(aql`
-          FOR key IN ${serverSettings.popPersonalForums}
-            LET pf = DOCUMENT(personalForums, key)
-            RETURN pf
-        `)
       })
-      .then(cursor => cursor.all())
-      .then(pfs => data.popPersonalForums = pfs)
+      //   return db.query(aql`
+      //     FOR key IN ${serverSettings.popPersonalForums}
+      //       LET pf = DOCUMENT(personalForums, key)
+      //       RETURN pf
+      //   `)
+      // })
+      // .then(cursor => cursor.all())
+      // .then(pfs => data.popPersonalForums = pfs)
       .then(() => {
         if(params.user)
          return queryfunc.getUsersThreads(params.user._key);
