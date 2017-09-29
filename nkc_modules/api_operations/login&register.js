@@ -324,7 +324,7 @@ table.userPhoneRegister = {
     let uid;
     let user;
     var isA = false;
-    const time = Date.now() - 2*60*1000  //2分钟之内的验证码
+    const time = Date.now() - 15*60*1000  //15分钟之内的验证码
     const code = params.regCode;
     const c = new layer.BaseDao('answersheets', code);
     return c.load()
@@ -1008,7 +1008,7 @@ table.bindMobile = {
     const phone = (params.areaCode + params.phone).replace('+', '00');
     const code = params.code;
     const user = params.user;
-    const time = Date.now() - 2 * 60 * 1000;
+    const time = Date.now() - 15 * 60 * 1000;//15分钟之内的验证码
     return db.query(aql`
       FOR doc IN smscode
         FILTER doc.toc > ${time} && doc.phone == ${phone} && doc.code == ${code}
