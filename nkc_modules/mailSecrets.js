@@ -15,7 +15,7 @@ module.exports = {
     }
   },
 
-  sendSMS: function(phone, code, fn, callback){\
+  sendSMS: function(phone, code, fn, callback){
     var period = 15*60*1000;
     if(fn === 'register'){
       //注册用户走这里
