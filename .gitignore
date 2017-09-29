@@ -22,7 +22,7 @@
 
 /test.js
 /run_as_production
-#/nkc_modules/mailSecrets.js
+/nkc_modules/mailSecrets.js
 /static
 /dump/*
 /run
