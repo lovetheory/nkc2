@@ -936,8 +936,7 @@ table.getMcode2 = {
     phone:String,
   }
 }
-
-//手机找回密码的验证码
+//资料设置页 绑定手机号
 table.getMcode3 = {
   operation:function(params){
     const ip = params._req.iptrim;
@@ -982,7 +981,7 @@ table.getMcode3 = {
           incIpTry(ip);
           throw '暂不支持修改绑定号码'
         }
-        sendSMS(phone, code , 'reset', function(err,res){ //2调用修改密码方法
+        sendSMS(phone, code , 'bindMobile', function(err,res){ //2调用修改密码方法
           if(err){
             console.log(err)
           }else{
