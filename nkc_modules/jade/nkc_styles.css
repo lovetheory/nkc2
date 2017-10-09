@@ -1727,13 +1727,11 @@ img.emoji {
 }
 #changeDis{
   float: left;
-  width: 50%;
 }
 #changeDisNone{
   float: left;
-  width: 50%;
 }
-@media screen and (max-width: 1200px) {
+@media screen and (max-width: 1365px) {
   #qrcode {
     display: none;
   }

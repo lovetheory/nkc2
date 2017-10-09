@@ -32,7 +32,7 @@ block content
           - var isOthersForumMdr = user? data.othersForum? data.othersForum.moderators.indexOf(user._key) > -1 : false : false
           
           .ThreadTitle
-            .ThreadTitle1(style="display:inline-block;width:74%;")
+            .ThreadTitle1(style="display:inline-block;width:69%;")
               - var forum = data.forum
               - var forumname = forum.display_name
               - var parent = null
@@ -187,8 +187,8 @@ block content
                     a#OFTopped(href='javascript:;' onclick='switchTInPersonalForum("#{thread._key}","#{displayName}","OF")' style='color: #CBDCEA') #{topOF}
                     span &nbsp;&nbsp;
 
-            .ThreadTitle2(style="display:inline-block;width:20%;vertical-align:top;")
-              .ThreadTitle22(style="border: 1px solid #ddd;border-radius: 10px;overflow: hidden;padding: 3px 0px 0 0px;")
+            .ThreadTitle2(style="display:inline-block;max-width:30%;vertical-align:top;")
+              .ThreadTitle22(style="border: 1px solid #ddd;border-radius: 10px;overflow: hidden;padding: 3px 3px 0 3px;")
                 div#changeDis
                   p.lighttext#airnum1(style="font-size:21px;text-align:center;margin-top:0px;margin-bottom:0px;") 文 号
                   .hrdiv(style="width:80%;height:1px;background-color:#ddd;margin:0 auto;")
@@ -197,7 +197,7 @@ block content
                   .hrdiv(style="width:80%;height:1px;background-color:#ddd;margin:0 auto;")
                   p.lighttext#airnum3(style="text-align:center;") #{(thread.count-1)?(thread.count-1)+' 回复 /':''} #{thread.hits} 浏览
                 div#changeDisNone
-                  canvas#qrcode(height='100%' width='100%')
+                  canvas#qrcode
 
           
           include interface_navigation_paging.jade      
@@ -301,7 +301,7 @@ block content
 block scripts
   script(src='/interface_common.js')
   script(src='/interface_thread.js')
-  script(src='/qrcode/qrcode.min.js')
+  script(src='/qrcode/build/qrcode.min.js')
   script.
     common.backcolorChange("#{(data.user?data.user.color:null)||'#e4e4e4'}");
                 
