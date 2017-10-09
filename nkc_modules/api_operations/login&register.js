@@ -971,7 +971,7 @@ table.getMcode3 = {
         }
         return AQL(`
         for u in mobilecodes
-        filter u._key == @uid
+        filter u.uid == @uid
         return u
         `,{uid: params.user._key}
         )
