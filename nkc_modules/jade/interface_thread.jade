@@ -197,7 +197,7 @@ block content
                   .hrdiv(style="width:80%;height:1px;background-color:#ddd;margin:0 auto;")
                   p.lighttext#airnum3(style="text-align:center;") #{(thread.count-1)?(thread.count-1)+' 回复 /':''} #{thread.hits} 浏览
                 div#changeDisNone
-                  canvas#qrcode
+                  canvas#qrcode(style='height:100%;width:100%;')
 
           
           include interface_navigation_paging.jade      
