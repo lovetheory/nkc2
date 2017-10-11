@@ -40,8 +40,9 @@ var nkc = express(); //main router
 
 //闭站
 //***********************************
+nkc.use(express.static('nkc_modules/jade'));
 nkc.use((req, res) => {
-  res.send('error');
+  res.render('404');
   return;
 })
 
