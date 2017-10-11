@@ -42,8 +42,6 @@ var nkc = express(); //main router
 //***********************************
 nkc.use(express.static('/nkc_modules/jade/'));
 nkc.use((req, res) => {
-  res.render('close.html');
-  // res.send('sss');
   return;
 })
 
