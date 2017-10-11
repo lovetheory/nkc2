@@ -36,9 +36,19 @@ queryfunc.db_init();
 
 var nkc = express(); //main router
 
-nkc.all((req, res) => {
+
+
+//闭站
+//***********************************
+nkc.use((req, res) => {
   res.send('error');
+  return;
 })
+
+//**********************************
+
+
+
 
 nkc.set('json spaces',2);
 nkc.enable('trust proxy');
