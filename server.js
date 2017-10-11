@@ -40,9 +40,9 @@ var nkc = express(); //main router
 
 //闭站
 //***********************************
-nkc.use(express.static('/nkc_modules'));
+nkc.use(express.static('/nkc_modules/jade/'));
 nkc.use((req, res) => {
-  res.render('/jade/close.jade',{});
+  res.render('close.jade',{});
   // res.send('sss');
   return;
 })
