@@ -38,6 +38,7 @@ var nkc = express(); //main router
 
 
 
+
 //闭站
 //***********************************
 nkc.set('views', './nkc_modules/jade');
