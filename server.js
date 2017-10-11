@@ -45,7 +45,6 @@ nkc.set('view engine', 'jade');
 nkc.use((req, res) => {
   res.status(404).render('close.jade',{})
   // res.render('close.jade',{});
-  // res.send('sss');
   return;
 })
 //*********************************************
