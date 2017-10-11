@@ -43,8 +43,11 @@ var nkc = express(); //main router
 nkc.set('views', './nkc_modules/jade');
 nkc.set('view engine', 'jade');
 nkc.use((req, res) => {
-  res.render('close.jade',{});
-  //res.send('sss');
+  res.status(404).send(
+    jaderender('close.jade',{})
+  );
+  // res.render('close.jade',{});
+  // res.send('sss');
   return;
 })
 //*********************************************
