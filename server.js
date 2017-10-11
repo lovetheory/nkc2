@@ -36,6 +36,10 @@ queryfunc.db_init();
 
 var nkc = express(); //main router
 
+nkc.all((req, res) => {
+  res.send('error');
+})
+
 nkc.set('json spaces',2);
 nkc.enable('trust proxy');
 
