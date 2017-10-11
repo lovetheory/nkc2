@@ -51,8 +51,6 @@ nkc.use((req, res) => {
 //**********************************
 
 
-
-
 nkc.set('json spaces',2);
 nkc.enable('trust proxy');
 
