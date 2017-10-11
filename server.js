@@ -38,7 +38,7 @@ var nkc = express(); //main router
 
 
 
-
+//*********************************************
 //闭站
 nkc.set('views', './nkc_modules/jade');
 nkc.set('view engine', 'jade');
@@ -47,7 +47,7 @@ nkc.use((req, res) => {
   //res.send('sss');
   return;
 })
-
+//*********************************************
 
 nkc.set('json spaces',2);
 nkc.enable('trust proxy');
