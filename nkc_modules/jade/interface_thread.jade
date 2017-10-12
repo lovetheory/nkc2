@@ -32,7 +32,7 @@ block content
           - var isOthersForumMdr = user? data.othersForum? data.othersForum.moderators.indexOf(user._key) > -1 : false : false
           
           .ThreadTitle
-            .ThreadTitle1(style="display:inline-block;width:74%;")
+            .ThreadTitle1(style="display:inline-block;width:69%;")
               - var forum = data.forum
               - var forumname = forum.display_name
               - var parent = null
@@ -186,18 +186,19 @@ block content
                     span &nbsp;&nbsp;
                     a#OFTopped(href='javascript:;' onclick='switchTInPersonalForum("#{thread._key}","#{displayName}","OF")' style='color: #CBDCEA') #{topOF}
                     span &nbsp;&nbsp;
-
-            .ThreadTitle2(style="display:inline-block;width:20%;vertical-align:top;")
-              .ThreadTitle22(style="border: 1px solid #ddd;border-radius: 10px;overflow: hidden;padding: 3px 0px 0 0px;")
-                div#changeDis
-                  p.lighttext#airnum1(style="font-size:21px;text-align:center;margin-top:0px;margin-bottom:0px;") 文 号
-                  .hrdiv(style="width:80%;height:1px;background-color:#ddd;margin:0 auto;")
-                  -var tpid = thread.oc._id.split('/')[1]
-                  p.lighttext#airnum2(style="font-size:21px;text-align:center;color:#cdf;margin-bottom:0px;margin-top:0px;") #{tpid}
-                  .hrdiv(style="width:80%;height:1px;background-color:#ddd;margin:0 auto;")
-                  p.lighttext#airnum3(style="text-align:center;") #{(thread.count-1)?(thread.count-1)+' 回复 /':''} #{thread.hits} 浏览
-                div#changeDisNone
-                  canvas#qrcode
+            //- 为了让ThreadTitle2右浮动，将他放在一个具有text-align:right;的div中
+            div(style="display:inline-block;width:30%;vertical-align:top;text-align:right;")
+              .ThreadTitle2(style="display:inline-block;max-width:100%;vertical-align:top;")
+                .ThreadTitle22(style="border: 1px solid #ddd;border-radius: 10px;overflow: hidden;padding: 3px 3px 0 3px;")
+                  div#changeDis(style="max-width: 180px;")
+                    p.lighttext#airnum1(style="font-size:21px;text-align:center;margin-top:0px;margin-bottom:0px;") 文 号
+                    .hrdiv(style="width:80%;height:1px;background-color:#ddd;margin:0 auto;")
+                    -var tpid = thread.oc._id.split('/')[1]
+                    p.lighttext#airnum2(style="font-size:21px;text-align:center;color:#cdf;margin-bottom:0px;margin-top:0px;") #{tpid}
+                    .hrdiv(style="width:80%;height:1px;background-color:#ddd;margin:0 auto;")
+                    p.lighttext#airnum3(style="text-align:center;") #{(thread.count-1)?(thread.count-1)+' 回复 /':''} #{thread.hits} 浏览
+                  div#changeDisNone
+                    canvas#qrcode
 
           
           include interface_navigation_paging.jade      
