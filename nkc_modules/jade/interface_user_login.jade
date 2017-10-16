@@ -4,6 +4,7 @@ block title
   title 登录
 
 block content
+  p #{JSON.stringify(data)}
   if data.user && data.user.username
     script.
       location.href='/'
