@@ -77,7 +77,7 @@ block content
               button#submit.btn.btn-default 交卷
 
             meta(id='exam' exam-object='#{encodeURI(JSON.stringify(data.exam))}')
-      
+    p #{JSON.stringify(data)}
     
   
   include debug_output.jade
