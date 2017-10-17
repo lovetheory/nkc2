@@ -40,13 +40,13 @@ var nkc = express(); //main router
 
 //*********************************************
 //闭站
-nkc.set('views', './nkc_modules/jade');
+/*nkc.set('views', './nkc_modules/jade');
 nkc.set('view engine', 'jade');
 nkc.use((req, res) => {
   res.status(404).render('close.jade',{})
   // res.render('close.jade',{});
   return;
-});
+});*/
 //*********************************************
 
 
