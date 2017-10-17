@@ -46,7 +46,7 @@ nkc.use((req, res) => {
   res.status(404).render('close.jade',{})
   // res.render('close.jade',{});
   return;
-})
+});
 //*********************************************
 
 
