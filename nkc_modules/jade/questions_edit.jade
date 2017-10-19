@@ -135,7 +135,7 @@ block content
                 a(href='?operation=viewQuestions&category=#{category}') #{category}
                 | : #{number}
           
-    p!= Json.stringify(data)
+    p!= JSON.stringify(data)
   include debug_output.jade
 block scripts
 
