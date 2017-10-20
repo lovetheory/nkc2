@@ -150,6 +150,7 @@ block content
             button.btn.btn-default.center-block#submitpersonalsetting(onclick='submitpersonalsetting()') 提交个人资料修改
             br
             br
+    p!= JSON.stringify(data)
   include debug_output.jade
     
 block scripts
