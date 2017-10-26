@@ -7,6 +7,9 @@ $(document).ready(function(){
     $('#airnum2').css('font-size','16px');
     $('#airnum3').css('font-size','10px');
   }
+  if($(window).width()<433){
+    $('.ThreadTitle1').css('width','100%');
+  }
   var qrcode = geid('qrcode');
   if(qrcode) {
     var path = window.location.href;
