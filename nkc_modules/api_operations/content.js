@@ -159,7 +159,7 @@ var postToThread = function(params,tid,user, type){
       return incrementForumOnNewPost(tid)
     })
     .then(() => operationScoreHandler({
-      address: params._req.connection.remoteAddress,
+      address: params._req.iptrim,
       port: params._req.connection.remotePort,
       operation: 'postToThread',
       from: params.user._key,
