@@ -83,7 +83,26 @@ block content
             .panel-body.post-body
               each q,index in data.questions
                 include questions_single.jade
-                
+
+          .panel.panel-default
+            .panel-body
+              h1 统计
+              hr
+              h4 专家
+              each i in data.byuser
+                -var username = i.username;var number = i.number;
+                div(style='margin:5px')
+                  a(href='/user_activities_byname/#{username}') #{username}
+                  | : #{number}
+
+              hr
+              h4 类目
+              each i in data.bycategory
+                -var category = i.category||'undefined';var number=i.number;
+                div(style='margin:5px')
+                  a(href='?operation=viewQuestions&category=#{category}') #{category}
+                  | : #{number}
+
         else
           h4 你还没有登录
           p 登录后才可以提交。
@@ -115,25 +134,7 @@ block content
 
                   include questions_single.jade
                   
-      .col-xs-12.col-sm-6
-        .panel.panel-default
-          .panel-body
-            h1 统计
-            hr
-            h4 专家
-            each i in data.byuser
-              -var username = i.username;var number = i.number;
-              div(style='margin:5px')
-                a(href='/user_activities_byname/#{username}') #{username}
-                | : #{number}
-            
-            hr
-            h4 类目
-            each i in data.bycategory
-              -var category = i.category||'undefined';var number=i.number;
-              div(style='margin:5px')
-                a(href='?operation=viewQuestions&category=#{category}') #{category}
-                | : #{number}
+
           
   include debug_output.jade
 block scripts
