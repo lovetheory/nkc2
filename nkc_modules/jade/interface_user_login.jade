@@ -60,8 +60,9 @@ block content
           div(style='color:gray;')
             :markdown
               忘记密码？可以尝试通过[邮件找回](/forgotPassword)或者[手机找回](/forgotPassword2)
+    p!= JSON.stringify(data)
   include debug_output.jade
-    
+
 block scripts
   script(src='/interface_common.js')
   script(src='/interface_user_login.js')
